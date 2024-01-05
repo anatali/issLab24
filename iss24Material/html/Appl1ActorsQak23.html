@@ -1,0 +1,230 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
+    <title>Appl1ActorsQak23 &#8212; iss23 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    
+    <script src="_static/sidebar.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="BasicRobot23" href="BasicRobot23.html" />
+    <link rel="prev" title="QakActors23Demo" href="QakActors23Demo.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="BasicRobot23.html" title="BasicRobot23"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="QakActors23Demo.html" title="QakActors23Demo"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss23 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Appl1ActorsQak23</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="appl1actorsqak23">
+<h1>Appl1ActorsQak23<a class="headerlink" href="#appl1actorsqak23" title="Permalink to this headline">¶</a></h1>
+<p>Riportiamo qui un possibile modello Qak dell’<a class="reference internal" href="Applicazione1.html#applicazione1"><span class="std std-ref">Applicazione1</span></a>, simile a quanto sviluppato in
+<a class="reference internal" href="Appl1ActorsFsm23.html#appl1actorsfsm23"><span class="std std-ref">Appl1ActorsFsm23</span></a>.</p>
+<section id="appl1actorsqak23-architettura">
+<h2>Appl1ActorsQak23 architettura<a class="headerlink" href="#appl1actorsqak23-architettura" title="Permalink to this headline">¶</a></h2>
+<p>La figura che segue illustra l’architettura del sistema</p>
+<table class="colwidths-given docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><a class="reference internal image-reference" href="_images/ArchAppl1ActorsQak23.png"><img alt="_images/ArchAppl1ActorsQak23.png" class="align-center" src="_images/ArchAppl1ActorsQak23.png" style="width: 100%;" /></a>
+</td>
+<td><p>Questa immagine costituisce una rappresentazione prodotta dalla <a class="reference internal" href="QakActors23.html#qak-software-factory"><span class="std std-ref">Qak software factory</span></a>,
+sulla base del modello stesso, una volta completato.</p>
+<p>Gli eventi:</p>
+<ul class="simple">
+<li><p><span class="brown">sonardata</span> sono generati dai Sonar presenti in WEnv</p></li>
+<li><p><span class="brown">info</span> sono generati da appl per aggiornare <span class="blue">obsforpath</span></p></li>
+<li><p><span class="brown">guicmd</span> e <span class="brown">guicmd</span> sono generati dal supporto <span class="blue">GuiObsForQak</span> che converte click sui
+pulsanti della GUI in eventi locali</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<section id="appl1qak-pl">
+<h3>appl1qak.pl<a class="headerlink" href="#appl1qak-pl" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%===============================================</span>
+<span class="o">%</span> <span class="n">appl1qak</span> <span class="n">description</span>
+<span class="o">%===============================================</span>
+<span class="n">context</span><span class="p">(</span><span class="n">ctxall</span><span class="p">,</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span><span class="s2">&quot;TCP&quot;</span><span class="p">,</span><span class="s2">&quot;8720&quot;</span><span class="p">)</span><span class="o">.</span>
+<span class="n">qactor</span><span class="p">(</span><span class="n">appl</span><span class="p">,</span> <span class="n">ctxall</span><span class="p">,</span><span class="s2">&quot;it.unibo.appl.Appl&quot;</span><span class="p">)</span><span class="o">.</span>
+<span class="n">qactor</span><span class="p">(</span><span class="n">consoleobs</span><span class="p">,</span> <span class="n">ctxall</span><span class="p">,</span><span class="s2">&quot;it.unibo.consoleobs.Consoleobs&quot;</span><span class="p">)</span><span class="o">.</span>
+<span class="n">qactor</span><span class="p">(</span><span class="n">sonarobs</span><span class="p">,</span> <span class="n">ctxall</span><span class="p">,</span><span class="s2">&quot;it.unibo.sonarobs.Sonarobs&quot;</span><span class="p">)</span><span class="o">.</span>
+<span class="n">qactor</span><span class="p">(</span><span class="n">obsforpath</span><span class="p">,</span> <span class="n">ctxall</span><span class="p">,</span><span class="s2">&quot;it.unibo.obsforpath.Obsforpath&quot;</span><span class="p">)</span><span class="o">.</span>
+<span class="n">qactor</span><span class="p">(</span><span class="n">console</span><span class="p">,</span> <span class="n">ctxall</span><span class="p">,</span><span class="s2">&quot;it.unibo.console.Console&quot;</span><span class="p">)</span><span class="o">.</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="dichiarazione-dei-messaggi">
+<h2>Dichiarazione dei messaggi<a class="headerlink" href="#dichiarazione-dei-messaggi" title="Permalink to this headline">¶</a></h2>
+<p>Tutte le versioni distribuite sviluppate in precedenza, basate su attori o meno, erano costituite da
+componenti software che interagvano tramite messaggi.</p>
+<p>I messaggi sono ciò che permetteva ai componenti di formare un sistema, ma non erano mai posti in evidenza;
+anche nella e basata su annotazioni non esistevano sezioni che introducessero in modo esplicito la descrizione
+dei messaggi.</p>
+<p>Ora invece, come previsto dal <a class="reference internal" href="QakActors23.html#qak-model-template"><span class="std std-ref">Qak model template</span></a> occorre iniziare proprio dalla dichiarazione dei messaggi
+che formano il ‘collante’ del sistema.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">System</span> <span class="o">/*</span> <span class="o">-</span><span class="n">msglog</span> <span class="o">*/</span> <span class="n">appl1qak</span>
+
+<span class="n">Dispatch</span> <span class="n">startcmd</span>   <span class="p">:</span> <span class="n">start</span><span class="p">(</span> <span class="n">ARG</span> <span class="p">)</span>
+<span class="n">Dispatch</span> <span class="n">restart</span>    <span class="p">:</span> <span class="n">start</span><span class="p">(</span> <span class="n">ARG</span> <span class="p">)</span>
+<span class="n">Dispatch</span> <span class="n">stopcmd</span>    <span class="p">:</span> <span class="n">stop</span><span class="p">(</span> <span class="n">ARG</span> <span class="p">)</span>
+<span class="n">Dispatch</span> <span class="n">resumecmd</span>  <span class="p">:</span> <span class="n">resume</span><span class="p">(</span> <span class="n">ARG</span> <span class="p">)</span>
+
+<span class="n">Dispatch</span> <span class="n">stopappl</span>   <span class="p">:</span> <span class="n">stopappl</span><span class="p">(</span> <span class="n">ARG</span> <span class="p">)</span>
+<span class="n">Dispatch</span> <span class="n">resumeappl</span> <span class="p">:</span> <span class="n">resumeappl</span><span class="p">(</span> <span class="n">ARG</span> <span class="p">)</span>
+
+<span class="o">//</span><span class="n">Dispatch</span> <span class="n">cmd</span>        <span class="p">:</span> <span class="n">cmd</span><span class="p">(</span><span class="n">MOVE</span><span class="p">)</span>
+<span class="n">Dispatch</span> <span class="n">stepdone</span>   <span class="p">:</span> <span class="n">stepdone</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+<span class="n">Dispatch</span> <span class="n">stepfailed</span> <span class="p">:</span> <span class="n">stepfailed</span><span class="p">(</span><span class="n">DURATION</span><span class="p">,</span> <span class="n">CAUSE</span><span class="p">)</span>
+
+<span class="n">Request</span> <span class="n">getpath</span>     <span class="p">:</span> <span class="n">getpath</span><span class="p">(</span> <span class="n">ARG</span> <span class="p">)</span>
+<span class="n">Request</span> <span class="n">isrunning</span>   <span class="p">:</span> <span class="n">isrunning</span><span class="p">(</span> <span class="n">ARG</span> <span class="p">)</span>
+<span class="n">Reply</span> <span class="n">pathamswer</span>    <span class="p">:</span> <span class="n">pathamswer</span><span class="p">(</span> <span class="n">ARG</span> <span class="p">)</span>
+<span class="n">Reply</span> <span class="n">runninganswer</span> <span class="p">:</span> <span class="n">runninganswer</span><span class="p">(</span> <span class="n">ARG</span> <span class="p">)</span>
+
+<span class="n">Event</span> <span class="n">info</span>          <span class="p">:</span> <span class="n">info</span><span class="p">(</span><span class="n">ARG</span><span class="p">)</span>
+<span class="n">Event</span> <span class="n">sonardata</span>     <span class="p">:</span> <span class="n">sonar</span><span class="p">(</span><span class="n">DISTANCE</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="dichiarazione-dei-contesti">
+<h2>Dichiarazione dei contesti<a class="headerlink" href="#dichiarazione-dei-contesti" title="Permalink to this headline">¶</a></h2>
+<p>Subito dopo dobbiamo descrivere i contesti che formano il sistema.
+Al momento, tenendo conto quanto detto in <a class="reference internal" href="Actors23.html#metodo-di-lavoro"><span class="std std-ref">Metodo di lavoro</span></a>, ne definiamo uno solo.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Context</span> <span class="n">ctxall</span>  <span class="n">ip</span> <span class="p">[</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span> <span class="n">port</span><span class="o">=</span><span class="mi">8720</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="dichiarazione-degli-attori">
+<h2>Dichiarazione degli attori<a class="headerlink" href="#dichiarazione-degli-attori" title="Permalink to this headline">¶</a></h2>
+<p>Il <a class="reference internal" href="QakActors23.html#qak-model-template"><span class="std std-ref">Qak model template</span></a> indica che il passo successivo ricguarda la dichiarazione degli
+attori che compongono il sistema.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span> <span class="n">appl</span> <span class="n">context</span> <span class="n">ctxall</span><span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+
+<span class="n">QActor</span> <span class="n">obsforpath</span> <span class="n">context</span> <span class="n">ctxall</span><span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+
+<span class="n">QActor</span> <span class="n">consoleobs</span> <span class="n">context</span> <span class="n">ctxall</span><span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+
+<span class="n">QActor</span> <span class="n">sonarobs</span> <span class="n">context</span> <span class="n">ctxall</span><span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+</pre></div>
+</div>
+<section id="qactor-appl">
+<h3>QActor appl<a class="headerlink" href="#qactor-appl" title="Permalink to this headline">¶</a></h3>
+<p>In progress ….</p>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Appl1ActorsQak23</a><ul>
+<li><a class="reference internal" href="#appl1actorsqak23-architettura">Appl1ActorsQak23 architettura</a><ul>
+<li><a class="reference internal" href="#appl1qak-pl">appl1qak.pl</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#dichiarazione-dei-messaggi">Dichiarazione dei messaggi</a></li>
+<li><a class="reference internal" href="#dichiarazione-dei-contesti">Dichiarazione dei contesti</a></li>
+<li><a class="reference internal" href="#dichiarazione-degli-attori">Dichiarazione degli attori</a><ul>
+<li><a class="reference internal" href="#qactor-appl">QActor appl</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="QakActors23Demo.html"
+                          title="previous chapter">QakActors23Demo</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="BasicRobot23.html"
+                          title="next chapter">BasicRobot23</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Appl1ActorsQak23.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="BasicRobot23.html" title="BasicRobot23"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="QakActors23Demo.html" title="QakActors23Demo"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss23 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Appl1ActorsQak23</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+    </div>
+  </body>
+</html>

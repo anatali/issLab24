@@ -1,0 +1,86 @@
+body {
+    background-color: rgb(255,255,255);
+  }
+  
+  .blue {
+    color: blue; 
+    font-style: italic;
+    font-weight: 0;
+  }
+
+  .red {
+    color:red;
+  }
+
+  .brown {
+    color:#990000;
+  }
+
+  .green {
+    color:#0fd80f;
+  }
+
+  .reference{
+    padding: 1px;
+    font-style: italic;
+    background-color: #fffed6; 
+    color:#990000;
+    text-decoration: underline;
+  }
+
+  .remark{
+    background-color: #E3F2FD;
+      border: 2px solid green;
+      padding: 3px;
+      margin: 0px;
+      line-height: 1.4;
+    border-radius: 25px;
+  }
+
+  .high{
+    background-color: hsl(62, 100%, 75%);
+    font-size: 16px; 
+    line-height: 1.5;
+    padding: 3px
+  }  
+
+  .worktodo{
+    background-color: #66ff66;
+    padding: 3px;
+    margin: 10px;
+    font-size: 30px; 
+    line-height: 1.4;
+    border-radius: 20px;
+  }
+
+  .slide{
+    background-color: #E3F2FD;
+    border-radius: 25px;
+    font-size: 40px; 
+    line-height: 1.5;
+    padding: 3px
+  }
+
+  .slide1{
+    background-color: #ccff66;
+    border-radius: 25px;
+    font-size: 30px; 
+    line-height: 1.5;
+    padding: 3px
+  }
+
+  .slide2{
+    background-color: #80ffff;
+    border-radius: 25px;
+    font-size: 20px; 
+    line-height: 1.5;
+    padding: 3px
+  }
+
+  .slidekp{
+    background-color: hsl(332, 77%, 86%);
+    border-radius: 25px;
+    font-size: 18px; 
+    line-height: 1.5;
+    padding: 3px
+  }  

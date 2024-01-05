@@ -1,0 +1,584 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
+    <title>Appl1-HTTPSprint3 &#8212; iss23 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    
+    <script src="_static/sidebar.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Appl1-WSSprint3" href="Appl1-WSSprint3.html" />
+    <link rel="prev" title="unibo.basicomm23" href="unibo.basicomm23.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="Appl1-WSSprint3.html" title="Appl1-WSSprint3"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="unibo.basicomm23.html" title="unibo.basicomm23"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss23 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Appl1-HTTPSprint3</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="appl1-httpsprint3">
+<h1>Appl1-HTTPSprint3<a class="headerlink" href="#appl1-httpsprint3" title="Permalink to this headline">¶</a></h1>
+<p>Nello <a class="reference internal" href="Appl1-HTTPSprint2.html#appl1-httpsprint2"><span class="std std-ref">Appl1-HTTPSprint2</span></a>, abbiamo costruito e testato un sistema  che soddisfa i requisiti del core-businness
+in ambiente locale, la cui architettura è schematizzata in figura:</p>
+<a class="reference internal image-reference" href="_images/Appl1HTTPSprint2Final.png"><img alt="_images/Appl1HTTPSprint2Final.png" class="align-center" src="_images/Appl1HTTPSprint2Final.png" style="width: 60%;" /></a>
+<p>La classe <a class="reference internal" href="Appl1-HTTPSprint2.html#appl1core-osservabile"><span class="std std-ref">Appl1Core osservabile</span></a>  realizza la logica applicativa.</p>
+<section id="requisiti-sprint3">
+<h2>Requisiti SPRINT3<a class="headerlink" href="#requisiti-sprint3" title="Permalink to this headline">¶</a></h2>
+<p>In questa nuova fase dello sviluppo, dobbiamo superare le limitazioni che ci siamo imposti in precedenza,
+tenendo conto di quanto già osservato in
+<a class="reference internal" href="Applicazione1.html#appl1-natura-dei-componenti"><span class="std std-ref">Appl1: Natura dei componenti</span></a> della <a class="reference internal" href="Applicazione1.html#appl1-architettura-logica"><span class="std std-ref">Appl1: Architettura logica</span></a>.</p>
+<p>L’archittura logica di riferimento può ora essere rappresentata come segue:</p>
+<a class="reference internal image-reference" href="_images/Appl1ArchSprinr3init.png"><img alt="_images/Appl1ArchSprinr3init.png" class="align-center" src="_images/Appl1ArchSprinr3init.png" style="width: 60%;" /></a>
+<p>In particolare detto <code class="docutils literal notranslate"><span class="pre">P</span></code> uno dei protocolli definiti in <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-msg-protocoltype"><span class="std std-ref">ProtocolType</span></a>:</p>
+<ol class="arabic simple">
+<li><p>L’applicazione <em>Appl1</em> viene concepita come un ente attivo (che abbiamo denominato
+<a class="reference internal" href="unibo.basicomm23.html#verso-gli-attori"><span class="std std-ref">actor</span></a>) capace  di ricevere messaggi (comandi <code class="docutils literal notranslate"><span class="pre">start/stop/resume</span></code>)
+via <code class="docutils literal notranslate"><span class="pre">P</span></code> e   <span class="blue">interpretare</span> tali messaggi,  convertendoli in comandi a <a class="reference internal" href="Appl1-HTTPSprint2.html#unibo-appl1-http-appl1core"><span class="std std-ref">Appl1Core</span></a>
+(e di qui a <a class="reference internal" href="VirtualRobot23.html#virtualrobot23"><span class="std std-ref">VirtualRobot23</span></a>).</p></li>
+<li><p><em>CmdConsole</em> deve diventare un  <a class="reference internal" href="unibo.basicomm23.html#verso-gli-attori"><span class="std std-ref">actor</span></a>  che interagisce con un utente umano e che invia comandi ad <code class="docutils literal notranslate"><span class="pre">Appl1</span></code>
+usando il protocollo <code class="docutils literal notranslate"><span class="pre">P</span></code>.</p></li>
+</ol>
+<p>La fase di interpretazione dei comandi è affidata a <em>Appl1</em> in quanto:</p>
+<ul class="simple">
+<li><p><span class="brown">Key-pointAP0</span>: la <em>CmdConsole</em> è <span class="remark">solo un dispositivo di input</span>, che si vuole mantenere libero da aspetti applicativi;</p></li>
+<li><p><em>Appl1</em> potrebbe ricevere comandi da dispositivi diversi dalla <em>CmdConsole</em>.</p></li>
+</ul>
+<p>I <span class="slide2">GOALS DELLO SPRINT3</span> sono dunque:</p>
+<ol class="arabic simple">
+<li><p>Affrontare il progetto e la realizzazione della <em>CmdConsole</em> remota.</p></li>
+<li><p>Affrontare il progetto e la realizzazione di un sistema distribuito.</p></li>
+</ol>
+<p>Siamo di fronte a un passaggio logico <span class="remark">da sistemi ad oggetti locali</span>  che interagiscono
+mediante <em>procedure-call</em> a sistemi <span class="remark">a componenti distribuiti attivi che interagiscono a messaggi</span>
+attraverso l’uso di vari protocolli, come quelli introdotti in  <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-msg-protocoltype"><span class="std std-ref">unibo.basicomm23.msg.ProtocolType</span></a>.</p>
+<p><span class="slide1">Il principio di inversione delle dipendenze</span></p>
+<p>Per evitare che l’<em>application designer</em> debba occuparsi
+di dettagli implementativi legati alle interazioni,
+possiamo intreprendere una strada che trae ispirazione dal
+un altro dei principi <a class="reference external" href="https://en.wikipedia.org/wiki/SOLID">SOLID</a>,
+secondo il quale:</p>
+<ul class="simple">
+<li><p><span class="slide2">Componenti high-level non devono dipendere da componenti low-level</span></p></li>
+</ul>
+<p>Seguire questa via significa anche che il nostro approccio passa:</p>
+<p><span class="slide">Da bottom-up a top-down</span></p>
+<p>In altre parole, è il livello applicativo (il problema stesso) che deve dire di quali
+elementi astratti (interfacce) o concreti ha bisogno per realizzare operazioni di più basso livello
+(come le comunicazioni di rete) e demandarne la
+realizzazione a opportuni supporti che realizzino quanto dichiarato.</p>
+<p><span class="slide1">Ricordando</span></p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="Principi.html#interazioni-dal-punto-di-vista-applicativo"><span class="std std-ref">Interazioni dal punto di vista applicativo</span></a></p></li>
+<li><p><a class="reference internal" href="Interaction.html#natura-e-struttura-dei-messaggi-applicativi"><span class="std std-ref">Natura e struttura dei messaggi applicativi</span></a></p></li>
+<li><p>Il progetto che realizza i concetti precedenti: <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23"><span class="std std-ref">unibo.basicomm23</span></a></p></li>
+</ol>
+<p>l’architettura logica del sistema viene reimpostata come segue:</p>
+<a class="reference internal image-reference" href="_images/Appl1ArchSprint3initLogico.png"><img alt="_images/Appl1ArchSprint3initLogico.png" class="align-center" src="_images/Appl1ArchSprint3initLogico.png" style="width: 75%;" /></a>
+<p>Come analisti del problema, diciamo che, dal punto di vosta logico:</p>
+<ul class="simple">
+<li><p><span class="brown">Key-pointAP1</span>: La <em>CmdConsole</em> deve usare un <span class="blue">dispatch</span> in quanto si tratta di inviare un <span class="blue">comando</span> a <em>Appl1</em>.</p></li>
+<li><p><span class="brown">Key-pointAP2</span>: <em>Appl1Core</em> usa logicamente una <span class="blue">request</span> per interagire via <code class="docutils literal notranslate"><span class="pre">HTTP</span></code> con il <em>VirtualRobot</em>.</p></li>
+</ul>
+<p>Per essere realizato,  questo sistema software richiede ora opportuni supporti per implementare le interazione
+punto-a-punto  <em>CmdConsole-Appl1</em> e <em>Appl1-VirtualRobot</em>.</p>
+<p>Nel progetto  <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23"><span class="std std-ref">unibo.basicomm23</span></a> sono stati introdotti i seguenti supporti
+<a class="reference internal" href="unibo.basicomm23.html#abilitatori-di-comunicazione"><span class="std std-ref">Abilitatori di comunicazione</span></a>:</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="unibo.basicomm23.html#serverfactory"><span class="std std-ref">ServerFactory</span></a> che permette di creare
+un server capace di ricevere messaggi usando un dato protocollo, stabilendo una <span class="blue">Interconnessione</span>
+two-way con il client chiamante che implementa l’interfaccia <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-interfaces-interaction"><span class="std std-ref">Interaction</span></a></p></li>
+<li><p><a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-enablers-actornaivecaller"><span class="std std-ref">ActorNaiveCaller</span></a>, che permette l’invio di messaggi
+usando un dato protocollo.</p></li>
+</ol>
+<p>Questi supporti ‘nascondono’ le tecnologie low-level di comunicazione e permettono di
+qualificare <em>CmdConsole</em> e <em>Appl1</em> come <span class="remark">nuovi enti computazionali</span>: <a class="reference internal" href="unibo.basicomm23.html#verso-gli-attori"><span class="std std-ref">attori</span></a>
+privi di memoria comune, ma capaci di interagire mediante scambio di messaggi.</p>
+<p>L’architettura logica può quindi essere ulteriormente rappresentata come segue
+(si noti la rappresentazione per gli <a class="reference internal" href="Principi.html#interazioni-dal-punto-di-vista-applicativo"><span class="std std-ref">attori</span></a>):</p>
+<a class="reference internal image-reference" href="_images/Appl1ArchSprint3Interaction.png"><img alt="_images/Appl1ArchSprint3Interaction.png" class="align-center" src="_images/Appl1ArchSprint3Interaction.png" style="width: 85%;" /></a>
+<p><span class="slide1">Interazioni Appl1 -&gt; robot</span></p>
+<section id="refactoring-di-vrobothlmoveshttpapache">
+<h3>Refactoring di VrobotHLMovesHTTPApache<a class="headerlink" href="#refactoring-di-vrobothlmoveshttpapache" title="Permalink to this headline">¶</a></h3>
+<p>La classe <em>unibo.supports.VrobotHLMovesInteractionSynch</em> che implementa <a class="reference internal" href="Appl1-HTTPSprint1.html#unibo-common-ivrobotmoves"><span class="std std-ref">IVrobotMoves</span></a>
+(usando  la classe  <a class="reference internal" href="Appl1-HTTPSprint1.html#unibo-common-vrobotmsgs"><span class="std std-ref">unibo.common.VrobotMsgs</span></a>)
+è un <a class="reference internal" href="#refactoring-di-vrobothlmoveshttpapache"><span class="std std-ref">Refactoring di VrobotHLMovesHTTPApache</span></a> che utilizza
+il supporto <span class="xref std std-ref">HttpConnection</span>  che implementa <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-interfaces-interaction"><span class="std std-ref">Interaction</span></a> per <code class="docutils literal notranslate"><span class="pre">HTTP</span></code> .</p>
+<section id="unibo-supports-vrobothlmovesinteractionsynch">
+<h4>unibo.supports.VrobotHLMovesInteractionSynch<a class="headerlink" href="#unibo-supports-vrobothlmovesinteractionsynch" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span> <span class="kd">public</span> <span class="kd">class</span> <span class="nc">VrobotHLMovesInteractionSynch</span> <span class="kd">implements</span> <span class="n">IVrobotMoves</span><span class="p">{</span>
+ <span class="kd">private</span> <span class="n">Interaction</span> <span class="n">commSupport</span>  <span class="p">;</span>
+
+   <span class="kd">public</span> <span class="nf">VrobotHLMovesInteractionSynch</span><span class="p">(</span><span class="n">Interaction</span> <span class="n">commSupport</span><span class="p">){</span>
+      <span class="k">this</span><span class="p">.</span><span class="na">commSupport</span> <span class="o">=</span> <span class="n">commSupport</span><span class="p">;</span>
+   <span class="p">}</span>
+   <span class="nd">@Override</span>
+   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">turnLeft</span><span class="p">()</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="p">{</span> <span class="n">commSupport</span><span class="p">.</span><span class="na">request</span><span class="p">(</span><span class="n">VrobotMsgs</span><span class="p">.</span><span class="na">turnleftcmd</span><span class="p">);}</span>
+   <span class="nd">@Override</span>
+   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">turnRight</span><span class="p">()</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="p">{</span><span class="n">commSupport</span><span class="p">.</span><span class="na">request</span><span class="p">(</span><span class="n">VrobotMsgs</span><span class="p">.</span><span class="na">turnrightcmd</span><span class="p">);}</span>
+   <span class="nd">@Override</span>
+   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">forward</span><span class="p">(</span><span class="kt">int</span> <span class="n">time</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="p">{</span>
+      <span class="n">String</span> <span class="n">result</span> <span class="o">=</span> <span class="n">commSupport</span><span class="p">.</span><span class="na">request</span><span class="p">(</span>  <span class="n">VrobotMsgs</span><span class="p">.</span><span class="na">forwardcmd</span><span class="p">.</span><span class="na">replace</span><span class="p">(</span><span class="s">&quot;TIME&quot;</span><span class="p">,</span><span class="s">&quot;&quot;</span><span class="o">+</span><span class="n">time</span><span class="p">)</span>  <span class="p">);</span>
+      <span class="k">if</span><span class="p">(</span> <span class="n">result</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="s">&quot;collision&quot;</span><span class="p">)</span>  <span class="p">){</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">CollisionException</span><span class="p">(</span>  <span class="p">)</span> <span class="p">;</span> <span class="p">}</span>
+   <span class="p">}</span>
+   <span class="nd">@Override</span>
+   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">backward</span><span class="p">(</span><span class="kt">int</span> <span class="n">time</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="p">{</span>
+      <span class="n">String</span> <span class="n">result</span> <span class="o">=</span> <span class="n">commSupport</span><span class="p">.</span><span class="na">request</span><span class="p">(</span>  <span class="n">VrobotMsgs</span><span class="p">.</span><span class="na">backwardcmd</span><span class="p">.</span><span class="na">replace</span><span class="p">(</span><span class="s">&quot;TIME&quot;</span><span class="p">,</span><span class="s">&quot;&quot;</span><span class="o">+</span><span class="n">time</span><span class="p">)</span>  <span class="p">);</span>
+      <span class="k">if</span><span class="p">(</span> <span class="n">result</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="s">&quot;collision&quot;</span><span class="p">)</span>  <span class="p">){</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">CollisionException</span><span class="p">(</span>  <span class="p">)</span> <span class="p">;</span> <span class="p">}</span>
+   <span class="p">}</span>
+   <span class="nd">@Override</span>
+   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">halt</span><span class="p">(</span> <span class="p">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="p">{</span> <span class="n">commSupport</span><span class="p">.</span><span class="na">request</span><span class="p">(</span>  <span class="n">VrobotMsgs</span><span class="p">.</span><span class="na">haltcmd</span>  <span class="p">);</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>La classe  <a class="reference internal" href="#unibo-supports-vrobothlmovesinteractionsynch"><span class="std std-ref">VrobotHLMovesInteractionSynch</span></a> realizza
+le mosse di alto livelo del robot usando l’implementazione di
+<a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-interfaces-interaction"><span class="std std-ref">unibo.basicomm23.interfaces.Interaction</span></a> che riceve nel costruttore.
+<a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-http-httpconnection"><span class="std std-ref">HttpConnection</span></a> è una di tali implementazioni.</p>
+<p>In prospettiva però, potremo anche sfruttare interazioni asincrone con il <em>VirtualRobot</em> usando le <em>WebSocket</em>.
+Una classe  (come ad esempio
+<a class="reference internal" href="Appl1-WSSprint3.html#unibo-supports-vrobothlmovesinteractionasynch"><span class="std std-ref">VrobotHLMovesInteractionAsynch</span></a>)  realizzerà
+le mosse di alto livelo del robot  usando il supporto <span class="xref std std-ref">WsConnection</span> per le interazioni con <em>WEnv</em>.</p>
+<p><span class="slide1">Una Factory di supporti</span></p>
+<p>E’ quindi opportuno  introdurre anche una Factory
+con cui costruire l’opportuno oggetto di supporto alla comunicazione
+con il robot che implementa l’intefaccia <a class="reference internal" href="Appl1-HTTPSprint1.html#unibo-common-ivrobotmoves"><span class="std std-ref">IVrobotMoves</span></a>
+usando <code class="docutils literal notranslate"><span class="pre">HTTP</span></code> o <code class="docutils literal notranslate"><span class="pre">WS</span></code>.</p>
+</section>
+</section>
+<section id="unibo-supports-vrobothlsupportfactory">
+<h3>unibo.supports.VrobotHLSupportFactory<a class="headerlink" href="#unibo-supports-vrobothlsupportfactory" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">VrobotHLSupportFactory</span> <span class="p">{</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="n">IVrobotMoves</span> <span class="nf">create</span><span class="p">(</span><span class="n">String</span> <span class="n">hostIp</span><span class="p">,</span> <span class="n">ProtocolType</span> <span class="n">protocol</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="p">{</span>
+     <span class="k">if</span><span class="p">(</span> <span class="n">protocol</span> <span class="o">==</span> <span class="n">ProtocolType</span><span class="p">.</span><span class="na">http</span> <span class="p">)</span> <span class="k">return</span> <span class="n">supportForHTTP</span><span class="p">(</span><span class="n">hostIp</span><span class="p">);</span>
+     <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="n">protocol</span> <span class="o">==</span> <span class="n">ProtocolType</span><span class="p">.</span><span class="na">ws</span> <span class="p">)</span> <span class="k">return</span> <span class="n">supportForWS</span><span class="p">(</span><span class="n">hostIp</span><span class="p">);</span>
+     <span class="k">else</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">Exception</span><span class="p">(</span><span class="s">&quot;VrobotHLSupportFactory protocol not allowed&quot;</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="n">IVrobotMoves</span> <span class="nf">supportForHTTP</span><span class="p">(</span><span class="n">String</span> <span class="n">hostIp</span><span class="p">){</span>
+     <span class="n">Interaction</span> <span class="n">connToWEnv</span> <span class="o">=</span> <span class="n">HttpConnection</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="n">hostIp</span><span class="o">+</span><span class="s">&quot;:8090/api/move&quot;</span><span class="p">);</span>
+     <span class="k">return</span> <span class="k">new</span> <span class="n">VrobotHLMovesInteractionSynch</span><span class="p">(</span> <span class="n">connToWEnv</span>  <span class="p">);</span>
+  <span class="p">}</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="n">IVrobotMoves</span> <span class="nf">supportForWS</span><span class="p">(</span><span class="n">String</span> <span class="n">hostIp</span><span class="p">){</span>
+     <span class="n">Interaction</span> <span class="n">connToWEnv</span> <span class="o">=</span> <span class="n">WsConnection</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="n">hostIp</span><span class="o">+</span><span class="s">&quot;:8091&quot;</span><span class="p">);</span>
+     <span class="k">return</span> <span class="k">new</span> <span class="n">VrobotHLMovesInteractionAsynch</span><span class="p">(</span> <span class="n">connToWEnv</span>  <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><span class="slide1">Appl1Core</span></p>
+</section>
+<section id="appl1core-sprint3">
+<h3>Appl1Core Sprint3<a class="headerlink" href="#appl1core-sprint3" title="Permalink to this headline">¶</a></h3>
+<p><span class="slide1">Una modifica radicale solo riconfigurando</span></p>
+<p>Per ottenere una nuova versione di <a class="reference internal" href="Appl1-HTTPSprint2.html#appl1core"><span class="std std-ref">Appl1Core</span></a> che sfrutta i nuovi supporti basati su
+<a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-interfaces-interaction"><span class="std std-ref">Interaction</span></a>, è sufficiente modificare
+la fase di configurazione del POJO applicativo.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="k">class</span> <span class="nc">Appl1Core</span> <span class="n">extends</span> <span class="n">java</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">Observable</span> <span class="n">implements</span> <span class="n">IAppl1Core</span> <span class="p">{</span>
+<span class="n">protected</span> <span class="n">IVrobotMoves</span> <span class="n">vr</span> <span class="p">;</span>
+<span class="o">...</span>
+ <span class="n">protected</span> <span class="n">void</span> <span class="n">configure</span><span class="p">(){</span>
+   <span class="n">readConfigFromFile</span><span class="p">();</span>
+ <span class="p">}</span>
+ <span class="n">protected</span> <span class="n">void</span> <span class="n">readConfigFromFile</span><span class="p">()</span> <span class="n">throws</span> <span class="ne">Exception</span><span class="p">{</span>
+     <span class="n">File</span> <span class="n">cfgfile</span>          <span class="o">=</span> <span class="n">new</span> <span class="n">File</span><span class="p">(</span><span class="s2">&quot;sprint3Config.json&quot;</span><span class="p">);</span>
+     <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="n">new</span> <span class="n">BufferedReader</span><span class="p">(</span><span class="n">new</span> <span class="n">FileReader</span><span class="p">(</span><span class="n">cfgfile</span><span class="p">));</span>
+     <span class="n">String</span> <span class="n">currentLine</span>    <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">readLine</span><span class="p">();</span>
+     <span class="n">CommUtils</span><span class="o">.</span><span class="n">outblue</span><span class="p">(</span><span class="s2">&quot;Appl1Core currentLine=&quot;</span> <span class="o">+</span> <span class="n">currentLine</span><span class="p">);</span>
+     <span class="n">JSONObject</span> <span class="n">cj</span>         <span class="o">=</span> <span class="n">CommUtils</span><span class="o">.</span><span class="n">parseForJson</span><span class="p">(</span><span class="n">currentLine</span><span class="p">);</span>
+     <span class="n">vitualRobotIp</span>         <span class="o">=</span> <span class="n">cj</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;virtualrobotip&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">toString</span><span class="p">();</span>
+     <span class="n">String</span> <span class="n">vrconn</span>         <span class="o">=</span> <span class="n">cj</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;virtualrobotconn&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">toString</span><span class="p">();</span>
+     <span class="k">if</span><span class="p">(</span> <span class="n">vrconn</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="s2">&quot;ws&quot;</span><span class="p">))</span>
+         <span class="n">vr</span> <span class="o">=</span> <span class="n">VrobotHLSupportFactory</span><span class="o">.</span><span class="n">supportForWS</span><span class="p">(</span><span class="n">vitualRobotIp</span><span class="p">);</span>
+     <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="n">vrconn</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="s2">&quot;http&quot;</span><span class="p">))</span>
+         <span class="n">vr</span> <span class="o">=</span> <span class="n">VrobotHLSupportFactory</span><span class="o">.</span><span class="n">supportForHTTP</span><span class="p">(</span><span class="n">vitualRobotIp</span><span class="p">);</span>
+
+ <span class="p">}</span>
+
+   <span class="o">...</span>
+
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="sprint3config-json">
+<h4>Sprint3Config.json<a class="headerlink" href="#sprint3config-json" title="Permalink to this headline">¶</a></h4>
+<p>La configurazione viene fissata leggendo informazioni da un file di nome <code class="docutils literal notranslate"><span class="pre">Sprint3Config.json</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;virtualrobotip&quot;</span><span class="p">:</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="s2">&quot;virtualrobotconn&quot;</span><span class="p">:</span><span class="s2">&quot;http&quot;</span><span class="p">,</span> <span class="s2">&quot;steptime&quot;</span><span class="p">:</span><span class="s2">&quot;350&quot;</span><span class="p">,</span>
+                                 <span class="s2">&quot;pathobs&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span> <span class="s2">&quot;robotstateobs&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Il metodo di configurazione viene ora invocato da <code class="docutils literal notranslate"><span class="pre">start</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>public class Appl1Core extends java.util.Observable implements IAppl1Core {
+protected IVrobotMoves vr ;
+...
+  public Appl1Core(){
+  }
+
+ @Override
+ public void start(   ) throws Exception {
+     if( ! started || ! isRunning){
+         started   = true;
+         stopped   = false;
+         configure();
+         walkAtBoundary();
+      }else CommUtils.outred(&quot;Appl1Core |  already started&quot;);
+ }
+</pre></div>
+</div>
+<p>Notiamo che <span class="xref std std-ref">ApplCore Sprint3</span> è un POJO capace di inviare messaggi. Non è  un
+<a class="reference internal" href="Principi.html#interazioni-dal-punto-di-vista-applicativo"><span class="std std-ref">attore</span></a> in
+quanto non ha un flusso di controllo autonomo e non è in grado di ricevere messaggi.</p>
+<p><span class="slide1">Appl1 verso actor</span></p>
+</section>
+</section>
+</section>
+<section id="appl1">
+<h2>Appl1<a class="headerlink" href="#appl1" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">unibo.appl1.http.Appl1</span></code> è il componente che funge da <a class="reference internal" href="Principi.html#interazioni-dal-punto-di-vista-applicativo"><span class="std std-ref">attore</span></a>
+a livello applicativo avvalendosi di un server.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="k">class</span> <span class="nc">Appl1</span> <span class="p">{</span>
+   <span class="n">private</span> <span class="n">IAppl1Core</span> <span class="n">appl1Core</span><span class="p">;</span>
+   <span class="n">private</span> <span class="n">ServerFactory</span> <span class="n">server</span><span class="p">;</span>
+
+   <span class="n">public</span> <span class="n">Appl1</span><span class="p">(</span><span class="n">IAppl1Core</span> <span class="n">appl1Core</span><span class="p">){</span>
+      <span class="n">this</span><span class="o">.</span><span class="n">appl1Core</span> <span class="o">=</span> <span class="n">appl1Core</span><span class="p">;</span>
+      <span class="n">IApplMsgHandler</span> <span class="n">applMsgHandler</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Appl1MsgHandler</span><span class="p">(</span><span class="s2">&quot;Appl1MsgHandler&quot;</span><span class="p">,</span> <span class="n">appl1Core</span><span class="p">);</span>
+      <span class="n">server</span> <span class="o">=</span> <span class="n">new</span> <span class="n">ServerFactory</span><span class="p">(</span>
+         <span class="s2">&quot;appl1Server&quot;</span><span class="p">,</span><span class="n">Appl1Config</span><span class="o">.</span><span class="n">port</span><span class="p">,</span> <span class="n">Appl1Config</span><span class="o">.</span><span class="n">protocol</span><span class="p">,</span> <span class="n">applMsgHandler</span><span class="p">);</span>
+   <span class="p">}</span>
+
+   <span class="n">public</span> <span class="n">void</span> <span class="n">start</span><span class="p">(){</span>
+      <span class="n">CommUtils</span><span class="o">.</span><span class="n">outgreen</span><span class="p">(</span><span class="s2">&quot;Appl1 | start&quot;</span>  <span class="p">);</span>
+      <span class="n">server</span><span class="o">.</span><span class="n">start</span><span class="p">();</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Ricordando quanto detto per il supporto <a class="reference internal" href="unibo.basicomm23.html#serverfactory"><span class="std std-ref">ServerFactory</span></a>, l’applicatin designer deve definire il gestore
+dei messaggi ricevuti dal server.</p>
+<section id="unibo-appl1-http-appl1msghandler">
+<h3>unibo.appl1.http.Appl1MsgHandler<a class="headerlink" href="#unibo-appl1-http-appl1msghandler" title="Permalink to this headline">¶</a></h3>
+<a class="reference internal image-reference" href="_images/Appl1MsgHandler.png"><img alt="_images/Appl1MsgHandler.png" class="align-center" src="_images/Appl1MsgHandler.png" style="width: 65%;" /></a>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="k">class</span> <span class="nc">Appl1MsgHandler</span> <span class="n">extends</span> <span class="n">ApplMsgHandler</span> <span class="p">{</span>
+   <span class="n">private</span> <span class="n">IAppl1Core</span> <span class="n">appl1Core</span> <span class="p">;</span>
+
+   <span class="n">public</span> <span class="n">Appl1MsgHandler</span><span class="p">(</span><span class="n">String</span> <span class="n">name</span><span class="p">,</span> <span class="n">IAppl1Core</span> <span class="n">appl1Core</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nb">super</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
+      <span class="n">this</span><span class="o">.</span><span class="n">appl1Core</span> <span class="o">=</span> <span class="n">appl1Core</span><span class="p">;</span>
+   <span class="p">}</span>
+   <span class="nd">@Override</span>
+   <span class="n">public</span> <span class="n">void</span> <span class="n">elaborate</span><span class="p">(</span><span class="n">IApplMessage</span> <span class="n">msg</span><span class="p">,</span> <span class="n">Interaction</span> <span class="n">conn</span><span class="p">)</span> <span class="p">{</span>
+
+      <span class="k">if</span><span class="p">(</span> <span class="n">msg</span><span class="o">.</span><span class="n">msgContent</span><span class="p">()</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">)){</span>
+            <span class="n">new</span> <span class="n">Thread</span><span class="p">(){</span>
+               <span class="n">public</span> <span class="n">void</span> <span class="n">run</span><span class="p">()</span> <span class="p">{</span>
+                  <span class="k">try</span> <span class="p">{</span>
+                        <span class="n">appl1Core</span><span class="o">.</span><span class="n">start</span><span class="p">();</span>
+                  <span class="p">}</span> <span class="n">catch</span> <span class="p">(</span><span class="ne">Exception</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span><span class="o">...</span> <span class="p">}</span>
+               <span class="p">}</span>
+            <span class="p">}</span><span class="o">.</span><span class="n">start</span><span class="p">();</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="n">msg</span><span class="o">.</span><span class="n">msgContent</span><span class="p">()</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;stop&quot;</span><span class="p">)){</span>
+            <span class="n">appl1Core</span><span class="o">.</span><span class="n">stop</span><span class="p">();</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="n">msg</span><span class="o">.</span><span class="n">msgContent</span><span class="p">()</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;resume&quot;</span><span class="p">)){</span>
+            <span class="n">appl1Core</span><span class="o">.</span><span class="n">resume</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="o">...</span>
+   <span class="p">}</span>
+</pre></div>
+</div>
+<p><span class="slide1">Interazioni CmdConsole -&gt; Appl1</span></p>
+</section>
+</section>
+<section id="interazioni-cmdconsole-appl1">
+<h2>Interazioni CmdConsole-Appl1<a class="headerlink" href="#interazioni-cmdconsole-appl1" title="Permalink to this headline">¶</a></h2>
+<p>Affrontiamo ora le interazioni <span class="remark">CmdConsole –&gt; Appl1</span>, osservando che:</p>
+<ul class="simple">
+<li><p><em>CmdConsole</em> deve diventare un actor che interagisce con un utente umano e che invia comandi ad <code class="docutils literal notranslate"><span class="pre">Appl1</span></code>
+usando un protocollo <code class="docutils literal notranslate"><span class="pre">P</span></code> tra quelli definiti in <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-msg-protocoltype"><span class="std std-ref">ProtocolType</span></a>.</p></li>
+</ul>
+<section id="cmdconsole-sprint3">
+<h3>CmdConsole Sprint3<a class="headerlink" href="#cmdconsole-sprint3" title="Permalink to this headline">¶</a></h3>
+<p>Dopo colloquio con il committente, si è convenuto di usare <code class="docutils literal notranslate"><span class="pre">TCP</span></code>.</p>
+</section>
+<section id="unibo-appl1-interaction-cmdconsoleremote">
+<h3>unibo.appl1.interaction.CmdConsoleRemote<a class="headerlink" href="#unibo-appl1-interaction-cmdconsoleremote" title="Permalink to this headline">¶</a></h3>
+<p><em>CmdConsoleRemote</em> estende l’abilitatore <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-enablers-actornaivecaller"><span class="std std-ref">ActorNaiveCaller</span></a>
+che stabilsce una <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-interfaces-interaction"><span class="std std-ref">Interconnessione</span></a> con <a class="reference internal" href="#appl1"><span class="std std-ref">Appl1</span></a>
+usando il <code class="docutils literal notranslate"><span class="pre">protocol</span></code> dato.</p>
+<p>La classe specializza <a class="reference internal" href="unibo.basicomm23.html#actornaivecaller"><span class="std std-ref">ActorNaiveCaller</span></a> realizza una semplice GUI Java, che si presenta all’utente come segue:</p>
+<a class="reference internal image-reference" href="_images/CmdConsole.png"><img alt="_images/CmdConsole.png" src="_images/CmdConsole.png" style="width: 20%;" /></a>
+<p>La classe è definita come un <code class="docutils literal notranslate"><span class="pre">java.util.Observer</span></code> il cui metodo <code class="docutils literal notranslate"><span class="pre">update</span></code> viene invocato
+dal <code class="docutils literal notranslate"><span class="pre">java.awt.event.ActionListener</span></code> realizzato da <code class="docutils literal notranslate"><span class="pre">ButtonAsGui</span></code> che
+estende <code class="docutils literal notranslate"><span class="pre">java.util.Observable</span></code> e che crea i pulsanti su un <code class="docutils literal notranslate"><span class="pre">java.awt.Frame</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="k">class</span> <span class="nc">CmdConsoleRemote</span> <span class="n">extends</span> <span class="n">ActorNaiveCaller</span> <span class="n">implements</span>  <span class="n">Observer</span><span class="p">{</span>
+<span class="n">private</span> <span class="n">String</span><span class="p">[]</span> <span class="n">buttonLabels</span>  <span class="o">=</span> <span class="n">new</span> <span class="n">String</span><span class="p">[]</span> <span class="p">{</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="s2">&quot;stop&quot;</span><span class="p">,</span> <span class="s2">&quot;resume&quot;</span><span class="p">,</span> <span class="s2">&quot;getpath&quot;</span> <span class="p">};</span>
+<span class="n">private</span> <span class="n">String</span> <span class="n">myName</span><span class="p">;</span>
+<span class="n">private</span> <span class="n">IApplMessage</span> <span class="n">curMsg</span><span class="p">;</span>
+<span class="n">private</span> <span class="n">IApplMessage</span> <span class="n">applRunningRequest</span><span class="p">,</span> <span class="n">applGetPathRequest</span> <span class="p">;</span>
+
+   <span class="n">public</span> <span class="n">CmdConsoleRemote</span><span class="p">(</span><span class="n">String</span> <span class="n">name</span><span class="p">,</span> <span class="n">ProtocolType</span> <span class="n">protocol</span><span class="p">,</span> <span class="n">String</span> <span class="n">hostAddr</span><span class="p">,</span> <span class="n">String</span> <span class="n">entry</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nb">super</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">protocol</span><span class="p">,</span>   <span class="n">hostAddr</span><span class="p">,</span>   <span class="n">entry</span><span class="p">);</span>
+      <span class="n">ButtonAsGui</span> <span class="n">concreteButton</span> <span class="o">=</span> <span class="n">ButtonAsGui</span><span class="o">.</span><span class="n">createButtons</span><span class="p">(</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">buttonLabels</span> <span class="p">);</span>
+      <span class="n">concreteButton</span><span class="o">.</span><span class="n">addObserver</span><span class="p">(</span> <span class="n">this</span> <span class="p">);</span>
+      <span class="n">this</span><span class="o">.</span><span class="n">myName</span>       <span class="o">=</span> <span class="n">name</span><span class="p">;</span>
+      <span class="n">applRunningRequest</span> <span class="o">=</span> <span class="n">CommUtils</span><span class="o">.</span><span class="n">buildRequest</span><span class="p">(</span><span class="s2">&quot;gui&quot;</span><span class="p">,</span> <span class="s2">&quot;isrunning&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="n">myName</span><span class="p">);</span>
+      <span class="n">applGetPathRequest</span> <span class="o">=</span> <span class="n">CommUtils</span><span class="o">.</span><span class="n">buildRequest</span><span class="p">(</span><span class="s2">&quot;gui&quot;</span><span class="p">,</span> <span class="s2">&quot;getpath&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="n">myName</span><span class="p">);</span>
+   <span class="p">}</span>
+
+   <span class="nd">@Override</span>
+   <span class="n">protected</span> <span class="n">void</span> <span class="n">body</span><span class="p">()</span> <span class="n">throws</span> <span class="ne">Exception</span> <span class="p">{</span>
+      <span class="n">connect</span><span class="p">();</span>
+      <span class="n">CommUtils</span><span class="o">.</span><span class="n">outmagenta</span><span class="p">(</span><span class="s2">&quot;CmdConsoleRemote simply reacts to buttons&quot;</span><span class="p">);</span>
+   <span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="cmdconsoleremote-update">
+<h3>CmdConsoleRemote.update<a class="headerlink" href="#cmdconsoleremote-update" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@Override</span>
+<span class="n">public</span> <span class="n">void</span> <span class="n">update</span><span class="p">(</span> <span class="n">Observable</span> <span class="n">o</span> <span class="p">,</span> <span class="n">Object</span> <span class="n">arg</span> <span class="p">)</span> <span class="p">{</span>
+ <span class="k">try</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span> <span class="n">connSupport</span> <span class="o">==</span> <span class="n">null</span> <span class="p">){</span>
+          <span class="n">CommUtils</span><span class="o">.</span><span class="n">outred</span><span class="p">(</span><span class="s2">&quot; CmdConsoleRemote | Please start Appl1HTTPSprint3&quot;</span>   <span class="p">);</span>
+          <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">String</span> <span class="n">move</span> <span class="o">=</span> <span class="n">arg</span><span class="o">.</span><span class="n">toString</span><span class="p">();</span>
+        <span class="k">if</span><span class="p">(</span> <span class="n">move</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="s2">&quot;getpath&quot;</span><span class="p">))</span> <span class="p">{</span>  <span class="o">//</span><span class="n">RICHIESTA</span> <span class="n">DI</span> <span class="n">INFO</span>
+          <span class="n">String</span> <span class="n">answer</span> <span class="o">=</span> <span class="n">connSupport</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">applRunningRequest</span><span class="o">.</span><span class="n">toString</span><span class="p">());</span>
+          <span class="n">String</span> <span class="n">curPathAnswer</span> <span class="o">=</span> <span class="n">connSupport</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">applGetPathRequest</span><span class="o">.</span><span class="n">toString</span><span class="p">());</span>
+          <span class="n">IApplMessage</span> <span class="n">answMsg</span> <span class="o">=</span> <span class="n">new</span> <span class="n">ApplMessage</span><span class="p">(</span><span class="n">answer</span><span class="p">);</span>
+          <span class="n">IApplMessage</span> <span class="n">pathMsg</span> <span class="o">=</span> <span class="n">new</span> <span class="n">ApplMessage</span><span class="p">(</span><span class="n">curPathAnswer</span><span class="p">);</span>
+          <span class="n">String</span> <span class="n">path</span>          <span class="o">=</span> <span class="n">pathMsg</span><span class="o">.</span><span class="n">msgContent</span><span class="p">();</span>
+          <span class="k">if</span> <span class="p">(</span><span class="n">answMsg</span><span class="o">.</span><span class="n">msgContent</span><span class="p">()</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="s2">&quot;true&quot;</span><span class="p">))</span> <span class="p">{</span>
+                  <span class="n">CommUtils</span><span class="o">.</span><span class="n">outmagenta</span><span class="p">(</span><span class="s2">&quot;CURRENT PATH=&quot;</span><span class="o">+</span> <span class="n">path</span><span class="p">);</span>
+          <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+                  <span class="n">String</span> <span class="n">spath</span> <span class="o">=</span> <span class="n">CommUtils</span><span class="o">.</span><span class="n">restoreFromConvertToSend</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
+                  <span class="n">CommUtils</span><span class="o">.</span><span class="n">outmagenta</span><span class="p">(</span><span class="s2">&quot;FINAL PATH=&quot;</span><span class="o">+</span> <span class="n">spath</span><span class="p">);</span>
+                <span class="p">}</span>
+        <span class="p">}</span><span class="k">else</span> <span class="p">{</span> <span class="o">//</span><span class="n">COMANDO</span>
+                <span class="n">curMsg</span> <span class="o">=</span> <span class="n">CommUtils</span><span class="o">.</span><span class="n">buildDispatch</span><span class="p">(</span><span class="s2">&quot;gui&quot;</span><span class="p">,</span> <span class="n">move</span><span class="p">,</span> <span class="n">move</span><span class="p">,</span> <span class="n">myName</span><span class="p">);</span>
+                <span class="n">connSupport</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">curMsg</span><span class="o">.</span><span class="n">toString</span><span class="p">());</span>
+        <span class="p">}</span>
+ <span class="p">}</span> <span class="n">catch</span> <span class="p">(</span><span class="ne">Exception</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span><span class="o">...</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Si ricorda <a class="reference internal" href="unibo.basicomm23.html#metodi-per-modificare-stringhe-messaggio"><span class="std std-ref">restoreFromConvertToSend</span></a></p>
+</section>
+<section id="appl1-httpsprint3-architettura-finale">
+<h3>Appl1-HTTPSprint3: architettura finale<a class="headerlink" href="#appl1-httpsprint3-architettura-finale" title="Permalink to this headline">¶</a></h3>
+<a class="reference internal image-reference" href="_images/Appl1FinalArchitecture.png"><img alt="_images/Appl1FinalArchitecture.png" src="_images/Appl1FinalArchitecture.png" style="width: 100%;" /></a>
+</section>
+</section>
+<section id="console-che-riceve-informazioni">
+<h2>Console che riceve informazioni<a class="headerlink" href="#console-che-riceve-informazioni" title="Permalink to this headline">¶</a></h2>
+<p>Osserviamo che la <a class="reference internal" href="#cmdconsole-sprint3"><span class="std std-ref">CmdConsole Sprint3</span></a> è in grado di chiedere informazioni a <a class="reference internal" href="#appl1"><span class="std std-ref">Appl1</span></a>
+inivando richieste e visualizzando le risposte.</p>
+<p>A questo fine il metodo <code class="docutils literal notranslate"><span class="pre">elaborate</span></code> di <a class="reference internal" href="#unibo-appl1-http-appl1msghandler"><span class="std std-ref">unibo.appl1.http.Appl1MsgHandler</span></a> deve gestire le richieste
+e inviare le risposte.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="k">class</span> <span class="nc">Appl1MsgHandler</span> <span class="n">extends</span> <span class="n">ApplMsgHandler</span> <span class="p">{</span>
+ <span class="o">....</span>
+
+ <span class="nd">@Override</span>
+ <span class="n">public</span> <span class="n">void</span> <span class="n">elaborate</span><span class="p">(</span><span class="n">IApplMessage</span> <span class="n">msg</span><span class="p">,</span> <span class="n">Interaction</span> <span class="n">conn</span><span class="p">)</span> <span class="p">{</span>
+   <span class="o">...</span>
+   <span class="k">if</span><span class="p">(</span> <span class="n">msg</span><span class="o">.</span><span class="n">isRequest</span><span class="p">()</span> <span class="p">){</span>
+      <span class="k">if</span><span class="p">(</span> <span class="n">msg</span><span class="o">.</span><span class="n">msgId</span><span class="p">()</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="s2">&quot;isrunning&quot;</span><span class="p">)){</span>
+         <span class="n">boolean</span> <span class="n">answer</span> <span class="o">=</span> <span class="n">appl1Core</span><span class="o">.</span><span class="n">isRunning</span><span class="p">();</span>
+         <span class="o">//</span><span class="n">Creo</span> <span class="n">e</span> <span class="n">invio</span> <span class="n">reply</span>
+         <span class="n">IApplMessage</span> <span class="n">reply</span> <span class="o">=</span> <span class="n">CommUtils</span><span class="o">.</span><span class="n">buildReply</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">.</span><span class="n">toLowerCase</span><span class="p">(</span><span class="n">Locale</span><span class="o">.</span><span class="n">ROOT</span><span class="p">),</span> <span class="s2">&quot;isrunninganswer&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="o">+</span><span class="n">answer</span><span class="p">,</span> <span class="n">msg</span><span class="o">.</span><span class="n">msgSender</span><span class="p">());</span>
+         <span class="k">try</span> <span class="p">{</span>
+            <span class="n">conn</span><span class="o">.</span><span class="n">reply</span><span class="p">(</span><span class="n">reply</span><span class="o">.</span><span class="n">toString</span><span class="p">());</span>
+         <span class="p">}</span> <span class="n">catch</span> <span class="p">(</span><span class="ne">Exception</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span><span class="o">...</span> <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="k">if</span><span class="p">(</span> <span class="n">msg</span><span class="o">.</span><span class="n">msgId</span><span class="p">()</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="s2">&quot;getpath&quot;</span><span class="p">)){</span>
+         <span class="n">String</span> <span class="n">curPath</span> <span class="o">=</span> <span class="n">CommUtils</span><span class="o">.</span><span class="n">convertToSend</span><span class="p">(</span> <span class="n">appl1Core</span><span class="o">.</span><span class="n">getCurrentPath</span><span class="p">()</span> <span class="p">);</span>
+         <span class="o">//</span><span class="n">Creo</span> <span class="n">e</span> <span class="n">invio</span> <span class="n">reply</span>
+         <span class="n">IApplMessage</span> <span class="n">reply</span> <span class="o">=</span> <span class="n">CommUtils</span><span class="o">.</span><span class="n">buildReply</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">.</span><span class="n">toLowerCase</span><span class="p">(</span><span class="n">Locale</span><span class="o">.</span><span class="n">ROOT</span><span class="p">),</span> <span class="s2">&quot;getpathanswer&quot;</span><span class="p">,</span>  <span class="n">curPath</span> <span class="p">,</span> <span class="n">msg</span><span class="o">.</span><span class="n">msgSender</span><span class="p">());</span>
+         <span class="k">try</span> <span class="p">{</span>
+            <span class="n">conn</span><span class="o">.</span><span class="n">reply</span><span class="p">(</span><span class="n">reply</span><span class="o">.</span><span class="n">toString</span><span class="p">()</span> <span class="p">);</span>
+         <span class="p">}</span> <span class="n">catch</span> <span class="p">(</span><span class="ne">Exception</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span><span class="o">...</span> <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="k">return</span><span class="p">;</span>
+   <span class="p">}</span>
+</pre></div>
+</div>
+<p><span class="slide">Distribuzione</span></p>
+</section>
+<section id="distribuzione-httpsprint3">
+<h2>Distribuzione HTTPSprint3<a class="headerlink" href="#distribuzione-httpsprint3" title="Permalink to this headline">¶</a></h2>
+<p>Main program senza attivazione di Console.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="k">class</span> <span class="nc">Appl1HTTPSprint3</span> <span class="p">{</span>
+   <span class="o">...</span>
+   <span class="n">public</span> <span class="n">void</span> <span class="n">configureTheSystem</span><span class="p">()</span> <span class="n">throws</span> <span class="ne">Exception</span> <span class="p">{</span>
+     <span class="o">//</span><span class="n">Create</span> <span class="n">the</span> <span class="n">application</span>
+     <span class="n">IAppl1Core</span> <span class="n">applCore</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Appl1Core</span><span class="p">();</span>
+     <span class="n">Appl1</span> <span class="n">appl</span>          <span class="o">=</span> <span class="n">new</span> <span class="n">Appl1</span><span class="p">(</span><span class="n">applCore</span><span class="p">);</span>
+     <span class="n">appl</span><span class="o">.</span><span class="n">start</span><span class="p">();</span>
+   <span class="p">}</span>
+   <span class="n">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">main</span><span class="p">(</span> <span class="n">String</span><span class="p">[]</span> <span class="n">args</span> <span class="p">)</span> <span class="n">throws</span> <span class="ne">Exception</span> <span class="p">{</span>
+     <span class="n">Appl1HTTPSprint3</span> <span class="n">appl</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Appl1HTTPSprint3</span><span class="p">();</span>
+     <span class="n">appl</span><span class="o">.</span><span class="n">configureTheSystem</span><span class="p">();</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ol class="arabic">
+<li><p>Controllare il file di configurazione <a class="reference internal" href="#sprint3config-json"><span class="std std-ref">Sprint3Config.json</span></a> con</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;virtualrobotip&quot;</span><span class="p">:</span><span class="s2">&quot;192.168.1.132&quot;</span>   <span class="o">//</span><span class="n">NON</span> <span class="n">LOCAL</span> <span class="n">hostAddr</span>
+</pre></div>
+</div>
+</li>
+<li><p><span class="remark">PROVARE L’APPLICAZIONE</span></p></li>
+<li><p>In <code class="docutils literal notranslate"><span class="pre">build.gradle</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">application</span> <span class="p">{</span>
+   <span class="o">//</span> <span class="n">Define</span> <span class="n">the</span> <span class="n">main</span> <span class="k">class</span> <span class="nc">for</span> <span class="n">the</span> <span class="n">application</span><span class="o">.</span>
+   <span class="n">mainClass</span> <span class="o">=</span> <span class="s1">&#39;unibo.appl1.http.Appl1HTTPSprint3&#39;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Crea il file <code class="docutils literal notranslate"><span class="pre">application1/build/distributions/application1-1.0.tar</span></code></p>
+</li>
+<li><p>Eseguire:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gradlew</span> <span class="n">distTar</span>
+<span class="p">(</span><span class="n">gradlew</span> <span class="n">build</span> <span class="n">distTar</span> <span class="o">-</span><span class="n">x</span> <span class="n">test</span><span class="p">)</span>
+
+<span class="n">docker</span> <span class="n">build</span> <span class="o">-</span><span class="n">t</span> <span class="n">appl1httpsprint3</span><span class="p">:</span><span class="mf">1.0</span> <span class="o">.</span>   <span class="o">//</span><span class="n">NOTE</span> <span class="n">THE</span> <span class="n">DOT</span>
+
+<span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="o">-</span><span class="n">f</span> <span class="n">appl1httpsprint3</span><span class="o">.</span><span class="n">yaml</span> <span class="n">up</span>
+</pre></div>
+</div>
+</li>
+<li><p>Eseguire <code class="docutils literal notranslate"><span class="pre">unibo.console.gui.Appl1HttpSprint3CmdConsole</span></code></p></li>
+</ol>
+<p><span class="slide2">Copiare il file di configurazione nel container</span></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">cp</span> <span class="n">sprint3Config</span><span class="o">.</span><span class="n">json</span> <span class="mi">112</span><span class="n">b1f413aca</span><span class="p">:</span><span class="o">/</span><span class="n">application1</span><span class="o">-</span><span class="mf">1.0</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">sprint3Config</span><span class="o">.</span><span class="n">json</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Appl1-HTTPSprint3</a><ul>
+<li><a class="reference internal" href="#requisiti-sprint3">Requisiti SPRINT3</a><ul>
+<li><a class="reference internal" href="#refactoring-di-vrobothlmoveshttpapache">Refactoring di VrobotHLMovesHTTPApache</a><ul>
+<li><a class="reference internal" href="#unibo-supports-vrobothlmovesinteractionsynch">unibo.supports.VrobotHLMovesInteractionSynch</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#unibo-supports-vrobothlsupportfactory">unibo.supports.VrobotHLSupportFactory</a></li>
+<li><a class="reference internal" href="#appl1core-sprint3">Appl1Core Sprint3</a><ul>
+<li><a class="reference internal" href="#sprint3config-json">Sprint3Config.json</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#appl1">Appl1</a><ul>
+<li><a class="reference internal" href="#unibo-appl1-http-appl1msghandler">unibo.appl1.http.Appl1MsgHandler</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#interazioni-cmdconsole-appl1">Interazioni CmdConsole-Appl1</a><ul>
+<li><a class="reference internal" href="#cmdconsole-sprint3">CmdConsole Sprint3</a></li>
+<li><a class="reference internal" href="#unibo-appl1-interaction-cmdconsoleremote">unibo.appl1.interaction.CmdConsoleRemote</a></li>
+<li><a class="reference internal" href="#cmdconsoleremote-update">CmdConsoleRemote.update</a></li>
+<li><a class="reference internal" href="#appl1-httpsprint3-architettura-finale">Appl1-HTTPSprint3: architettura finale</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#console-che-riceve-informazioni">Console che riceve informazioni</a></li>
+<li><a class="reference internal" href="#distribuzione-httpsprint3">Distribuzione HTTPSprint3</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="unibo.basicomm23.html"
+                          title="previous chapter">unibo.basicomm23</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="Appl1-WSSprint3.html"
+                          title="next chapter">Appl1-WSSprint3</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Appl1-HTTPSprint3.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="Appl1-WSSprint3.html" title="Appl1-WSSprint3"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="unibo.basicomm23.html" title="unibo.basicomm23"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss23 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Appl1-HTTPSprint3</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+    </div>
+  </body>
+</html>

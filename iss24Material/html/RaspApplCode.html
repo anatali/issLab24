@@ -1,0 +1,356 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
+    <title>RaspApplCode &#8212; iss23 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    
+    <script src="_static/sidebar.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="RadarSystem23" href="RadarSystem23.html" />
+    <link rel="prev" title="RaspBasicCode" href="RaspBasicCode.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="RadarSystem23.html" title="RadarSystem23"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="RaspBasicCode.html" title="RaspBasicCode"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss23 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">RaspApplCode</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="raspapplcode">
+<h1>RaspApplCode<a class="headerlink" href="#raspapplcode" title="Permalink to this headline">¶</a></h1>
+<p>Premessa: <a class="reference internal" href="RaspberrySoftware.html#raspberrysoftware"><span class="std std-ref">RaspberrySoftware</span></a> e <a class="reference internal" href="RaspBasicCode.html#raspbasiccode"><span class="std std-ref">RaspBasicCode</span></a>.</p>
+<p><span class="slide1">Verifichiamo i dispositivi</span></p>
+<p>Riportiamo qui codice utile per sperimentare la coretta installazione del Led e del sonarHCSR04
+su RaspberryPi.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">paho</span><span class="o">-</span><span class="n">mqtt</span>
+<span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="n">pip</span>
+<span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="n">matplotlib</span>
+</pre></div>
+</div>
+<section id="progetto-it-unibo-raspintro2023">
+<h2>Progetto <em>it.unibo.raspIntro2023</em><a class="headerlink" href="#progetto-it-unibo-raspintro2023" title="Permalink to this headline">¶</a></h2>
+<section id="software-per-il-led">
+<h3>Software per il Led<a class="headerlink" href="#software-per-il-led" title="Permalink to this headline">¶</a></h3>
+<table class="colwidths-given docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference external" href="../../it.unibo.raspIntro2023/code/bash/bls/led25GpioTurnOn.sh">led25GpioTurnOn.sh</a>, <a class="reference external" href="../../it.unibo.raspIntro2023/code/bash/bls/led25GpioTurnOff.sh">led25GpioTurnOff.sh</a></p></td>
+<td><p>Accensione/spegnimento in bash</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="../../it.unibo.raspIntro2023/code/bash/bls/led25OnOff.sh">led25OnOff.sh</a></p></td>
+<td><p>Blinking in bash</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="../../it.unibo.raspIntro2023/code/c/ledOnOff.c">ledOnOff.c</a></p></td>
+<td><p>Blinking in C</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="../../it.unibo.raspIntro2023/code/python/ledPython25.py">ledPython25.py</a></p></td>
+<td><p>Blinking in Python</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="software-per-il-sonar">
+<h3>Software per il Sonar<a class="headerlink" href="#software-per-il-sonar" title="Permalink to this headline">¶</a></h3>
+<p><span class="remark">ATTENZIONE</span>: per gli esempi in Python, si fa riferimento a <span class="slide2">Python3</span>. Si veda
+<a class="reference internal" href="RaspberrySoftware.html#installazione-del-modulo-gpio-per-python3"><span class="std std-ref">Installazione del modulo GPIO per Python3</span></a></p>
+<table class="colwidths-given docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference external" href="../../it.unibo.raspIntro2023/code/c/SonarAlone.c">SonarAlone.c</a></p></td>
+<td><p>Software per il <code class="docutils literal notranslate"><span class="pre">sonarHCSR04</span></code> scritto in C</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="../../it.unibo.raspIntro2023/code/python/Sonar.py">Sonar.py</a></p></td>
+<td><p>Software per il <code class="docutils literal notranslate"><span class="pre">sonarHCSR04</span></code> scritto in Python</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="../../it.unibo.raspIntro2023/code/python/SonarMqtt.py">SonarMqtt.py</a>  <span class="slide2">LOGICAMENTE ERRATO</span></p></td>
+<td><p>Software per il <code class="docutils literal notranslate"><span class="pre">sonarHCSR04</span></code> scritto in Python che pubblica sul broker MQTT
+<span class="brown">mqtt.eclipseprojects.io</span> TOPIC= <span class="blue">unibo/sonar/events</span> l’evento
+<code class="docutils literal notranslate"><span class="pre">msg(sonardata,event,sonar,none,distance(D),N)</span></code>.</p>
+<p>Si veda <a class="reference external" href="../../it.unibo.raspIntro2023/code/python/mqttPlotQakEvents.py">mqttPlotQakEvents.py</a> e <a class="reference external" href="../../unibo.radarqak23/src/radargui23.qak">radargui23.qak</a> possibili receiver.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="../../it.unibo.raspIntro2023/code/python/pipes/ControllerMqtt.py">ControllerMqtt.py</a></p></td>
+<td><p>Un controller che libera il Sonar da compiti di interazione applicativa.
+Da usarsi in una pipe insieme a <a class="reference external" href="../../it.unibo.raspIntro2023/code/python/pipes/LedDevice.py">LedDevice.py</a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">sonar</span><span class="o">.</span><span class="n">py</span> <span class="o">|</span> <span class="n">python</span> <span class="n">ControllerMqtt</span><span class="o">.</span><span class="n">py</span> <span class="o">|</span> <span class="n">python</span> <span class="n">LedDevice</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="../../it.unibo.raspIntro2023/code/python/pipes/mqttReceiver.py">mqttReceiver.py</a></p></td>
+<td><p>Un ricevitore che fa subscribe a TOPIC= <span class="blue">unibo/sonar/events</span> per visualizzare
+i dati emessi dal Sonar</p></td>
+</tr>
+</tbody>
+</table>
+<p><span class="slide1">Costruiamo applicazioni</span></p>
+</section>
+<section id="software-lowlevel-per-il-radarsystem">
+<h3>Software lowlevel per il RadarSystem<a class="headerlink" href="#software-lowlevel-per-il-radarsystem" title="Permalink to this headline">¶</a></h3>
+<table class="colwidths-given docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference external" href="../../it.unibo.raspIntro2023/code/radarSystem/LedControl.py">LedControl.py</a> <span class="slide2">LOGICAMENTE ERRATO</span></p></td>
+<td><p>Software per controllo del Led in <a class="reference external" href="https://it.wikipedia.org/wiki/Pipe_(informatica)">Pipe</a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">sonar</span><span class="o">.</span><span class="n">py</span> <span class="o">|</span> <span class="n">python</span> <span class="n">LedControl</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="../../unibo.radarqak23/src/radargui23.qak">radargui23.qak</a></p></td>
+<td><p>Modello qak per il radar che percepisce eventi <code class="docutils literal notranslate"><span class="pre">sonardata:distance(D)</span></code> emessi da
+<a class="reference external" href="../../it.unibo.raspIntro2023/code/python/SonarMqtt.py">SonarMqtt.py</a></p>
+<a class="reference internal image-reference" href="_images/radarguiqak23.png"><img alt="_images/radarguiqak23.png" src="_images/radarguiqak23.png" style="width: 50%;" /></a>
+<p>Sistema che accende il Led e aggiorna il radarDisplay inviando eventi via MQTT:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">sonar</span><span class="o">.</span><span class="n">py</span> <span class="o">|</span> <span class="n">python</span> <span class="n">ControllerMqtt</span><span class="o">.</span><span class="n">py</span> <span class="o">|</span> <span class="n">python</span> <span class="n">LedDevice</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="slide">Da Python-code ad attori</span></p>
+</section>
+<section id="sonar-e-led-come-attori">
+<h3>Sonar e Led come attori<a class="headerlink" href="#sonar-e-led-come-attori" title="Permalink to this headline">¶</a></h3>
+<p>Il software di basso livello viene inglobato all’interno di attori qak che
+possono sfruttare la infrastruttura qak per interagire tra loro, in locale
+e/o in remoto, in modo <em>technology-independent</em>.</p>
+<section id="progetto-unibo-sonarqak23">
+<h4>Progetto  unibo.sonarqak23<a class="headerlink" href="#progetto-unibo-sonarqak23" title="Permalink to this headline">¶</a></h4>
+<p>Sviluppiamo un sistema software che utilizza il <a class="reference internal" href="RaspBasicCode.html#usiamo-un-sonar-hc-sr04"><span class="std std-ref">SONAR HC-SR04</span></a> operando in tre fasi:</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="#sonarqak23-fase1"><span class="std std-ref">sonarqak23 Fase1</span></a>: predisposizione della gestione dei dispositivi.</p></li>
+<li><p><a class="reference internal" href="#sonarqak23-fase2"><span class="std std-ref">sonarqak23 Fase2</span></a>: interazione con il <a class="reference internal" href="BasicRobot23.html#basicrobot23"><span class="std std-ref">BasicRobot23</span></a>.</p></li>
+<li><p><a class="reference internal" href="#sonarqak23-fase3"><span class="std std-ref">sonarqak23 Fase3</span></a>: distribuzione su Raspberry Pi.</p></li>
+</ol>
+<p><span class="slide1">Fase1</span></p>
+<section id="sonarqak23-fase1">
+<h5>sonarqak23 Fase1<a class="headerlink" href="#sonarqak23-fase1" title="Permalink to this headline">¶</a></h5>
+<table class="colwidths-given docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 70%" />
+<col style="width: 30%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><span class="slide2">GOAL Fase1</span>: Costruire un (sotto)sistema ad attori che utilizza
+il <a class="reference internal" href="RaspBasicCode.html#usiamo-un-sonar-hc-sr04"><span class="std std-ref">SONAR HC-SR04</span></a>.</p>
+<ol class="arabic simple">
+<li><p>Definizione del <a class="reference internal" href="QakActors23.html#codedqactor"><span class="std std-ref">CodedQActor</span></a> di nome <span class="blue">sonar</span> che opera come un simulatore del sonar
+(classe Kotlin <code class="docutils literal notranslate"><span class="pre">sonarSimulator</span></code>) o che esegue codice Python per la gestione di un sonar fisico
+<a class="reference internal" href="RaspBasicCode.html#usiamo-un-sonar-hc-sr04"><span class="std std-ref">SONAR HC-SR04</span></a> (classe Kotlin <a class="reference external" href="../../unibo.sonarqak23/src/kotlin/sonarHCSR04Support23.kt">sonarHCSR04Support23.kt</a>).
+Questo attore emmete l’evento locale
+<code class="docutils literal notranslate"><span class="pre">sonar:distance(D)</span></code> usando la primitiva <a class="reference internal" href="Actors23.html#emitlocalstreamevent"><span class="std std-ref">emitLocalStreamEvent</span></a>.</p></li>
+<li><p>Definizione dei <a class="reference internal" href="QakActors23.html#codedqactor"><span class="std std-ref">CodedQActor</span></a> di nome <span class="blue">dataCleaner</span> e <span class="blue">distancefilter</span> ciascuno dei quali
+opera come uno <a class="reference internal" href="QakActors23.html#streamedqactor"><span class="std std-ref">StreamedQActor</span></a>. Pertanto, essi sono usabili per costruire una pipe
+che ha  <span class="blue">sonar</span> come sorgente-dati e che provvede a eliminare dati spuri (<span class="blue">dataCleaner</span>)
+e a generare  (<span class="blue">distancefilter</span>) eventi significativi per il livello applicativo.</p></li>
+<li><p>Definizione di un attore <span class="blue">sonar23</span> che crea la pipe  <code class="docutils literal notranslate"><span class="pre">sonar-dataCleaner-distancefilter</span></code>
+per la gestione dei dati emessi dal <span class="blue">sonar</span>, e
+gestisce l’evento <strong>sonardata</strong> (emesso da <span class="blue">dataCleaner</span>)
+e l’evento locale <strong>obstacle</strong> (emesso da <span class="blue">distancefilter</span>).</p></li>
+<li><p>Esecuzione del sistema prima su PC (con <span class="blue">sonar</span> simulato) e poi sul Raspberry (prima con
+<span class="blue">sonar</span> simulato e poi con <span class="blue">sonar fisico</span>).</p></li>
+</ol>
+</td>
+<td><a class="reference internal image-reference" href="_images/ArchSonarqak23Fase1.png"><img alt="_images/ArchSonarqak23Fase1.png" src="_images/ArchSonarqak23Fase1.png" style="width: 100%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="slide1">Fase2</span></p>
+</section>
+<section id="sonarqak23-fase2">
+<h5>sonarqak23 Fase2<a class="headerlink" href="#sonarqak23-fase2" title="Permalink to this headline">¶</a></h5>
+<table class="colwidths-given docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><span class="slide2">GOAL Fase2</span>: muovere il <a class="reference internal" href="BasicRobot23.html#basicrobot23"><span class="std std-ref">BasicRobot23</span></a> e fermarlo quando il sonar rileva un ostacolo.</p>
+<ol class="arabic simple">
+<li><p>Il <span class="blue">sonar23</span> gestisce l’evento <strong>obstacle</strong> emettendo l’evento <code class="docutils literal notranslate"><span class="pre">alarm:alarm(obstacle)</span></code>.</p></li>
+<li><p>Definizione dell’attore di nome <span class="blue">appl</span> che muove il <a class="reference internal" href="BasicRobot23.html#basicrobot23"><span class="std std-ref">BasicRobot23</span></a> da HOME alla
+cella (6,4).</p></li>
+<li><p>Attivazione del <a class="reference internal" href="BasicRobot23.html#basicrobot23"><span class="std std-ref">BasicRobot23</span></a> per <a class="reference internal" href="VirtualRobot23.html#virtualrobot23"><span class="std std-ref">VirtualRobot23</span></a> mediante docker-compose.</p></li>
+<li><p>Sprimentazione su PC (con <span class="blue">sonar</span> simulato) per verificare che l’evento <code class="docutils literal notranslate"><span class="pre">alarm:alarm(obstacle)</span></code>
+venga percepito dal robot, che si ferma prima di  avere completato il piano di movimento.</p></li>
+</ol>
+</td>
+<td><a class="reference internal image-reference" href="_images/ArchSonarqak23Fase2.png"><img alt="_images/ArchSonarqak23Fase2.png" src="_images/ArchSonarqak23Fase2.png" style="width: 100%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="sonar23observer">
+<h5>sonar23observer<a class="headerlink" href="#sonar23observer" title="Permalink to this headline">¶</a></h5>
+<p>Riportiamo qui la specifica del sonar23observer come esempio della <a class="reference internal" href="QakActors23.html#qak-primitive-disponibili"><span class="std std-ref">primitiva Qak</span></a>
+<span class="blue">observeResource</span>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>  <span class="n">QActor</span> <span class="n">sonar23observer</span> <span class="n">context</span> <span class="n">ctxsonarqak23</span><span class="p">{</span>
+  <span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span><span class="p">{</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;sonar23observer | start  &quot;</span><span class="p">)</span>
+    <span class="n">observeResource</span> <span class="n">sonar23</span>
+  <span class="p">}</span>
+  <span class="n">Goto</span> <span class="n">observing</span>
+
+  <span class="n">State</span> <span class="n">observing</span><span class="p">{</span>
+
+  <span class="p">}</span>
+  <span class="n">Transition</span> <span class="n">t0</span> <span class="n">whenMsg</span> <span class="n">coapUpdate</span> <span class="o">-&gt;</span> <span class="n">doObserve</span>
+
+  <span class="n">State</span> <span class="n">doObserve</span><span class="p">{</span>
+    <span class="n">printCurrentMessage</span>
+  <span class="p">}</span>
+  <span class="n">Goto</span> <span class="n">observing</span>
+
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><span class="slide1">Fase3</span></p>
+</section>
+<section id="sonarqak23-fase3">
+<h5>sonarqak23 Fase3<a class="headerlink" href="#sonarqak23-fase3" title="Permalink to this headline">¶</a></h5>
+<table class="colwidths-given docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><span class="slide2">GOAL Fase3</span>: sperimentare il sistema  con <a class="reference internal" href="BasicRobot23.html#basicrobot23"><span class="std std-ref">BasicRobot23</span></a> per <a class="reference internal" href="VirtualRobot23.html#virtualrobot23"><span class="std std-ref">VirtualRobot23</span></a>
+su PC e con il (sotto)sistema <a class="reference internal" href="#sonarqak23-fase2"><span class="std std-ref">sonarqak23</span></a> su RaspberryPi, con sonar fisico.</p></td>
+<td><a class="reference internal image-reference" href="_images/ArchSonarqak23Fase3.png"><img alt="_images/ArchSonarqak23Fase3.png" src="_images/ArchSonarqak23Fase3.png" style="width: 100%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">RaspApplCode</a><ul>
+<li><a class="reference internal" href="#progetto-it-unibo-raspintro2023">Progetto <em>it.unibo.raspIntro2023</em></a><ul>
+<li><a class="reference internal" href="#software-per-il-led">Software per il Led</a></li>
+<li><a class="reference internal" href="#software-per-il-sonar">Software per il Sonar</a></li>
+<li><a class="reference internal" href="#software-lowlevel-per-il-radarsystem">Software lowlevel per il RadarSystem</a></li>
+<li><a class="reference internal" href="#sonar-e-led-come-attori">Sonar e Led come attori</a><ul>
+<li><a class="reference internal" href="#progetto-unibo-sonarqak23">Progetto  unibo.sonarqak23</a><ul>
+<li><a class="reference internal" href="#sonarqak23-fase1">sonarqak23 Fase1</a></li>
+<li><a class="reference internal" href="#sonarqak23-fase2">sonarqak23 Fase2</a></li>
+<li><a class="reference internal" href="#sonar23observer">sonar23observer</a></li>
+<li><a class="reference internal" href="#sonarqak23-fase3">sonarqak23 Fase3</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="RaspBasicCode.html"
+                          title="previous chapter">RaspBasicCode</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="RadarSystem23.html"
+                          title="next chapter">RadarSystem23</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/RaspApplCode.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="RadarSystem23.html" title="RadarSystem23"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="RaspBasicCode.html" title="RaspBasicCode"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss23 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">RaspApplCode</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+    </div>
+  </body>
+</html>
