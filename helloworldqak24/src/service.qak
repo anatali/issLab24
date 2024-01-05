@@ -8,15 +8,15 @@ Reply   actiondone : actiondone( RCALLER,REQID,N,R ) for doaction
 Request dofibo   : dofibo(N)
 Reply   fibodone : fibodone( CALLER,N,R ) for dofibo
 
-
+ 
 //Request r1   : r1(X)
 //Reply   rr1 : rr1(X) for r1
 //
 //Dispatch finish : finish(X)
 //Dispatch coapUpdate : coapUpdate(RESOURCE, VALUE)
-
+ 
 Dispatch show : show(S)
-Dispatch out  : out(S)
+Dispatch out  : out(S) 
 
 Context ctxservice ip [host="localhost" port=8011]  
 

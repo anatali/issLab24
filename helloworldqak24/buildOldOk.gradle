@@ -11,7 +11,6 @@ plugins {
     id 'eclipse'
 
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
-    //id 'org.jetbrains.kotlin.jvm' version "$kotlinVersion" //sourceCompatibility = '1.8'
     id "org.jetbrains.kotlin.jvm" version "1.8.10"
     
     //Per poter usare qakfacadegui23-1.0 che usa Spring
@@ -26,7 +25,6 @@ version '1.0'
 java {
    sourceCompatibility = '17'
 }
-
 
 repositories {
     // Use Maven Central for resolving dependencies.
@@ -57,9 +55,9 @@ dependencies {
 
     /* COROUTINES ******************************************************************************* */
     // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core
-    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: "$kotlinVersion", ext: 'pom'
+    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: "1.7.3", ext: 'pom'
     // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm
-    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core-jvm', version: "$kotlinVersion"
+    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core-jvm', version: "1.7.3"
 
 	//SOCKET.IO (for WEnv)
     implementation group: 'javax.websocket', name: 'javax.websocket-api', version: '1.1'
@@ -115,6 +113,16 @@ testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.7'
     // https://mvnrepository.com/artifact/com.googlecode.aima-java/aima-core
     implementation group: 'com.googlecode.aima-java', name: 'aima-core', version: '3.0.0'
 
+	/* Librerie spring per il supporto a qakfacadegui23 ***************************** */
+ 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	//depends on spring-boot-starter-logging, which already pulls in spring-jcl for us.
+	//When using starters, Logback is used for logging by default.
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    /* Supporto a qakfacadegui23                        ***************************** */
+    implementation name: 'qakfacadegui23-1.0'
+    implementation name: 'qakfacadegui23-1.0-plain'
+
 }
 
 sourceSets {
@@ -133,13 +141,15 @@ eclipse {
 
 application {
     // Define the main class for the application.
-    mainClass = 'it.unibo.ctxhello.MainCtxhelloKt'
+    //mainClass = 'it.unibo.ctxhello.MainCtxhelloKt'
+    mainClass = 'it.unibo.ctxservice.MainCtxserviceKt'
 }
 
+/*
  jar {
     println("building jar")
     from sourceSets.main.allSource
     manifest {
         attributes 'Main-Class': "$mainClassName"
     }
-}
+}*/
