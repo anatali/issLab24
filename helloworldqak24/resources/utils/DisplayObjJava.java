@@ -1,5 +1,5 @@
 package utils;
-import it.unibo.kactor.ActorBasic;
+ 
 import unibo.basicomm23.utils.CommUtils;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -9,22 +9,37 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text; 
 import javafx.scene.control.Button;
 
-public class ActorIO extends Application{
+public class DisplayObjJava extends Application{
+	protected static boolean  launched = false;
 	protected static TextArea   outarea   ;
 	protected static Text   outtext   ;
 	protected  Stage stage;
-//	protected  Scene scene;
 	protected static Button myButton;
-	protected static boolean  launched = false;
 	
-	public ActorIO()  {
-	}
+//	public DisplayObj()  {
+//		super();
+//		if( ! launched ) {
+//			new Thread(){
+//				public void run() {				 
+//	 				initialize();
+//				}
+//			}.start();
+//		}
+//	}
+	
 	public  void initialize(){
-		if( !launched ) {
+ 		if( ! launched ) {
 			launch(new String[] {});
-			launched = true;
-		}
+ 			launched = true;
+ 		}
 	}
+
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+        stage     = primaryStage;
+        setOutArea();
+		createScene( stage  );
+	}	
 	
 	protected void setOutArea() {
         outarea   = new TextArea( );
@@ -40,12 +55,7 @@ public class ActorIO extends Application{
          
 	}
 	
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-        stage     = primaryStage;
-        setOutArea();
-		createScene( stage  );
-	}	
+
 	
 	@Override
 	public void stop(){
@@ -65,9 +75,11 @@ public class ActorIO extends Application{
     }
 	
 	public void write( String s ) {
-		if(s==null) return;  //defensive
+		if(s==null)       return;  //defensive
+		if(outarea==null) return;  //defensive
 		String outs = s.replace("show(", "").replace("out(", "");
-		outs  = outs.substring(0, outs.lastIndexOf(")"));
+		int i = outs.lastIndexOf(")");
+		if( i >= 0 ) outs  = outs.substring(0, i);
 		outarea.appendText(outs+"\n");
 	}
 	

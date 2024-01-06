@@ -1,0 +1,24 @@
+System helloworld
+
+Dispatch start:start(X)
+Dispatch out  : out(TERM) 
+
+Context ctxhello ip [host="localhost" port=8001] 
+
+//CodedQActor ca context ctxhello className "DisplayCodedQak"
+
+QActor worker context ctxhello{
+	[# val d = utils.DisplayObj() #]
+	State s0 initial{
+		[# 
+		   kotlin.concurrent.thread(start = true) {
+			     d.initialize( ) } 
+		#]
+//		forward ca -m start:start(1)
+ 		delay 2000
+		println("Hello world") color magenta
+ 		[# d.write("Hello world") #]
+// 		forward ca -m out:out(m(1))
+//		[# System.exit(0) #]
+	}
+} 

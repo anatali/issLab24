@@ -24,13 +24,9 @@ plugins {
 
 version '1.0'
 java {
-   sourceCompatibility = '11'
+   sourceCompatibility = '17'
 }
 
-//From https://kotlinlang.org/docs/gradle-configure-project.html#14f1f63b
-kotlin {
-    jvmToolchain(11)
-}
 
 repositories {
     // Use Maven Central for resolving dependencies.
