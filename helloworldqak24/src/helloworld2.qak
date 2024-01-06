@@ -1,0 +1,18 @@
+System helloworld2
+
+Dispatch start:start(X)
+Dispatch out  : out(TERM) 
+
+Context ctxhello ip [host="localhost" port=8001] 
+
+CodedQActor ca context ctxhello className "DisplayCodedQak"
+
+QActor worker context ctxhello{
+	State s0 initial{
+  		delay 1500
+		println("Hello world") color magenta 		 
+  		forward ca -m out:out(hello_again)
+  		[# val OutMsg = "hello hello again" #]
+  		forward ca -m out:out($OutMsg)
+	}
+} 

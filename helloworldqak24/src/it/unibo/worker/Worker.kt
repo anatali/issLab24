@@ -20,12 +20,14 @@ class Worker ( name: String, scope: CoroutineScope, isconfined: Boolean=false  )
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
 		
-		 val d = utils.DisplayObj.create()  
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
+						delay(1500) 
 						CommUtils.outmagenta("Hello world")
-						 d.write("Hello world again!")  
+						forward("out", "out(hello_again)" ,"ca" ) 
+						 val OutMsg = "hello hello again"  
+						forward("out", "out($OutMsg)" ,"ca" ) 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002

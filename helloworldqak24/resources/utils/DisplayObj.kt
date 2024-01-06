@@ -54,6 +54,7 @@ class DisplayObj : Application() {
         outarea!!.prefColumnCount = 15
         outarea!!.prefHeight = 280.0
         outarea!!.prefWidth = 600.0
+        outarea!!.setWrapText(true)
         myButton = Button("Clear")
         myButton!!.onAction = EventHandler { _: ActionEvent? ->
             //println("Clear!")
@@ -85,9 +86,8 @@ class DisplayObj : Application() {
         var outs = s.replace("show(", "").replace("out(", "")
         val i = outs.lastIndexOf(")")
         if (i >= 0) outs = outs.substring(0, i)
-        outarea!!.appendText(
-            """$outs""".trimIndent()
-        )
+        outarea!!.appendText("""$outs""".trimIndent())
+        outarea!!.appendText("\n")
     }
 
     fun simulateButtonPress() { //(Button button

@@ -1,4 +1,5 @@
 import it.unibo.kactor.*
+import it.unibo.kactor.ActorBasic
 import alice.tuprolog.*
 import unibo.basicomm23.*
 import unibo.basicomm23.interfaces.*
@@ -7,28 +8,13 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.CoroutineScope
 
-//class DisplayCodedQak(name:String, scope: CoroutineScope = GlobalScope, confined : Boolean =false):
-//          ActorBasic(name,scope, confined){
-class DisplayCodedQak(name:String ):
-        ActorBasic(name ){
-	val display = utils.ActorIO()
-//	init{
-//		  runBlocking{  autoMsg("start","do") }
-//		}
+class DisplayCodedQak(name:String, scope: CoroutineScope = GlobalScope, confined : Boolean =false):
+          ActorBasic(name,scope, confined){
+  val display = utils.DisplayObj.create()
  
   override suspend fun actorBody(msg : IApplMessage){
-    if( msg.msgId() == "start"){
-      kotlin.concurrent.thread(start = true) {
-	     display.initialize( ) 
-	  } 
-      workStep(  msg  )
-    }else if( msg.msgId() == "out"){
-    	display.write(msg.msgContent())
-    }
-    else CommUtils.outgreen("$tt $name | received  $msg ")
+	CommUtils.outcyan("$name  $msg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+	if( msg.msgId() == "out") display.write(msg.msgContent() )
   }
 
-	suspend fun workStep(  msg : IApplMessage  ){
-		CommUtils.outgreen("$tt $name | working on  $msg ")
-	}
 }

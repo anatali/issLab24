@@ -1,16 +1,10 @@
-System helloworld
-
-Dispatch start:start(X)
-Dispatch out  : out(TERM) 
+System helloworld1
 
 Context ctxhello ip [host="localhost" port=8001] 
-
-//CodedQActor ca context ctxhello className "DisplayCodedQak"
 
 QActor worker context ctxhello{
 	[# val d = utils.DisplayObj.create() #]
 	State s0 initial{
- 		//delay 2000
 		println("Hello world") color magenta
  		[# d.write("Hello world again!") #]
 	}
