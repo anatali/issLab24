@@ -20,16 +20,12 @@ class Worker ( name: String, scope: CoroutineScope, isconfined: Boolean=false  )
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
 		
-		 val d = utils.DisplayObj()  
+		 val d = utils.DisplayObj.create()  
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						 
-								   kotlin.concurrent.thread(start = true) {
-									     d.initialize( ) } 
-						delay(2000) 
 						CommUtils.outmagenta("Hello world")
-						 d.write("Hello world")  
+						 d.write("Hello world again!")  
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002

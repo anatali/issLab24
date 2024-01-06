@@ -7,8 +7,10 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.CoroutineScope
 
-class DisplayCodedQak(name:String, scope: CoroutineScope = GlobalScope, confined : Boolean =false):
-          ActorBasic(name,scope, confined){
+//class DisplayCodedQak(name:String, scope: CoroutineScope = GlobalScope, confined : Boolean =false):
+//          ActorBasic(name,scope, confined){
+class DisplayCodedQak(name:String ):
+        ActorBasic(name ){
 	val display = utils.ActorIO()
 //	init{
 //		  runBlocking{  autoMsg("start","do") }

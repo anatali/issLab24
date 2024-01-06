@@ -19,6 +19,20 @@ class DisplayObj : Application() {
         protected var outarea: TextArea? = null
         protected var outtext: Text? = null
         protected var myButton: Button? = null
+        protected var created = false
+        protected var display: DisplayObj? = null
+        
+        public fun create() : DisplayObj{
+           if( ! created ) {
+        	   val d   = DisplayObj()
+               display = d
+        	   created = true;
+			   kotlin.concurrent.thread(start = true) {
+			     d.initialize( ) 
+			   } 
+           }else CommUtils.outred("WARNING: display already created")
+           return display!!
+        }
     }
 
     fun initialize() {
@@ -41,7 +55,7 @@ class DisplayObj : Application() {
         outarea!!.prefHeight = 280.0
         outarea!!.prefWidth = 600.0
         myButton = Button("Clear")
-        myButton!!.onAction = EventHandler { e: ActionEvent? ->
+        myButton!!.onAction = EventHandler { _: ActionEvent? ->
             //println("Clear!")
             outarea!!.text = ""
         }
@@ -64,7 +78,10 @@ class DisplayObj : Application() {
 
     fun write(s: String?) {
         if (s == null) return  //defensive
-        if (outarea == null) return  //defensive
+        while (outarea == null){
+            Thread.sleep(500L)
+            //CommUtils.outred("WARNING: display non yet started")
+        }  //defensive
         var outs = s.replace("show(", "").replace("out(", "")
         val i = outs.lastIndexOf(")")
         if (i >= 0) outs = outs.substring(0, i)
