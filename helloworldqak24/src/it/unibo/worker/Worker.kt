@@ -25,7 +25,9 @@ class Worker ( name: String, scope: CoroutineScope, isconfined: Boolean=false  )
 					action { //it:State
 						delay(1500) 
 						CommUtils.outmagenta("Hello world")
-						forward("out", "out(hello_again)" ,"display" ) 
+						forward("out", "out(hello_again)" ,"ca" ) 
+						 val OutMsg = "hello hello again"  
+						forward("out", "out($OutMsg)" ,"ca" ) 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002

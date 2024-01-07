@@ -119,6 +119,16 @@ testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.7'
     // https://mvnrepository.com/artifact/com.googlecode.aima-java/aima-core
     implementation group: 'com.googlecode.aima-java', name: 'aima-core', version: '3.0.0'
 
+	/* Librerie spring per il supporto a qakfacadegui23 ***************************** */
+ 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	//depends on spring-boot-starter-logging, which already pulls in spring-jcl for us.
+	//When using starters, Logback is used for logging by default.
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+/* Supporto a qakdisplay24                        ***************************** */
+implementation name: 'qakdisplaygui24-1.0'
+implementation name: 'qakdisplaygui24-1.0-plain'
+
 }
 
 sourceSets {

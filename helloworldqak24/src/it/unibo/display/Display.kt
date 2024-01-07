@@ -37,12 +37,15 @@ class Display ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								 val OutMsg = payloadArg(0)  
 								 d.write("$OutMsg")  
+								updateResourceRep( OutMsg  
+								)
 						}
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
+					 transition(edgeName="t01",targetState="handleout",cond=whenDispatch("out"))
 				}	 
 			}
 		}

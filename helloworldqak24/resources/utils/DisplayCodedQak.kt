@@ -1,15 +1,13 @@
-import it.unibo.kactor.*
 import it.unibo.kactor.ActorBasic
-import alice.tuprolog.*
-import unibo.basicomm23.*
-import unibo.basicomm23.interfaces.*
-import unibo.basicomm23.utils.*
+import unibo.basicomm23.interfaces.IApplMessage
+import unibo.basicomm23.utils.CommUtils
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.CoroutineScope
 
-class DisplayCodedQak(name:String, scope: CoroutineScope = GlobalScope, confined : Boolean =false):
-          ActorBasic(name,scope, confined){
+class DisplayCodedQak(name:String, 
+		scope: CoroutineScope = GlobalScope, 
+		confined : Boolean =false): ActorBasic(name,scope, confined){
   val display = utils.DisplayObj.create()
  
   override suspend fun actorBody(msg : IApplMessage){
