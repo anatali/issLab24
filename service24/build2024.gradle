@@ -135,7 +135,7 @@ application {
     // Define the main class for the application.
     mainClass = 'it.unibo.ctxservice.MainCtxserviceKt'
 }
-
+/*
  jar {
     println("building jar")
     from sourceSets.main.allSource
@@ -143,3 +143,4 @@ application {
         attributes 'Main-Class': "$mainClassName"
     }
 }
+*/

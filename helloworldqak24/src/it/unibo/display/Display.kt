@@ -19,8 +19,7 @@ class Display ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
-		
-		 val d = utils.DisplayObj.create()  
+		 val d = utils.DisplayObj.create()
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State

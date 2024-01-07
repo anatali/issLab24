@@ -4,8 +4,6 @@ Dispatch out  : out(TERM)
 
 Context ctxhello ip [host="localhost" port=8003] 
 
-//CodedQActor ca context ctxhello className "DisplayCodedQak"
-
 QActor display context ctxhello{
 	[# val d = utils.DisplayObj.create() #]
 	State s0 initial{
@@ -39,4 +37,4 @@ QActor worker context ctxhello{
 	Goto s0
 } 
   
-DisplayHTML d   
+//DisplayHTML d   

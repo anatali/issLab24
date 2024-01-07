@@ -23,6 +23,6 @@ with Diagram('helloworld2Arch', show=False, outformat='png', graph_attr=graphatt
 ### see https://renenyffenegger.ch/notes/tools/Graphviz/attributes/label/HTML-like/index
      with Cluster('ctxhello', graph_attr=nodeattr):
           worker=Custom('worker','./qakicons/symActorSmall.png')
-          ca=Custom('ca(coded)','./qakicons/codedQActor.png')
-     worker >> Edge(color='blue', style='solid',  decorate='true', label='<out &nbsp; >',  fontcolor='blue') >> ca
+          display=Custom('display(coded)','./qakicons/codedQActor.png')
+     worker >> Edge(color='blue', style='solid',  decorate='true', label='<out &nbsp; >',  fontcolor='blue') >> display
 diag
