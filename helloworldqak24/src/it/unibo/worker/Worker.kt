@@ -23,9 +23,26 @@ class Worker ( name: String, scope: CoroutineScope, isconfined: Boolean=false  )
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						delay(1500) 
+						delay(2000) 
 						 var M = "${name}_hello_${n++}" 
-						forward("out", "out($M)" ,"display" ) 
+						CommUtils.outblack(M)
+						updateResourceRep( M  
+						)
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition( edgeName="goto",targetState="s0", cond=doswitchGuarded({  n <= 15  
+					}) )
+					transition( edgeName="goto",targetState="finish", cond=doswitchGuarded({! (  n <= 15  
+					) }) )
+				}	 
+				state("finish") { //this:State
+					action { //it:State
+						//terminate(0)
+						context!!.removeInternalActor(myself)
+						CommUtils.outmagenta("$name BYE")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
