@@ -23,36 +23,26 @@ class Display ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						CoapObserverSupport(myself, "localhost","8004","ctxhello","worker","info")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t00",targetState="handleinfo",cond=whenDispatch("info"))
+					 transition(edgeName="t00",targetState="handleout",cond=whenDispatch("out"))
 				}	 
-				state("handleinfo") { //this:State
+				state("handleout") { //this:State
 					action { //it:State
-						CommUtils.outcyan("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
-						 	   
-						CommUtils.outblue("$currentMsg")
-						 d.print( currentMsg.toString() )  
-						 d.print( "$currentMsg" )  
-						 d.print( currentMsg.msgContent().toString() )  
-						 d.print( "${currentMsg.msgContent()}" )  
-						if( checkMsgContent( Term.createTerm("info(SOURCE,TERM)"), Term.createTerm("info(SOURCE,TERM)"), 
+						if( checkMsgContent( Term.createTerm("out(TERM)"), Term.createTerm("out(TERM)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
-								 val Source = payloadArg(0) 
-											   val infoMsg = payloadArg(1)	
-											   val M      = "$infoMsg from $Source"			
-								 d.write( M )  
+								 val OutMsg = payloadArg(0)  
+								 d.write("$OutMsg")  
 						}
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t01",targetState="handleinfo",cond=whenDispatch("info"))
+					 transition(edgeName="t01",targetState="handleout",cond=whenDispatch("out"))
 				}	 
 			}
 		}

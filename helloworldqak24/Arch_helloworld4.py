@@ -22,7 +22,7 @@ with Diagram('helloworld4Arch', show=False, outformat='png', graph_attr=graphatt
      sys = Custom('','./qakicons/system.png')
 ### see https://renenyffenegger.ch/notes/tools/Graphviz/attributes/label/HTML-like/index
      with Cluster('ctxhello', graph_attr=nodeattr):
-          display=Custom('display','./qakicons/symActorWithobjSmall.png')
+          display=Custom('display','./qakicons/symActorSmall.png')
           worker=Custom('worker','./qakicons/symActorSmall.png')
      worker >> Edge(color='blue', style='solid',  decorate='true', label='<coapUpdate &nbsp; >',  fontcolor='blue') >> display
 diag

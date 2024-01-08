@@ -13,10 +13,12 @@ QActor display context ctxhello withobj d using "utils.DisplayObj.create()"{
 	State handleinfo{
 		printCurrentMessage
 		println("$currentMsg") color blue
-		[# d.print( currentMsg.toString() ) #]
-		[# d.print( "$currentMsg" ) #]
-		[# d.print( currentMsg.msgContent().toString() ) #]
-		[# d.print( "${currentMsg.msgContent()}" ) #]
+		[# 
+		 d.print( currentMsg.toString() )  
+		 d.print( "$currentMsg" )  
+		 d.print( currentMsg.msgContent().toString() )  
+		 d.print( "${currentMsg.msgContent()}" )  		 
+		#]
 		onMsg( info:info(SOURCE,TERM)){
 			[# val Source = payloadArg(0) 
 			   val infoMsg = payloadArg(1)	
@@ -28,14 +30,16 @@ QActor display context ctxhello withobj d using "utils.DisplayObj.create()"{
 	Transition t0 whenMsg info -> handleinfo
 }
 
-QActor worker context ctxhello{
+QActor worker context ctxhello  {
  	State s0 initial{
 		[# var n = 0 #]
 		delay 1500
-		updateResource [# "hello_${n++}" #]	
+		updateResource [# "$name hello_${n++}" #]	
 		delay 2000	 
-		updateResource [# "hello_${n++}" #]
+		updateResource [# "$name hello_${n++}" #]
 	}	 
 } 
+
+
   
  
