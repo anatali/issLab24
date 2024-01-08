@@ -1,2 +1,2 @@
-{"actor":"display", "msgType":"dispatch", "curstate":"s0", "nextstate":"handleout", "msgId":"out"}
-{"actor":"display", "msgType":"dispatch", "curstate":"handleout", "nextstate":"handleout", "msgId":"out"}
+{"actor":"display", "msgType":"dispatch", "curstate":"s0", "nextstate":"handleinfo", "msgId":"info"}
+{"actor":"display", "msgType":"dispatch", "curstate":"handleinfo", "nextstate":"handleinfo", "msgId":"info"}

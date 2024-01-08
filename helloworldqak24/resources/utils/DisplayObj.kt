@@ -89,7 +89,16 @@ class DisplayObj : Application() {
         outarea!!.appendText("""$outs""".trimIndent())
         outarea!!.appendText("\n")
     }
-
+    fun print(s: String?) {
+        if (s == null) return    //defensive
+        //CommUtils.outred("print: $s")
+        while (outarea == null){ //defensive
+            Thread.sleep(500L)
+            CommUtils.outred("WARNING: display non yet started")
+        }  
+         outarea!!.appendText("""$s""".trimIndent())
+         outarea!!.appendText("\n")
+    }
     fun simulateButtonPress() { //(Button button
         // Puoi chiamare il metodo fire() per simulare la pressione del pulsante
         if (myButton != null) myButton!!.fire() else CommUtils.outred("ActorIO |  simulateButtonPress null  ")
