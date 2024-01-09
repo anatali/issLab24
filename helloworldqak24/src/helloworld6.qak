@@ -3,6 +3,7 @@ Dispatch out  : out(TERM)
 
 Context ctxhello ip [host="localhost" port=8006] 
 
+
 QActor display context ctxhello  {
   	State s0 initial{
 	}	
@@ -13,12 +14,14 @@ QActor display context ctxhello  {
 		onMsg( out:out(T) ){
 			println("$name | ${payloadArg(0)}") color blue
 			updateResource [# payloadArg(0) #]
+			updateResource [# "out(${currentMsg})" #]
+			updateResource [# "show(${currentMsg})" #]
 		}  
 	}
 	Transition t0 whenMsg out -> handleout
   
 } 
-
+ 
  
 QActor worker context ctxhello  {
 	[# var n = 0 #]
@@ -38,5 +41,5 @@ QActor worker context ctxhello  {
 } 
  
 
-DisplayHTML d usingactor display inctx ctxhello  
+DisplayHTML hellodev usingactor display inctx ctxhello  
   

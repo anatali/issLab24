@@ -36,6 +36,10 @@ class Display ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 								CommUtils.outblue("$name | ${payloadArg(0)}")
 								updateResourceRep( payloadArg(0)  
 								)
+								updateResourceRep( "out(${currentMsg})"  
+								)
+								updateResourceRep( "show(${currentMsg})"  
+								)
 						}
 						//genTimer( actor, state )
 					}
