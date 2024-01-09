@@ -26,16 +26,15 @@ class Worker ( name: String, scope: CoroutineScope, isconfined: Boolean=false  )
 						delay(2000) 
 						 var M = "${name}_hello_${n++}" 
 						CommUtils.outblack(M)
-						updateResourceRep( M  
-						)
+						forward("out", "out($M)" ,"display" ) 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition( edgeName="goto",targetState="s0", cond=doswitchGuarded({  n <= 15  
+					 transition( edgeName="goto",targetState="s0", cond=doswitchGuarded({  n <= 20  
 					}) )
-					transition( edgeName="goto",targetState="finish", cond=doswitchGuarded({! (  n <= 15  
+					transition( edgeName="goto",targetState="finish", cond=doswitchGuarded({! (  n <= 20  
 					) }) )
 				}	 
 				state("finish") { //this:State

@@ -3,6 +3,21 @@ Dispatch out  : out(TERM)
 
 Context ctxhello ip [host="localhost" port=8006] 
 
+QActor display context ctxhello  {
+  	State s0 initial{
+	}	
+	Transition t0 whenMsg out -> handleout
+	
+	State handleout{
+		//printCurrentMessage color green
+		onMsg( out:out(T) ){
+			println("$name | ${payloadArg(0)}") color blue
+			updateResource [# payloadArg(0) #]
+		}  
+	}
+	Transition t0 whenMsg out -> handleout
+  
+} 
 
  
 QActor worker context ctxhello  {
@@ -11,12 +26,10 @@ QActor worker context ctxhello  {
 		delay 2000
 		[# var M = "${name}_hello_${n++}"#]
 		println(M)
-		//forward d -m out:out($M)
-		//[# d.write("$M") #]
-		updateResource [# M #]
-	}	
-	Goto s0 if [#  n <= 15 #] else finish
-	
+		forward display -m out:out($M)
+ 	}	
+	Goto s0 if [#  n <= 20 #] else finish
+	   
 	State finish{
 		terminate 0 //remove the actor from the context
 		println("$name BYE") color magenta
@@ -25,5 +38,5 @@ QActor worker context ctxhello  {
 } 
  
 
-DisplayHTML d forctx ctxhello
+DisplayHTML d usingactor display inctx ctxhello  
   

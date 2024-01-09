@@ -1,1 +1,1 @@
-{"host":"localhost", "port":"8006", "context":"ctxhello"}
+{"host":"localhost", "port":"8006", "context":"ctxhello", "usingactor": "display" }

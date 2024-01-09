@@ -19,7 +19,6 @@ class Display ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
-		 val d = utils.DisplayObj.create()
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
@@ -32,10 +31,11 @@ class Display ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 				}	 
 				state("handleout") { //this:State
 					action { //it:State
-						if( checkMsgContent( Term.createTerm("out(TERM)"), Term.createTerm("out(TERM)"), 
+						if( checkMsgContent( Term.createTerm("out(TERM)"), Term.createTerm("out(T)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
-								 val OutMsg = payloadArg(0)  
-								 d.write("$OutMsg")  
+								CommUtils.outblue("$name | ${payloadArg(0)}")
+								updateResourceRep( payloadArg(0)  
+								)
 						}
 						//genTimer( actor, state )
 					}
