@@ -13,9 +13,9 @@ QActor display context ctxhello  {
 		//printCurrentMessage color green
 		onMsg( out:out(T) ){
 			println("$name | ${payloadArg(0)}") color blue
-			updateResource [# payloadArg(0) #]
 			updateResource [# "out(${currentMsg})" #]
 			updateResource [# "show(${currentMsg})" #]
+			updateResource [# payloadArg(0) #]
 		}  
 	}
 	Transition t0 whenMsg out -> handleout
@@ -41,5 +41,5 @@ QActor worker context ctxhello  {
 } 
  
 
-DisplayHTML hellodev usingactor display inctx ctxhello  
+DisplayHTML hellodev6 usingactor display inctx ctxhello  
   

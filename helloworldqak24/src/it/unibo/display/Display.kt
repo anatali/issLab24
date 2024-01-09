@@ -34,11 +34,11 @@ class Display ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 						if( checkMsgContent( Term.createTerm("out(TERM)"), Term.createTerm("out(T)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								CommUtils.outblue("$name | ${payloadArg(0)}")
-								updateResourceRep( payloadArg(0)  
-								)
 								updateResourceRep( "out(${currentMsg})"  
 								)
 								updateResourceRep( "show(${currentMsg})"  
+								)
+								updateResourceRep( payloadArg(0)  
 								)
 						}
 						//genTimer( actor, state )
