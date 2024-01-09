@@ -24,5 +24,7 @@ with Diagram('helloworld6Arch', show=False, outformat='png', graph_attr=graphatt
      with Cluster('ctxhello', graph_attr=nodeattr):
           display=Custom('display','./qakicons/symActorSmall.png')
           worker=Custom('worker','./qakicons/symActorSmall.png')
-     worker >> Edge(color='blue', style='solid',  decorate='true', label='<out &nbsp; >',  fontcolor='blue') >> display
+     hellodev6=Custom('hellodev6','./qakicons/server.png')
+     display >> Edge(color='blue', style='solid', decorate='true', label='<out &nbsp; show>',  fontcolor='blue') >> hellodev6
+     worker >> Edge(color='blue', style='solid',  decorate='true', label='<write &nbsp; >',  fontcolor='blue') >> display
 diag

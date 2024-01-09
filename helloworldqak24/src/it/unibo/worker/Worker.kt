@@ -26,7 +26,7 @@ class Worker ( name: String, scope: CoroutineScope, isconfined: Boolean=false  )
 						delay(2000) 
 						 var M = "${name}_hello_${n++}" 
 						CommUtils.outblack(M)
-						forward("out", "out($M)" ,"display" ) 
+						forward("write", "write($M)" ,"display" ) 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002

@@ -27,11 +27,11 @@ class Display ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t00",targetState="handleout",cond=whenDispatch("out"))
+					 transition(edgeName="t00",targetState="handleout",cond=whenDispatch("write"))
 				}	 
 				state("handleout") { //this:State
 					action { //it:State
-						if( checkMsgContent( Term.createTerm("out(TERM)"), Term.createTerm("out(T)"), 
+						if( checkMsgContent( Term.createTerm("write(TERM)"), Term.createTerm("write(T)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								CommUtils.outblue("$name | ${payloadArg(0)}")
 								updateResourceRep( "out(${currentMsg})"  
@@ -46,7 +46,7 @@ class Display ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t01",targetState="handleout",cond=whenDispatch("out"))
+					 transition(edgeName="t01",targetState="handleout",cond=whenDispatch("write"))
 				}	 
 			}
 		}

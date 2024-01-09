@@ -23,4 +23,6 @@ with Diagram('helloworldArch', show=False, outformat='png', graph_attr=graphattr
 ### see https://renenyffenegger.ch/notes/tools/Graphviz/attributes/label/HTML-like/index
      with Cluster('ctxhello', graph_attr=nodeattr):
           worker=Custom('worker','./qakicons/symActorSmall.png')
+     hellodev6=Custom('hellodev6','./qakicons/server.png')
+     display >> Edge(color='blue', style='solid', decorate='true', label='<out &nbsp; show>',  fontcolor='blue') >> hellodev6
 diag
