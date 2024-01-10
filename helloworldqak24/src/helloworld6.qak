@@ -16,7 +16,7 @@ QActor display context ctxhello  {
 			updateResource [# "out(${currentMsg})" #]
 			updateResource [# "show(${currentMsg})" #]
 			updateResource [# payloadArg(0) #]
-		}    
+		}     
 	}     
 	Transition t0 whenMsg write -> handleout
   
@@ -38,8 +38,8 @@ QActor worker context ctxhello  {
 		println("$name BYE") color magenta
 		//[# System.exit(0) #]
 	}
-} 
- 
+}  
+  
 
-DisplayHTML hellodev6 usingactor display inctx ctxhello  
+DisplayHTML hellodev6 port 8085 usingactor display inctx ctxhello  
   
