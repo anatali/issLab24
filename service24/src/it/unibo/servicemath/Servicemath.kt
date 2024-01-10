@@ -19,38 +19,59 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
-		
 		return { //this:ActionBasciFsm
 				state("init") { //this:State
 					action { //it:State
-						CommUtils.outgreen("$name  STARTS ")
+						CommUtils.outblue("$name  STARTS ")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t00",targetState="work",cond=whenRequest("dofibo"))
+					 transition(edgeName="t04",targetState="work",cond=whenRequest("dofibo"))
 				}	 
 				state("work") { //this:State
 					action { //it:State
-						 var SOUT : String  
 						if( checkMsgContent( Term.createTerm("dofibo(N)"), Term.createTerm("dofibo(N)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
-								 //var ReqId  = currentMsg.msgId()
-											   var ReqArg = payloadArg(0) 
-											   var Sender = currentMsg.msgSender()  
-											   //val M      = currentMsg
-								 var F = utils.Common.fibo( ReqArg.toInt() )  
-								 SOUT  = "result($name, fibo($ReqArg), $F)"  
-								CommUtils.outmagenta("$SOUT")
-								answer("dofibo", "fibodone", "fibodone($Sender,$ReqArg,$F)"   )  
+								  
+											   var ReqId  = currentMsg.msgId()
+											   var ReqArg = payloadArg(0)
+											   var Sender = currentMsg.msgSender()
+								 val SOUT = "$name | $ReqId $ReqArg Sender=$Sender"  
+								CommUtils.outblue("$SOUT")
+								request("doaction", "doaction($ReqId,$ReqArg,$Sender,name)",createActorDynamically("actionexecutor", "", false) )
 						}
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t01",targetState="work",cond=whenRequest("dofibo"))
+					 transition(edgeName="t05",targetState="elabjobdone",cond=whenReply("actiondone"))
+					transition(edgeName="t06",targetState="work",cond=whenRequest("dofibo"))
+				}	 
+				state("elabjobdone") { //this:State
+					action { //it:State
+						CommUtils.outcyan("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						 	   
+						 val M = currentMsg.msgContent()   
+						if( checkMsgContent( Term.createTerm("actiondone(RCALLER,REQID,N,R)"), Term.createTerm("actiondone(RCALLER,REQID,N,RESULT)"), 
+						                        currentMsg.msgContent()) ) { //set msgArgList
+								 val Caller = payloadArg(0) 
+											   val ReqId  = payloadArg(1)
+											   val N      = payloadArg(2) 
+											   val Result = payloadArg(3) 	
+								CommUtils.outmagenta("$name | result for $Caller, N=$N=$Result ")
+								 var SOUT = "$name | result for $Caller, N=$N=$Result "  
+								answer("dofibo", "fibodone", "fibodone($Caller,$N,$Result)","$Caller"   )  
+						}
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition(edgeName="t07",targetState="elabjobdone",cond=whenReply("actiondone"))
+					transition(edgeName="t08",targetState="work",cond=whenRequest("dofibo"))
 				}	 
 			}
 		}

@@ -17,11 +17,10 @@ QActor display context ctxhello  {
 			updateResource [# "show(${currentMsg})" #]
 			updateResource [# payloadArg(0) #]
 		}     
-	}     
+	}      
 	Transition t0 whenMsg write -> handleout
-  
 }   
- 
+  
  
 QActor worker context ctxhello  {
 	[# var n = 0 #]
