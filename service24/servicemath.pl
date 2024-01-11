@@ -11,10 +11,8 @@ dispatch( show, show(S) ).
 context(ctxservice, "localhost",  "TCP", "8011").
  qactor( display, ctxservice, "it.unibo.display.Display").
  static(display).
-  qactor( caller1, ctxservice, "it.unibo.caller1.Caller1").
- static(caller1).
-  qactor( caller2, ctxservice, "it.unibo.caller2.Caller2").
- static(caller2).
+  qactor( caller_test, ctxservice, "it.unibo.caller_test.Caller_test").
+ static(caller_test).
   qactor( servicemath, ctxservice, "it.unibo.servicemath.Servicemath").
  static(servicemath).
   qactor( actionexecutor, ctxservice, "it.unibo.actionexecutor.Actionexecutor").

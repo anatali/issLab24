@@ -14,17 +14,7 @@ Dispatch show  : show(S)
  
 Context ctxservice ip [host="localhost" port=8011]  
  
-/*
- * caller1, che chiede fibo(6) parte dopo caller2 che chiede fibo(40)
- * 
- * Il service esegue le richieste fibo attivando un  actionexecutor 
- * che poi termina dopo avere eseguito 
- * execresultReplyTo doaction with actiondone : actiondone( $Caller,$ReqId, $F )
- * 
- * Il service invia la risposta ricevuta da actionexecutor eseguendo
- * replyTo dofibo ofsender $Caller with fibodone : fibodone(N,$Result)
- * In questo modo risponde a ciascun caller in modo corretto
- */
+
  
 QActor display context ctxservice {  //withobj d using "utils.DisplayObj.create()"
  	State s0 initial{		
@@ -46,15 +36,29 @@ QActor display context ctxservice {  //withobj d using "utils.DisplayObj.create(
 	Transition t0 whenMsg out -> handleout
 }
 
-QActor caller1 context ctxservice {  
+/*
+ * caller1, che chiede fibo(6) parte dopo caller2 che chiede fibo(40)
+ * 
+ * Il service esegue le richieste fibo attivando un  actionexecutor 
+ * che poi termina dopo avere eseguito 
+ * execresultReplyTo doaction with actiondone : actiondone( $Caller,$ReqId, $F )
+ * 
+ * Il service invia la risposta ricevuta da actionexecutor eseguendo
+ * replyTo dofibo ofsender $Caller with fibodone : fibodone(N,$Result)
+ * In questo modo risponde a ciascun caller in modo corretto
+ */
+ 
+QActor caller_test context ctxservice {  
 	[# val N = 6 
        var SOUT = ""
 	#]
  	State init initial { 
-  		delay 5000
+  		delay 3000
 		[# SOUT = "$name | starts "#]
 		forward display -m out : out($SOUT)
- 		request servicemath -m dofibo : dofibo($N)
+ 		request servicemath -m dofibo : dofibo(40)
+ 		delay 1000
+ 		request servicemath -m dofibo : dofibo(6)
 	}	 
 	Transition t0 whenReply fibodone -> fiboanswer
 	
@@ -69,30 +73,9 @@ QActor caller1 context ctxservice {
             //forward display -m out : out($SOUT)
 		}   
 	}
+	Transition t0 whenReply fibodone -> fiboanswer
 }
 
-QActor caller2 context ctxservice {
-	[# var N    = 40 
-       var SOUT = ""
-		
-	#] 
-	State init initial {   
-		delay 4000
-		//println("$name  STARTS ") color magenta
-		[# SOUT = "$name | starts "#]
-		forward display -m out : out($SOUT)
-		request servicemath -m dofibo : dofibo($N)
-	}	
-	Transition t0 whenReply fibodone -> fiboanswer
-	
-	State fiboanswer{
-		onMsg(fibodone : fibodone( CALLER,V,R ) ){
-			[# val SOUT = "$name | fiboanswer for ${payloadArg(1)}/from ${payloadArg(0)}=${payloadArg(2)}" #]
-			//println("$name | fiboanswer for $N") color magenta
-			//forward display -m out : out($SOUT)
-		}
-	} 
-}
 
 
 

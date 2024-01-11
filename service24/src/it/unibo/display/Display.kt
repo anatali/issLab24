@@ -19,6 +19,7 @@ class Display ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
+		 val d = utils.DisplayObj.create()
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
@@ -34,8 +35,7 @@ class Display ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						 val SOUT = "${currentMsg.msgContent()}"  
-						updateResourceRep( SOUT  
-						)
+						 d.write( SOUT )  
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
