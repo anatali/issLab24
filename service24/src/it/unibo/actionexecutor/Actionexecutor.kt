@@ -44,8 +44,9 @@ class Actionexecutor ( name: String, scope: CoroutineScope, isconfined: Boolean=
 								 var D = ReqArg.toInt() * 20L  
 								delay(D)
 								  var F = math.fibo( ReqArg.toInt() )  
-								 val SOUT = "$name fibo($ReqArg)=$F}"  
+								 val SOUT = "$name, fibo($ReqArg), $F"  
 								CommUtils.outcyan("$SOUT")
+								forward("out", "out($SOUT)" ,"display" ) 
 								answer("doaction", "actiondone", "actiondone($Caller,$ReqId,$ReqArg,$F)")
 								//context!!.removeInternalActor(myself)
 								//terminate(0)

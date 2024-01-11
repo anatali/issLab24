@@ -62,7 +62,8 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 											   val N      = payloadArg(2) 
 											   val Result = payloadArg(3) 	
 								CommUtils.outmagenta("$name | result for $Caller, N=$N=$Result ")
-								 var SOUT = "$name | result for $Caller, N=$N=$Result "  
+								 var SOUT = "$name | result for $Caller, N=$N->$Result "  
+								forward("out", "out($SOUT)" ,"display" ) 
 								answer("dofibo", "fibodone", "fibodone($Caller,$N,$Result)","$Caller"   )  
 						}
 						//genTimer( actor, state )

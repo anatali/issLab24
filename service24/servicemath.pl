@@ -6,6 +6,7 @@ reply( actiondone, actiondone(RCALLER,REQID,N,R) ).  %%for doaction
 request( dofibo, dofibo(N) ).
 reply( fibodone, fibodone(CALLER,N,R) ).  %%for dofibo
 dispatch( out, out(S) ).
+dispatch( show, show(S) ).
 %====================================================================================
 context(ctxservice, "localhost",  "TCP", "8011").
  qactor( display, ctxservice, "it.unibo.display.Display").

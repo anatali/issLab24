@@ -22,7 +22,7 @@ with Diagram('servicemathArch', show=False, outformat='png', graph_attr=graphatt
      sys = Custom('','./qakicons/system.png')
 ### see https://renenyffenegger.ch/notes/tools/Graphviz/attributes/label/HTML-like/index
      with Cluster('ctxservice', graph_attr=nodeattr):
-          display=Custom('display','./qakicons/symActorWithobjSmall.png')
+          display=Custom('display','./qakicons/symActorSmall.png')
           caller1=Custom('caller1','./qakicons/symActorSmall.png')
           caller2=Custom('caller2','./qakicons/symActorSmall.png')
           servicemath=Custom('servicemath','./qakicons/symActorSmall.png')
@@ -31,6 +31,8 @@ with Diagram('servicemathArch', show=False, outformat='png', graph_attr=graphatt
      caller2 >> Edge(color='magenta', style='solid', decorate='true', label='<dofibo<font color="darkgreen"> fibodone</font> &nbsp; >',  fontcolor='magenta') >> servicemath
      caller1 >> Edge(color='magenta', style='solid', decorate='true', label='<dofibo<font color="darkgreen"> fibodone</font> &nbsp; >',  fontcolor='magenta') >> servicemath
      display >> Edge(color='blue', style='solid', decorate='true', label='<out &nbsp; show>',  fontcolor='blue') >> servicedev
+     servicemath >> Edge(color='blue', style='solid',  decorate='true', label='<out &nbsp; >',  fontcolor='blue') >> display
+     actionexecutor >> Edge(color='blue', style='solid',  decorate='true', label='<out &nbsp; >',  fontcolor='blue') >> display
      caller1 >> Edge(color='blue', style='solid',  decorate='true', label='<out &nbsp; >',  fontcolor='blue') >> display
      caller2 >> Edge(color='blue', style='solid',  decorate='true', label='<out &nbsp; >',  fontcolor='blue') >> display
 diag

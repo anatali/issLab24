@@ -41,7 +41,6 @@ class Caller2 ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 						if( checkMsgContent( Term.createTerm("fibodone(CALLER,N,R)"), Term.createTerm("fibodone(CALLER,V,R)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								 val SOUT = "$name | fiboanswer for ${payloadArg(1)}/from ${payloadArg(0)}=${payloadArg(2)}"  
-								forward("out", "out($SOUT)" ,"display" ) 
 						}
 						//genTimer( actor, state )
 					}

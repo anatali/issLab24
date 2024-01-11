@@ -145,6 +145,7 @@ application {
 
  jar {
     println("building jar")
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
     from sourceSets.main.allSource
     manifest {
         attributes 'Main-Class': "$mainClassName"
