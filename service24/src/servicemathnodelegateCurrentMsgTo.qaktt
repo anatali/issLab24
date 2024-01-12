@@ -90,8 +90,7 @@ QActor servicemath context ctxservice {
 			[# val SOUT = "$name | $ReqId $ReqArg Sender=$Sender" #]
 			println("$SOUT") color blue
 			//forward display -m out  : out(  $SOUT  )
-			delegateCurrentMsgTo actionexec
-			//create actionexecutor requestbycreator doaction : doaction ( $ReqId,$ReqArg,$Sender,name ) 
+			create actionexecutor requestbycreator doaction : doaction ( $ReqId,$ReqArg,$Sender,name ) 
 		}
 	}  
 	Transition t0 whenReply actiondone  -> elabjobdone  
@@ -116,36 +115,7 @@ QActor servicemath context ctxservice {
 	              whenRequest dofibo    -> work
 }
 
-QActor actionexec  context ctxservice withobj math using "utils.MathUtils.create()" dynamicOnly{
-	State init initial {
-		//println("$name | STARTS ")  color cyan
-    }	 
-    Transition t0 whenRequest dofibo -> work
-	
-	State work{
-		printCurrentMessage color green
-		onMsg( dofibo : dofibo( N ) ){
-			[#   
-				var ReqArg  = payloadArg(0) 
- 				
-			#]  
-			//println("$name | work N=$N ${sysUtil.curThread()}") color blue
-			[# var D = ReqArg.toInt() * 20L #] 
-			delayVar D
- 			[#  var F = math.fibo( ReqArg.toInt() ) #]   //SIMULO AZIONE LUNGA SENZA FARE delay
-			[# val SOUT = "$name, fibo($ReqArg), $F" #]
-			println("$SOUT") color cyan
-			forward display -m out : out($SOUT)
-			replyTo dofibo with fibodone : fibodone($F)
- 			   
-			terminate 0
 
-			[# var anames = sysUtil.getAllActorNames(context!!.name) #]
-			println("$name | AFTER: $anames")
-		}
-	} 
- 
- }
 
 
 /*

@@ -39,13 +39,13 @@ class Actionexec ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 								   
 												var ReqArg  = payloadArg(0) 
 								 				var Sender  = currentMsg.msgSender() 
-								 var D = ReqArg.toInt() * 20L  
-								delay(D)
+								 val T0 = getCurrentTime()  
 								  var F = math.fibo( ReqArg.toInt() )  
+								 val TF  = getDuration(T0)  
 								 val SOUT = "$name, fibo($ReqArg), $F"  
 								CommUtils.outcyan("$SOUT")
 								forward("out", "out($SOUT)" ,"display" ) 
-								answer("dofibo", "fibodone", "fibodone($Sender,$ReqArg,$F)"   )  
+								answer("dofibo", "fibodone", "fibodone($Sender,$ReqArg,$F,$TF)"   )  
 								//terminate(0)
 								context!!.removeInternalActor(myself)
 								 var anames = sysUtil.getAllActorNames(context!!.name)  

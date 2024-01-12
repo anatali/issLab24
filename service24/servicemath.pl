@@ -2,7 +2,7 @@
 % servicemath description   
 %====================================================================================
 request( dofibo, dofibo(N) ).
-reply( fibodone, fibodone(CALLER,N,R) ).  %%for dofibo
+reply( fibodone, fibodone(CALLER,N,RESULT,TIME) ).  %%for dofibo
 dispatch( out, out(S) ).
 dispatch( show, show(S) ).
 %====================================================================================
