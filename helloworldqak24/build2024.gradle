@@ -122,10 +122,10 @@ testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.7'
 	//When using starters, Logback is used for logging by default.
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	
+/* Supporto a qakfacadegui23                        ***************************** */
+implementation name: 'qakfacadegui23-1.0'
+implementation name: 'qakfacadegui23-1.0-plain'
 	
-/* Supporto a qakdisplay24                        ***************************** */
-implementation name: 'qakdisplaygui24-1.0'
-implementation name: 'qakdisplaygui24-1.0-plain'
 }
 
 sourceSets {
@@ -144,7 +144,7 @@ eclipse {
 
 application {
     // Define the main class for the application.
-    mainClass = 'it.unibo.ctxhello.MainCtxhelloKt'
+    mainClass = 'it.unibo.ctxservice.MainCtxserviceKt'
 }
 /*
  jar {

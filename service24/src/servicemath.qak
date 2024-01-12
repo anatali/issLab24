@@ -1,20 +1,14 @@
 System /*-msglog  -trace */ servicemath  
 //mqttBroker "broker.hivemq.com" : 1883
 
-//Massaggi relativi agli Actor-dinamici
-Request doaction   : doaction(REQID,RARG,RCALLER,SERVICE)
-Reply   actiondone : actiondone( RCALLER,REQID,N,R ) for doaction
-
 Request dofibo   : dofibo(N)
 Reply   fibodone : fibodone( CALLER,N,R ) for dofibo
- 
-  
+
+//Messages for the display 
 Dispatch out  : out(S) 
 Dispatch show  : show(S)         
  
 Context ctxservice ip [host="localhost" port=8011]  
- 
-
  
 QActor display context ctxservice {  //withobj d using "utils.DisplayObj.create()"
  	State s0 initial{		
@@ -37,15 +31,6 @@ QActor display context ctxservice {  //withobj d using "utils.DisplayObj.create(
 }
 
 /*
- * caller1, che chiede fibo(6) parte dopo caller2 che chiede fibo(40)
- * 
- * Il service esegue le richieste fibo attivando un  actionexecutor 
- * che poi termina dopo avere eseguito 
- * execresultReplyTo doaction with actiondone : actiondone( $Caller,$ReqId, $F )
- * 
- * Il service invia la risposta ricevuta da actionexecutor eseguendo
- * replyTo dofibo ofsender $Caller with fibodone : fibodone(N,$Result)
- * In questo modo risponde a ciascun caller in modo corretto
  */
  
 QActor caller_test context ctxservice {  
@@ -53,11 +38,11 @@ QActor caller_test context ctxservice {
        var SOUT = ""
 	#]
  	State init initial { 
-  		delay 3000
+  		delay 6000
 		[# SOUT = "$name | starts "#]
 		forward display -m out : out($SOUT)
  		request servicemath -m dofibo : dofibo(40)
- 		delay 1000
+ 		delay 500
  		request servicemath -m dofibo : dofibo(6)
 	}	 
 	Transition t0 whenReply fibodone -> fiboanswer
@@ -70,27 +55,23 @@ QActor caller_test context ctxservice {
 			//println("$name | fiboanswer for ${N}=${payloadArg(0)}") color magenta
 			//printCurrentMessage color magenta
 			[# val SOUT = "$name | fiboanswer for ${payloadArg(1)} from ${payloadArg(0)}=${payloadArg(2)}" #]
-            //forward display -m out : out($SOUT)
+            forward display -m out : out($SOUT)
 		}   
 	}
 	Transition t0 whenReply fibodone -> fiboanswer
 }
 
 
-
-
-
 /*
  * SERVICE 
  */
 QActor servicemath context ctxservice {
- 	
 	 
 	State init initial { 
 		println("$name  STARTS ") color blue
 	}	
 	Transition t0 whenRequest dofibo -> work
-	
+	 
 	State work{
 		onMsg( dofibo : dofibo(N) ){
 			[#  
@@ -101,74 +82,46 @@ QActor servicemath context ctxservice {
 			[# val SOUT = "$name | $ReqId $ReqArg Sender=$Sender" #]
 			println("$SOUT") color blue
 			//forward display -m out  : out(  $SOUT  )
-			create actionexecutor requestbycreator doaction : doaction ( $ReqId,$ReqArg,$Sender,name ) 
+			delegateCurrentMsgTo actionexec
+			//create actionexecutor requestbycreator doaction : doaction ( $ReqId,$ReqArg,$Sender,name ) 
 		}
 	}  
-	Transition t0 whenReply actiondone  -> elabjobdone  
-	              whenRequest dofibo    -> work
+	Transition t0   whenRequest dofibo    -> work
 
-	State elabjobdone{
-		printCurrentMessage color cyan
-		[# val M = currentMsg.msgContent()  #]
- 		onMsg( actiondone : actiondone( RCALLER,REQID,N,RESULT ) ){
-			[# val Caller = payloadArg(0) 
-			   val ReqId  = payloadArg(1)
-			   val N      = payloadArg(2) 
-			   val Result = payloadArg(3) 	
-			#]    
-		    println("$name | result for $Caller, N=$N=$Result ") color magenta		
-		    [# var SOUT = "$name | result for $Caller, N=$N->$Result " #]
-		    forward display -m out  : out(  $SOUT  )
-		    replyTo dofibo ofsender $Caller with fibodone : fibodone($Caller, $N,$Result)
-		}
- 	}
-	Transition t0 whenReply actiondone  -> elabjobdone  
-	              whenRequest dofibo    -> work
-}
+ }
 
-
-/*
-
- */
-QActor actionexecutor  context ctxservice withobj math using "utils.MathUtils.create()" dynamicOnly{
+QActor actionexec  context ctxservice withobj math using "utils.MathUtils.create()" dynamicOnly{
 	State init initial {
 		//println("$name | STARTS ")  color cyan
     }	 
-    Transition t0 whenRequest doaction -> work
+    Transition t0 whenRequest dofibo -> work
 	
 	State work{
 		printCurrentMessage color green
-		onMsg( doaction : doaction( REQID,RARG,RCALLER,SERVICE ) ){
-			[#  var ReqId   = payloadArg(0)
-				var ReqArg  = payloadArg(1) 
-				var Caller  = payloadArg(2)
-				val Service = payloadArg(3)			
-				
+		onMsg( dofibo : dofibo( N ) ){
+			[#   
+				var ReqArg  = payloadArg(0) 
+ 				var Sender  = currentMsg.msgSender() 
 			#]  
 			//println("$name | work N=$N ${sysUtil.curThread()}") color blue
 			[# var D = ReqArg.toInt() * 20L #] 
 			delayVar D
-//	 		if [# ReqArg.toInt() > 30  #]{
-//	 			delay 500
-//	 		}
-			[#  var F = math.fibo( ReqArg.toInt() ) #]   //SIMULO AZIONE LUNGA SENZA FARE delay
+ 			[#  var F = math.fibo( ReqArg.toInt() ) #]   //SIMULO AZIONE LUNGA SENZA FARE delay
 			[# val SOUT = "$name, fibo($ReqArg), $F" #]
 			println("$SOUT") color cyan
 			forward display -m out : out($SOUT)
-			execresultReplyTo doaction with actiondone : actiondone( $Caller,$ReqId, $ReqArg, $F )
-			
-//			[# var anames = sysUtil.getAllActorNames(context!!.name) #]
-//			println("$name | BEFORE: $anames in ${context!!.name}")
-			   
+			replyTo dofibo with fibodone : fibodone($Sender,$ReqArg,$F)
+ 			   
 			terminate 0
 
 			[# var anames = sysUtil.getAllActorNames(context!!.name) #]
 			println("$name | AFTER: $anames")
 		}
-	
 	} 
  
  }
 
+
+ 
 DisplayHTML servicedev port 8020 usingactor display inctx ctxservice
 

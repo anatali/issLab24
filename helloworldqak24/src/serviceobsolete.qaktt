@@ -7,7 +7,7 @@ Reply   actiondone : actiondone( RCALLER,REQID,N,R ) for doaction
 
 Request dofibo   : dofibo(N)
 Reply   fibodone : fibodone( CALLER,N,R ) for dofibo
-
+  
  
 //Request r1   : r1(X)
 //Reply   rr1 : rr1(X) for r1
@@ -196,7 +196,8 @@ QActor servicemath context ctxservice {
 			[# val SOUT = "$name | $ReqId $ReqArg Sender=$Sender" #]
 			println("$SOUT") color blue
 			forward display -m show  : show(  $SOUT  )
-			create actionexecutor requestbycreator doaction : doaction ( $ReqId,$ReqArg,$Sender,name ) 
+			delegateCurrentMsgTo actionexecutor
+			//create actionexecutor requestbycreator doaction : doaction ( $ReqId,$ReqArg,$Sender,name ) 
 		}
 	}  
 	Transition t0 whenReply actiondone  -> elabjobdone  

@@ -19,6 +19,7 @@ class Display ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
+		 var count = 0  
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
@@ -27,26 +28,39 @@ class Display ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t00",targetState="handleout",cond=whenDispatch("write"))
+					 transition( edgeName="goto",targetState="init", cond=doswitch() )
 				}	 
-				state("handleout") { //this:State
+				state("init") { //this:State
 					action { //it:State
-						if( checkMsgContent( Term.createTerm("write(TERM)"), Term.createTerm("write(T)"), 
-						                        currentMsg.msgContent()) ) { //set msgArgList
-								CommUtils.outblue("$name | ${payloadArg(0)}")
-								updateResourceRep( "out(${currentMsg})"  
-								)
-								updateResourceRep( "show(${currentMsg})"  
-								)
-								updateResourceRep( payloadArg(0)  
-								)
-						}
+						CommUtils.outyellow("$name waiting for request  ")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t01",targetState="handleout",cond=whenDispatch("write"))
+					 transition(edgeName="t02",targetState="doout",cond=whenDispatch("show"))
+					transition(edgeName="t03",targetState="doout",cond=whenDispatch("out"))
+				}	 
+				state("emitinfo") { //this:State
+					action { //it:State
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition( edgeName="goto",targetState="init", cond=doswitch() )
+				}	 
+				state("doout") { //this:State
+					action { //it:State
+						 val M = currentMsg.msgContent() 
+						updateResourceRep( "$M"  
+						)
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition( edgeName="goto",targetState="init", cond=doswitch() )
 				}	 
 			}
 		}
