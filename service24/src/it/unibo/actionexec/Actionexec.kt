@@ -42,7 +42,7 @@ class Actionexec ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 								 val T0 = getCurrentTime()  
 								  var F = math.fibo( ReqArg.toInt() )  
 								 val TF  = getDuration(T0)  
-								 val SOUT = "$name, fibo($ReqArg), $F"  
+								 val SOUT = "$name, fibo($ReqArg), $F, time=$TF"  
 								CommUtils.outcyan("$SOUT")
 								forward("out", "out($SOUT)" ,"display" ) 
 								answer("dofibo", "fibodone", "fibodone($Sender,$ReqArg,$F,$TF)"   )  

@@ -102,7 +102,7 @@ QActor actionexec  context ctxservice withobj math using "utils.MathUtils.create
 			[# val T0 = getCurrentTime() #]
  			[#  var F = math.fibo( ReqArg.toInt() ) #]   //SIMULO AZIONE LUNGA SENZA FARE delay
  			[# val TF  = getDuration(T0) #]
-			[# val SOUT = "$name, fibo($ReqArg), $F" #]
+			[# val SOUT = "$name, fibo($ReqArg), $F, time=$TF" #]
 			println("$SOUT") color cyan
 			forward display -m out : out($SOUT)
 			replyTo dofibo with fibodone : fibodone($Sender, $ReqArg, $F, $TF)
