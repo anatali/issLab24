@@ -4,7 +4,7 @@ System /*-msglog  -trace */ servicemathasking
 //Messages for the application 
 Request dofibo   : dofibo(N)
 Reply   fibodone : fibodone( CALLER,N,RESULT,TIME ) for dofibo
-
+ 
 Request confirm   : confirm(X)
 Reply   confirmed : confirmed(X) for confirm
 
@@ -12,22 +12,24 @@ Dispatch doelab   : doelab(X)
 
 //Messages for the display 
 Dispatch out  : out(S) 
-Dispatch show  : show(S)         
+Dispatch show : show(S)         
   
 Context ctxservice ip [host="localhost" port=8011]  
  
 QActor display context ctxservice {  //withobj d using "utils.DisplayObj.create()"
  	State s0 initial{		
 	}
-	Transition t0 whenMsg out -> handleout
-	
-	State handleout{
+	Transition t0 whenMsg out  -> view
+	              whenMsg show -> view
+ 	
+	State view{
 		printCurrentMessage color yellow
-		[# val SOUT = "${currentMsg.msgContent()}" #]
-		//[# d.write( SOUT ) #]
-		updateResource [# SOUT #]	
+		[# val SOUT = "${currentMsg.msgContent()}" #] //inizia con out o con show
+		println("$name | $SOUT ") color yellow
+		updateResource [# "$SOUT" #]
 	} 
-	Transition t0 whenMsg out -> handleout
+	Transition t0 whenMsg out  -> view
+	              whenMsg show -> view
 }
 
 /*
@@ -37,13 +39,18 @@ QActor caller_test context ctxservice {
 	[#  var SOUT = ""
 	#]
  	State init initial { 
-  		delay 6000
-		[# SOUT = "$name | starts"  #]
+  		delay 10000
+  		//[# sysUtil.waitUser( "HIT a CHAR TO START", 30000)#]
+		[# SOUT = "$name | 44"  #]
 		forward display -m out : out($SOUT)
  		request servicemath -m dofibo : dofibo(44)
- 		delay 500
- 		request servicemath -m dofibo : dofibo(48)
- 		delay 500
+ 		delay 1000
+ 		[# SOUT = "$name | 38"  #]
+ 		forward display -m out : out($SOUT)
+ 		request servicemath -m dofibo : dofibo(50)
+ 		delay 1000
+ 		[# SOUT = "$name | 40"  #]
+ 		forward display -m out : out($SOUT)
  		request servicemath -m dofibo : dofibo(40)
 	}	 
 	Transition t0 whenReply fibodone  -> fiboanswer
@@ -130,8 +137,8 @@ QActor actionexec  context ctxservice withobj math using "utils.MathUtils.create
 				ask confirm : confirm($N) forrequest dofibo
 			}
 			else{
-				//forward actionexec -m doelab : doelab($N) //NO!!
-				[# forward("doelab", "doelab($N)" , name ) #]
+				autodispatch doelab : doelab($N)  
+				//[# forward("doelab", "doelab($N)" , name ) #]
 				//println("$name | work N=$N ${sysUtil.curThread()}") color blue
 			}
 		} 
@@ -143,9 +150,12 @@ QActor actionexec  context ctxservice withobj math using "utils.MathUtils.create
 		onMsg( confirmed : confirmed( X ) ){
 			[# val Arg = payloadArg(0) #]
 			if [# payloadArg(0) == "yes"#]{  
-			  println("confirmed $MyName  $name" ) color red
-			  [# forward("doelab", "doelab($N)" , name ) #]			  
+			  println("confirmed $MyName  $name autodispatch" ) color red
+			  autodispatch doelab : doelab($N) 
+			  //[# forward("doelab", "doelab($N)" , name ) #]			  
 			}else{
+				[# val SOUT = "$name, fibo($N), not confirmed" #]
+				forward display -m show : show($SOUT)
 				terminate 0		 
 			    [# var anames = sysUtil.getAllActorNames(context!!.name) #]
 			    println("$name | AFTER: $anames")			  	
@@ -164,7 +174,7 @@ QActor actionexec  context ctxservice withobj math using "utils.MathUtils.create
 		 	    val SOUT = "$name, fibo($ReqArg), $F, time=$TF" 
 			#]
 			println("$SOUT") color cyan
-			forward display -m out : out($SOUT)
+			forward display -m show : show($SOUT)
 			replyTo dofibo with fibodone : fibodone($Sender, $ReqArg, $F, $TF)
 		 			   
 			terminate 0

@@ -30,7 +30,7 @@ class Actionexec ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t010",targetState="work",cond=whenRequest("dofibo"))
+					 transition(edgeName="t012",targetState="work",cond=whenRequest("dofibo"))
 				}	 
 				state("work") { //this:State
 					action { //it:State
@@ -45,7 +45,7 @@ class Actionexec ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 								 ){replyreq("confirm", "dofibo", "confirm($N)"   )  
 								}
 								else
-								 { forward("doelab", "doelab($N)" , name )  
+								 {forward("doelab", "doelab($N)" ,name ) 
 								 }
 						}
 						//genTimer( actor, state )
@@ -53,8 +53,8 @@ class Actionexec ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t011",targetState="checkelab",cond=whenReply("confirmed"))
-					transition(edgeName="t012",targetState="elab",cond=whenDispatch("doelab"))
+					 transition(edgeName="t013",targetState="checkelab",cond=whenReply("confirmed"))
+					transition(edgeName="t014",targetState="elab",cond=whenDispatch("doelab"))
 				}	 
 				state("checkelab") { //this:State
 					action { //it:State
@@ -62,11 +62,13 @@ class Actionexec ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								 val Arg = payloadArg(0)  
 								if(  payloadArg(0) == "yes" 
-								 ){CommUtils.outred("confirmed $MyName  $name")
-								 forward("doelab", "doelab($N)" , name )  
+								 ){CommUtils.outred("confirmed $MyName  $name autodispatch")
+								forward("doelab", "doelab($N)" ,name ) 
 								}
 								else
-								 {//terminate(0)
+								 { val SOUT = "$name, fibo($N), not confirmed"  
+								 forward("show", "show($SOUT)" ,"display" ) 
+								 //terminate(0)
 								 context!!.removeInternalActor(myself)
 								  var anames = sysUtil.getAllActorNames(context!!.name)  
 								 CommUtils.outblack("$name | AFTER: $anames")
@@ -77,7 +79,7 @@ class Actionexec ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t013",targetState="elab",cond=whenDispatch("doelab"))
+					 transition(edgeName="t015",targetState="elab",cond=whenDispatch("doelab"))
 				}	 
 				state("elab") { //this:State
 					action { //it:State
@@ -90,7 +92,7 @@ class Actionexec ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 										 	    val TF  = getDuration(T0)  
 										 	    val SOUT = "$name, fibo($ReqArg), $F, time=$TF" 
 								CommUtils.outcyan("$SOUT")
-								forward("out", "out($SOUT)" ,"display" ) 
+								forward("show", "show($SOUT)" ,"display" ) 
 								answer("dofibo", "fibodone", "fibodone($Sender,$ReqArg,$F,$TF)"   )  
 								//terminate(0)
 								context!!.removeInternalActor(myself)
