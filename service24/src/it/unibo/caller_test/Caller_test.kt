@@ -26,7 +26,9 @@ class Caller_test ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 						delay(6000) 
 						 SOUT = "$name | starts"   
 						forward("out", "out($SOUT)" ,"display" ) 
-						request("dofibo", "dofibo(43)" ,"servicemath" )  
+						request("dofibo", "dofibo(44)" ,"servicemath" )  
+						delay(500) 
+						request("dofibo", "dofibo(48)" ,"servicemath" )  
 						delay(500) 
 						request("dofibo", "dofibo(40)" ,"servicemath" )  
 						//genTimer( actor, state )
@@ -35,15 +37,15 @@ class Caller_test ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					sysaction { //it:State
 					}	 	 
 					 transition(edgeName="t02",targetState="fiboanswer",cond=whenReply("fibodone"))
+					transition(edgeName="t03",targetState="handleAskFromreceiver",cond=whenRequest("confirm"))
 				}	 
 				state("fiboanswer") { //this:State
 					action { //it:State
 						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
-						 val M = currentMsg.msgContent()  
 						if( checkMsgContent( Term.createTerm("fibodone(CALLER,N,RESULT,TIME)"), Term.createTerm("fibodone(CALLER,V,R,T)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
-								 val SOUT = "$name | fiboanswer for ${payloadArg(1)} from ${payloadArg(0)}=${payloadArg(2)} time=${payloadArg(3)}"  
+								 SOUT = "$name | fiboanswer for ${payloadArg(1)} from ${payloadArg(0)}=${payloadArg(2)} time=${payloadArg(3)}"  
 								forward("out", "out($SOUT)" ,"display" ) 
 						}
 						//genTimer( actor, state )
@@ -51,7 +53,28 @@ class Caller_test ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t03",targetState="fiboanswer",cond=whenReply("fibodone"))
+					 transition(edgeName="t04",targetState="fiboanswer",cond=whenReply("fibodone"))
+					transition(edgeName="t05",targetState="handleAskFromreceiver",cond=whenRequest("confirm"))
+				}	 
+				state("handleAskFromreceiver") { //this:State
+					action { //it:State
+						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						 	   
+						if( checkMsgContent( Term.createTerm("confirm(X)"), Term.createTerm("confirm(N)"), 
+						                        currentMsg.msgContent()) ) { //set msgArgList
+								if(  payloadArg(0).toInt() > 45  
+								 ){answer("confirm", "confirmed", "confirmed(no)"   )  
+								}
+								else
+								 {answer("confirm", "confirmed", "confirmed(yes)"   )  
+								 }
+						}
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition(edgeName="t06",targetState="fiboanswer",cond=whenReply("fibodone"))
 				}	 
 			}
 		}

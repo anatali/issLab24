@@ -1,1 +1,1 @@
-{"host":"localhost", "port":"8011", "context":"ctxservice", "usingactor": "display", "devicename":"servicedev", "deviceport":"8020", "sysdescr":"servicemath" }
+{"host":"localhost", "port":"8011", "context":"ctxservice", "usingactor": "display", "devicename":"servicedev", "deviceport":"8020", "sysdescr":"servicemathasking" }

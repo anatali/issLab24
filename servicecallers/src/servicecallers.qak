@@ -1,14 +1,16 @@
 System servicecallers 
 
+//Messages for the application 
 Request dofibo   : dofibo(N)
-Reply   fibodone : fibodone( CALLER,N,R ) for dofibo
+Reply   fibodone : fibodone( CALLER,N,RESULT,TIME ) for dofibo
 
+//Messages for the display  
 Dispatch out  : out(S) 
 Dispatch show : show(S)  
 
 Context ctxcallers ip [host="localhost" port=8015]
 Context ctxservice ip [host="127.0.0.1" port=8011] 
-
+ 
 ExternalQActor servicemath context ctxservice
 
 QActor display context ctxcallers withobj d using "utils.DisplayObj.create()" {  //
@@ -25,22 +27,27 @@ QActor display context ctxcallers withobj d using "utils.DisplayObj.create()" { 
 }
  
 QActor caller_1 context ctxcallers {  
-	[# val N=6 #]
+	[# val N=43 #]
 	State s0 initial { 
-		println("$name | STARTS")
-		[# val SOUT ="$name | STARTS" #]
+		println("$name | STARTS") color blue
+		[# val SOUT ="$name | STARTS N=$N" #]
 		forward display -m out : out($SOUT)  
  		request servicemath -m dofibo : dofibo($N)
 	}	 
 	Transition t0 whenReply fibodone -> fiboanswer
 	
 	State fiboanswer{
-		printCurrentMessage color magenta
+		printCurrentMessage color blue
 		[# val M = currentMsg.msgContent() #]
 		//println("$currentMsg") color red
-		onMsg(fibodone : fibodone( CALLER,V,R) ){
-			[# val SOUT = "$name | fiboanswer for ${payloadArg(1)} from ${payloadArg(0)}=${payloadArg(2)}" #]
-			println("$name | $SOUT") color magenta
+		onMsg(fibodone : fibodone( CALLER,V,R,T) ){			
+			[# val Caller = payloadArg(0)
+			   val N      = payloadArg(1)
+			   val Result = payloadArg(2)
+			   val Time   = payloadArg(3)
+				val SOUT = "$name | fiboanswer for ${N} from ${Caller}=${Result} time=$Time"  
+			#]
+			println("$name | $SOUT") color blue
             forward display -m out : out($SOUT)
 		}   
 	}

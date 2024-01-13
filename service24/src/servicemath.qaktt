@@ -8,7 +8,7 @@ Reply   fibodone : fibodone( CALLER,N,RESULT,TIME ) for dofibo
 //Messages for the display 
 Dispatch out  : out(S) 
 Dispatch show  : show(S)         
- 
+  
 Context ctxservice ip [host="localhost" port=8011]  
  
 QActor display context ctxservice {  //withobj d using "utils.DisplayObj.create()"
@@ -43,11 +43,8 @@ QActor caller_test context ctxservice {
 	
 	State fiboanswer{
 		printCurrentMessage color magenta
-		[# val M = currentMsg.msgContent() #]
-		//println("$currentMsg") color red
 		onMsg(fibodone : fibodone( CALLER,V,R,T) ){
-			//println("$name | fiboanswer for ${N}=${payloadArg(0)}") color magenta
-			[# val SOUT = "$name | fiboanswer for ${payloadArg(1)} from ${payloadArg(0)}=${payloadArg(2)} time=${payloadArg(3)}" #]
+			[# SOUT = "$name | fiboanswer for ${payloadArg(1)} from ${payloadArg(0)}=${payloadArg(2)} time=${payloadArg(3)}" #]
             forward display -m out : out($SOUT)
 		}   
 	}
@@ -97,12 +94,12 @@ QActor actionexec  context ctxservice withobj math using "utils.MathUtils.create
  				var Sender  = currentMsg.msgSender() 
 			#]  
 			//println("$name | work N=$N ${sysUtil.curThread()}") color blue
-//			[# var D = ReqArg.toInt() * 20L #] 
-//			delayVar D
-			[# val T0 = getCurrentTime() #]
- 			[#  var F = math.fibo( ReqArg.toInt() ) #]   //SIMULO AZIONE LUNGA SENZA FARE delay
- 			[# val TF  = getDuration(T0) #]
-			[# val SOUT = "$name, fibo($ReqArg), $F, time=$TF" #]
+			[# 
+			   val T0 = getCurrentTime()  
+ 			   var F = math.fibo( ReqArg.toInt() )  
+ 			   val TF  = getDuration(T0)  
+			   val SOUT = "$name, fibo($ReqArg), $F, time=$TF" 
+			#]
 			println("$SOUT") color cyan
 			forward display -m out : out($SOUT)
 			replyTo dofibo with fibodone : fibodone($Sender, $ReqArg, $F, $TF)

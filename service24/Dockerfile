@@ -23,4 +23,8 @@ CMD ["bash", "./unibo.servicemath"]
 ## gradlew build
 ## docker build -t servicemath:1.0 .                      CREA IMMAGINE REPOSTORY lowercase
 ## docker run -it --rm --name servicemath -p8011:8011 -p8020:8020 --privileged servicemath:1.0  /bin/bash
+## docker-compose -f servicemath.yaml up
 
+## docker tag servicemath:1.0 natbodocker/servicemath:1.0
+## type docker_password.txt | docker login --username natbodocker --password-stdin
+## docker push natbodocker/servicemath:1.0

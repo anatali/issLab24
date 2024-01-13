@@ -1,2 +1,4 @@
 {"actor":"display", "msgType":"dispatch", "curstate":"s0", "nextstate":"handleout", "msgId":"out"}
 {"actor":"display", "msgType":"dispatch", "curstate":"handleout", "nextstate":"handleout", "msgId":"out"}
+{"actor":"actionexec", "msgType":"dispatch", "curstate":"work", "nextstate":"elab", "msgId":"doelab"}
+{"actor":"actionexec", "msgType":"dispatch", "curstate":"checkelab", "nextstate":"elab", "msgId":"doelab"}
