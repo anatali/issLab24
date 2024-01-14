@@ -20,8 +20,6 @@ class Actionexec ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
 		 val math = utils.MathUtils.create()
-		 var N      = 0 
-			   var Sender = ""		
 		return { //this:ActionBasciFsm
 				state("init") { //this:State
 					action { //it:State
@@ -30,7 +28,7 @@ class Actionexec ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t012",targetState="work",cond=whenRequest("dofibo"))
+					 transition(edgeName="t08",targetState="work",cond=whenRequest("dofibo"))
 				}	 
 				state("work") { //this:State
 					action { //it:State
@@ -39,58 +37,13 @@ class Actionexec ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 						if( checkMsgContent( Term.createTerm("dofibo(N)"), Term.createTerm("dofibo(N)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								   
-												N       = payloadArg(0).toInt()
-								 				Sender  = currentMsg.msgSender() 
-								if(  N > 43  
-								 ){replyreq("confirm", "dofibo", "confirm($N)"   )  
-								}
-								else
-								 {forward("doelab", "doelab($N)" ,name ) 
-								 }
-						}
-						//genTimer( actor, state )
-					}
-					//After Lenzi Aug2002
-					sysaction { //it:State
-					}	 	 
-					 transition(edgeName="t013",targetState="checkelab",cond=whenReply("confirmed"))
-					transition(edgeName="t014",targetState="elab",cond=whenDispatch("doelab"))
-				}	 
-				state("checkelab") { //this:State
-					action { //it:State
-						if( checkMsgContent( Term.createTerm("confirmed(X)"), Term.createTerm("confirmed(X)"), 
-						                        currentMsg.msgContent()) ) { //set msgArgList
-								 val Arg = payloadArg(0)  
-								if(  payloadArg(0) == "yes" 
-								 ){CommUtils.outred("confirmed $MyName  $name autodispatch")
-								forward("doelab", "doelab($N)" ,name ) 
-								}
-								else
-								 { val SOUT = "$name, fibo($N), not confirmed"  
-								 forward("show", "show($SOUT)" ,"display" ) 
-								 //terminate(0)
-								 context!!.removeInternalActor(myself)
-								  var anames = sysUtil.getAllActorNames(context!!.name)  
-								 CommUtils.outblack("$name | AFTER: $anames")
-								 }
-						}
-						//genTimer( actor, state )
-					}
-					//After Lenzi Aug2002
-					sysaction { //it:State
-					}	 	 
-					 transition(edgeName="t015",targetState="elab",cond=whenDispatch("doelab"))
-				}	 
-				state("elab") { //this:State
-					action { //it:State
-						if( checkMsgContent( Term.createTerm("doelab(X)"), Term.createTerm("doelab(N)"), 
-						                        currentMsg.msgContent()) ) { //set msgArgList
+												var ReqArg  = payloadArg(0) 
+								 				var Sender  = currentMsg.msgSender() 
 								 
-												val ReqArg = payloadArg(0)
-												val T0  = getCurrentTime()  
-										 		var F   = math.fibo( ReqArg.toInt() )  
-										 	    val TF  = getDuration(T0)  
-										 	    val SOUT = "$name, fibo($ReqArg), $F, time=$TF" 
+											   val T0 = getCurrentTime()  
+								 			   var F = math?.fibo( ReqArg.toInt() )  
+								 			   val TF  = getDuration(T0)  
+											   val SOUT = "$name, fibo($ReqArg), $F, time=$TF" 
 								CommUtils.outcyan("$SOUT")
 								forward("show", "show($SOUT)" ,"display" ) 
 								answer("dofibo", "fibodone", "fibodone($Sender,$ReqArg,$F,$TF)"   )  

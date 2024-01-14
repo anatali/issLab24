@@ -51,7 +51,7 @@ QActor caller_test context ctxservice {
  		delay 1000
  		[# SOUT = "$name | 40"  #]
  		forward display -m out : out($SOUT)
- 		request servicemath -m dofibo : dofibo(40)
+ 		request servicemath -m dofibo : dofibo(5)
 	}	 
 	Transition t0 whenReply fibodone  -> fiboanswer
 	              whenRequest confirm -> handleAskFromreceiver

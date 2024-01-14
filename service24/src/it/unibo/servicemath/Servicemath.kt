@@ -28,7 +28,7 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t09",targetState="work",cond=whenRequest("dofibo"))
+					 transition(edgeName="t06",targetState="work",cond=whenRequest("dofibo"))
 				}	 
 				state("work") { //this:State
 					action { //it:State
@@ -47,18 +47,7 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t010",targetState="work",cond=whenRequest("dofibo"))
-					transition(edgeName="t011",targetState="answerAfterAsk",cond=whenReply("confirmed"))
-				}	 
-				state("answerAfterAsk") { //this:State
-					action { //it:State
-						CommUtils.outcyan("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
-						 	   
-						//genTimer( actor, state )
-					}
-					//After Lenzi Aug2002
-					sysaction { //it:State
-					}	 	 
+					 transition(edgeName="t07",targetState="work",cond=whenRequest("dofibo"))
 				}	 
 			}
 		}
