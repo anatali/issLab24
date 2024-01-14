@@ -102,6 +102,10 @@ QActor storage context ctxservice withobj math using "utils.MathUtils.create()"{
 
 		[# val NUMS = sysUtil.solve("storednums(X)","X") #]
 		println("$name | NUMS=$NUMS ") color green	
+		
+		[# val NMax = sysUtil.solve("maxnumstored(X)","X") #]
+		println("$name | NMax=$NMax ") color green	
+		
 
 	}	
 	

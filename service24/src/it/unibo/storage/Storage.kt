@@ -53,6 +53,8 @@ class Storage ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 						CommUtils.outgreen("$name | RR=$RR ")
 						 val NUMS = sysUtil.solve("storednums(X)","X")  
 						CommUtils.outgreen("$name | NUMS=$NUMS ")
+						 val NMax = sysUtil.solve("maxnumstored(X)","X")  
+						CommUtils.outgreen("$name | NMax=$NMax ")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
