@@ -45,7 +45,8 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 											   //val M      = currentMsg
 								 var F = math.fibo( ReqArg.toInt() )  
 								 SOUT  = "result($name, fibo($ReqArg), $F)"  
-								CommUtils.outmagenta("$SOUT")
+								CommUtils.outgreen("$SOUT")
+								 publish("unibo/qak/pythonan","hello")  
 								answer("dofibo", "fibodone", "fibodone($Sender,$ReqArg,$F)"   )  
 						}
 						//genTimer( actor, state )

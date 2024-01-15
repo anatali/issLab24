@@ -91,7 +91,7 @@ QActor caller2 context ctxservice {
 
    
 /*
- * SERVICE : senza caller locali usare jupyter
+ * SERVICE : senza caller locali usare jupyter o mqtt
  */
 QActor servicemath context ctxservice withobj math using "utils.MathUtils.create()"{
 	State init initial { 
@@ -113,9 +113,12 @@ QActor servicemath context ctxservice withobj math using "utils.MathUtils.create
 //		    [# var F = utils.Common.fibo( ReqArg.toInt() ) #]   
 		    [# var F = math.fibo( ReqArg.toInt() ) #] 
 			[# SOUT  = "result($name, fibo($ReqArg), $F)" #]
-			println("$SOUT") color magenta
+			println("$SOUT") color green
+			[# publish("unibo/qak/pythonan","hello") #]
 //			forward display -m show : show($SOUT)		    
 		    replyTo dofibo /*ofsender $Sender*/ with fibodone : fibodone($Sender,$ReqArg,$F)
+		    
+		    
 		}
 	}  
 	Transition t0  whenRequest dofibo -> work
@@ -130,3 +133,13 @@ QActor servicemath context ctxservice withobj math using "utils.MathUtils.create
 
 //DisplayHTML servicedev port 8085 usingactor display inctx ctxservice 
 
+/*
+ * Usando MQTT
+ * - tutti gli attori ricevono eventi inviati sulla eventTopic
+ * - un mqqt client che invia una richietsa (si veda mqtt_emitter.py) 
+ *   riceve la risposta inviata da xxx se fa subscribe su unibo/qak/xxx
+ * - un actor può fare publish su una topic
+ 
+ */ 
+
+ 

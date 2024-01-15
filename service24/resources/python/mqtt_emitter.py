@@ -33,7 +33,8 @@ def sendMsg( message ) :
     client.publish(topic, msg)
  
 def work() :
-    #emit( alarmFire )
+    emit( alarmFire )
+    time.sleep(1)
     sendMsg( req1 )
 #    time.sleep(1)
 #    emit( alarmTsunami )
@@ -48,13 +49,7 @@ def terminate() :
     print("BYE")
 
 def on_message(client, userdata, msg):
-    print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
-
-def subscribe( ):
-    print("SUBSCRIBE")
-    def on_message(client, userdata, msg):
-        print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
-    client.on_message = on_message
+    print(f"Received  {msg.payload.decode()} from  {msg.topic}  topic")
 
 #################################################
 client= paho.Client("sender")      
