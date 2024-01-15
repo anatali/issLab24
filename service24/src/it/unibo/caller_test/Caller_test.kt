@@ -28,7 +28,7 @@ class Caller_test ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 						forward("out", "out($SOUT)" ,"display" ) 
 						request("dofibo", "dofibo(43)" ,"servicemath" )  
 						delay(500) 
-						request("dofibo", "dofibo(40)" ,"servicemath" )  
+						request("dofibo", "dofibo(93)" ,"servicemath" )  
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002

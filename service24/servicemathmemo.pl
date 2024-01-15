@@ -6,6 +6,7 @@ reply( fibodone, fibodone(CALLER,N,RESULT,TIME) ).  %%for dofibo
 dispatch( out, out(S) ).
 dispatch( show, show(S) ).
 request( getfibo, getfibo(N) ).
+reply( getfiboanswer, getfiboanswer(N,V) ).  %%for getfibo
 %====================================================================================
 context(ctxservice, "localhost",  "TCP", "8011").
  qactor( display, ctxservice, "it.unibo.display.Display").

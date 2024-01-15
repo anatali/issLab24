@@ -28,6 +28,7 @@ with Diagram('servicemathmemoArch', show=False, outformat='png', graph_attr=grap
           servicemath=Custom('servicemath','./qakicons/symActorSmall.png')
           actionexec=Custom('actionexec','./qakicons/symActorWithobjSmall.png')
      servicedev=Custom('servicedev','./qakicons/server.png')
+     actionexec >> Edge(color='magenta', style='solid', decorate='true', label='<getfibo<font color="darkgreen"> getfiboanswer</font> &nbsp; >',  fontcolor='magenta') >> storage
      caller_test >> Edge(color='magenta', style='solid', decorate='true', label='<dofibo<font color="darkgreen"> fibodone</font> &nbsp; >',  fontcolor='magenta') >> servicemath
      display >> Edge(color='blue', style='solid', decorate='true', label='<out &nbsp; show>',  fontcolor='blue') >> servicedev
      actionexec >> Edge(color='blue', style='solid',  decorate='true', label='<show &nbsp; >',  fontcolor='blue') >> display

@@ -57,6 +57,12 @@ private static HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
 		Pair<Integer,Integer> v2 = fibo2(n-2, last,preclast);
 		return new Pair<Integer,Integer>(v1.getValue()+v2.getValue(),v1.getValue());
 	}
+	
+ 
+	/*
+	 * Theory curTh = engine.getTheory(); // save current theory to file
+new FileOutputStream(args[1]).write(curTh.toString().getBytes());
+	 */
  }
 
  

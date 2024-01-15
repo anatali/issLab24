@@ -28,7 +28,7 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t06",targetState="work",cond=whenRequest("dofibo"))
+					 transition(edgeName="t08",targetState="work",cond=whenRequest("dofibo"))
 				}	 
 				state("work") { //this:State
 					action { //it:State
@@ -36,18 +36,24 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								  
 											   var ReqId  = currentMsg.msgId()
-											   var ReqArg = payloadArg(0)
+											   var ReqArg = payloadArg(0).toLong()
 											   var Sender = currentMsg.msgSender()
 								 val SOUT = "$name | $ReqId $ReqArg Sender=$Sender"  
 								CommUtils.outblue("$SOUT")
-								delegateCurrentMsgTodynamic("actionexec") 
+								if(  ReqArg < 0 || ReqArg > 92  
+								 ){ val Wrong = "-1"  
+								answer("dofibo", "fibodone", "fibodone($Sender,$ReqArg,$Wrong,0)"   )  
+								}
+								else
+								 {delegateCurrentMsgTodynamic("actionexec") 
+								 }
 						}
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t07",targetState="work",cond=whenRequest("dofibo"))
+					 transition(edgeName="t09",targetState="work",cond=whenRequest("dofibo"))
 				}	 
 			}
 		}

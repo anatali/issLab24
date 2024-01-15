@@ -20,6 +20,9 @@ class Actionexec ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
 		 val math = utils.MathUtils.create()
+		 var T0     = 0L 
+			   var ReqArg = 0L
+		       var Sender = ""
 		return { //this:ActionBasciFsm
 				state("init") { //this:State
 					action { //it:State
@@ -28,7 +31,7 @@ class Actionexec ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t08",targetState="work",cond=whenRequest("dofibo"))
+					 transition(edgeName="t010",targetState="work",cond=whenRequest("dofibo"))
 				}	 
 				state("work") { //this:State
 					action { //it:State
@@ -37,21 +40,34 @@ class Actionexec ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 						if( checkMsgContent( Term.createTerm("dofibo(N)"), Term.createTerm("dofibo(N)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								   
-												var ReqArg  = payloadArg(0) 
-								 				var Sender  = currentMsg.msgSender() 
-								 
-											   val T0 = getCurrentTime()  
-								 			   var F = math?.fibo( ReqArg.toInt() )  
-								 			   val TF  = getDuration(T0)  
-											   val SOUT = "$name, fibo($ReqArg), $F, time=$TF" 
-								CommUtils.outcyan("$SOUT")
+												ReqArg  = payloadArg(0).toLong() 
+								 				Sender  = currentMsg.msgSender() 
+								 T0 = getCurrentTime()  
+								request("getfibo", "getfibo($ReqArg)" ,"storage" )  
+						}
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition(edgeName="t011",targetState="sendAnswerToCaller",cond=whenReply("getfiboanswer"))
+				}	 
+				state("sendAnswerToCaller") { //this:State
+					action { //it:State
+						if( checkMsgContent( Term.createTerm("getfiboanswer(N,V)"), Term.createTerm("getfiboanswer(N,V)"), 
+						                        currentMsg.msgContent()) ) { //set msgArgList
+								
+												val TF  = getDuration(T0) 				
+												val F   = payloadArg(1)
+												val SOUT = "$name, ${payloadArg(0)} / fibo($ReqArg), $F, time=$TF" 
+								CommUtils.outyellow("$name | check $ReqArg==${payloadArg(0)}")
 								forward("show", "show($SOUT)" ,"display" ) 
 								answer("dofibo", "fibodone", "fibodone($Sender,$ReqArg,$F,$TF)"   )  
-								//terminate(0)
-								context!!.removeInternalActor(myself)
-								 var anames = sysUtil.getAllActorNames(context!!.name)  
-								CommUtils.outblack("$name | AFTER: $anames")
 						}
+						//terminate(0)
+						context!!.removeInternalActor(myself)
+						 var anames = sysUtil.getAllActorNames(context!!.name)  
+						CommUtils.outblack("$name | AFTER: $anames")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002

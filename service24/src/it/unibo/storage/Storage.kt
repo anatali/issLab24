@@ -20,46 +20,38 @@ class Storage ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
 		 val math = utils.MathUtils.create()
+		 val engine = Prolog()
+					
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
 						 var N = 5  
 						CommUtils.outgreen("$name | STARTS ")
-						 sysUtil.loadTheory("storage.pl")  
-						 val V = sysUtil.solve("fibo($N,V)","V")  
+						 math!!.loadTheory("storage.pl", engine)  
+						 val V = math!!.solve("fibo($N,V)","V",engine)  
 						CommUtils.outgreen("$name | V=$V ")
-						 
-						        	val VX5 = math?.fibo(5)
-						CommUtils.outgreen("$name | VX5=$VX5 ")
-						  val V4 = Pair<Int,Int>(4,3)
-									val V5 = Pair<Int,Int>(5,5)
-									val V7 = math!!.fibo2(7,V5,V4)  //safe call
-									
-									val fact = "fibo(7,${V7.second})"
-									val R    = sysUtil.solve("assert("+ fact +")","")
-									
-									val P1   = math!!.fibo3( 9 )
-									val P1a  = "fibo(9,${P1.first})"
-									val P1b  = "fibo(8,${P1.second})"
-									sysUtil.solve("assert("+ P1a +")","")
-									sysUtil.solve("assert("+ P1b +")","")
-									
-						CommUtils.outgreen("$name | V7=$V7 R=$R  ${P1.first}|${P1.second}")
-						 val Z = sysUtil.solve("fibo(8,X)","X")  
-						CommUtils.outgreen("$name | Z=$Z ")
-						 val Q = sysUtil.solve("fibo(12,X)","X")  
-						CommUtils.outgreen("$name | Q=$Q ")
-						 val RR = math!!.fibo4( 42)  
-						CommUtils.outgreen("$name | RR=$RR ")
-						 val NUMS = sysUtil.solve("storednums(X)","X")  
-						CommUtils.outgreen("$name | NUMS=$NUMS ")
-						 val NMax = sysUtil.solve("maxnumstored(X)","X")  
-						CommUtils.outgreen("$name | NMax=$NMax ")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
+					 transition(edgeName="t06",targetState="elab",cond=whenRequest("getfibo"))
+				}	 
+				state("elab") { //this:State
+					action { //it:State
+						if( checkMsgContent( Term.createTerm("getfibo(N)"), Term.createTerm("getfibo(N)"), 
+						                        currentMsg.msgContent()) ) { //set msgArgList
+								 val K = payloadArg(0).toLong() 
+											   val R = math!!.fiboWithMemo( K,engine )
+											   
+								answer("getfibo", "getfiboanswer", "getfiboanswer($K,$R)"   )  
+						}
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition(edgeName="t07",targetState="elab",cond=whenRequest("getfibo"))
 				}	 
 			}
 		}

@@ -1,8 +1,12 @@
 package utils
 
 
+import alice.tuprolog.Prolog
+import alice.tuprolog.Theory
 import it.unibo.kactor.sysUtil
 import unibo.basicomm23.utils.CommUtils
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.util.HashMap
 
 class MathUtils {
@@ -71,26 +75,81 @@ class MathUtils {
         }
 
     fun fibo4(
-        n: Int
+        n: Int, engine: Prolog
     ): Int { //vuso della cache Prolog
         if (n == 1 || n == 2) return 1
-        val R = sysUtil.solve("fibo($n,X)","X")
+        val R =  solve("fibo($n,X)","X", engine)
 
         if( R != null ){
             CommUtils.outyellow("fibo4 has found: n=$n "   )
             return R.toInt()
         }
         CommUtils.outyellow("fibo4 elab: n=$n "   )
-        val v1 = fibo4(n - 1)
-        val v2 = fibo4(n - 2)
+        val v1 = fibo4(n - 1, engine)
+        val v2 = fibo4(n - 2, engine)
 
         val fact = "fibo($n,${v1+v2})"
         //Inserisco senza ripetizioni
-        val R1 = sysUtil.solve("retract( $fact )","")
+        val R1 = engine.solve("retract( $fact )." )
         if( R1 == null ) CommUtils.outyellow("fibo4 $fact absent "   )
-        val R2 = sysUtil.solve("assert($fact)","")
+        val R2 = engine.solve("assert($fact).")
         //if( R2 != null ) CommUtils.outyellow("fibo4 $n R2:  $R2 "   )
         return v1+v2
     }
 
+    fun fiboWithMemo(
+        n: Long, engine: Prolog
+    ): Long { //vuso della cache Prolog
+        if (n == 1L || n == 2L ) return 1L
+        val R =  solve("fibo($n,X)","X", engine)
+
+        if( R != null ){
+            //CommUtils.outyellow("fiboWithMemo has found: n=$n "   )
+            return R.toLong()
+        }
+        //CommUtils.outyellow("fiboWithMemo elab: n=$n "   )
+        val v1 = fiboWithMemo(n - 1L, engine)
+        val v2 = fiboWithMemo(n - 2L, engine)
+
+        val fact = "fibo($n,${v1+v2})"
+        //Inserisco senza ripetizioni
+        val R1 = engine.solve("retract( $fact )." )
+        if( R1.isSuccess() ) CommUtils.outyellow("fiboWithMemo retracted $fact  $R1"   )
+        //else CommUtils.outyellow("fiboWithMemo $fact absent "   )
+        val R2 = engine.solve("assert($fact).")
+        //if( R2 != null ) CommUtils.outyellow("fiboWithMemo $n R2:  $R2 "   )
+        return v1+v2
+    }
+
+    fun loadTheory( path: String, pengine: Prolog ) {
+        try {
+            CommUtils.outyellow("%%% MathUtils | loadTheory: th $path"   )
+            //user.dir is typically the directory in which the Java virtual machine was invoked.
+            //val executionPath = System.getProperty("user.dir")
+             val worldTh = Theory( FileInputStream(path) )
+             pengine.addTheory(worldTh)
+        } catch (e: Exception) {
+            CommUtils.outred("%%% MathUtils | loadheory WARNING: ${e}" )
+            throw e
+        }
+    }
+    fun saveTheory( FileName: String, pengine: Prolog) {
+        val curTh = pengine.getTheory();
+        //CommUtils.outyellow("%%% MathUtils | saveTheory: th $curTh"   )
+        FileOutputStream(FileName).write(curTh.toString().toByteArray())
+            //.write( curTh.toString() );
+    }
+
+    fun solve( goal: String, resVar: String, pengine: Prolog  ) : String? {
+        //println("sysUtil  | solve  ${goal} resVar=$resVar" );
+        val sol =  pengine.solve( goal+".");
+        if( sol.isSuccess ) {
+            if( resVar.length == 0 ) return "success"
+            val result = sol.getVarValue(resVar)  //Term
+            var resStr = result.toString()
+            return sysUtil.strCleaned(resStr)
+        }
+        else return null
+    }
 }//MathUtils
+ 
