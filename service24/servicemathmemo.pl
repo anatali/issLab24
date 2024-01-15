@@ -1,6 +1,7 @@
 %====================================================================================
 % servicemathmemo description   
 %====================================================================================
+mqttBroker("broker.hivemq.com", "1883", "servicetopic").
 request( dofibo, dofibo(N) ).
 reply( fibodone, fibodone(CALLER,N,RESULT,TIME) ).  %%for dofibo
 dispatch( out, out(S) ).

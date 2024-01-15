@@ -1,5 +1,5 @@
 System /*-msglog  -trace */ servicemathmemo  
-//mqttBroker "broker.hivemq.com" : 1883
+//mqttBroker "broker.hivemq.com" : 1883 eventTopic "servicetopic"
 
 //Messages for the application 
 Request dofibo   : dofibo(N)
@@ -13,8 +13,6 @@ Dispatch show  : show(S)
 Request getfibo : getfibo(N)
 Reply   getfiboanswer : getfiboanswer(N,V) for getfibo //LAST=0 => V=fibo(N) else V=fibo(LAST)
 
-
- 
 
 
 /*

@@ -15,10 +15,10 @@ class MathUtils {
         protected var count = 1
         protected var thcounter = 0
         protected var numOfExecutors = 0
-        private var singleton: MathUtils? = null
+        private  var singleton = MathUtils()
         private val map = HashMap<Int, Int>()
-        fun create(): MathUtils? {
-            if (singleton == null) singleton = MathUtils()
+        fun create(): MathUtils {
+            //if (singleton.isInitialized ) singleton = MathUtils()
             return singleton
         }
     }

@@ -19,41 +19,54 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
+		 val math = utils.MathUtils.create()
 		return { //this:ActionBasciFsm
 				state("init") { //this:State
 					action { //it:State
-						CommUtils.outblue("$name  STARTS ")
+						CommUtils.outgreen("$name  STARTS ")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t08",targetState="work",cond=whenRequest("dofibo"))
+					 transition(edgeName="t04",targetState="work",cond=whenRequest("dofibo"))
+					transition(edgeName="t05",targetState="handlealarm",cond=whenEvent("alarm"))
 				}	 
 				state("work") { //this:State
 					action { //it:State
+						CommUtils.outgreen("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						 	   
+						 var SOUT : String  
 						if( checkMsgContent( Term.createTerm("dofibo(N)"), Term.createTerm("dofibo(N)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
-								  
-											   var ReqId  = currentMsg.msgId()
-											   var ReqArg = payloadArg(0).toLong()
-											   var Sender = currentMsg.msgSender()
-								 val SOUT = "$name | $ReqId $ReqArg Sender=$Sender"  
-								CommUtils.outblue("$SOUT")
-								if(  ReqArg < 0 || ReqArg > 92  
-								 ){ val Wrong = "-1"  
-								answer("dofibo", "fibodone", "fibodone($Sender,$ReqArg,$Wrong,0)"   )  
-								}
-								else
-								 {delegateCurrentMsgTodynamic("actionexec") 
-								 }
+								 //var ReqId  = currentMsg.msgId()
+											   var ReqArg = payloadArg(0) 
+											   var Sender = currentMsg.msgSender()  
+											   //val M      = currentMsg
+								 var F = math.fibo( ReqArg.toInt() )  
+								 SOUT  = "result($name, fibo($ReqArg), $F)"  
+								CommUtils.outmagenta("$SOUT")
+								answer("dofibo", "fibodone", "fibodone($Sender,$ReqArg,$F)"   )  
 						}
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t09",targetState="work",cond=whenRequest("dofibo"))
+					 transition(edgeName="t06",targetState="work",cond=whenRequest("dofibo"))
+					transition(edgeName="t07",targetState="handlealarm",cond=whenEvent("alarm"))
+				}	 
+				state("handlealarm") { //this:State
+					action { //it:State
+						CommUtils.outcyan("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						 	   
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition(edgeName="t08",targetState="work",cond=whenRequest("dofibo"))
+					transition(edgeName="t09",targetState="handlealarm",cond=whenEvent("alarm"))
 				}	 
 			}
 		}
