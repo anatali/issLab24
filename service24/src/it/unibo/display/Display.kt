@@ -12,6 +12,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import it.unibo.kactor.sysUtil.createActor   //Sept2023
 
+//User imports JAN2024
+import utils.DisplayObj
+import utils.Common
+
 class Display ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : ActorBasicFsm( name, scope, confined=isconfined ){
 
 	override fun getInitialState() : String{
@@ -19,10 +23,11 @@ class Display ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
-		 val d = utils.DisplayObj.create()
+		 val d = DisplayObj.create()
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
+						 Common.hello()  
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002

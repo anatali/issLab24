@@ -12,6 +12,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import it.unibo.kactor.sysUtil.createActor   //Sept2023
 
+//User imports JAN2024
+import utils.MathUtils
+
 class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : ActorBasicFsm( name, scope, confined=isconfined ){
 
 	override fun getInitialState() : String{
@@ -19,7 +22,7 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
-		 val math = utils.MathUtils.create()
+		 val math = MathUtils.create()
 		return { //this:ActionBasciFsm
 				state("init") { //this:State
 					action { //it:State
