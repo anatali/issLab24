@@ -13,7 +13,7 @@ import kotlinx.coroutines.runBlocking
 import it.unibo.kactor.sysUtil.createActor   //Sept2023
 
 //User imports JAN2024
-import utils.MathUtils
+import utils.MathUtilsJava
 
 class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : ActorBasicFsm( name, scope, confined=isconfined ){
 
@@ -22,7 +22,7 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
-		 val math = MathUtils.create()
+		 val math = MathUtilsJava.create()
 		return { //this:ActionBasciFsm
 				state("init") { //this:State
 					action { //it:State
@@ -32,8 +32,8 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t04",targetState="work",cond=whenRequest("dofibo"))
-					transition(edgeName="t05",targetState="handlealarm",cond=whenEvent("alarm"))
+					 transition(edgeName="t03",targetState="work",cond=whenRequest("dofibo"))
+					transition(edgeName="t04",targetState="handlealarm",cond=whenEvent("alarm"))
 				}	 
 				state("work") { //this:State
 					action { //it:State
@@ -46,19 +46,20 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 											   var ReqArg = payloadArg(0) 
 											   var Sender = currentMsg.msgSender()  
 											   //val M      = currentMsg
+								 val T0 = getCurrentTime()    
 								 var F = math.fibo( ReqArg.toInt() )  
-								 SOUT  = "result($name, fibo($ReqArg), $F)"  
+								 val TF  = getDuration(T0)   
+								 SOUT  = "result($name, fibo($ReqArg), $F, $TF)"  
 								CommUtils.outgreen("$SOUT")
-								 publish("unibo/qak/pythonan","hello")  
-								answer("dofibo", "fibodone", "fibodone($Sender,$ReqArg,$F)"   )  
+								answer("dofibo", "fibodone", "fibodone($Sender,$ReqArg,$F,$TF)"   )  
 						}
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t06",targetState="work",cond=whenRequest("dofibo"))
-					transition(edgeName="t07",targetState="handlealarm",cond=whenEvent("alarm"))
+					 transition(edgeName="t05",targetState="work",cond=whenRequest("dofibo"))
+					transition(edgeName="t06",targetState="handlealarm",cond=whenEvent("alarm"))
 				}	 
 				state("handlealarm") { //this:State
 					action { //it:State
@@ -69,8 +70,8 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t08",targetState="work",cond=whenRequest("dofibo"))
-					transition(edgeName="t09",targetState="handlealarm",cond=whenEvent("alarm"))
+					 transition(edgeName="t07",targetState="work",cond=whenRequest("dofibo"))
+					transition(edgeName="t08",targetState="handlealarm",cond=whenEvent("alarm"))
 				}	 
 			}
 		}

@@ -1,9 +1,8 @@
 %====================================================================================
 % servicemathsynch description   
 %====================================================================================
-mqttBroker("broker.hivemq.com", "1883", "servicemathsynch/events").
 request( dofibo, dofibo(N) ).
-reply( fibodone, fibodone(CALLER,N,R) ).  %%for dofibo
+reply( fibodone, fibodone(CALLER,N,RESULT,TIME) ).  %%for dofibo
 dispatch( show, show(S) ).
 dispatch( out, out(S) ).
 event( alarm, alarm(X) ).

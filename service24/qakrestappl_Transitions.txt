@@ -1,3 +1,2 @@
 {"actor":"display", "msgType":"dispatch", "curstate":"s0", "nextstate":"view", "msgId":"out"}
-{"actor":"display", "msgType":"dispatch", "curstate":"s0", "nextstate":"view", "msgId":"show"}
 {"actor":"display", "msgType":"dispatch", "curstate":"view", "nextstate":"view", "msgId":"out"}

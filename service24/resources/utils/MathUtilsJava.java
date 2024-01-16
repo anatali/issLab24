@@ -9,12 +9,12 @@ public  class MathUtilsJava {
 protected static int count = 1;
 protected static int thcounter = 0;
 protected static int numOfExecutors = 0;
-private static MathUtilsJava singleton;
+private static MathUtilsJava singleton = new MathUtilsJava();
 
 private static HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
 
     public static MathUtilsJava create() {
-    	if( singleton == null ) singleton = new MathUtilsJava();
+    	//if( singleton == null ) singleton = new MathUtilsJava();
     	return singleton;
     }
     

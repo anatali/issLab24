@@ -21,11 +21,11 @@ class Caller1 ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
-		 val N = 6 
+		 val N = 43 
 		return { //this:ActionBasciFsm
 				state("init") { //this:State
 					action { //it:State
-						delay(2000) 
+						delay(3000) 
 						CommUtils.outblue("$name | STARTS ")
 						request("dofibo", "dofibo($N)" ,"servicemath" )  
 						//genTimer( actor, state )
@@ -33,15 +33,15 @@ class Caller1 ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t03",targetState="fiboanswer",cond=whenReply("fibodone"))
+					 transition(edgeName="t02",targetState="fiboanswer",cond=whenReply("fibodone"))
 				}	 
 				state("fiboanswer") { //this:State
 					action { //it:State
 						CommUtils.outblue("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
-						if( checkMsgContent( Term.createTerm("fibodone(CALLER,N,R)"), Term.createTerm("fibodone(CALLER,V,R)"), 
+						if( checkMsgContent( Term.createTerm("fibodone(CALLER,N,RESULT,TIME)"), Term.createTerm("fibodone(CALLER,V,R,T)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
-								 val SOUT = "$name | fiboanswer for N=${payloadArg(1)} calledby ${payloadArg(0)}:${payloadArg(2)}"  
+								 val SOUT = "$name | fiboanswer for N=${payloadArg(1)} calledby ${payloadArg(0)}:${payloadArg(2)} time=${payloadArg(3)}"  
 								forward("out", "out($SOUT)" ,"display" ) 
 								CommUtils.outblue("$name | $SOUT")
 						}
