@@ -103,20 +103,20 @@ testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.7'
     // https://mvnrepository.com/artifact/commons-io/commons-io
     implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
 
-    /* UNIBO *********************************************************************************/
-    implementation name: 'uniboInterfaces'
-    implementation name: '2p301'
-	implementation name: 'unibo.qakactor23-5.0'
-    implementation name: 'unibo.basicomm23-1.0'
-
     /* AIMA ****************************************** */
  	//PLANNER  
     implementation name: 'unibo.planner23-1.0'
     // https://mvnrepository.com/artifact/com.googlecode.aima-java/aima-core
     implementation group: 'com.googlecode.aima-java', name: 'aima-core', version: '3.0.0'
 
-	
-	
+    /* UNIBO *********************************************************************************/
+    implementation name: 'uniboInterfaces'
+    implementation name: '2p301'
+	implementation name: 'unibo.qakactor23-5.0'
+    implementation name: 'unibo.basicomm23-1.0'
+
+
+    
 }
 
 sourceSets {
@@ -135,7 +135,7 @@ eclipse {
 
 application {
     // Define the main class for the application.
-    mainClass = 'it.unibo.ctxcallers.MainCtxcallersKt'
+    mainClass = 'it.unibo.ctxservice.MainCtxserviceKt'
 }
 /*
  jar {
