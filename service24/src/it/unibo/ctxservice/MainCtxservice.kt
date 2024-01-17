@@ -10,8 +10,6 @@ fun main() = runBlocking {
 	        "localhost", this, "servicemathsynch.pl", "sysRules.pl", "ctxservice"
 	)
 	//OCT2023 Facade
-	unibo.qakfacadegui23.Qakfacadegui23Application.main( arrayOf<String>() );
 	//JAN24 Display
-	unibo.qakdisplaygui24.QakFacadeApplication.main( arrayOf<String>() );
 }
 

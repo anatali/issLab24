@@ -27,7 +27,6 @@ class Display ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						 Common.hello()  
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
