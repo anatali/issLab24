@@ -6,10 +6,10 @@ import unibo.basicomm23.interfaces.Interaction;
 import unibo.basicomm23.tcp.TcpConnection;
 import unibo.basicomm23.utils.CommUtils;
 
-public class ServerCaller {
+public class ServerCallers {
 //	private Interaction conn;
 	
-    public ServerCaller(){
+    public ServerCallers(){
 //        try {
 //			conn = new TcpConnection("localhost", 8011);
 //	        CommUtils.outmagenta("ServerCaller conn="+conn);
@@ -120,6 +120,6 @@ public class ServerCaller {
     }  
     
     public static void main( String[] args) {
-    	new ServerCaller().doJob();
+    	new ServerCallers().doJob();
     }
 }

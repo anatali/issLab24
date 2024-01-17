@@ -32,8 +32,8 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t03",targetState="work",cond=whenRequest("dofibo"))
-					transition(edgeName="t04",targetState="handlealarm",cond=whenEvent("alarm"))
+					 transition(edgeName="t04",targetState="work",cond=whenRequest("dofibo"))
+					transition(edgeName="t05",targetState="handlealarm",cond=whenEvent("alarm"))
 				}	 
 				state("work") { //this:State
 					action { //it:State
@@ -49,8 +49,10 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 								 val T0 = getCurrentTime()    
 								 var F = math.fibo( ReqArg.toInt() )  
 								 val TF  = getDuration(T0)   
-								 SOUT  = "result($name, fibo($ReqArg), $F, $TF)"  
-								CommUtils.outgreen("$SOUT")
+								 SOUT  = "servicemathresult($name, fibo($ReqArg), $F, $TF)"  
+								CommUtils.outmagenta("$SOUT")
+								updateResourceRep( SOUT  
+								)
 								answer("dofibo", "fibodone", "fibodone($Sender,$ReqArg,$F,$TF)"   )  
 						}
 						//genTimer( actor, state )
@@ -58,8 +60,8 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t05",targetState="work",cond=whenRequest("dofibo"))
-					transition(edgeName="t06",targetState="handlealarm",cond=whenEvent("alarm"))
+					 transition(edgeName="t06",targetState="work",cond=whenRequest("dofibo"))
+					transition(edgeName="t07",targetState="handlealarm",cond=whenEvent("alarm"))
 				}	 
 				state("handlealarm") { //this:State
 					action { //it:State
@@ -70,8 +72,8 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t07",targetState="work",cond=whenRequest("dofibo"))
-					transition(edgeName="t08",targetState="handlealarm",cond=whenEvent("alarm"))
+					 transition(edgeName="t08",targetState="work",cond=whenRequest("dofibo"))
+					transition(edgeName="t09",targetState="handlealarm",cond=whenEvent("alarm"))
 				}	 
 			}
 		}

@@ -9,7 +9,7 @@ import unibo.basicomm23.utils.CommUtils;
 public class ServerCallerTCP {
     
 	public void doJob() {
-    	IApplMessage req = MsgUtil.buildRequest("tester", "dofibo", "dofibo(23)", "servicemath");
+    	IApplMessage req = MsgUtil.buildRequest("tester", "dofibo", "dofibo(35)", "servicemath");
     	CommUtils.outgreen("send " + req);
     	String answer = sendMessageTcp(req,"localhost", 8011);  
     	CommUtils.outgreen(answer);   	

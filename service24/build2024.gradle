@@ -118,6 +118,7 @@ testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.7'
 
     /* USER **************************** */
     implementation name: 'qakfacadegui23-1.0'
+    implementation name: 'qakfacadegui23-1.0-plain'
     
 	/* Librerie spring per il supporto a qakfacadegui23 ***************************** */
         implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'

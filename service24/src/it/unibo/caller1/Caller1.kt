@@ -26,8 +26,11 @@ class Caller1 ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 				state("init") { //this:State
 					action { //it:State
 						delay(3000) 
-						CommUtils.outblue("$name | STARTS ")
+						CommUtils.outblue("$name | request ")
 						request("dofibo", "dofibo($N)" ,"servicemath" )  
+						delay(3000) 
+						CommUtils.outblue("$name | request ")
+						request("dofibo", "dofibo(23)" ,"servicemath" )  
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -50,6 +53,7 @@ class Caller1 ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
+					 transition(edgeName="t03",targetState="fiboanswer",cond=whenReply("fibodone"))
 				}	 
 			}
 		}
