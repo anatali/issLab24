@@ -21,11 +21,4 @@ with Diagram('servicecallersArch', show=False, outformat='png', graph_attr=graph
   with Cluster('env'):
      sys = Custom('','./qakicons/system.png')
 ### see https://renenyffenegger.ch/notes/tools/Graphviz/attributes/label/HTML-like/index
-     with Cluster('ctxcallers', graph_attr=nodeattr):
-          display=Custom('display','./qakicons/symActorWithobjSmall.png')
-          caller_1=Custom('caller_1','./qakicons/symActorSmall.png')
-     with Cluster('ctxservice', graph_attr=nodeattr):
-          servicemath=Custom('servicemath(ext)','./qakicons/externalQActor.png')
-     caller_1 >> Edge(color='magenta', style='solid', decorate='true', label='<dofibo<font color="darkgreen"> fibodone</font> &nbsp; >',  fontcolor='magenta') >> servicemath
-     caller_1 >> Edge(color='blue', style='solid',  decorate='true', label='<out &nbsp; >',  fontcolor='blue') >> display
 diag

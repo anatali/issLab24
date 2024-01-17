@@ -21,7 +21,7 @@ class Caller_1 ( name: String, scope: CoroutineScope, isconfined: Boolean=false 
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
-		 val N=43  
+		 val N=40  
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State

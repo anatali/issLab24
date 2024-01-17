@@ -32,8 +32,8 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t04",targetState="work",cond=whenRequest("dofibo"))
-					transition(edgeName="t05",targetState="handlealarm",cond=whenEvent("alarm"))
+					 transition(edgeName="t08",targetState="work",cond=whenRequest("dofibo"))
+					transition(edgeName="t09",targetState="handlealarm",cond=whenEvent("alarm"))
 				}	 
 				state("work") { //this:State
 					action { //it:State
@@ -53,6 +53,7 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 								CommUtils.outmagenta("$SOUT")
 								updateResourceRep( SOUT  
 								)
+								forward("show", "show($SOUT)" ,"displayweb" ) 
 								answer("dofibo", "fibodone", "fibodone($Sender,$ReqArg,$F,$TF)"   )  
 						}
 						//genTimer( actor, state )
@@ -60,8 +61,8 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t06",targetState="work",cond=whenRequest("dofibo"))
-					transition(edgeName="t07",targetState="handlealarm",cond=whenEvent("alarm"))
+					 transition(edgeName="t010",targetState="work",cond=whenRequest("dofibo"))
+					transition(edgeName="t011",targetState="handlealarm",cond=whenEvent("alarm"))
 				}	 
 				state("handlealarm") { //this:State
 					action { //it:State
@@ -72,8 +73,8 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t08",targetState="work",cond=whenRequest("dofibo"))
-					transition(edgeName="t09",targetState="handlealarm",cond=whenEvent("alarm"))
+					 transition(edgeName="t012",targetState="work",cond=whenRequest("dofibo"))
+					transition(edgeName="t013",targetState="handlealarm",cond=whenEvent("alarm"))
 				}	 
 			}
 		}

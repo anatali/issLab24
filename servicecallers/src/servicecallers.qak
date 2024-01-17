@@ -27,13 +27,13 @@ QActor display context ctxcallers withobj d using "utils.DisplayObj.create()" { 
 }
  
 QActor caller_1 context ctxcallers {  
-	[# val N=43 #]
+	[# val N=40 #]
 	State s0 initial { 
 		println("$name | STARTS") color blue
 		[# val SOUT ="$name | STARTS N=$N" #]
 		forward display -m out : out($SOUT)  
  		request servicemath -m dofibo : dofibo($N)
-	}	 
+	}	  
 	Transition t0 whenReply fibodone -> fiboanswer
 	
 	State fiboanswer{

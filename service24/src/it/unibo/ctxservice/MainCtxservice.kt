@@ -12,5 +12,6 @@ fun main() = runBlocking {
 	//OCT2023 Facade
 	unibo.qakfacadegui23.Qakfacadegui23Application.main( arrayOf<String>() );
 	//JAN24 Display
+	unibo.qakdisplaygui24.QakFacadeApplication.main( arrayOf<String>() );
 }
 

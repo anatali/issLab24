@@ -9,26 +9,28 @@ import unibo.basicomm23.utils.CommUtils;
 public class ServerCallerTCP {
     
 	public void doJob() {
-    	IApplMessage req = MsgUtil.buildRequest("tester", "dofibo", "dofibo(38)", "servicemath");
-    	CommUtils.outgreen("send " + req);
+    	IApplMessage req = MsgUtil.buildRequest("tester", "dofibo", "dofibo(41)", "servicemath");
+    	CommUtils.outgreen("ServerCallerTCP | send " + req);
     	String answer = sendMessageTcp(req,"localhost", 8011);  
-    	CommUtils.outgreen(answer);   	
+    	CommUtils.outgreen("ServerCallerTCP | answer " + answer);   	
      }
     
     protected  String sendMessageTcp(IApplMessage m, String addr, int port ) {
 	        try {
-            //CommUtils.outyellow("sendMessageTcp  " + m );
             Interaction conn = new TcpConnection(addr, port);
-            CommUtils.outyellow("sendMessageTcp conn " + conn + " for m="+m);
+            //CommUtils.outblue("ServerCallerTCP | sendMessageTcp conn " + conn + " for m="+m);
             if( m.isRequest() ) {
                String answer = conn.request(m.toString()); //sincrono
-               CommUtils.outblue("sendMessageTcp answer: " + answer);
+               //CommUtils.outblue("ServerCallerTCP | sendMessageTcp answer: " + answer);
+               conn.close();
                return answer;    
                
            }else{
-               conn.forward(m.toString());                
+               conn.forward(m.toString());    
+               conn.close();
                return "sendMessageTcp done";
            }
+            
        }catch(Exception e){
     	   CommUtils.outred("ERROR " + e.getMessage() );
            return "sendMessageTcp failed";
@@ -37,7 +39,7 @@ public class ServerCallerTCP {
     
     public static void main( String[] args) throws InterruptedException {
     	new ServerCallerTCP().doJob();
-    	Thread.sleep(2000);
+    	//Thread.sleep(2000);
     	CommUtils.outyellow("sendMessageTcp BYE "  );
     }
 }

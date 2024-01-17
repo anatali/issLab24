@@ -13,7 +13,7 @@ public class ServerCallerMqtt {
 	//"tcp://test.mosquitto.org"
 	
 	public void doJob() {
-    	IApplMessage req = MsgUtil.buildRequest("tester", "dofibo", "dofibo(27)", "servicemath");
+    	IApplMessage req = MsgUtil.buildRequest("tester", "dofibo", "dofibo(37)", "servicemath");
     	CommUtils.outblack("send " + req);
     	String answer = sendMessageMqtt( req );  
     	CommUtils.outblack(answer);   	

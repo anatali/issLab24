@@ -36,7 +36,7 @@ class Caller1 ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t02",targetState="fiboanswer",cond=whenReply("fibodone"))
+					 transition(edgeName="t06",targetState="fiboanswer",cond=whenReply("fibodone"))
 				}	 
 				state("fiboanswer") { //this:State
 					action { //it:State
@@ -53,7 +53,7 @@ class Caller1 ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t03",targetState="fiboanswer",cond=whenReply("fibodone"))
+					 transition(edgeName="t07",targetState="fiboanswer",cond=whenReply("fibodone"))
 				}	 
 			}
 		}

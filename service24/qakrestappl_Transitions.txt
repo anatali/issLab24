@@ -1,2 +1,6 @@
 {"actor":"display", "msgType":"dispatch", "curstate":"s0", "nextstate":"view", "msgId":"out"}
 {"actor":"display", "msgType":"dispatch", "curstate":"view", "nextstate":"view", "msgId":"out"}
+{"actor":"displayweb", "msgType":"dispatch", "curstate":"s0", "nextstate":"view", "msgId":"out"}
+{"actor":"displayweb", "msgType":"dispatch", "curstate":"s0", "nextstate":"view", "msgId":"show"}
+{"actor":"displayweb", "msgType":"dispatch", "curstate":"view", "nextstate":"view", "msgId":"out"}
+{"actor":"displayweb", "msgType":"dispatch", "curstate":"view", "nextstate":"view", "msgId":"show"}

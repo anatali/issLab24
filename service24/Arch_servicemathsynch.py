@@ -23,8 +23,12 @@ with Diagram('servicemathsynchArch', show=False, outformat='png', graph_attr=gra
 ### see https://renenyffenegger.ch/notes/tools/Graphviz/attributes/label/HTML-like/index
      with Cluster('ctxservice', graph_attr=nodeattr):
           display=Custom('display','./qakicons/symActorWithobjSmall.png')
+          displayweb=Custom('displayweb','./qakicons/symActorSmall.png')
           caller1=Custom('caller1','./qakicons/symActorSmall.png')
           servicemath=Custom('servicemath','./qakicons/symActorWithobjSmall.png')
+     servicedev=Custom('servicedev','./qakicons/server.png')
      caller1 >> Edge(color='magenta', style='solid', decorate='true', label='<dofibo<font color="darkgreen"> fibodone</font> &nbsp; >',  fontcolor='magenta') >> servicemath
+     displayweb >> Edge(color='blue', style='solid', decorate='true', label='<out &nbsp; show>',  fontcolor='blue') >> servicedev
+     servicemath >> Edge(color='blue', style='solid',  decorate='true', label='<show &nbsp; >',  fontcolor='blue') >> displayweb
      caller1 >> Edge(color='blue', style='solid',  decorate='true', label='<out &nbsp; >',  fontcolor='blue') >> display
 diag
