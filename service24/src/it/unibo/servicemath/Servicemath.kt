@@ -68,6 +68,9 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					action { //it:State
 						CommUtils.outgreen("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
+						 val SOUT  = "servicemath( $name, alarm )"  
+						updateResourceRep( SOUT  
+						)
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002

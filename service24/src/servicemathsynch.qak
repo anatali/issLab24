@@ -162,6 +162,8 @@ import "utils.MathUtilsJava"
 	
 	State handlealarm{
 		printCurrentMessage color green
+		[# val SOUT  = "servicemath( $name, alarm )" #]
+		updateResource [# SOUT #] 
 	}
 	Transition t0 whenRequest dofibo -> work
 	              whenEvent alarm    -> handlealarm
