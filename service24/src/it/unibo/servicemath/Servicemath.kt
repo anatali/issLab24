@@ -13,7 +13,7 @@ import kotlinx.coroutines.runBlocking
 import it.unibo.kactor.sysUtil.createActor   //Sept2023
 
 //User imports JAN2024
-import utils.MathUtilsJava
+import utils.MathUtils
 
 class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : ActorBasicFsm( name, scope, confined=isconfined ){
 
@@ -22,7 +22,7 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
-		 val math = MathUtilsJava.create()
+		 val math = MathUtils()
 		return { //this:ActionBasciFsm
 				state("init") { //this:State
 					action { //it:State
@@ -32,8 +32,8 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t06",targetState="work",cond=whenRequest("dofibo"))
-					transition(edgeName="t07",targetState="handlealarm",cond=whenEvent("alarm"))
+					 transition(edgeName="t00",targetState="work",cond=whenRequest("dofibo"))
+					transition(edgeName="t01",targetState="handlealarm",cond=whenEvent("alarm"))
 				}	 
 				state("work") { //this:State
 					action { //it:State
@@ -53,7 +53,6 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 								CommUtils.outmagenta("$SOUT")
 								updateResourceRep( SOUT  
 								)
-								forward("show", "show($SOUT)" ,"displayweb" ) 
 								answer("dofibo", "fibodone", "fibodone($Sender,$ReqArg,$F,$TF)"   )  
 						}
 						//genTimer( actor, state )
@@ -61,8 +60,8 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t08",targetState="work",cond=whenRequest("dofibo"))
-					transition(edgeName="t09",targetState="handlealarm",cond=whenEvent("alarm"))
+					 transition(edgeName="t02",targetState="work",cond=whenRequest("dofibo"))
+					transition(edgeName="t03",targetState="handlealarm",cond=whenEvent("alarm"))
 				}	 
 				state("handlealarm") { //this:State
 					action { //it:State
@@ -76,8 +75,8 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t010",targetState="work",cond=whenRequest("dofibo"))
-					transition(edgeName="t011",targetState="handlealarm",cond=whenEvent("alarm"))
+					 transition(edgeName="t04",targetState="work",cond=whenRequest("dofibo"))
+					transition(edgeName="t05",targetState="handlealarm",cond=whenEvent("alarm"))
 				}	 
 			}
 		}

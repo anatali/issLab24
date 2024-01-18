@@ -8,9 +8,5 @@ dispatch( out, out(S) ).
 event( alarm, alarm(X) ).
 %====================================================================================
 context(ctxservice, "localhost",  "TCP", "8011").
- qactor( display, ctxservice, "it.unibo.display.Display").
- static(display).
-  qactor( displayweb, ctxservice, "it.unibo.displayweb.Displayweb").
- static(displayweb).
-  qactor( servicemath, ctxservice, "it.unibo.servicemath.Servicemath").
+ qactor( servicemath, ctxservice, "it.unibo.servicemath.Servicemath").
  static(servicemath).

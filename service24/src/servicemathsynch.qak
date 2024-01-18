@@ -15,10 +15,11 @@ Event alarm : alarm(X)
  
 Context ctxservice ip [host="localhost" port=8011]  
 
+/* 
 QActor display context ctxservice withobj d using "DisplayObj.create()"{  
 import "utils.DisplayObj"
 import "utils.Common"
-
+ 
  	State s0 initial{	
  		 	//[# Common.hello() #]	
 	}
@@ -56,7 +57,7 @@ QActor displayweb context ctxservice  {
   	 
 }
  
- 
+ */
 
 
 /* 
@@ -118,8 +119,8 @@ QActor caller2 context ctxservice {
 /*
  * SERVICE : senza caller locali usare jupyter o mqtt
  */
-QActor servicemath context ctxservice withobj math using "MathUtilsJava.create()" {//withobj math using "utils.MathUtils.create()"
-import "utils.MathUtilsJava" 
+QActor servicemath context ctxservice withobj math using "MathUtils()" {//withobj math using "utils.MathUtils.create()"
+import "utils.MathUtils" 
 
 	State init initial { 
 		println("$name  STARTS ") color green
@@ -146,7 +147,8 @@ import "utils.MathUtilsJava"
 			//delay 1000
 			updateResource [# SOUT #] //gestito da CoapObserver con Facade
 			//[# publish("unibo/qak/pythonan","hello") #]  //PROVA MQTT out
- 			forward displayweb -m show : show($SOUT)		
+ 			
+ 			//forward displayweb -m show : show($SOUT)		
 
 //La reply potrebbe essere inviata all'alieno servicefacade
 //In questo caso OutIn invia la info sulla messagearea
