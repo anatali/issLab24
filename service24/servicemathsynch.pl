@@ -14,4 +14,3 @@ context(ctxservice, "localhost",  "TCP", "8011").
  static(displayweb).
   qactor( servicemath, ctxservice, "it.unibo.servicemath.Servicemath").
  static(servicemath).
-tracing.

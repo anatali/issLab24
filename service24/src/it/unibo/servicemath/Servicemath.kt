@@ -66,7 +66,7 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 				}	 
 				state("handlealarm") { //this:State
 					action { //it:State
-						CommUtils.outcyan("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outgreen("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						//genTimer( actor, state )
 					}

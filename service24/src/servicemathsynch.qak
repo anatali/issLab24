@@ -1,12 +1,12 @@
-System /*-msglog   */ -trace servicemathsynch 
+System /*-msglog  -trace */  servicemathsynch 
 //mqttBroker "broker.hivemq.com" : 1883 eventTopic "servicemathsynch/events"
    
 UserLibs   file "qakfacadegui23-1.0"  file "qakfacadegui23-1.0-plain"  
-  
+   
 //Messages for the application 
 Request dofibo   : dofibo(N)
 Reply   fibodone : fibodone( CALLER,N,RESULT,TIME ) for dofibo
- 
+  
 //Messages for the display 
 Dispatch show : show(S)
 Dispatch out  : out(S)
@@ -29,8 +29,7 @@ import "utils.Common"
 		printCurrentMessage color yellow
 		[# val SOUT = "${currentMsg.msgContent()}" #] //inizia con out o con show
 		println("$name | $SOUT ") color yellow
-		[# d.write("$SOUT") #]
-		
+		[# d.write("$SOUT") #]		
 	} 
 	Transition t0 whenMsg out  -> view
 	              //whenMsg show -> view
@@ -162,7 +161,7 @@ import "utils.MathUtilsJava"
 	               whenEvent alarm    -> handlealarm
 	
 	State handlealarm{
-		printCurrentMessage
+		printCurrentMessage color green
 	}
 	Transition t0 whenRequest dofibo -> work
 	              whenEvent alarm    -> handlealarm
