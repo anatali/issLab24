@@ -11,7 +11,8 @@ plugins {
     id 'eclipse'
 
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
-    id 'org.jetbrains.kotlin.jvm' version "$kotlinVersion"
+    //id 'org.jetbrains.kotlin.jvm' version "$kotlinVersion" //sourceCompatibility = '1.8'
+    id "org.jetbrains.kotlin.jvm" version "1.8.10"
     
     //Per poter usare qakfacadegui23-1.0 che usa Spring
     id 'org.springframework.boot' version '2.7.16'
@@ -23,8 +24,9 @@ plugins {
 
 version '1.0'
 java {
-   sourceCompatibility = '1.8'
+   sourceCompatibility = '17'
 }
+
 
 repositories {
     // Use Maven Central for resolving dependencies.
@@ -101,35 +103,31 @@ testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.7'
     // https://mvnrepository.com/artifact/commons-io/commons-io
     implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
 
-    /* UNIBO *********************************************************************************/
-    implementation name: 'uniboInterfaces'
-    implementation name: '2p301'
-	implementation name: 'unibo.qakactor23-5.0'
-    implementation name: 'unibo.basicomm23-1.0'
-
     /* AIMA ****************************************** */
  	//PLANNER  
     implementation name: 'unibo.planner23-1.0'
     // https://mvnrepository.com/artifact/com.googlecode.aima-java/aima-core
     implementation group: 'com.googlecode.aima-java', name: 'aima-core', version: '3.0.0'
 
+    /* UNIBO *********************************************************************************/
+    implementation name: 'uniboInterfaces'
+    implementation name: '2p301'
+	implementation name: 'unibo.qakactor23-5.0'
+    implementation name: 'unibo.basicomm23-1.0'
+
+
+    /* USER **************************** */
+    implementation name: 'qakfacadegui23-1.0'
+    implementation name: 'qakfacadegui23-1.0-plain'
+    
 	/* Librerie spring per il supporto a qakfacadegui23 ***************************** */
         implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	//depends on spring-boot-starter-logging, which already pulls in spring-jcl for us.
 	//When using starters, Logback is used for logging by default.
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
-
-    /* USER **************************** */
-    implementation name: 'qakfacadegui23-1.0'
-    implementation name: 'qakfacadegui23-1.0-plain'
-
-	/* Supporto a qakdisplay24 ******  (interferenza banner se esiste anche qakfacadegui23-1.0) */
-	implementation name: 'qakdisplaygui24-1.0'
-	implementation name: 'qakdisplaygui24-1.0-plain'
-
 }
-
+	
 sourceSets {
     main.java.srcDirs += 'src'
     main.java.srcDirs += 'resources'
@@ -147,14 +145,18 @@ eclipse {
 application {
     // Define the main class for the application.
     mainClass = 'it.unibo.ctxservice.MainCtxserviceKt'
-    //mainClass = 'javacallers.ServerCallerTCP'
 }
-
+ 
  jar {
     println("building jar")
-    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)  //per via di locgback.xml quando si usa spring
     from sourceSets.main.allSource
+    from('./') {
+      include '*.pl'
+      include '*.json'
+    }
     manifest {
         attributes 'Main-Class': "$mainClassName"
     }
 }
+//gradlew run --warning-mode all

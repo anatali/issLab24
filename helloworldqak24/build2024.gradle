@@ -137,13 +137,17 @@ application {
     // Define the main class for the application.
     mainClass = 'it.unibo.ctxhello.MainCtxhelloKt'
 }
-/*
+
  jar {
     println("building jar")
+    //duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
     from sourceSets.main.allSource
+    from('./') {
+      include '*.pl'
+      include '*.json'
+    }
     manifest {
         attributes 'Main-Class': "$mainClassName"
     }
 }
 //gradlew run --warning-mode all
-*/

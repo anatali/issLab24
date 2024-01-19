@@ -135,12 +135,16 @@ eclipse {
 
 application {
     // Define the main class for the application.
-    mainClass = 'it.unibo.ctxcallers.MainCtxcallersKt'
+    mainClass = 'it.unibo.ctxservice.MainCtxserviceKt'
 }
 /*
  jar {
     println("building jar")
     from sourceSets.main.allSource
+    from('./') {
+      include '*.pl'
+      include '*.json'
+    }
     manifest {
         attributes 'Main-Class': "$mainClassName"
     }

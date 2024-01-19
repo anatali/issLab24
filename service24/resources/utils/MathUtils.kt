@@ -94,7 +94,8 @@ class MathUtils {
         //Inserisco senza ripetizioni
         val R1 = engine.solve("retract( $fact )." )
         if( R1 == null ) CommUtils.outyellow("fibo4 $fact absent "   )
-        val R2 = engine.solve("assert($fact).")
+        //val R2 =  
+        engine.solve("assert($fact).") 
         //if( R2 != null ) CommUtils.outyellow("fibo4 $n R2:  $R2 "   )
         return v1+v2
     }
