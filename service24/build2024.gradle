@@ -4,8 +4,6 @@ build2024.gradle
 GENERATED ONLY ONCE
 ================================================================================
 */
-import java.text.SimpleDateFormat
-
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
@@ -148,52 +146,7 @@ application {
     // Define the main class for the application.
     mainClass = 'it.unibo.ctxservice.MainCtxserviceKt'
 }
-
-tasks.register('copyReport', Copy) {
-	println("copyReport")
-    from layout.buildDirectory.file("resources/logback.xml")
-    into layout.buildDirectory.dir("toArchive")
-}
-
  
- 
-tasks.register("mycopy", Copy) {    //Registers a new task of type Copy and configures it
-    println("projectDir= $projectDir") //C:\Didattica2024\issLab24\service24
-    println("buildDir  = $buildDir")   //C:\Didattica2024\issLab24\service24\build
-    //println("binDir  = $binDir")   //C:\Didattica2024\issLab24\service24\build
-//    from("$projectDir/."){
-        //exclude( "**/main/resources", "**/test" )
-//    }
-//    into( "../copiedFiles" )
-}
-
- 
-
-/*
-task proviamoGradle {
-	for(int i=1;i<20;i++)
-		if (i%2==0) println i+" è pari..."
-	println 'Operazioni terminate ' 
-}
-*/
-
-task dovesiamo {
-    println("projectDir= $projectDir") //C:\Didattica2024\issLab24\service24
-    println("buildDir  = $buildDir")   //C:\Didattica2024\issLab24\service24\build
-}
-
-distributions {
-    main {
-        contents {
-            from './sysRules.pl'  
-            from './servicemathsynchbase.pl'
-            from './facadeConfig.json'
-        }
-    }
-}
-
-
-
  jar {
     println("building jar")
     duplicatesStrategy(DuplicatesStrategy.EXCLUDE)  //per via di locgback.xml quando si usa spring
