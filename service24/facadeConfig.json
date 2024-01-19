@@ -1,1 +1,1 @@
-{"host":"localhost", "port":"8011", "context":"ctxservice", "facade": "servicemath", "facadeport":"8088", "sysdescr":"servicemathsynch" }
+{"host":"localhost", "port":"8011", "context":"ctxservice", "facade": "servicemath", "facadeport":"8088", "sysdescr":"servicemathsynchbase" }

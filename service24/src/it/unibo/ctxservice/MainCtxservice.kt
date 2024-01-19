@@ -7,9 +7,10 @@ import kotlinx.coroutines.runBlocking
 fun main() = runBlocking {
 	//System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "ERROR");
 	QakContext.createContexts(
-	        "localhost", this, "servicemathsynch.pl", "sysRules.pl", "ctxservice"
+	        "localhost", this, "servicemathsynchbase.pl", "sysRules.pl", "ctxservice"
 	)
 	//OCT2023 Facade
+	unibo.qakfacadegui23.Qakfacadegui23Application.main( arrayOf<String>() );
 	//JAN24 Display
 }
 
