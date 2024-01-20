@@ -1,61 +1,87 @@
 System /*-msglog  -trace */  servicemathsynchbase 
 //mqttBroker "broker.hivemq.com" : 1883 eventTopic "servicemathsynch/events"
    
-UserLibs   file "servicefacade24-1.0"   file "servicefacade24-1.0-plain"
+//UserLibs   -f "servicefacade24-1.0"   -f "servicefacade24-1.0-plain"
    
 //Messages for the application 
 Request dofibo   : dofibo(N)
 Reply   fibodone : fibodone( CALLER,N,RESULT,TIME ) for dofibo
+
    
-Context ctxservice ip [host="localhost" port=8011]  
-    
+Context ctxservice ip [host="localhost" port=8011]    
+CodedQActor servicemathcoded context ctxservice className "codedActor.Servicecodedbasic"
+
+QActor caller_1 context ctxservice {  
+	[# val N=7 #]
+	State s0 initial { 
+		println("$name | STARTS") color blue
+		[# val SOUT ="$name | STARTS N=$N" #]
+		//forward display -m out : out($SOUT)  
+ 		request servicemathcoded -m dofibo : dofibo($N)
+	}	  
+	Transition t0 whenReply fibodone -> fiboanswer
+	
+	State fiboanswer{
+		printCurrentMessage color blue
+		[# val M = currentMsg.msgContent() #]
+		//println("$currentMsg") color red
+		onMsg(fibodone : fibodone( CALLER,V,R,T) ){			
+			[# val Caller = payloadArg(0)
+			   val N      = payloadArg(1)
+			   val Result = payloadArg(2)
+			   val Time   = payloadArg(3)
+				val SOUT = "$name | fiboanswer for ${N} from ${Caller}=${Result} time=$Time"  
+			#]
+			println("$name | $SOUT") color blue
+            //forward display -m out : out($SOUT)
+		}   
+	}
+
+} 				      
 /*
- * Senza caller locali usare jupyter o mqtt
- */
-QActor servicemath context ctxservice withobj math using "MathUtils()" {//withobj math using "utils.MathUtils.create()"
+ * Senza caller locali, usare jupyter o mqtt
+
+QActor servicemath context ctxservice withobj math using "MathUtils()" {
 import "utils.MathUtils" 
 
 	State init initial { 
 		println("$name  STARTS ") color green
 	}	
 	Transition t0 whenRequest dofibo -> work
-//	              whenEvent alarm    -> handlealarm
 	   
 	State work{  
 		printCurrentMessage color green
 		[# var SOUT : String #]
 		onMsg( dofibo : dofibo(N) ){
-			[# //var ReqId  = currentMsg.msgId()
-			   var ReqArg = payloadArg(0) 
-			   var Sender = currentMsg.msgSender()  
-			   //val M      = currentMsg
-			#]
-//			forward display -m show : show( $M )
-//		    [# var F = utils.Common.fibo( ReqArg.toInt() ) #]   
-[# val T0 = getCurrentTime()   #]
-		    [# var F = math.fibo( ReqArg.toInt() ) #] 
-[# val TF  = getDuration(T0)  #]
-			[# SOUT  = "servicemathresult($name, fibo($ReqArg), $F, $TF)" #]
+		 [# 
+			var ReqArg = payloadArg(0) 
+			var Sender = currentMsg.msgSender()  
+			 
+            val T0  = getCurrentTime()   
+		    var F   = math.fibo( ReqArg.toInt() )  
+            val TF  = getDuration(T0)  
+
+            SOUT= "servicemathresult($name, fibo($ReqArg), $F, $TF)" 
+				
+		 #]
 			println("$SOUT") color magenta
 			//delay 1000
 			updateResource [# SOUT #] //gestito da CoapObserver con Facade
 			//[# publish("unibo/qak/pythonan","hello") #]  //PROVA MQTT out
- 			
- 			//forward displayweb -m show : show($SOUT)		
-  
-//La reply potrebbe essere inviata all'alieno servicefacade
-//In questo caso OutIn invia la info sulla messagearea
-//Potrebbe entrare il conflitto di scrittura con  CoapObserver (updateResource)
-//Per questo protected synchronized  void sendToAll(String message)
-		    replyTo dofibo /*ofsender $Sender*/ with fibodone : fibodone($Sender,$ReqArg,$F,$TF)
+		    replyTo dofibo with fibodone : fibodone($Sender,$ReqArg,$F,$TF)
 		}
 	}   
 	Transition t0  whenRequest dofibo -> work
  
  } 
- 
+ */
 //DisplayHTML servicedev port 8085 usingactor display inctx ctxservice  
-Facade f port 8088 usingactor servicemath inctx ctxservice   
+//                   appl "unibo.qakdisplaygui24.QakFacadeApplication" 
+//                   UserLibs -f "qakdisplaygui24-1.0" -f "qakdisplaygui24-1.0-plain"
+
+//Facade f port 8088 usingactor servicemath inctx ctxservice  
+//                   appl "unibo.servicefacade24.Servicefacade24Application" 
+//                   UserLibs -f "servicefacade24-1.0" -f "servicefacade24-1.0-plain"
   
  
  

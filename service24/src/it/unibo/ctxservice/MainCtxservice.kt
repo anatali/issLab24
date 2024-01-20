@@ -9,8 +9,7 @@ fun main() = runBlocking {
 	QakContext.createContexts(
 	        "localhost", this, "servicemathsynchbase.pl", "sysRules.pl", "ctxservice"
 	)
-	//OCT2023 Facade
-	unibo.servicefacade24.Servicefacade24Application.main( arrayOf<String>() );
+	//JAN Facade
 	//JAN24 Display
 }
 

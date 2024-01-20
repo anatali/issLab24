@@ -32,7 +32,7 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t00",targetState="work",cond=whenRequest("dofibo"))
+					 transition(edgeName="t01",targetState="work",cond=whenRequest("dofibo"))
 				}	 
 				state("work") { //this:State
 					action { //it:State
@@ -41,14 +41,16 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 						 var SOUT : String  
 						if( checkMsgContent( Term.createTerm("dofibo(N)"), Term.createTerm("dofibo(N)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
-								 //var ReqId  = currentMsg.msgId()
-											   var ReqArg = payloadArg(0) 
-											   var Sender = currentMsg.msgSender()  
-											   //val M      = currentMsg
-								 val T0 = getCurrentTime()    
-								 var F = math.fibo( ReqArg.toInt() )  
-								 val TF  = getDuration(T0)   
-								 SOUT  = "servicemathresult($name, fibo($ReqArg), $F, $TF)"  
+								 
+											var ReqArg = payloadArg(0) 
+											var Sender = currentMsg.msgSender()  
+											 
+								            val T0  = getCurrentTime()   
+										    var F   = math.fibo( ReqArg.toInt() )  
+								            val TF  = getDuration(T0)  
+								
+								            SOUT= "servicemathresult($name, fibo($ReqArg), $F, $TF)" 
+												
 								CommUtils.outmagenta("$SOUT")
 								updateResourceRep( SOUT  
 								)
@@ -59,7 +61,7 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t01",targetState="work",cond=whenRequest("dofibo"))
+					 transition(edgeName="t02",targetState="work",cond=whenRequest("dofibo"))
 				}	 
 			}
 		}

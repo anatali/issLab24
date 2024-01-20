@@ -1,0 +1,84 @@
+System /*-msglog  -trace */  servicemathsynchbase 
+//mqttBroker "broker.hivemq.com" : 1883 eventTopic "servicemathsynch/events"
+   
+//UserLibs   -f "servicefacade24-1.0"   -f "servicefacade24-1.0-plain"
+   
+//Messages for the application 
+Request dofibo   : dofibo(N)
+Reply   fibodone : fibodone( CALLER,N,RESULT,TIME ) for dofibo
+
+//Messages for the display 
+Dispatch out  : out(S) 
+Dispatch show  : show(S)         
+   
+Context ctxservice ip [host="localhost" port=8011]  
+    
+QActor display context ctxservice withobj d using "utils.DisplayObj.create()"{  //withobj d using "utils.DisplayObj.create()"
+ 	State s0 initial{		
+	}
+	Transition t0 whenMsg out -> handleout
+	
+	State handleout{
+		printCurrentMessage color blue
+		[# val SOUT = "${currentMsg.msgContent()}" #]
+		[# d.write( SOUT ) #]
+		updateResource [# SOUT #]	
+	} 
+	Transition t0 whenMsg out -> handleout
+}
+    
+/*
+ * Senza caller locali usare jupyter o mqtt
+ */
+QActor servicemath context ctxservice withobj math using "MathUtils()" {//withobj math using "utils.MathUtils.create()"
+import "utils.MathUtils" 
+
+	State init initial { 
+		println("$name  STARTS ") color green
+	}	
+	Transition t0 whenRequest dofibo -> work
+//	              whenEvent alarm    -> handlealarm
+	   
+	State work{  
+		printCurrentMessage color green
+		[# var SOUT : String #]
+		onMsg( dofibo : dofibo(N) ){
+			[# //var ReqId  = currentMsg.msgId()
+			   var ReqArg = payloadArg(0) 
+			   var Sender = currentMsg.msgSender()  
+			   val M      = currentMsg
+			#]
+ 			forward display -m out : out( $M )
+//		    [# var F = utils.Common.fibo( ReqArg.toInt() ) #]   
+[# val T0 = getCurrentTime()   #]
+		    [# var F = math.fibo( ReqArg.toInt() ) #] 
+[# val TF  = getDuration(T0)  #]
+			[# SOUT  = "servicemathresult($name, fibo($ReqArg), $F, $TF)" #]
+			println("$SOUT") color magenta
+			//delay 1000
+			updateResource [# SOUT #] //gestito da CoapObserver con Facade
+			//[# publish("unibo/qak/pythonan","hello") #]  //PROVA MQTT out
+ 			
+ 			//forward displayweb -m show : show($SOUT)		
+  
+//La reply potrebbe essere inviata all'alieno servicefacade
+//In questo caso OutIn invia la info sulla messagearea
+//Potrebbe entrare il conflitto di scrittura con  CoapObserver (updateResource)
+//Per questo protected synchronized  void sendToAll(String message)
+		    replyTo dofibo /*ofsender $Sender*/ with fibodone : fibodone($Sender,$ReqArg,$F,$TF)
+		}
+	}   
+	Transition t0  whenRequest dofibo -> work
+ 
+ } 
+ 
+//DisplayHTML servicedev port 8085 usingactor display inctx ctxservice  
+//                   appl "unibo.qakdisplaygui24.QakFacadeApplication" 
+//                   UserLibs -f "qakdisplaygui24-1.0" -f "qakdisplaygui24-1.0-plain"
+
+Facade f port 8088 usingactor servicemath inctx ctxservice  
+                   appl "unibo.servicefacade24.Servicefacade24Application" 
+                   UserLibs -f "servicefacade24-1.0" -f "servicefacade24-1.0-plain"
+  
+ 
+ 
