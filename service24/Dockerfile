@@ -1,5 +1,5 @@
 ## ----------------------------------------------------------
-## Dockerfile for unibo.basicrobot22
+## Dockerfile for servicemathsynchbase
 ## ----------------------------------------------------------
 
 FROM openjdk:12.0.2

@@ -33,7 +33,6 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					sysaction { //it:State
 					}	 	 
 					 transition(edgeName="t00",targetState="work",cond=whenRequest("dofibo"))
-					transition(edgeName="t01",targetState="handlealarm",cond=whenEvent("alarm"))
 				}	 
 				state("work") { //this:State
 					action { //it:State
@@ -60,23 +59,7 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t02",targetState="work",cond=whenRequest("dofibo"))
-					transition(edgeName="t03",targetState="handlealarm",cond=whenEvent("alarm"))
-				}	 
-				state("handlealarm") { //this:State
-					action { //it:State
-						CommUtils.outgreen("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
-						 	   
-						 val SOUT  = "servicemath( $name, alarm )"  
-						updateResourceRep( SOUT  
-						)
-						//genTimer( actor, state )
-					}
-					//After Lenzi Aug2002
-					sysaction { //it:State
-					}	 	 
-					 transition(edgeName="t04",targetState="work",cond=whenRequest("dofibo"))
-					transition(edgeName="t05",targetState="handlealarm",cond=whenEvent("alarm"))
+					 transition(edgeName="t01",targetState="work",cond=whenRequest("dofibo"))
 				}	 
 			}
 		}
