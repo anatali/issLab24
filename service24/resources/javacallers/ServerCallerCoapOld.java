@@ -10,9 +10,7 @@ import unibo.basicomm23.interfaces.Interaction;
 import unibo.basicomm23.utils.CommUtils;
 import unibo.basicomm23.utils.Connection;
 
-import java.net.Socket;
-
-public class ServerCallerCoap {
+public class ServerCallerCoapOld {
     private final String destination = "servicemathcoded";
     private final String sender      = "clientjava";
     private final String hostAddr    = "localhost";
@@ -97,7 +95,7 @@ public class ServerCallerCoap {
     public static void main( String[] args) throws InterruptedException {
 //    	new ServerCallerCoap().dorequest("ctxservice");
 //    	new ServerCallerCoap().emitAlerm("ctxservice");
-    	new ServerCallerCoap().dorequest("ctxservice/servicemath");
+    	new ServerCallerCoapOld().dorequest("ctxservice/servicemath");
     	//Thread.sleep(2000);
     	CommUtils.outyellow("sendUsingCoap BYE "  );
     }
