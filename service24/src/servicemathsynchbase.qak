@@ -7,10 +7,11 @@ System /*-msglog  -trace */  servicemathsynchbase
 Request dofibo   : dofibo(N)
 Reply   fibodone : fibodone( CALLER,N,RESULT,TIME ) for dofibo
 
-   
+    
 Context ctxservice ip [host="localhost" port=8011]    
 CodedQActor servicemathcoded context ctxservice className "codedActor.Servicecodedbasic"
-/* 
+/* *  
+*/	
 QActor caller_1 context ctxservice {  
 	[# val N=7 #]
 	State s0 initial { 
@@ -38,8 +39,7 @@ QActor caller_1 context ctxservice {
 	}
 
 } 
-*  
-*/				      
+			      
 /*
  * Senza caller locali, usare jupyter o mqtt
 

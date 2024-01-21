@@ -11,15 +11,15 @@ import unibo.basicomm23.interfaces.IApplMessage;
 import unibo.basicomm23.utils.CommUtils;
 
 public class ServerCallerTCPNaive {
-    
+    private String destination = "servicemathcoded";
 	public void doJob() {
-    	//IApplMessage req = MsgUtil.buildRequest("tester", "dofibo", "dofibo(41)", "servicemath");
+    	//IApplMessage req = MsgUtil.buildRequest("tester", "dofibo", "dofibo(41)", destination);
     	sendMessageTcp("dofibo(41)","localhost", 8011);  
      }
     
     protected  void sendMessageTcp(String m, String addr, int port ) {
 	   try {
-		   IApplMessage req             =  MsgUtil.buildRequest("client", "dofibo", m, "servicemath");
+		   IApplMessage req             =  MsgUtil.buildRequest("client", "dofibo", m, destination);
 	        Socket socket           =  new Socket( addr, port );
 			OutputStream outStream  = socket.getOutputStream();
 			InputStream inStream    = socket.getInputStream();

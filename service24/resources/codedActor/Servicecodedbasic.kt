@@ -1,52 +1,47 @@
 package codedActor
 
 import it.unibo.kactor.*
-import kotlinx.coroutines.delay
-import it.unibo.kactor.MsgUtil
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.runBlocking
 import unibo.basicomm23.interfaces.IApplMessage
 import unibo.basicomm23.utils.CommUtils
-import utils.MathUtils
 import alice.tuprolog.Term
 import alice.tuprolog.Struct
+
 
 /*
 --------------------------------------------------
 Servicecodedbasic
 --------------------------------------------------
  */
-
-class Servicecodedbasic (name:String,  scope: CoroutineScope = GlobalScope,
-						 confined : Boolean =false): ActorBasic(name,scope, confined){
- 	
-	private var msgArgList = mutableListOf<String>()
-	
+/*
+ class Servicecodedbasic (name:String, scope: CoroutineScope = GlobalScope,
+ 						 confined : Boolean =false): ActorBasic(name,scope,  confined){
+*/
+class Servicecodedbasic (name:String ): ActorBasic( name ){
+//se no dice: manca codedActor.Servicecodedbasic.<init>
+init{
+	CommUtils.outblue("$tt $name | init: WAITING for messages ...  "  )
+}
 			
     override suspend fun actorBody(msg : IApplMessage){
-		CommUtils.outgreen("$tt $name | received  $msg "  )
+		CommUtils.outblue("$name | received  $msg "  )
 		if( msg.msgId() == "dofibo"){
-			dofibo( msg.msgContent()  )
-		}//else CommUtils.outgreen("$tt $name | received  $msg "  )
+			addValueToRequestMap(msg.msgId()+msg.msgSender(), msg)
+			dofibo( msg.msgSender(), msg.msgContent()  )
+		}
      }
   	
-	suspend fun dofibo(  content : String  ){
-		CommUtils.outmagenta("$tt $name | content $content}")
-		val tt = Term.createTerm(content) as Struct
-	    val ttar = tt.arity
-	    for( i in 0..ttar-1 ) msgArgList.add( tt.getArg(i).toString().replace("'","") )
-	    val v    =  msgArgList.elementAt(0)
+	suspend fun dofibo(  sender: String, content : String  ){ //suspend since answer
+		CommUtils.outblue("$name | content $content}")
 		val math = utils.MathUtils.create()
-		var F    = math.fibo( v.toInt() )
-		CommUtils.outmagenta("$tt $name | F= $F")
+		val T0 = getCurrentTime()
+		val cterm = Term.createTerm(content) as Struct
+		val v     = cterm.getArg(0).toString().replace("'","")
+		//CommUtils.outmagenta("$tt $name | v= $v")
+		var R   = math.fibo( v.toInt() )
+		val TF  = getDuration(T0)
+		val answerMsg = "fibodone( $sender,$v,$R,$TF )"
+        answer("dofibo", "fibodone ", answerMsg)
+		CommUtils.outblue("$name | send the answer fibsodone:$answerMsg}")
 	}
-	
-	
- 
-    fun  payloadArg( n : Int  ) : String{
-         return msgArgList.elementAt(n)
-    }
-
-} 
+}
  
