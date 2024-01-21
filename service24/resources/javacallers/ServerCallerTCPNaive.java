@@ -1,16 +1,46 @@
 package javacallers;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 import it.unibo.kactor.MsgUtil;
 import unibo.basicomm23.interfaces.IApplMessage;
 import unibo.basicomm23.utils.CommUtils;
 
 public class ServerCallerTCPNaive {
+	private final String destination = "servicemathcoded";
+	private final String sender      = "clientjava";
+	private final String hostAddr    = "localhost";
+	private final int    port        = 8011;
+	private final String msgid       = "dofibo";
+	private final String msgcontent  = "dofibo(39)";
+	private Socket socket   ;
+
+	public void doJob() {
+		try {
+			socket  =  new Socket( hostAddr, port );
+			sendUsingTcp(   );
+			receiveAnswer( );
+			socket.close();
+		}catch(Exception e){
+			CommUtils.outred("ERROR " + e.getMessage() );
+		}
+	}
+
+	protected void receiveAnswer( ) throws Exception {
+		InputStream inStream    = socket.getInputStream();
+		BufferedReader inputChannel = new BufferedReader(new InputStreamReader(inStream));
+		String	answer = inputChannel.readLine() ;
+		CommUtils.outblue("ServerCallerTCPNaive | answer: " + answer);
+	}
+	protected  void sendUsingTcp( ) throws Exception{
+		IApplMessage req = MsgUtil.buildRequest(sender,msgid,msgcontent,destination);
+		OutputStream outStream  = socket.getOutputStream();
+		DataOutputStream outputChannel = new DataOutputStream(outStream);
+		outputChannel.writeBytes(req+"\n" );
+		outputChannel.flush();
+	}
+
+	/*
     private String destination = "servicemathcoded";
 	public void doJob() {
     	//IApplMessage req = MsgUtil.buildRequest("tester", "dofibo", "dofibo(41)", destination);
@@ -35,7 +65,7 @@ public class ServerCallerTCPNaive {
     	   CommUtils.outred("ERROR " + e.getMessage() );    	    
        }   			
     }   
-    
+    */
     public static void main( String[] args)   {
     	new ServerCallerTCPNaive().doJob();
     	//Thread.sleep(2000);
