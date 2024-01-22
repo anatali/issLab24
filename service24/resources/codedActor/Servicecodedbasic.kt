@@ -35,9 +35,9 @@ init{
 		val math = utils.MathUtils.create()
 		val T0 = getCurrentTime()
 		val cterm = Term.createTerm(content) as Struct
-		val v     = cterm.getArg(0) //.toString() //.replace("'","")
+		val v     = cterm.getArg(0).toString().replace("'","")
 		//CommUtils.outmagenta("$tt $name | v= $v")
-		var R   = math.fibo( 31 ) //v.toInt()
+		var R   = math.fibo( v.toInt() ) //
 		val TF  = getDuration(T0)
 		val answerMsg = "fibodone( $sender,$v,$R,$TF )"
         answer("dofibo", "fibodone ", answerMsg)

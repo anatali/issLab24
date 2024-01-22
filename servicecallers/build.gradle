@@ -12,7 +12,8 @@ plugins {
 
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
     //id 'org.jetbrains.kotlin.jvm' version "$kotlinVersion" //sourceCompatibility = '1.8'
-    id "org.jetbrains.kotlin.jvm" version "1.8.10"
+    //VEDI https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core
+    id "org.jetbrains.kotlin.jvm" version "1.9.22"
     
     //Per poter usare qakfacadegui23-1.0 che usa Spring
     id 'org.springframework.boot' version '2.7.16'
@@ -24,7 +25,7 @@ plugins {
 
 version '1.0'
 java {
-   sourceCompatibility = '17'
+   sourceCompatibility = '15'
 }
 
 
@@ -56,10 +57,11 @@ dependencies {
     testImplementation 'org.jetbrains.kotlin:kotlin-test-junit'
 
     /* COROUTINES ******************************************************************************* */
+    //VEDI https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core
     // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: "$kotlinVersion", ext: 'pom'
     // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm
-    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core-jvm', version: "$kotlinVersion"
+    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core-jvm', version: "$kotlinVersion", ext: 'pom'
 
 	//SOCKET.IO (for WEnv)
     implementation group: 'javax.websocket', name: 'javax.websocket-api', version: '1.1'

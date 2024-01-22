@@ -15,8 +15,9 @@ public class ServerCallerCoapNaive {
     private final String hostAddr    = "localhost";
     private final int    port        = 8011;
     private final String msgid       = "dofibo";
-    private final String msgcontent  = "dofibo(28)";
+    private final String msgcontent  = "dofibo(33)";
 
+    //protected CoapConnection conn;
     protected CoapClient client;
     protected String url;
     protected String path = "ctxservice/servicemathcoded";
