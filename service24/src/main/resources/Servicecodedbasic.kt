@@ -1,4 +1,4 @@
-package codedActor
+
 
 import it.unibo.kactor.*
 import unibo.basicomm23.interfaces.IApplMessage
@@ -40,6 +40,7 @@ init{
 		var R   = math.fibo( v.toInt() ) //
 		val TF  = getDuration(T0)
 		val answerMsg = "fibodone( $sender,$v,$R,$TF )"
+		updateResourceRep(answerMsg)
         answer("dofibo", "fibodone ", answerMsg)
 		CommUtils.outblue("$name | send the answer fibsodone:$answerMsg}")
 	}

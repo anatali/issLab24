@@ -17,14 +17,13 @@ public class ServerCallerCoapNaive {
     private final String msgid       = "dofibo";
     private final String msgcontent  = "dofibo(28)";
 
-    protected CoapClient client;
-    protected String url;
-    protected String path = "ctxservice/servicemathcoded";
-    protected CoapResponse response;
+    private CoapClient client;
+    private String url;
+    private String path = "ctxservice/servicemathcoded";
+    private CoapResponse response;
 
     public void doJob() {
         try {
-             //conn = new CoapConnection(hostAddr+":"+port,path);
             sendUsingCoap(   );
             String answer = receiveAnswer( );
             CommUtils.outblue(  "    ServerCallerCoapNaive | answer="  + answer );
@@ -37,24 +36,10 @@ public class ServerCallerCoapNaive {
         try {
             IApplMessage req = 
             	MsgUtil.buildRequest(sender, msgid, msgcontent, destination);
-            //String query = req.msgContent();
-            //String param = "?q="+query;
             url  = "coap://"+hostAddr+":"+port + "/"+ path;
             client  = new CoapClient( url );
             CommUtils.outyellow(  "    ServerCallerCoapNaive |  " + client );
-            //client.setURI(url+param);
-            //CommUtils.outyellow(  "    ServerCallerCoapNaive |  " + (url+param) );
-            response = client.put(req.toString(), MediaTypeRegistry.TEXT_PLAIN);
-            
-//             if( response != null ) {
-//                CommUtils.outyellow(  "    ServerCallerCoapNaive | request=" + query
-//                        +" RESPONSE CODEEEE: " + response.getCode() + " answer=" + response.getResponseText()  );
-//                String answer = response.getResponseText();
-//                return answer;
-//            }else {
-//                CommUtils.outred(  "    ServerCallerCoapNaive | request=" + query +" RESPONSE NULL " );
-//                return null;
-//            }
+             response = client.put(req.toString(), MediaTypeRegistry.TEXT_PLAIN);
         }catch(Exception e){
             CommUtils.outred("ERROR " + e.getMessage() );
         }
@@ -73,7 +58,7 @@ public class ServerCallerCoapNaive {
     }
       
     public static void main( String[] args) throws InterruptedException {
-    	new ServerCallerCoapNaive().doJob(); //dorequest("ctxservice/servicemath");
+    	new ServerCallerCoapNaive().doJob();  
     	//Thread.sleep(2000);
     	CommUtils.outyellow("sendUsingCoap BYE "  );
     }

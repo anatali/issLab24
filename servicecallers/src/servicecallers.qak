@@ -4,7 +4,7 @@ System servicecallers
 Request dofibo   : dofibo(N)
 Reply   fibodone : fibodone( CALLER,N,RESULT,TIME ) for dofibo
 
-//Messages for the display  
+//Messages for the display   
 Dispatch out  : out(S) 
 Dispatch show : show(S)  
 
