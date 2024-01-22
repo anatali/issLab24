@@ -12,7 +12,7 @@ plugins {
 
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
     //id 'org.jetbrains.kotlin.jvm' version "$kotlinVersion" //sourceCompatibility = '1.8'
-    id "org.jetbrains.kotlin.jvm" version "1.8.10"
+    id "org.jetbrains.kotlin.jvm" version "1.6.0"
     
     //Per poter usare qakfacadegui23-1.0 che usa Spring
     id 'org.springframework.boot' version '2.7.16'
@@ -20,20 +20,43 @@ plugins {
     
     //Per poter usare javafx
     id 'org.openjfx.javafxplugin' version '0.1.0'
+
+    //id 'org.gradle.toolchains.foojay-resolver-convention' version '0.5.0'
 }
 
 version '1.0'
 java {
-   sourceCompatibility = '15'
+   sourceCompatibility = '1.8'
 }
 
 
+
+/*
+kotlin {
+
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(<MAJOR_JDK_VERSION>))
+    }
+    // Or shorter:
+    jvmToolchain(<MAJOR_JDK_VERSION>)
+     // For example:
+    jvmToolchain(17)
+}
+*/
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
     flatDir {   dirs '../unibolibs'	 }
 }
-
+/*
+compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+}
+kotlinOptions {
+    jvmTarget = '1.8'
+}
+*/
 javafx {
     version = "11"
     modules =  ["javafx.controls", "javafx.fxml", "javafx.web", "javafx.graphics"]
