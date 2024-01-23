@@ -12,7 +12,7 @@ plugins {
 
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
     //id 'org.jetbrains.kotlin.jvm' version "$kotlinVersion" //sourceCompatibility = '1.8'
-    id "org.jetbrains.kotlin.jvm" version "1.9.22"
+    id "org.jetbrains.kotlin.jvm" version "1.8.10"
     
     //Per poter usare qakfacadegui23-1.0 che usa Spring
     id 'org.springframework.boot' version '2.7.16'

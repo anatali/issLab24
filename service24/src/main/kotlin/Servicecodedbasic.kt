@@ -1,5 +1,3 @@
-
-
 import it.unibo.kactor.*
 import unibo.basicomm23.interfaces.IApplMessage
 import unibo.basicomm23.utils.CommUtils
@@ -16,12 +14,14 @@ Servicecodedbasic
  class Servicecodedbasic (name:String, scope: CoroutineScope = GlobalScope,
  						 confined : Boolean =false): ActorBasic(name,scope,  confined){
 */
-class Servicecodedbasic (name:String ): ActorBasic( name ){
+class `Servicecodedbasic` (name:String ): ActorBasic( name ){
 //se no dice: manca codedActor.Servicecodedbasic.<init>
 init{
 	CommUtils.outblue("$tt $name | init: WAITING for messages ...  "  )
 }
-			
+/*
+MESSAGE DRIVEN structure
+ */
     override suspend fun actorBody(msg : IApplMessage){
 		CommUtils.outblue("$name | received  $msg "  )
 		if( msg.msgId() == "dofibo"){
