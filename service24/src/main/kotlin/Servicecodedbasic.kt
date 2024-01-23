@@ -41,6 +41,10 @@ MESSAGE DRIVEN structure
 		val TF  = getDuration(T0)
 		val answerMsg = "fibodone( $sender,$v,$R,$TF )"
 		updateResourceRep(answerMsg)
+		if(  mqttConnected ){
+			CommUtils.outblue("$name | publish ....")
+			mqtt.publish("servertopic", "serverinfo") 
+		}
         answer("dofibo", "fibodone ", answerMsg)
 		CommUtils.outblue("$name | send the answer fibsodone:$answerMsg}")
 	}

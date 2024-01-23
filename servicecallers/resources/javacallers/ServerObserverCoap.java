@@ -46,15 +46,16 @@ public class ServerObserverCoap implements CoapHandler{
 	}
 	
 	public void shutdown() {
-		CommUtils.outblue("CoapObserverForSonar | shutdown  ");
 		client.shutdown();
+		CommUtils.outblue("CoapObserverForSonar | shutdown obsRel.isCanceled()=" + obsRel.isCanceled());
 		if( obsRel != null ) obsRel.proactiveCancel();
-	}	
+		CommUtils.outblue("CoapObserverForSonar | shutdown obsRel.isCanceled()=" + obsRel.isCanceled());
+	}
 
     public static void main( String[] args) throws InterruptedException   {
 		ServerObserverCoap appl = new ServerObserverCoap();
 		appl.doJob();
-		Thread.sleep(60000);
+		Thread.sleep(30000);
 		CommUtils.outyellow("ServerObserverCoap BYE "  );
 		appl.shutdown();
     }

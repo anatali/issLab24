@@ -7,34 +7,30 @@ import unibo.basicomm23.mqtt.MqttConnection;
 import unibo.basicomm23.utils.CommUtils;
 
 public class ServerCallerMqtt {
-	private MqttConnection mqtt;
-	private String demotopic  = "unibo/qak/servicemath"; //"servicemathsynch/events";
+	private String servicetopic  = "unibo/qak/servicemathcoded"; 
 	private String brokerAddr = "tcp://broker.hivemq.com"; // : 1883  OPTIONAL
-	//"tcp://test.mosquitto.org"
+	private final String destination = "servicemathcoded";
+	private final String sender      = "clientjava";
+	private final String msgid       = "dofibo";
+	private final String msgcontent  = "dofibo(39)";
 	
-	public void doJob() {
-    	IApplMessage req = MsgUtil.buildRequest("tester", "dofibo", "dofibo(37)", "servicemath");
-    	CommUtils.outblack("send " + req);
-    	String answer = sendMessageMqtt( req );  
-    	CommUtils.outblack(answer);   	
-     }
+    private Interaction connMqtt;
     
-    protected  String sendMessageMqtt( IApplMessage m  ) {
-	        try {
-            //CommUtils.outyellow("sendMessageMqtt  " + m );
-            Interaction conn = MqttConnection.create("javacaller", brokerAddr, demotopic);
-            CommUtils.outyellow("sendMessageMqtt conn " + conn + " for m="+m);
-            if( m.isRequest() ) {
-               String answer = conn.request(m.toString()); //sincrono
-               return answer;                
-           }else{
-               conn.forward(m.toString());                
-               return "sendMessageMqtt done";
-           }
-       }catch(Exception e){
-    	   CommUtils.outred("ERROR " + e.getMessage() );
-           return "sendMessageMqtt failed";
-       }   			
+	public void doJob() {
+	 try {
+ 		connMqtt = MqttConnection.create("javacaller", brokerAddr, servicetopic);
+    	dorequest();
+     }catch(Exception e){
+        CommUtils.outred("ERROR " + e.getMessage() );
+     }     
+	}
+    
+    protected  void dorequest(   ) throws Exception {
+        //CommUtils.outyellow("sendMessageMqtt  " + m );
+    	IApplMessage req = MsgUtil.buildRequest(sender, msgid, msgcontent, destination);
+    	CommUtils.outyellow("ServerCallerMqtt | sendMessageMqtt connMqtt=" + connMqtt + " for req="+req);
+        String answerMqtt = connMqtt.request(req.toString());  
+        CommUtils.outblue("ServerCallerMqtt | answer:" + answerMqtt);               
     }  
     
     public static void main( String[] args) {

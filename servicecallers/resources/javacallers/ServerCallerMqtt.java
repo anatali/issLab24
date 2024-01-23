@@ -8,7 +8,7 @@ import unibo.basicomm23.utils.CommUtils;
 
 public class ServerCallerMqtt {
 	private MqttConnection mqtt;
-	private String demotopic  = "unibo/qak/servicemath"; //"servicemathsynch/events";
+	private String servicetopic = "unibo/qak/servicemath"; //"servicemathsynch/events";
 	private String brokerAddr = "tcp://broker.hivemq.com"; // : 1883  OPTIONAL
 	//"tcp://test.mosquitto.org"
 	
@@ -23,7 +23,7 @@ public class ServerCallerMqtt {
     protected  String sendMessageMqtt( IApplMessage m  ) {
 	        try {
             //CommUtils.outyellow("sendMessageMqtt  " + m );
-            Interaction conn = MqttConnection.create("javacaller", brokerAddr, demotopic);
+            Interaction conn = MqttConnection.create("javacaller", brokerAddr, servicetopic);
             CommUtils.outyellow("sendMessageMqtt conn " + conn + " for m="+m);
             if( m.isRequest() ) {
                String answer = conn.request(m.toString()); //sincrono
