@@ -11,5 +11,8 @@ fun main() = runBlocking {
 		"servicemathsynchbasealone.pl", "sysRules.pl",
 		"ctxservice"
 	)
+	//JAN Facade
+	unibo.servicefacade24.Servicefacade24Application.main( arrayOf<String>() );
+
 }
 
