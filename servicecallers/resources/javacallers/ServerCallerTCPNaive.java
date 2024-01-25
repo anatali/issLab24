@@ -12,7 +12,7 @@ public class ServerCallerTCPNaive {
 	private final String hostAddr    = "localhost";
 	private final int    port        = 8011;
 	private final String msgid       = "dofibo";
-	private final String msgcontent  = "dofibo(39)";
+	private final String msgcontent  = "dofibo(33)";
 	private Socket socket   ;
 
 	public void doJob() {
@@ -34,6 +34,7 @@ public class ServerCallerTCPNaive {
 	}
 	protected  void sendUsingTcp( ) throws Exception{
 		IApplMessage req = MsgUtil.buildRequest(sender,msgid,msgcontent,destination);
+		CommUtils.outblue("ServerCallerTCPNaive | req: " + req);
 		OutputStream outStream  = socket.getOutputStream();
 		DataOutputStream outputChannel = new DataOutputStream(outStream);
 		outputChannel.writeBytes(req+"\n" );

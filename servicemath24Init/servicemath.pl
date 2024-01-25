@@ -1,5 +1,5 @@
 %====================================================================================
-% servicemathsynchbase description   
+% servicemath description
 %====================================================================================
 %%mqttBroker("broker.hivemq.com", "1883", "servicemathsynch/events").
 request( dofibo, dofibo(N) ).

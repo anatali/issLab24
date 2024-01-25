@@ -3,6 +3,7 @@
 import it.unibo.kactor.QakContext
 import kotlinx.coroutines.runBlocking
 import unibo.basicomm23.utils.CommUtils
+import unibo.servicefacade24.Servicefacade24Application.main
 
 fun main() = runBlocking {
 	CommUtils.outblue("MainCtxservice.kt STARTS")
@@ -11,8 +12,7 @@ fun main() = runBlocking {
 		"servicemath.pl", "sysRules.pl",
 		"ctxservice"
 	)
-	//JAN Facade
-	unibo.servicefacade24.Servicefacade24Application.main( arrayOf<String>() );
-
+	//Facade
+	main( arrayOf<String>() );
 }
 

@@ -38,7 +38,7 @@ public class ServerCallerCoapNaive {
             	MsgUtil.buildRequest(sender, msgid, msgcontent, destination);
             url  = "coap://"+hostAddr+":"+port + "/"+ path;
             client  = new CoapClient( url );
-            CommUtils.outyellow(  "    ServerCallerCoapNaive |  " + client );
+            CommUtils.outyellow(  "    ServerCallerCoapNaive | url=" + url );
              response = client.put(req.toString(), MediaTypeRegistry.TEXT_PLAIN);
         }catch(Exception e){
             CommUtils.outred("ERROR " + e.getMessage() );

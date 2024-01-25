@@ -17,7 +17,12 @@ Servicecodedbasic
 class Servicecodedbasic(name:String ): ActorBasic( name ){
 //se no dice: manca codedActor.Servicecodedbasic.<init>
 init{
-	CommUtils.outblue("$tt $name | init: WAITING for messages ...  "  )
+	//servicemath.pl e sysRules.pl già caricati nella teoria sysUtil da createContexts
+	//MA ALLORA gi actor CONDIVIDONO conoscenza ...
+	//val r = sysUtil.solve("getCtxNames(X)","X")
+	//CommUtils.outblue("$tt $name | rrrrrrrrrrrrr=  " + r )
+	sysUtil.solve("showSystemConfiguration","")
+	CommUtils.outblue("$tt $name | init: WAITING for messages ...  "   )
 }
 /*
 MESSAGE DRIVEN structure
