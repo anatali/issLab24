@@ -1,0 +1,13 @@
+System servicemathsynchbase 
+//Messages for the application 
+Request dofibo   : dofibo(N)
+Reply   fibodone : fibodone( CALLER,N,RESULT,TIME ) for dofibo
+   
+Context ctxservice ip [host="localhost" port=8031]    
+
+CodedQActor servicemath context ctxservice className "Servicecodedbasic"
+
+//Facade f port 8088 usingactor servicemathcoded inctx ctxservice  
+//                   appl "unibo.servicefacade24.Servicefacade24Application" 
+//                   UserLibs -f "servicefacade24-1.0" -f "servicefacade24-1.0-plain"
+ 
