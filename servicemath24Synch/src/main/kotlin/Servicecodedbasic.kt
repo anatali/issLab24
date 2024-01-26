@@ -1,3 +1,5 @@
+
+
 import it.unibo.kactor.*
 import unibo.basicomm23.interfaces.IApplMessage
 import unibo.basicomm23.utils.CommUtils
@@ -32,7 +34,7 @@ MESSAGE DRIVEN structure
   	
 	suspend fun dofibo(  sender: String, content : String  ){ //suspend since answer
 		CommUtils.outblue("$name | content $content}")
-		val math = utils.MathUtils.create()
+		val math = MathUtils.create()
 		val T0 = getCurrentTime()
 		val cterm = Term.createTerm(content) as Struct
 		val v     = cterm.getArg(0).toString().replace("'","")

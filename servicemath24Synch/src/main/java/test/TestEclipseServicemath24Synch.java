@@ -1,40 +1,38 @@
-package test;
+package main.java.test;
 
-
-import static org.junit.Assert.fail;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
-//import org.junit.Before;
-//import org.junit.Test;
 import it.unibo.kactor.MsgUtil;
 import unibo.basicomm23.interfaces.IApplMessage;
 import unibo.basicomm23.interfaces.Interaction;
 import unibo.basicomm23.msg.ApplMessage;
 import unibo.basicomm23.tcp.TcpConnection;
 import unibo.basicomm23.utils.CommUtils;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
+import static org.junit.Assert.fail;
+ 
 public class TestEclipseServicemath24Synch {
 
-	//@Before
-	protected void initSystemTotest(){
+	@BeforeClass
+	public static void initSystemTotest(){
 		CommUtils.outblue( "initSystemTotest"   );
         try {
-        	Process proc = Runtime.getRuntime().exec("C:\\Didattica2024\\issLab24\\servicemath24Synch\\run.bat");
+        	//Process proc = Runtime.getRuntime().exec("C:\\Didattica2024\\issLab24\\servicemath24Synch\\run.bat");
 			//Process proc = Runtime.getRuntime().exec("it.unibo.ctxservice.MainCtxserviceKt");
 			//it.unibo.ctxservice.MainCtxserviceKt.main();
+        	startTheService();
 			CommUtils.outblue( "activated	"   );
         	//show( proc );
         	Thread.sleep(3000);
-        	testCalls();
+        	//testCalls();
 		} catch ( Exception e) {
 			fail("startTheService " + e.getMessage());
 		}
 	}
 	
-	private void show(Process proc) {
+	private static void show(Process proc) {
 	    new Thread(){
 	    public void run(){
 	        try{
@@ -63,7 +61,7 @@ public class TestEclipseServicemath24Synch {
 		
 	}
 
-	private void startTheService(){
+	private static void startTheService(){
 	    new Thread(){
 	    public void run(){
 	        try{
@@ -73,7 +71,8 @@ public class TestEclipseServicemath24Synch {
 	            //it.unibo.ctxservice.MainCtxserviceKt.main();
 	            //String[] cmd = {"ls", "-l"};
 	            //Runtime.getRuntime().exec("notepad.exe");
-	            Runtime.getRuntime().exec("C:\\Didattica2024\\issLab24\\servicemath24Synch\\run.bat");
+	            Process proc = Runtime.getRuntime().exec("C:\\Didattica2024\\issLab24\\servicemath24Synch\\run.bat");
+	            show( proc );
 	            CommUtils.outblue( "done"   );
 	        }catch (Exception e) {
 	            fail("startTheService " + e.getMessage());
@@ -83,7 +82,7 @@ public class TestEclipseServicemath24Synch {
 	    CommUtils.outblue( "started"   );
 	}
 
-	//@Test
+	@Test
 	public void testCalls(){
 	    //startTheService();
 	      IApplMessage req35 = MsgUtil.buildRequest("tester", "dofibo", "dofibo(35)", "servicemath");
@@ -102,7 +101,7 @@ public class TestEclipseServicemath24Synch {
 		}
 	}
 	
-	public static void main(String[] args) {
-		new TestEclipseServicemath24Synch().initSystemTotest();
-	}
+//	public static void main(String[] args) {
+//		new TestEclipseServicemath24Synch().initSystemTotest();
+//	}
 }

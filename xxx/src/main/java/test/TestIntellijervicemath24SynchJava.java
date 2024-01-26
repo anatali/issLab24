@@ -1,5 +1,3 @@
-package test;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 //import org.junit.Test;
@@ -43,7 +41,7 @@ public class TestIntellijervicemath24SynchJava {
 	    }
 	    }.start();
 		try {
-			conn = TcpConnection.create("localhost", 8031);
+			conn = TcpConnection.create("localhost", 8041);
 		} catch (Exception e) {
 			fail("connection " + e.getMessage());
 		}

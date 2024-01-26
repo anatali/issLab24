@@ -1,4 +1,3 @@
-package utils
 
 
 import alice.tuprolog.Prolog
@@ -15,11 +14,11 @@ class MathUtils {
         protected var count = 1
         protected var thcounter = 0
         protected var numOfExecutors = 0
-        //private lateinit var singleton = MathUtils()
+        //private lateinit var singleton = test.MathUtils()
         private val map = HashMap<Int, Int>()
 
         fun create(): MathUtils {
-            //if (singleton.isInitialized ) singleton = MathUtils()
+            //if (singleton.isInitialized ) singleton = test.MathUtils()
             //return singleton
         	return MathUtils()
         }
@@ -127,19 +126,19 @@ class MathUtils {
 
     fun loadTheory( path: String, pengine: Prolog ) {
         try {
-            CommUtils.outyellow("%%% MathUtils | loadTheory: th $path"   )
+            CommUtils.outyellow("%%% test.MathUtils | loadTheory: th $path"   )
             //user.dir is typically the directory in which the Java virtual machine was invoked.
             //val executionPath = System.getProperty("user.dir")
              val worldTh = Theory( FileInputStream(path) )
              pengine.addTheory(worldTh)
         } catch (e: Exception) {
-            CommUtils.outred("%%% MathUtils | loadheory WARNING: ${e}" )
+            CommUtils.outred("%%% test.MathUtils | loadheory WARNING: ${e}" )
             throw e
         }
     }
     fun saveTheory( FileName: String, pengine: Prolog) {
         val curTh = pengine.getTheory();
-        //CommUtils.outyellow("%%% MathUtils | saveTheory: th $curTh"   )
+        //CommUtils.outyellow("%%% test.MathUtils | saveTheory: th $curTh"   )
         FileOutputStream(FileName).write(curTh.toString().toByteArray())
             //.write( curTh.toString() );
     }
@@ -155,5 +154,5 @@ class MathUtils {
         }
         else return null
     }
-}//MathUtils
+}//test.MathUtils
  
