@@ -25,15 +25,18 @@ init{
 MESSAGE DRIVEN structure
  */
     override suspend fun actorBody(msg : IApplMessage){
-		CommUtils.outblue("$name | received  $msg "  )
+		CommUtils.outblue("$name coded |  received  $msg "  )
 		if( msg.msgType() == "request" && msg.msgId() == "dofibo"){
 			addValueToRequestMap(msg.msgId()+msg.msgSender(), msg)
 			dofibo( msg.msgSender(), msg.msgContent()  )
 		}
+		if( msg.msgType() == "dispatch" && msg.msgId() == "exit"){
+			System.exit(0);
+		}
      }
   	
 	suspend fun dofibo(  sender: String, content : String  ){ //suspend since answer
-		CommUtils.outblue("$name | content $content}")
+		//CommUtils.outblue("$name coded |  content $content}")
 		val math = MathUtils.create()
 		val T0 = getCurrentTime()
 		val cterm = Term.createTerm(content) as Struct
@@ -44,11 +47,11 @@ MESSAGE DRIVEN structure
 		val answerMsg = "fibodone( $sender,$v,$R,$TF )"
 		updateResourceRep(answerMsg)
 		if(  mqttConnected ){
-			CommUtils.outblue("$name | publish ....")
+			CommUtils.outblue("$name coded | publish ....")
 			mqtt.publish("servertopic", "serverinfo") 
 		}
         answer("dofibo", "fibodone ", answerMsg)
-		CommUtils.outblue("$name | send the answer fibsodone:$answerMsg}")
+		CommUtils.outblue("$name coded |  send the answer fibsodone:$answerMsg}")
 	}
 }
  
