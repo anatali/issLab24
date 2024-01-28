@@ -3,7 +3,7 @@ System /*-trace*/ servicemathsynchbase
 Request dofibo   : dofibo(N)
 Reply   fibodone : fibodone( CALLER,N,RESULT,TIME ) for dofibo
   
-Dispatch exit : exit(X)   
+//Dispatch exit : exit(X)   
 
 Context ctxservice ip [host="localhost" port=8710]     
  

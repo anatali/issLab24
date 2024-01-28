@@ -21,7 +21,7 @@ import static org.junit.Assert.fail;
 
 //occupazione porte netstat -anb >c:\ports.txt
 
-public class TestEclipseServicemath24Synch {
+public class TestEclipseServicemathbase {
 	private static Interaction conn;
 	private static String serviceName = "servicemath";
 	private static int servicePort = 8710;
@@ -31,8 +31,8 @@ public class TestEclipseServicemath24Synch {
 			MsgUtil.buildRequest("tester", "dofibo", "dofibo(35)", serviceName);
 	private IApplMessage req6  = 
 			MsgUtil.buildRequest("tester", "dofibo", "dofibo(6)", serviceName);
-	private static IApplMessage exitMsg  = 
-			MsgUtil.buildDispatch("tester", "exit", "exit(bytester)", serviceName);
+//	private static IApplMessage exitMsg  = 
+//			MsgUtil.buildDispatch("tester", "exit", "exit(bytester)", serviceName);
 
 	@BeforeClass
 	public static void initSystemTotest(){
@@ -61,11 +61,11 @@ public class TestEclipseServicemath24Synch {
 	    CommUtils.outmagenta( "destroyed - isAlive=" + proc.isAlive()   );
 	    try {
 // 		conn.forward( exitMsg.toString()  );  //con java -jar non necessario
-		if( proc != null ) {
- 		    proc.destroy();
- 		    CommUtils.outmagenta( "AfterClass destroyed - isAlive=" + proc.isAlive()   );
- 		}
-			Thread.sleep(2000);  //GIve time to show sentinel | exit the last wishes 
+			if( proc != null ) {
+	 		    proc.destroy();
+	 		    CommUtils.outmagenta( "AfterClass destroyed - isAlive=" + proc.isAlive()   );
+	 		}
+			Thread.sleep(2000);  //GIve time to show last wishes 
 	    }catch(Exception e) {
 	    	CommUtils.outred( "AfterClass error:" + e.getMessage()  );
 	    }

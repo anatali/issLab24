@@ -1,0 +1,67 @@
+System /*-trace*/ servicemathsynch
+//Messages for the application 
+Request dofibo   : dofibo(N)
+Reply   fibodone : fibodone( CALLER,N,RESULT,TIME ) for dofibo 
+
+Context ctxservice ip [host="localhost" port=8710]     
+ 
+//CodedQActor servicemath context ctxservice className "Servicecodedbasic"
+ 
+QActor servicemath context ctxservice 
+                withobj math using "MathUtils.create()"{ 
+	State s0 initial{
+		println("$name  STARTS ") color magenta
+	}
+	Transition t0 whenRequest dofibo -> handleRequest
+	
+	State handleRequest{
+		onMsg( dofibo : dofibo(N)){
+			[#val N = payloadArg(0) 
+              var Sender = currentMsg.msgSender()
+			#]
+			println("$name |  N=$N ") color magenta
+			[# val T0 = getCurrentTime()    
+		       var R = math.fibo( N.toInt() )  
+			   val TF  = getDuration(T0)  
+			#]
+			 
+			//[# val SOUT="servicemathresult($name,fibo($N),$R,$TF)" #]
+			[# val SOUT=""working($name, msgid(dofibo), sender($sender))"#]
+			updateResource [# SOUT #]
+			println("$name |  $SOUT ") color magenta 
+			replyTo dofibo with fibodone:fibodone($Sender,$N,$R,$TF)
+		}
+	}
+	Transition t0 whenRequest dofibo -> handleRequest
+}//servicemath
+
+/* 
+QActor caller1 context ctxservice {  
+	[# val N = 43 
+	#]
+ 	State init initial { 
+		delay 3000
+		println("$name | request ") color blue
+		request servicemath -m dofibo : dofibo($N)
+		delay 3000
+		println("$name | request ") color blue
+		request servicemath -m dofibo : dofibo(23)
+	}	 
+	Transition t0 whenReply fibodone -> fiboanswer
+	
+	State fiboanswer{
+		//printCurrentMessage color blue
+		onMsg(fibodone : fibodone( CALLER,V,R,T) ){
+			[# val SOUT = "$name | fiboanswer for N=${payloadArg(1)} calledby ${payloadArg(0)}:${payloadArg(2)} time=${payloadArg(3)}" #]
+            //forward display -m out : out($SOUT) 
+			println(" $SOUT") color blue
+		}   
+	}
+	Transition t0 whenReply fibodone -> fiboanswer
+}
+*/
+
+//Facade f port 8088 usingactor servicemathcoded inctx ctxservice  
+//                   appl "unibo.servicefacade24.Servicefacade24Application" 
+//                   UserLibs -f "servicefacade24-1.0" -f "servicefacade24-1.0-plain"
+    
