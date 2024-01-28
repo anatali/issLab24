@@ -26,7 +26,7 @@ QActor servicemath context ctxservice
 			#]
 			 
 			//[# val SOUT="servicemathresult($name,fibo($N),$R,$TF)" #]
-			[# val SOUT=""working($name, msgid(dofibo), sender($sender))"#]
+			[# val SOUT=""working($name,msgid(dofibo),sender($sender))" #]
 			updateResource [# SOUT #]
 			println("$name |  $SOUT ") color magenta 
 			replyTo dofibo with fibodone:fibodone($Sender,$N,$R,$TF)
