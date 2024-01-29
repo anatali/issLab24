@@ -2,22 +2,19 @@ package main.java.test;
 
 import it.unibo.kactor.ActorBasic;
 import it.unibo.kactor.MsgUtil;
-import it.unibo.kactor.QakContext;
 import it.unibo.kactor.sysUtil;
-import unibo.basicomm23.coap.CoapConnection;
 import unibo.basicomm23.interfaces.IApplMessage;
 import unibo.basicomm23.interfaces.Interaction;
 import unibo.basicomm23.msg.ApplMessage;
 import unibo.basicomm23.tcp.TcpConnection;
 import unibo.basicomm23.utils.CommUtils;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import alice.tuprolog.Struct;
 import alice.tuprolog.Term;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 //occupazione porte netstat -anb >c:\ports.txt
@@ -25,7 +22,7 @@ import static org.junit.Assert.fail;
 public class TestEclipseServicemath {
 	private static Interaction conn;
 	private static String serviceName = "servicemath";
-	private static int servicePort = 8710;
+	private static int servicePort = 8011;
 	private static Process proc;
 	
 	private IApplMessage req35 = 
@@ -122,7 +119,8 @@ public class TestEclipseServicemath {
 //	    }.start();
 //	    CommUtils.outblue( "started"   );		
 //	}
-    @Test
+    
+	//@Test
 	public void test35(){
 		CommUtils.outgreen( "test35 ---------------------- " + conn  );
 		try {
@@ -136,7 +134,7 @@ public class TestEclipseServicemath {
 		}
 	}
     
-    @Test
+    //@Test
 	public void test6(){
 		CommUtils.outgreen( "test6 ---------------------- " + conn  );
 		try {
@@ -152,17 +150,17 @@ public class TestEclipseServicemath {
 
     @Test
 	public void testObservable(){
-		CommUtils.outgreen( "testObservable ---------------------- " + conn  );
+		CommUtils.outgreen( "testObservable ---------------------- "   );
 		try {
 			String path = "ctxservice/Servicemath";
-			Interaction coap = CoapConnection.create("localhost:8011", path);
-			
-// 		    CommUtils.outblue( "test35 answer6:" + answer6 );
-//			int res6 = fromAnswerToValue(answer6);			
-//		    assertEquals(res6,8);
+ 			ServicemathObserverCoap obs = new ServicemathObserverCoap("localhost",servicePort,"ctxservice/servicemath");
+    		Thread.sleep( 4000 );
+ 			String s = obs.getobserved();
+ 			CommUtils.outgreen( "getobserved   " + s  );
+ 			assertTrue( s.contains("working(servicemath,msgid(dofibo(43)),sender(caller))"));
 		} catch (Exception e) {
 			CommUtils.outred( "test6 ERROR" + e.getMessage() );
-			fail("test6 " + e.getMessage());
+			fail("testObservable " + e.getMessage());
 		}
     	
     }

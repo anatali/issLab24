@@ -44,9 +44,9 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 										       var R = math.fibo( N.toInt() )  
 											   val TF  = getDuration(T0)  
 								 val SOUT="working($name,msgid(dofibo($N)),sender($Sender))"  
+								CommUtils.outmagenta("$name |  $SOUT ")
 								updateResourceRep( SOUT  
 								)
-								CommUtils.outmagenta("$name |  $SOUT ")
 								answer("dofibo", "fibodone", "fibodone($Sender,$N,$R,$TF)"   )  
 						}
 						//genTimer( actor, state )

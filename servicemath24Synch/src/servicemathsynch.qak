@@ -29,8 +29,8 @@ QActor servicemath context ctxservice
 			 
 			//[# val SOUT="servicemathresult($name,fibo($N),$R,$TF)" #]
 			[# val SOUT="working($name,msgid(dofibo($N)),sender($Sender))" #]
-			updateResource [# SOUT #]
 			println("$name |  $SOUT ") color magenta 
+			updateResource [# SOUT #]
 			replyTo dofibo with fibodone:fibodone($Sender,$N,$R,$TF)
 		}
 	}
@@ -42,11 +42,11 @@ QActor caller context ctxservice {
 	[# val N = 43 
 	#]
  	State init initial { 
-		delay 3000
-		println("$name | request ") color blue
+		delay 1000
+		println("$name | request 1") color blue
 		request servicemath -m dofibo : dofibo($N)
 		//delay 3000
-		println("$name | request ") color blue
+		println("$name | request 2") color blue
 		request servicemath -m dofibo : dofibo(23)
 	}	 
 	Transition t0 whenReply fibodone -> fiboanswer

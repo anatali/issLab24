@@ -25,10 +25,10 @@ class Caller ( name: String, scope: CoroutineScope, isconfined: Boolean=false  )
 		return { //this:ActionBasciFsm
 				state("init") { //this:State
 					action { //it:State
-						delay(3000) 
-						CommUtils.outblue("$name | request ")
+						delay(1000) 
+						CommUtils.outblue("$name | request 1")
 						request("dofibo", "dofibo($N)" ,"servicemath" )  
-						CommUtils.outblue("$name | request ")
+						CommUtils.outblue("$name | request 2")
 						request("dofibo", "dofibo(23)" ,"servicemath" )  
 						//genTimer( actor, state )
 					}
