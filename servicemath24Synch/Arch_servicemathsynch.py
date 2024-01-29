@@ -23,4 +23,8 @@ with Diagram('servicemathsynchArch', show=False, outformat='png', graph_attr=gra
 ### see https://renenyffenegger.ch/notes/tools/Graphviz/attributes/label/HTML-like/index
      with Cluster('ctxservice', graph_attr=nodeattr):
           servicemath=Custom('servicemath','./qakicons/symActorWithobjSmall.png')
+          caller=Custom('caller','./qakicons/symActorSmall.png')
+          serviceobserver=Custom('serviceobserver','./qakicons/symActorSmall.png')
+     caller >> Edge(color='magenta', style='solid', decorate='true', label='<dofibo<font color="darkgreen"> fibodone</font> &nbsp; >',  fontcolor='magenta') >> servicemath
+     servicemath >> Edge(color='blue', style='solid',  decorate='true', label='<coapUpdate &nbsp; >',  fontcolor='blue') >> serviceobserver
 diag

@@ -4,6 +4,7 @@ import it.unibo.kactor.ActorBasic;
 import it.unibo.kactor.MsgUtil;
 import it.unibo.kactor.QakContext;
 import it.unibo.kactor.sysUtil;
+import unibo.basicomm23.coap.CoapConnection;
 import unibo.basicomm23.interfaces.IApplMessage;
 import unibo.basicomm23.interfaces.Interaction;
 import unibo.basicomm23.msg.ApplMessage;
@@ -148,7 +149,24 @@ public class TestEclipseServicemath {
 			fail("test6 " + e.getMessage());
 		}
 	} 
-	
+
+    @Test
+	public void testObservable(){
+		CommUtils.outgreen( "testObservable ---------------------- " + conn  );
+		try {
+			String path = "ctxservice/Servicemath";
+			Interaction coap = CoapConnection.create("localhost:8011", path);
+			
+// 		    CommUtils.outblue( "test35 answer6:" + answer6 );
+//			int res6 = fromAnswerToValue(answer6);			
+//		    assertEquals(res6,8);
+		} catch (Exception e) {
+			CommUtils.outred( "test6 ERROR" + e.getMessage() );
+			fail("test6 " + e.getMessage());
+		}
+    	
+    }
+
 	//Utility
 	private int fromAnswerToValue(String msganswer){
 		 //msganswer:fibodone( CALLER,N,V,TIME )

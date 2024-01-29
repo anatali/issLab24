@@ -3,7 +3,9 @@ System /*-trace*/ servicemathsynch
 Request dofibo   : dofibo(N)
 Reply   fibodone : fibodone( CALLER,N,RESULT,TIME ) for dofibo 
 
-Context ctxservice ip [host="localhost" port=8710]     
+Dispatch serverinfo : serverinfo( SOURCE, INFO )
+
+Context ctxservice ip [host="localhost" port=8011]     
  
 //CodedQActor servicemath context ctxservice className "Servicecodedbasic"
  
@@ -26,7 +28,7 @@ QActor servicemath context ctxservice
 			#]
 			 
 			//[# val SOUT="servicemathresult($name,fibo($N),$R,$TF)" #]
-			[# val SOUT=""working($name,msgid(dofibo),sender($sender))" #]
+			[# val SOUT="working($name,msgid(dofibo($N)),sender($Sender))" #]
 			updateResource [# SOUT #]
 			println("$name |  $SOUT ") color magenta 
 			replyTo dofibo with fibodone:fibodone($Sender,$N,$R,$TF)
@@ -35,31 +37,57 @@ QActor servicemath context ctxservice
 	Transition t0 whenRequest dofibo -> handleRequest
 }//servicemath
 
-/* 
-QActor caller1 context ctxservice {  
+  
+QActor caller context ctxservice {  
 	[# val N = 43 
 	#]
  	State init initial { 
 		delay 3000
 		println("$name | request ") color blue
 		request servicemath -m dofibo : dofibo($N)
-		delay 3000
+		//delay 3000
 		println("$name | request ") color blue
 		request servicemath -m dofibo : dofibo(23)
 	}	 
 	Transition t0 whenReply fibodone -> fiboanswer
 	
 	State fiboanswer{
-		//printCurrentMessage color blue
+		printCurrentMessage color cyan
 		onMsg(fibodone : fibodone( CALLER,V,R,T) ){
-			[# val SOUT = "$name | fiboanswer for N=${payloadArg(1)} calledby ${payloadArg(0)}:${payloadArg(2)} time=${payloadArg(3)}" #]
+                [# 
+                   val Sender = payloadArg(0)
+                   val N = payloadArg(1)
+                   val R = payloadArg(2)
+                   val T = payloadArg(3)
+                   val outS = "fiboanswer for N=${N} calledby ${Sender}:${R} time=${T}"
+                   val SOUT = "$name | $outS "
+                #]
             //forward display -m out : out($SOUT) 
 			println(" $SOUT") color blue
 		}   
 	}
 	Transition t0 whenReply fibodone -> fiboanswer
 }
-*/
+
+
+QActor serviceobserver context ctxservice { 
+	State s0 initial { 
+		observeResource servicemath msgid serverinfo
+	}
+	Transition t0 whenMsg serverinfo -> showServerInfo
+	
+	State showServerInfo{
+		printCurrentMessage color green
+		onMsg( serverinfo : serverinfo( SOURCE, INFO ) ){
+			[#  
+				val SOURCE = payloadArg(0) 
+				val INFO  = payloadArg(1) 
+			#]
+			println( "$SOURCE, $INFO") color magenta
+		}		
+	}
+	Transition t0 whenMsg serverinfo -> showServerInfo
+}
 
 //Facade f port 8088 usingactor servicemathcoded inctx ctxservice  
 //                   appl "unibo.servicefacade24.Servicefacade24Application" 

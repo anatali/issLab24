@@ -2,15 +2,12 @@ package main.java.test;
 
 import it.unibo.kactor.ActorBasic;
 import it.unibo.kactor.MsgUtil;
-import it.unibo.kactor.QakContext;
 import it.unibo.kactor.sysUtil;
 import unibo.basicomm23.interfaces.IApplMessage;
 import unibo.basicomm23.interfaces.Interaction;
 import unibo.basicomm23.msg.ApplMessage;
 import unibo.basicomm23.tcp.TcpConnection;
 import unibo.basicomm23.utils.CommUtils;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;

@@ -1,0 +1,2 @@
+{"actor":"serviceobserver", "msgType":"dispatch", "curstate":"s0", "nextstate":"showServerInfo", "msgId":"serverinfo"}
+{"actor":"serviceobserver", "msgType":"dispatch", "curstate":"showServerInfo", "nextstate":"showServerInfo", "msgId":"serverinfo"}

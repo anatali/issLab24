@@ -43,7 +43,7 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 								 val T0 = getCurrentTime()    
 										       var R = math.fibo( N.toInt() )  
 											   val TF  = getDuration(T0)  
-								 val SOUT=""working($name,msgid(dofibo),sender($sender))"  
+								 val SOUT="working($name,msgid(dofibo($N)),sender($Sender))"  
 								updateResourceRep( SOUT  
 								)
 								CommUtils.outmagenta("$name |  $SOUT ")
