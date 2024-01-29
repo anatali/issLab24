@@ -23,8 +23,7 @@ public class ServicemathObserverCoap implements CoapHandler{
 		crrateObserver();
 	}
 	
-	public String getobserved() {
-		
+	public String getobserved() {		
 		return observed;
 	}
 	

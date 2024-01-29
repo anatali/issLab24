@@ -1,0 +1,2 @@
+{"actor":"actionexec", "msgType":"dispatch", "curstate":"work", "nextstate":"elab", "msgId":"doelab"}
+{"actor":"actionexec", "msgType":"dispatch", "curstate":"checkelab", "nextstate":"elab", "msgId":"doelab"}
