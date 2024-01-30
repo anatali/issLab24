@@ -30,37 +30,17 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t00",targetState="work",cond=whenRequest("dofibo"))
+					 transition(edgeName="t06",targetState="work",cond=whenRequest("dofibo"))
 				}	 
 				state("work") { //this:State
 					action { //it:State
-						if( checkMsgContent( Term.createTerm("dofibo(N)"), Term.createTerm("dofibo(N)"), 
-						                        currentMsg.msgContent()) ) { //set msgArgList
-								  
-											   var ReqId  = currentMsg.msgId()
-											   var ReqArg = payloadArg(0)
-											   var Sender = currentMsg.msgSender()
-								 val SOUT = "$name | $ReqId $ReqArg Sender=$Sender"  
-								CommUtils.outblue("$SOUT")
-								delegateCurrentMsgTodynamic("actionexec") 
-						}
+						delegateCurrentMsgTodynamic("actionexec") 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t01",targetState="work",cond=whenRequest("dofibo"))
-					transition(edgeName="t02",targetState="answerAfterAsk",cond=whenReply("confirmed"))
-				}	 
-				state("answerAfterAsk") { //this:State
-					action { //it:State
-						CommUtils.outcyan("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
-						 	   
-						//genTimer( actor, state )
-					}
-					//After Lenzi Aug2002
-					sysaction { //it:State
-					}	 	 
+					 transition(edgeName="t07",targetState="work",cond=whenRequest("dofibo"))
 				}	 
 			}
 		}

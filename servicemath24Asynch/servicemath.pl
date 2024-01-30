@@ -3,6 +3,8 @@
 %====================================================================================
 request( dofibo, dofibo(N) ).
 reply( fibodone, fibodone(CALLER,N,RESULT,TIME) ).  %%for dofibo
+dispatch( out, out(S) ).
+dispatch( show, show(S) ).
 %====================================================================================
 context(ctxservice, "localhost",  "TCP", "8011").
  qactor( servicemath, ctxservice, "it.unibo.servicemath.Servicemath").

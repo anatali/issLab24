@@ -27,20 +27,23 @@ class Caller_test ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					action { //it:State
 						delay(10000) 
 						 SOUT = "$name | 44"   
+						forward("out", "out($SOUT)" ,"display" ) 
 						request("dofibo", "dofibo(44)" ,"servicemath" )  
 						delay(1000) 
 						 SOUT = "$name | 38"   
+						forward("out", "out($SOUT)" ,"display" ) 
 						request("dofibo", "dofibo(50)" ,"servicemath" )  
 						delay(1000) 
 						 SOUT = "$name | 40"   
+						forward("out", "out($SOUT)" ,"display" ) 
 						request("dofibo", "dofibo(5)" ,"servicemath" )  
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t00",targetState="fiboanswer",cond=whenReply("fibodone"))
-					transition(edgeName="t01",targetState="handleAskFromreceiver",cond=whenRequest("confirm"))
+					 transition(edgeName="t04",targetState="fiboanswer",cond=whenReply("fibodone"))
+					transition(edgeName="t05",targetState="handleAskFromreceiver",cond=whenRequest("confirm"))
 				}	 
 				state("fiboanswer") { //this:State
 					action { //it:State
@@ -49,14 +52,15 @@ class Caller_test ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 						if( checkMsgContent( Term.createTerm("fibodone(CALLER,N,RESULT,TIME)"), Term.createTerm("fibodone(CALLER,V,R,T)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								 SOUT = "$name | fiboanswer for ${payloadArg(1)} from ${payloadArg(0)}=${payloadArg(2)} time=${payloadArg(3)}"  
+								forward("out", "out($SOUT)" ,"display" ) 
 						}
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t02",targetState="fiboanswer",cond=whenReply("fibodone"))
-					transition(edgeName="t03",targetState="handleAskFromreceiver",cond=whenRequest("confirm"))
+					 transition(edgeName="t06",targetState="fiboanswer",cond=whenReply("fibodone"))
+					transition(edgeName="t07",targetState="handleAskFromreceiver",cond=whenRequest("confirm"))
 				}	 
 				state("handleAskFromreceiver") { //this:State
 					action { //it:State
@@ -76,7 +80,7 @@ class Caller_test ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t04",targetState="fiboanswer",cond=whenReply("fibodone"))
+					 transition(edgeName="t08",targetState="fiboanswer",cond=whenReply("fibodone"))
 				}	 
 			}
 		}

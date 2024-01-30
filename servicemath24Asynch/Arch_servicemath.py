@@ -25,5 +25,7 @@ with Diagram('servicemathArch', show=False, outformat='png', graph_attr=graphatt
           servicemath=Custom('servicemath','./qakicons/symActorSmall.png')
           actionexec=Custom('actionexec','./qakicons/symActorWithobjSmall.png')
           caller_test=Custom('caller_test','./qakicons/symActorSmall.png')
+     f=Custom('f','./qakicons/server.png')
      caller_test >> Edge(color='magenta', style='solid', decorate='true', label='<dofibo<font color="darkgreen"> fibodone</font> &nbsp; >',  fontcolor='magenta') >> servicemath
+     f >> Edge(color='blue', style='solid', decorate='true', label='< &harr; >',  fontcolor='blue') >> servicemath
 diag
