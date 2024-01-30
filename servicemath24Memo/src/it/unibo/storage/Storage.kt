@@ -37,7 +37,7 @@ class Storage ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t06",targetState="elab",cond=whenRequest("getfibo"))
+					 transition(edgeName="t00",targetState="elab",cond=whenRequest("getfibo"))
 				}	 
 				state("elab") { //this:State
 					action { //it:State
@@ -53,7 +53,7 @@ class Storage ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t07",targetState="elab",cond=whenRequest("getfibo"))
+					 transition(edgeName="t01",targetState="elab",cond=whenRequest("getfibo"))
 				}	 
 			}
 		}

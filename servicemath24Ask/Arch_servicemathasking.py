@@ -27,6 +27,7 @@ with Diagram('servicemathaskingArch', show=False, outformat='png', graph_attr=gr
           servicemath=Custom('servicemath','./qakicons/symActorSmall.png')
           actionexec=Custom('actionexec','./qakicons/symActorWithobjSmall.png')
      f=Custom('f','./qakicons/server.png')
+     servicemath >> Edge(color='magenta', style='solid', decorate='true', label='<currentMsg &nbsp; >',  fontcolor='magenta') >> actionexec
      caller_test >> Edge(color='magenta', style='solid', decorate='true', label='<dofibo<font color="darkgreen"> fibodone</font> &nbsp; >',  fontcolor='magenta') >> servicemath
      f >> Edge(color='blue', style='solid', decorate='true', label='< &harr; >',  fontcolor='blue') >> servicemath
      actionexec >> Edge(color='blue', style='solid',  decorate='true', label='<show &nbsp; >',  fontcolor='blue') >> display

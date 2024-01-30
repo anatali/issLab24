@@ -22,13 +22,13 @@ with Diagram('servicemathmemoArch', show=False, outformat='png', graph_attr=grap
      sys = Custom('','./qakicons/system.png')
 ### see https://renenyffenegger.ch/notes/tools/Graphviz/attributes/label/HTML-like/index
      with Cluster('ctxservice', graph_attr=nodeattr):
-          display=Custom('display','./qakicons/symActorSmall.png')
-          caller_test=Custom('caller_test','./qakicons/symActorSmall.png')
           storage=Custom('storage','./qakicons/symActorWithobjSmall.png')
+          dummy=Custom('dummy','./qakicons/symActorSmall.png')
           servicemath=Custom('servicemath','./qakicons/symActorSmall.png')
-          actionexec=Custom('actionexec','./qakicons/symActorWithobjSmall.png')
+          actionexec=Custom('actionexec','./qakicons/symActorSmall.png')
+     f=Custom('f','./qakicons/server.png')
+     servicemath >> Edge(color='magenta', style='dotted', decorate='true', label='<currentMsg &nbsp; >',  fontcolor='green') >> actionexec
+     storage >> Edge(color='magenta', style='solid', decorate='true', label='<dofibo<font color="darkgreen"> fibodone</font> &nbsp; >',  fontcolor='magenta') >> servicemath
      actionexec >> Edge(color='magenta', style='solid', decorate='true', label='<getfibo<font color="darkgreen"> getfiboanswer</font> &nbsp; >',  fontcolor='magenta') >> storage
-     caller_test >> Edge(color='magenta', style='solid', decorate='true', label='<dofibo<font color="darkgreen"> fibodone</font> &nbsp; >',  fontcolor='magenta') >> servicemath
-     actionexec >> Edge(color='blue', style='solid',  decorate='true', label='<show &nbsp; >',  fontcolor='blue') >> display
-     caller_test >> Edge(color='blue', style='solid',  decorate='true', label='<out &nbsp; >',  fontcolor='blue') >> display
+     f >> Edge(color='blue', style='solid', decorate='true', label='< &harr; >',  fontcolor='blue') >> servicemath
 diag

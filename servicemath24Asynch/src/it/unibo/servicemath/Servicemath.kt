@@ -34,16 +34,7 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 				}	 
 				state("work") { //this:State
 					action { //it:State
-						if( checkMsgContent( Term.createTerm("dofibo(N)"), Term.createTerm("dofibo(N)"), 
-						                        currentMsg.msgContent()) ) { //set msgArgList
-								  
-											   var ReqId  = currentMsg.msgId()
-											   var ReqArg = payloadArg(0)
-											   var Sender = currentMsg.msgSender()
-								 val SOUT = "$name | $ReqId $ReqArg Sender=$Sender"  
-								CommUtils.outblue("$SOUT")
-								delegateCurrentMsgTodynamic("actionexec") 
-						}
+						delegateCurrentMsgTodynamic("actionexec") 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002

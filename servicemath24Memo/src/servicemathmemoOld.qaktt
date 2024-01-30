@@ -13,8 +13,8 @@ Dispatch show  : show(S)
 Request getfibo : getfibo(N)
 Reply   getfiboanswer : getfiboanswer(N,V) for getfibo //LAST=0 => V=fibo(N) else V=fibo(LAST)
 
-      
- 
+
+
 /*
  * Il servizio arriva fino a un valore di 9223372036854775807
  * che implica 0 <= n <= 92
@@ -41,7 +41,7 @@ QActor display context ctxservice {  //withobj d using "utils.DisplayObj.create(
 */
 
 /*
-
+ */
  
 QActor caller context ctxservice {  
 	[#  var SOUT = ""
@@ -66,7 +66,7 @@ QActor caller context ctxservice {
 	Transition t0 whenReply fibodone -> fiboanswer
 }
 
- */
+
 QActor storage context ctxservice withobj math using "MathUtils.create()"{	 
 		[# val engine = Prolog()
 			
@@ -171,13 +171,6 @@ QActor storage context ctxservice withobj math using "MathUtils.create()"{
 	Transition t0 whenRequest getfibo -> elab
 	
 }
-QActor dummy context ctxservice {
-	State init initial { 
-		println("$name  STARTS ") color blue
-		delegate dofibo to servicemath
-	}  
-}
-
 /*
  * SERVICE 
  */
@@ -205,16 +198,16 @@ QActor servicemath context ctxservice {
 			else { delegateCurrentMsgTo actionexec }
 			//create actionexecutor requestbycreator doaction : doaction ( $ReqId,$ReqArg,$Sender,name ) 
 		}
-	}   
+	}  
 	Transition t0   whenRequest dofibo    -> work
 
  }
 
-QActor actionexec  context ctxservice dynamicOnly{ //withobj math using "MathUtils.create()" 
+QActor actionexec  context ctxservice withobj math using "utils.MathUtils.create()" dynamicOnly{
 	[# var T0     = 0L 
 	   var ReqArg = 0L
-       var Sender = "" 
-    #] 
+       var Sender = ""
+    #]
 	
 	State init initial {
 		//println("$name | STARTS ")  color cyan

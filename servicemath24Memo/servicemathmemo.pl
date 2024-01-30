@@ -9,12 +9,10 @@ request( getfibo, getfibo(N) ).
 reply( getfiboanswer, getfiboanswer(N,V) ).  %%for getfibo
 %====================================================================================
 context(ctxservice, "localhost",  "TCP", "8011").
- qactor( display, ctxservice, "it.unibo.display.Display").
- static(display).
-  qactor( caller_test, ctxservice, "it.unibo.caller_test.Caller_test").
- static(caller_test).
-  qactor( storage, ctxservice, "it.unibo.storage.Storage").
+ qactor( storage, ctxservice, "it.unibo.storage.Storage").
  static(storage).
+  qactor( dummy, ctxservice, "it.unibo.dummy.Dummy").
+ static(dummy).
   qactor( servicemath, ctxservice, "it.unibo.servicemath.Servicemath").
  static(servicemath).
   qactor( actionexec, ctxservice, "it.unibo.actionexec.Actionexec").

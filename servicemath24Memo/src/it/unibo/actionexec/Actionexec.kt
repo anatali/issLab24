@@ -21,10 +21,9 @@ class Actionexec ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
-		 val math = utils.MathUtils.create()
 		 var T0     = 0L 
 			   var ReqArg = 0L
-		       var Sender = ""
+		       var Sender = "" 
 		return { //this:ActionBasciFsm
 				state("init") { //this:State
 					action { //it:State
@@ -33,7 +32,7 @@ class Actionexec ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t010",targetState="work",cond=whenRequest("dofibo"))
+					 transition(edgeName="t04",targetState="work",cond=whenRequest("dofibo"))
 				}	 
 				state("work") { //this:State
 					action { //it:State
@@ -52,7 +51,7 @@ class Actionexec ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t011",targetState="sendAnswerToCaller",cond=whenReply("getfiboanswer"))
+					 transition(edgeName="t05",targetState="sendAnswerToCaller",cond=whenReply("getfiboanswer"))
 				}	 
 				state("sendAnswerToCaller") { //this:State
 					action { //it:State
@@ -63,7 +62,6 @@ class Actionexec ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 												val F   = payloadArg(1)
 												val SOUT = "$name, ${payloadArg(0)} / fibo($ReqArg), $F, time=$TF" 
 								CommUtils.outyellow("$name | check $ReqArg==${payloadArg(0)}")
-								forward("show", "show($SOUT)" ,"display" ) 
 								answer("dofibo", "fibodone", "fibodone($Sender,$ReqArg,$F,$TF)"   )  
 						}
 						//terminate(0)

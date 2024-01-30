@@ -1,2 +1,6 @@
+{"actor":"display", "msgType":"dispatch", "curstate":"s0", "nextstate":"view", "msgId":"out"}
+{"actor":"display", "msgType":"dispatch", "curstate":"s0", "nextstate":"view", "msgId":"show"}
+{"actor":"display", "msgType":"dispatch", "curstate":"view", "nextstate":"view", "msgId":"out"}
+{"actor":"display", "msgType":"dispatch", "curstate":"view", "nextstate":"view", "msgId":"show"}
 {"actor":"actionexec", "msgType":"dispatch", "curstate":"work", "nextstate":"elab", "msgId":"doelab"}
 {"actor":"actionexec", "msgType":"dispatch", "curstate":"checkelab", "nextstate":"elab", "msgId":"doelab"}
