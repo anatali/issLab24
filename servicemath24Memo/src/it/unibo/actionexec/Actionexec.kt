@@ -60,8 +60,7 @@ class Actionexec ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 								
 												val TF  = getDuration(T0) 				
 												val F   = payloadArg(1)
-												val SOUT = "$name, ${payloadArg(0)} / fibo($ReqArg), $F, time=$TF" 
-								CommUtils.outyellow("$name | check $ReqArg==${payloadArg(0)}")
+								CommUtils.outyellow("$name | check $ReqArg F=$F}")
 								answer("dofibo", "fibodone", "fibodone($Sender,$ReqArg,$F,$TF)"   )  
 						}
 						//terminate(0)

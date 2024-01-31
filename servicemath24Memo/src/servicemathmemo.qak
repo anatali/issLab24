@@ -4,10 +4,7 @@ System /*-msglog  -trace */ servicemathmemo
 //Messages for the application 
 Request dofibo   : dofibo(N)
 Reply   fibodone : fibodone( CALLER,N,RESULT,TIME ) for dofibo
- 
-//Messages for the display 
-//Dispatch out  : out(S) 
-//Dispatch show  : show(S)         
+         
 
 //Messages for storage
 Request getfibo : getfibo(N)
@@ -68,94 +65,11 @@ QActor caller context ctxservice {
 
  */
 QActor storage context ctxservice withobj math using "MathUtils.create()"{	 
-		[# val engine = Prolog()
-			
-		#]
+	[# val engine = Prolog()			
+	#]
 	State s0 initial { 
-		
-		
-//		[# var N = 5 #] 
-
 		println("$name | STARTS ") color green
-
-		//CALCOLO LUNGO SENZA LONG
-//        [# val T00 = getCurrentTime() #]
-//		[# val R46_0 = math!!.fibo( 46  ) #]
-//		[# val T0F  = getDuration(T00)  #]
-//		println("$name | R46_0=$R46_0 time=$T0F") color green	
-
-		
-		//[# sysUtil.loadTheory("storage.pl") #]
-//		[# math!!.loadTheory("storage.pl", engine) #]
-		//[# math!!.saveTheory("xxx0.pl", engine )  #]
-		
-		//VERIFICO CHE ESISTE fibo(N, ...)
-//		[# val V = math!!.solve("fibo($N,V)","V",engine) #]
-//		println("$name | V=$V ") color green	
-//		[# val V10 = math.fibo(10,5,8) #]
-//		println("$name | V10=$V10 ") color green
-//		[# val V15 = math.fibo(15,5,8) #]
-//		println("$name | V15=$V15 ") color green
-/* 
-        [# 
-        	val VX5 = math!!.fibo(5)
-        #]
-        println("$name | VX5=$VX5 ") color green
-        
-		[#  //CONOSCO
-			val V4 = Pair<Int,Int>(4,3)
-			val V5 = Pair<Int,Int>(5,5)
-			//CALCOLO fibo(7)
-			val V7 = math!!.fibo2(7,V5,V4)  //safe call			
-			val fact = "fibo(7,${V7.second})"
-			//MEMORIZZO
-			val R    = math!!.solve("assert("+ fact +")","", engine)
-			
-			//CALCOLO fibo3(9) 
-			val P1   = math!!.fibo3( 9 )
-			val P1a  = "fibo(9,${P1.first})"
-			val P1b  = "fibo(8,${P1.second})"
-			math!!.solve("assert("+ P1a +")","", engine)
-			math!!.solve("assert("+ P1b +")","", engine)
-			
-		#]
-		println("$name | V7=$V7 R=$R  ${P1.first}|${P1.second}") color green
-		[# val V8 = math!!.solve("fibo(8,X)","X", engine) #]
-		println("$name | V8=$V8 ") color green	
-
-		//CERCO fibo(12
-		[# val V12 = math!!.solve("fibo(12,X)","X", engine) #]
-		println("$name | V12=$V12 ") color green	
-*/ 
-        //CALCOLO fibo4(45) 
-//        [# val T0 = getCurrentTime() #]
-//		[# val R45 = math!!.fibo4( 45,engine ) #]
-//		[# val TF  = getDuration(T0)  #]
-//		println("$name | R45=$R45 time=$TF") color green	
-
-        //CALCOLO fiboWithMemo(46) 
-//        [# val T0 = getCurrentTime() #]
-//		[# val R46 = math!!.fiboWithMemo( 46L,engine ) #]
-//		[# val TF  = getDuration(T0)  #]
-//		println("$name | R46=$R46 time=$TF") color green	
-
-        //CERCO NMAX
-//        [# val T1 = getCurrentTime() #]
-//        [# val K = 93L #]
-//		[# val R  = math!!.fiboWithMemo( K,engine ) #]
-//		[# val TF1  = getDuration(T1)  #]
-//		println("$name | K=$K R=$R time=$TF1") color green	
-//
-//        //LISTA DEI VALORI MEMORIZZATI
-//		[# val NUMS = math!!.solve("storednums(X)","X", engine) #]
-//		println("$name | NUMS=$NUMS ") color green	
-//		
-//		//MASSIMO VALORE DI FIB CALCOLATO
-//		[# val NMax = math!!.solve("maxnumstored(X)","X", engine) #]
-//		println("$name | NMax=$NMax ") color green	
-		
-//		[# math.saveTheory("xxx.pl", engine) #]
-
+		[# math.loadTheory("storage.pl", engine) #]
 	}	
 	Transition t0 whenRequest getfibo -> elab
 	
@@ -163,7 +77,8 @@ QActor storage context ctxservice withobj math using "MathUtils.create()"{
 		onMsg( getfibo : getfibo(N) ){
 			[# val K = payloadArg(0).toLong() 
 			   val R = math.fiboWithMemo( K,engine )
-			   
+			   math.show( engine )
+			   math.saveTheory("xxx.pl", engine) 
 			#]
 			replyTo getfibo with getfiboanswer : getfiboanswer($K,$R)
 		}
@@ -176,8 +91,7 @@ QActor storage context ctxservice withobj math using "MathUtils.create()"{
 /*
  * SERVICE 
  */
-QActor servicemath context ctxservice {
-	 
+QActor servicemath context ctxservice {	 
 	State init initial { 
 		println("$name  STARTS ") color blue
 	}	
@@ -227,21 +141,6 @@ QActor actionexec  context ctxservice dynamicOnly{ //withobj math using "MathUti
 			
 			[# T0 = getCurrentTime() #]
 			request storage -m getfibo : getfibo($ReqArg)
-			
-//			[# 
-//			   val T0 = getCurrentTime()  
-// 			   var F = math?.fibo( ReqArg.toInt() )  
-// 			   val TF  = getDuration(T0)  
-//			   val SOUT = "$name, fibo($ReqArg), $F, time=$TF" 
-//			#]
-//			println("$SOUT") color cyan
-//			forward display -m show : show($SOUT)
-//			replyTo dofibo with fibodone : fibodone($Sender, $ReqArg, $F, $TF)
-// 			   
-//			terminate 0
-// 
-//			[# var anames = sysUtil.getAllActorNames(context!!.name) #]
-//			println("$name | AFTER: $anames")
 		} 
 	} 
 	Transition t0 whenReply getfiboanswer -> sendAnswerToCaller
@@ -251,9 +150,8 @@ QActor actionexec  context ctxservice dynamicOnly{ //withobj math using "MathUti
 			[#
 				val TF  = getDuration(T0) 				
 				val F   = payloadArg(1)
-				val SOUT = "$name, ${payloadArg(0)} / fibo($ReqArg), $F, time=$TF" 
 			#]
-			println("$name | check $ReqArg==${payloadArg(0)}") color yellow
+			println("$name | check $ReqArg F=$F}") color yellow
 //			forward display -m show : show($SOUT)
 			replyTo dofibo with fibodone : fibodone($Sender, $ReqArg, $F, $TF)
 		}

@@ -22,12 +22,12 @@ class Storage ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
 		 val math = MathUtils.create()
-		 val engine = Prolog()
-					
+		 val engine = Prolog()			
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
 						CommUtils.outgreen("$name | STARTS ")
+						 math.loadTheory("storage.pl", engine)  
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -41,7 +41,8 @@ class Storage ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								 val K = payloadArg(0).toLong() 
 											   val R = math.fiboWithMemo( K,engine )
-											   
+											   math.show( engine )
+											   math.saveTheory("xxx.pl", engine) 
 								answer("getfibo", "getfiboanswer", "getfiboanswer($K,$R)"   )  
 						}
 						//genTimer( actor, state )
