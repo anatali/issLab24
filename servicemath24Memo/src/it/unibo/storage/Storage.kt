@@ -27,11 +27,7 @@ class Storage ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						 var N = 5  
 						CommUtils.outgreen("$name | STARTS ")
-						 math!!.loadTheory("storage.pl", engine)  
-						 val V = math!!.solve("fibo($N,V)","V",engine)  
-						CommUtils.outgreen("$name | V=$V ")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -44,7 +40,7 @@ class Storage ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 						if( checkMsgContent( Term.createTerm("getfibo(N)"), Term.createTerm("getfibo(N)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								 val K = payloadArg(0).toLong() 
-											   val R = math!!.fiboWithMemo( K,engine )
+											   val R = math.fiboWithMemo( K,engine )
 											   
 								answer("getfibo", "getfiboanswer", "getfiboanswer($K,$R)"   )  
 						}

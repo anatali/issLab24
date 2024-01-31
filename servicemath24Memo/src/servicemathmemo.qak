@@ -6,8 +6,8 @@ Request dofibo   : dofibo(N)
 Reply   fibodone : fibodone( CALLER,N,RESULT,TIME ) for dofibo
  
 //Messages for the display 
-Dispatch out  : out(S) 
-Dispatch show  : show(S)         
+//Dispatch out  : out(S) 
+//Dispatch show  : show(S)         
 
 //Messages for storage
 Request getfibo : getfibo(N)
@@ -74,7 +74,7 @@ QActor storage context ctxservice withobj math using "MathUtils.create()"{
 	State s0 initial { 
 		
 		
-		[# var N = 5 #] 
+//		[# var N = 5 #] 
 
 		println("$name | STARTS ") color green
 
@@ -86,12 +86,12 @@ QActor storage context ctxservice withobj math using "MathUtils.create()"{
 
 		
 		//[# sysUtil.loadTheory("storage.pl") #]
-		[# math!!.loadTheory("storage.pl", engine) #]
+//		[# math!!.loadTheory("storage.pl", engine) #]
 		//[# math!!.saveTheory("xxx0.pl", engine )  #]
 		
 		//VERIFICO CHE ESISTE fibo(N, ...)
-		[# val V = math!!.solve("fibo($N,V)","V",engine) #]
-		println("$name | V=$V ") color green	
+//		[# val V = math!!.solve("fibo($N,V)","V",engine) #]
+//		println("$name | V=$V ") color green	
 //		[# val V10 = math.fibo(10,5,8) #]
 //		println("$name | V10=$V10 ") color green
 //		[# val V15 = math.fibo(15,5,8) #]
@@ -162,7 +162,7 @@ QActor storage context ctxservice withobj math using "MathUtils.create()"{
 	State elab{
 		onMsg( getfibo : getfibo(N) ){
 			[# val K = payloadArg(0).toLong() 
-			   val R = math!!.fiboWithMemo( K,engine )
+			   val R = math.fiboWithMemo( K,engine )
 			   
 			#]
 			replyTo getfibo with getfiboanswer : getfiboanswer($K,$R)
@@ -171,12 +171,7 @@ QActor storage context ctxservice withobj math using "MathUtils.create()"{
 	Transition t0 whenRequest getfibo -> elab
 	
 }
-QActor dummy context ctxservice {
-	State init initial { 
-		println("$name  STARTS ") color blue
-		delegate dofibo to servicemath
-	}  
-}
+
 
 /*
  * SERVICE 
@@ -270,6 +265,12 @@ QActor actionexec  context ctxservice dynamicOnly{ //withobj math using "MathUti
  
  } 
 
+QActor dummy context ctxservice {
+	State init initial { 
+		println("$name  STARTS ") color blue
+		delegate dofibo to servicemath
+	}  
+}
  
 Facade f port 8088 usingactor servicemath inctx ctxservice  
                    appl "unibo.servicefacade24.Servicefacade24Application" 
