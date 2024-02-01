@@ -1,5 +1,4 @@
 package unibo.servicefacade24;
-
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapResponse;
 import unibo.basicomm23.utils.CommUtils;

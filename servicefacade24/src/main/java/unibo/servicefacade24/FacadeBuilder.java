@@ -4,19 +4,20 @@ import unibo.basicomm23.utils.CommUtils;
 import java.util.List;
 
 public class FacadeBuilder {
-
-    protected   WSHandler wsHandler     ;
+    public static  WSHandler wsHandler;
+    //protected   WSHandler wsHandler     ;
     protected   ApplguiCore guiCore  ;
     protected   ActorOutIn outinadapter;
 
-    public FacadeBuilder(WSHandler wsHandler){
-        wsHandler    = this.wsHandler = wsHandler;
+    public FacadeBuilder( ){
+        //wsHandler    = this.wsHandler = wsHandler;
         create();
     }
 
     public void create(){
-
-        outinadapter = new ActorOutIn(wsHandler );
+        //CommUtils.outred("FacadeBuilder createeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+        wsHandler    = new WSHandler();
+        outinadapter = new ActorOutIn( wsHandler );
         guiCore      = new ApplguiCore(outinadapter);
         wsHandler.setGuiCore(guiCore); //Injections
 

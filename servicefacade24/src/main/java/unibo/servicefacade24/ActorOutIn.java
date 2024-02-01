@@ -23,8 +23,8 @@ public class ActorOutIn {
     private String qakSysPort;
     private String qakSysCtx;
     private String applActorName;
-    private String reqid;
-    private String reqarg;
+//    private String reqid;
+//    private String reqarg;
     public static String facadePort = "";
     public static String sysname = "";
 
@@ -36,13 +36,13 @@ public class ActorOutIn {
                 qakSysHost     = config.get(0);
                 qakSysPort     = config.get(1);
                 qakSysCtx      = config.get(2);
-                applActorName  = config.get(3);
-                facadePort     = config.get(4);
-                sysname        = config.get(5);
+ //               applActorName  = config.get(3);
+ //               facadePort     = config.get(4);
+ //               sysname        = config.get(5);
                 //reqid = "dofibo";           //config.get(6); CHE NE SA?
                 //reqarg = "dofibo(X)";       //config.get(7);
-                senderId = "gui";
-                destActor = applActorName;
+ //               senderId = "gui";
+ //               destActor = applActorName;
 
              tcpConn = TcpClientSupport.connect(qakSysHost, Integer.parseInt(qakSysPort), 10);
              CommUtils.outblue("OUTIN | Stabilita tcpConn: " + tcpConn + " con " + qakSysPort);
@@ -85,13 +85,12 @@ public class ActorOutIn {
         } catch (Exception e) {
             CommUtils.outred("OUTIN | ERROR " + e.getMessage() +" while sending the request");
         }
-
     }
 
     //
-    public void dorequest(String msg ) {
-        CommUtils.outmagenta("OUTIN | dorequest " + msg );
-        IApplMessage message = CommUtils.buildRequest(senderId, reqid, reqarg.replace("X",msg) , destActor);
+    public void dorequest(  String senderId, String destActor, String reqid, String reqarg ) {
+        IApplMessage message = CommUtils.buildRequest(senderId, reqid, reqarg  , destActor);
+        CommUtils.outmagenta("OUTIN | dorequest " + message );
         sendToActor( message );
     }
 

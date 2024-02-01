@@ -18,10 +18,12 @@ function connect() {
     socket = new WebSocket(addr); // CONNESSIONE
 
     socket.onopen = function (event) {
-        addTo_msgArea("Connessione " + addr + " ok");
+        //addTo_msgArea("Connessione " + addr + " ok");
+        showMsg("Connessione " + addr + " ok");
     };
     socket.onerror = function (event) {
-        addTo_msgArea("ERROR " + event.data);
+        //addTo_msgArea("ERROR " + event.data);
+        showMsg("ERROR " + event.data);
     };
     socket.onmessage = function (event) { // RICEZIONE
         //let [type, payload, info] = event.data.split("/");

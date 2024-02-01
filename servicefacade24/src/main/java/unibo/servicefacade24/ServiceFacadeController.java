@@ -10,9 +10,11 @@ import unibo.basicomm23.utils.CommUtils;
 public class ServiceFacadeController {
     @Value("${spring.application.name}")
     String appNameOld;  //vedi application.properties
-
     protected String sysName = "unknown";
 
+    public ServiceFacadeController(){
+         new FacadeBuilder( ) ;
+    }
     private void updateViewmodel(Model model, String info ){
         model.addAttribute("info", info );
         model.addAttribute("sysNames", sysName);

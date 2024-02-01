@@ -2,22 +2,25 @@ package unibo.servicefacade24;
 import unibo.basicomm23.utils.CommUtils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /*
 Logica applicativa (domain core) della gui
  */
 public class ApplguiCore {
-    //private   WSHandler wsHandler;
     private   ActorOutIn outinadapter;
+    private String reqid      = "dofibo";           //config.get(6); CHE NE SA?
+    private String reqcontent = "dofibo(X)";       //config.get(7);
+    private  String destActor = "";
 
     public ApplguiCore( ActorOutIn outinadapter ) {
         this.outinadapter = outinadapter;
-        //public ApplguiCore(WSHandler clientHandler) {
-         //wsHandler  = clientHandler;
-         //outinadapter = new ActorOutIn(this );
-         //wsHandler.setManager(this);
-    }
+        List<String> config = QaksysConfigSupport.readConfig("facadeConfig.json");
+        if( config != null ) {
+            destActor = config.get(3);
+        }
+      }
 
     public void hanldeMsgFromActor(String msg, String requestId) {
         CommUtils.outcyan("AGC | hanldeMsgFromActor " + msg + " requestId=" + requestId) ;
@@ -26,7 +29,6 @@ public class ApplguiCore {
 
     public void updateMsg( String msg ) {
         CommUtils.outblue("AGC updateMsg " + msg);
-        //this.wsHandler.sendToAll( msg  );
         outinadapter.sendToAll(msg);
     }
 
@@ -54,9 +56,10 @@ public class ApplguiCore {
  
 
     private void dorequest(String payload ) {
-        outinadapter.dorequest(payload );
+        outinadapter.dorequest(
+        "gui",destActor,reqid,reqcontent.replace("X",payload) );
     }
     private void docmd(String payload ) {
-        outinadapter.docmd(payload );
+        //outinadapter.docmd(payload );
     }
 }
