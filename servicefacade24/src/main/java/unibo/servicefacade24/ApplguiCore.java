@@ -8,13 +8,15 @@ import java.util.Map;
 Logica applicativa (domain core) della gui
  */
 public class ApplguiCore {
-    private final WSHandler wsHandler;
-    private final ActorOutIn actoroutin;
+    //private   WSHandler wsHandler;
+    private   ActorOutIn outinadapter;
 
-    public ApplguiCore(WSHandler clientHandler) {
-         wsHandler  = clientHandler;
-         actoroutin = new ActorOutIn(this );
-         wsHandler.setManager(this);
+    public ApplguiCore( ActorOutIn outinadapter ) {
+        this.outinadapter = outinadapter;
+        //public ApplguiCore(WSHandler clientHandler) {
+         //wsHandler  = clientHandler;
+         //outinadapter = new ActorOutIn(this );
+         //wsHandler.setManager(this);
     }
 
     public void hanldeMsgFromActor(String msg, String requestId) {
@@ -24,7 +26,8 @@ public class ApplguiCore {
 
     public void updateMsg( String msg ) {
         CommUtils.outblue("AGC updateMsg " + msg);
-        this.wsHandler.sendToAll( msg  );
+        //this.wsHandler.sendToAll( msg  );
+        outinadapter.sendToAll(msg);
     }
 
     public void handleWsMsg(String msg ) {
@@ -51,9 +54,9 @@ public class ApplguiCore {
  
 
     private void dorequest(String payload ) {
-        this.actoroutin.dorequest(payload );
+        outinadapter.dorequest(payload );
     }
     private void docmd(String payload ) {
-        this.actoroutin.docmd(payload );
+        outinadapter.docmd(payload );
     }
 }

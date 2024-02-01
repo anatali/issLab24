@@ -17,6 +17,7 @@ public class ActorOutIn {
     private  String senderId;
     private  String destActor;
     private ApplguiCore applGuiCore;
+    private WSHandler wsHandler;
     private  Interaction tcpConn;
     private String qakSysHost;
     private String qakSysPort;
@@ -27,32 +28,34 @@ public class ActorOutIn {
     public static String facadePort = "";
     public static String sysname = "";
 
-    public ActorOutIn(ApplguiCore gui ) {
-        this.applGuiCore = gui;
+    public ActorOutIn( WSHandler wsHandler ) { //deve referenziare ApplGuiCore?
+        this.wsHandler = wsHandler;
         try {
             List<String> config = QaksysConfigSupport.readConfig("facadeConfig.json");
             if( config != null ) {
-                qakSysHost = config.get(0);
-                qakSysPort = config.get(1);
-                qakSysCtx = config.get(2);
-                applActorName = config.get(3);
-                facadePort = config.get(4);
-                sysname = config.get(5);
-                reqid = "dofibo";           //config.get(6);
-                reqarg = "dofibo(X)";       //config.get(7);
+                qakSysHost     = config.get(0);
+                qakSysPort     = config.get(1);
+                qakSysCtx      = config.get(2);
+                applActorName  = config.get(3);
+                facadePort     = config.get(4);
+                sysname        = config.get(5);
+                //reqid = "dofibo";           //config.get(6); CHE NE SA?
+                //reqarg = "dofibo(X)";       //config.get(7);
                 senderId = "gui";
                 destActor = applActorName;
 
              tcpConn = TcpClientSupport.connect(qakSysHost, Integer.parseInt(qakSysPort), 10);
              CommUtils.outblue("OUTIN | Stabilita tcpConn: " + tcpConn + " con " + qakSysPort);
-
+/*
             CoapObserver obs = new CoapObserver(gui , applActorName);
 
             CoapConnection coapConn = new CoapConnection(qakSysHost+":"+qakSysPort,
                     qakSysCtx+"/"+applActorName);
             CommUtils.outblue("OUTIN | Stabilita coapConn : " + coapConn );
 
-                coapConn.observeResource( obs );
+            coapConn.observeResource( obs );
+
+ */
             }
         } catch (Exception e) {
             tcpConn = null;
@@ -70,13 +73,12 @@ public class ActorOutIn {
                 CommUtils.outmagenta("OUTIN | Got response " + response);
                 if (response != null) {
                     if(response.isRequest()){
-                        //applGuiCore.hanldeMsgFromActor("Sorry, I'm not able to answet to request " + response.msgId() + ":"+ response.msgContent(), response.msgId());
-                        applGuiCore.updateMsg("Sorry, I'm not able to answet to request " + response.msgId() + ":"+ response.msgContent() );
-                        //dovrei delegare la ask a un oggetto locale alla gui che
-                        //dovrebbe essere plugged-in nella dichiarazione della faccade
+                        //applGuiCore.updateMsg( );
+                        String s =  "Sorry, I'm not able to answet to request " + response.msgId() + ":"+ response.msgContent();
+                        wsHandler.sendToAll( s );
                     }else {
-                        //applGuiCore.hanldeMsgFromActor(response.msgContent(), requestId);
-                        applGuiCore.updateMsg(response.msgContent() );
+                        wsHandler.sendToAll( response.msgContent() );
+                        //applGuiCore.updateMsg(response.msgContent() );
                     }
                 }
             }else tcpConn.forward(message);
@@ -99,5 +101,7 @@ public class ActorOutIn {
 //        sendToActor(message, msgId);
     }
 
-
+    public void sendToAll(String msg){
+        wsHandler.sendToAll( msg  );
+    }
 }

@@ -6,11 +6,11 @@ import unibo.basicomm23.utils.CommUtils;
 
 public class CoapObserver implements CoapHandler {
 
-    private final ApplguiCore guiManager;
+    private final ApplguiCore guiCore;
     private final String observedActor;
 
-    public CoapObserver(ApplguiCore manager, String actor) {
-        this.guiManager    = manager;
+    public CoapObserver(ApplguiCore guiCore, String actor) {
+        this.guiCore = guiCore;
         this.observedActor = actor;
     }
 
@@ -18,7 +18,7 @@ public class CoapObserver implements CoapHandler {
     public void onLoad(CoapResponse response) {
         CommUtils.outblue("CoapObserver | Got update from " + observedActor + ": " + response.getResponseText());
         //guiManager.updateStatusGUI(observedActor, response.getResponseText());
-        guiManager.hanldeMsgFromActor(response.getResponseText(), "");
+        guiCore.hanldeMsgFromActor(response.getResponseText(), "");
     }
 
     @Override

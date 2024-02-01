@@ -10,8 +10,8 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 public class WebSocketConfiguration implements WebSocketConfigurer {
     public final WSHandler wsHandler = new WSHandler();
     public final String wsPath       = "accessgui";
-
-    public final ApplguiCore guiManager = new ApplguiCore(wsHandler);
+    private FacadeBuilder builder = new FacadeBuilder(wsHandler) ;
+    //public final ApplguiCore guiManager = new ApplguiCore(wsHandler);
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {

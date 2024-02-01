@@ -3,9 +3,6 @@
 const msgArea = document.getElementById("messageArea");
 console.log("msgArea=" + msgArea)
 
-const outdevArea = document.getElementById("outdevArea");
-console.log("outdevArea=" + outdevArea)
-
 var socket = connect();
 
 
@@ -36,12 +33,7 @@ function connect() {
 
 
 function submitRequest() {
-
-/*
-    if (requestInput.value.length === 0) {
-        addTo_msgArea("Inserisci un dato")
-    } else { */
-    console.log("submitRequest "+ requestInput.value);
+     console.log("submitRequest "+ requestInput.value);
     sendMessage("request/" + requestInput.value); //arriva a ActorOutIn
     requestInput.value = "";
 
@@ -54,7 +46,6 @@ function submitTheCmd() {
 }
 
 function submitTheExit() {
-      //console.log("submitCmd "+ cmdInput.value);
       sendMessage("exit/ok"  );
       cmdInput.value = "";
 }
@@ -65,31 +56,7 @@ function sendMessage(message) {
 }
 
 function showMsg(message) {
-    if( message.startsWith("show")){
-        var msg = message.replace("show(","")
-        msg     = msg.substring(0, msg.lastIndexOf(")")) + ""
-        addTo_outdevArea(msg)
-    }
-    else  if( message.startsWith("out")){
-        var msg = message.replace("out(","")
-        msg     = msg.substring(0, msg.lastIndexOf(")")) + ""
-        addTo_msgArea(msg)
-    }
-    else addTo_msgArea(message)
-}
-
-function addTo_msgArea(message) {
-    //msgArea.innerHTML += "<div class=\"testo\">" + message + "</div>"
-    msgArea.innerHTML +=  message + "\n"
-}
-
-function addTo_outdevArea(message) {
-    //outdevArea.innerHTML += "<div class=\"testo\">" + message + "</div>"
-     outdevArea.innerHTML +=  message + "\n"
-}
-
-function clear_outdevArea(){
-    outdevArea.innerHTML = ""
+  msgArea.innerHTML +=  message + "\n"
 }
 
 function clear_messageArea(){

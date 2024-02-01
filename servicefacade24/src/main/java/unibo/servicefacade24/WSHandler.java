@@ -12,7 +12,6 @@ import java.util.Map;
 
 /*
 Gestisce la websocket avendo come riferimento applicativo ApplguiCore
-
  */
 
 
@@ -20,10 +19,11 @@ public class WSHandler extends AbstractWebSocketHandler {
     private final List<WebSocketSession> sessions               = new ArrayList<>();
     private final Map<String, WebSocketSession> pendingRequests = new HashMap<>();
 
-    private ApplguiCore applGuiCore;
+    private ApplguiCore guiCore;
 
-    protected void setManager(ApplguiCore gui) {
-        this.applGuiCore = gui;
+    //Injiection
+    public void setGuiCore(ApplguiCore gui) {
+        guiCore = gui;
     }
 
     @Override
@@ -48,13 +48,7 @@ public class WSHandler extends AbstractWebSocketHandler {
                                      TextMessage message) {
         String msg = message.getPayload();
         CommUtils.outgreen("WSH | Received: " + msg);
-        this.applGuiCore.handleWsMsg( msg ); //gestisce dorequest e docmd
-        /*
-        if( msg.startsWith("dorequest")) {
-            this.applGuiCore.handleWsMsg(msg, newRequest(session));
-        }else if( msg.startsWith("docmd")) {
-            this.applGuiCore.clientCmd(msg, newRequest(session));
-        }*/
+        guiCore.handleWsMsg( msg ); //gestisce dorequest e docmd
     }
 
     protected synchronized  void sendToAll(String message) { //synchronized JAN24
@@ -68,6 +62,7 @@ public class WSHandler extends AbstractWebSocketHandler {
         }
     }
 
+    /*
     protected void sendToClient(String message, String requestId, Boolean requestComplete) {
         System.out.println("WSH | Sending to client " + message);
         WebSocketSession session = this.pendingRequests.get(requestId);
@@ -85,5 +80,5 @@ public class WSHandler extends AbstractWebSocketHandler {
         String requestId = "req" + session.getId().substring(session.getId().lastIndexOf('-') + 1);
         pendingRequests.put(requestId, session);
         return requestId;
-    }
+    }*/
 }
