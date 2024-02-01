@@ -1,0 +1,37 @@
+package unibo.servicefacade24;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import unibo.basicomm23.utils.CommUtils;
+
+@Controller
+public class ServiceFacadeController {
+    @Value("${spring.application.name}")
+    String appNameOld;  //vedi application.properties
+
+    protected ApplSystemInfo qakSys;
+    protected String sysName = "unknown";
+
+    private void updateViewmodel(Model model, String info ){
+        model.addAttribute("info", info );
+        model.addAttribute("sysNames", sysName);
+      }
+
+    @GetMapping("/")
+    public String homePage(Model viewmodel) {
+        CommUtils.outcyan("ServiceFacadeController homePage appNameOld=" + appNameOld);
+        viewmodel.addAttribute("appname", CustomContainer.appName);
+        entry();
+        return "qakFacadeGUI";
+    }
+
+    protected void entry(){
+        String dir = System.getProperty("user.dir");
+        CommUtils.outgreen (" --- ServiceFacadeController | entry dir= "+dir  ); //+" qakSys="+qakSys
+        qakSys = new ApplSystemInfo();  
+        sysName = qakSys.readSystemFileDescriptionNames(ActorOutIn.sysname).toString().trim()
+                .replace("[","").replace("]","");
+    }
+}
