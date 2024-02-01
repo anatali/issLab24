@@ -12,9 +12,9 @@ public class ApplguiCore {
     private final ActorOutIn actoroutin;
 
     public ApplguiCore(WSHandler clientHandler) {
-        this.wsHandler  = clientHandler;
-        this.actoroutin = new ActorOutIn(this );
-        this.wsHandler.setManager(this);
+         wsHandler  = clientHandler;
+         actoroutin = new ActorOutIn(this );
+         wsHandler.setManager(this);
     }
 
     public void hanldeMsgFromActor(String msg, String requestId) {
@@ -28,7 +28,7 @@ public class ApplguiCore {
     }
 
     public void handleWsMsg(String msg ) {
-        CommUtils.outcyan("AGC | handleWsMsg "  );
+        CommUtils.outcyan("AGC | handleWsMsg $msg"  );
         String[] parts = msg.split("/");
         String message = parts[0];
         String payload = parts[1];
