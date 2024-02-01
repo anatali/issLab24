@@ -11,27 +11,19 @@ public class ServiceFacadeController {
     @Value("${spring.application.name}")
     String appNameOld;  //vedi application.properties
 
-    protected ApplSystemInfo qakSys;
     protected String sysName = "unknown";
 
     private void updateViewmodel(Model model, String info ){
         model.addAttribute("info", info );
         model.addAttribute("sysNames", sysName);
-      }
+    }
 
     @GetMapping("/")
     public String homePage(Model viewmodel) {
-        CommUtils.outcyan("ServiceFacadeController homePage appNameOld=" + appNameOld);
+        //CommUtils.outcyan("ServiceFacadeController homePage appNameOld=" + appNameOld);
         viewmodel.addAttribute("appname", CustomContainer.appName);
-        entry();
-        return "qakFacadeGUI";
-    }
-
-    protected void entry(){
         String dir = System.getProperty("user.dir");
-        CommUtils.outgreen (" --- ServiceFacadeController | entry dir= "+dir  ); //+" qakSys="+qakSys
-        qakSys = new ApplSystemInfo();  
-        sysName = qakSys.readSystemFileDescriptionNames(ActorOutIn.sysname).toString().trim()
-                .replace("[","").replace("]","");
+        CommUtils.outgreen (" --- ServiceFacadeController | entry dir= "+dir  );
+        return "qakFacadeGUI";
     }
 }

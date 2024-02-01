@@ -106,6 +106,7 @@ QActor servicemath context ctxservice {
 			#]
 			[# val SOUT = "$name | $ReqId $ReqArg Sender=$Sender" #]
 			println("$SOUT") color blue
+			updateResource [# SOUT #]
 			//forward display -m out  : out(  $SOUT  )
 			if[# ReqArg < 0 || ReqArg > 92 #]{
 				[# val Wrong = "-1" #]

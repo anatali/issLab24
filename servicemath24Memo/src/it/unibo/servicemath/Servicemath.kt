@@ -42,6 +42,8 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 											   var Sender = currentMsg.msgSender()
 								 val SOUT = "$name | $ReqId $ReqArg Sender=$Sender"  
 								CommUtils.outblue("$SOUT")
+								updateResourceRep( SOUT  
+								)
 								if(  ReqArg < 0 || ReqArg > 92  
 								 ){ val Wrong = "-1"  
 								answer("dofibo", "fibodone", "fibodone($Sender,$ReqArg,$Wrong,0)"   )  

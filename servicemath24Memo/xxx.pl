@@ -25,6 +25,8 @@ fibo(5,5).
 
 fibo(6,8).
 
+fibo(7,13).
+
 showListOfElements('[]').
 
 showListOfElements([C|R]) :-

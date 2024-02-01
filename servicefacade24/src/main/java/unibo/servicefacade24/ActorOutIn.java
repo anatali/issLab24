@@ -44,13 +44,15 @@ public class ActorOutIn {
                 destActor = applActorName;
 
              tcpConn = TcpClientSupport.connect(qakSysHost, Integer.parseInt(qakSysPort), 10);
-            CommUtils.outblue("OUTIN | Stabilita connessione tcp: " + tcpConn + " con " + qakSysPort);
+             CommUtils.outblue("OUTIN | Stabilita tcpConn: " + tcpConn + " con " + qakSysPort);
 
             CoapObserver obs = new CoapObserver(gui , applActorName);
 
             CoapConnection coapConn = new CoapConnection(qakSysHost+":"+qakSysPort,
                     qakSysCtx+"/"+applActorName);
-            coapConn.observeResource( obs );
+            CommUtils.outblue("OUTIN | Stabilita coapConn : " + coapConn );
+
+                coapConn.observeResource( obs );
             }
         } catch (Exception e) {
             tcpConn = null;
