@@ -38,7 +38,7 @@ public class ApplguiCore {
     }
 
     public void handleWsMsg(String msg ) {
-        CommUtils.outcyan("AGC | handleWsMsg $msg"  );
+        CommUtils.outcyan("AGC | handleWsMsg msg " + msg  );
         String[] parts = msg.split("/");
         String message = parts[0];
             String payload = parts[1];

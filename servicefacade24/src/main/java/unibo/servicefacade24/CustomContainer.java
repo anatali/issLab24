@@ -9,12 +9,12 @@ import java.util.List;
 
 @Configuration
 public class CustomContainer implements WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> {
-    public static String appName ;
+
     public void customize(ConfigurableServletWebServerFactory factory){
         ApplSystemInfo.readConfig();
         int port = ApplSystemInfo.facadeport;
         factory.setPort(port);  //customization
-        appName = ApplSystemInfo.appName;
+        String appName = ApplSystemInfo.appName;
         CommUtils.outblue("CustomContainer | facade port=" + port + " appName=" + appName);
     }
 

@@ -25,7 +25,7 @@ public class ServiceFacadeController {
     @GetMapping("/")
     public String homePage(Model viewmodel) {
         //CommUtils.outcyan("ServiceFacadeController homePage appNameOld=" + appNameOld);
-        viewmodel.addAttribute("appname", CustomContainer.appName);
+        viewmodel.addAttribute("appname", ApplSystemInfo.appName);
         String dir = System.getProperty("user.dir");
         CommUtils.outgreen (" --- ServiceFacadeController | entry dir= "+dir  );
 

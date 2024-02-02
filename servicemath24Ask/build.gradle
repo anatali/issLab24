@@ -22,10 +22,11 @@ plugins {
 }
 
 version '1.0'
+/*
 java {
    sourceCompatibility = '11'
 }
-
+*/
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(11))
 }
