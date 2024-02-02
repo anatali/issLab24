@@ -16,6 +16,7 @@ public class FacadeBuilder {
         wsHandler    = new WSHandler();
         outinadapter = new ActorOutIn( wsHandler );
         guiCore      = new ApplguiCore(outinadapter);
+        outinadapter.setGuiCore(guiCore); //Injection
         wsHandler.setGuiCore(guiCore); //Injection
 
 

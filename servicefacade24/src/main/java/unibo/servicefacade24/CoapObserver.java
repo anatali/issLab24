@@ -16,8 +16,7 @@ public class CoapObserver implements CoapHandler {
     @Override
     public void onLoad(CoapResponse response) {
         CommUtils.outblue("CoapObserver | Got update from " + observedActor + ": " + response.getResponseText());
-        //guiManager.updateStatusGUI(observedActor, response.getResponseText());
-        guiCore.hanldeMsgFromActor(response.getResponseText(), "");
+        guiCore.handleMsgFromActor(response.getResponseText(), "");
     }
 
     @Override

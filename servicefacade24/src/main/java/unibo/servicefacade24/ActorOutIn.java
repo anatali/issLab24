@@ -1,5 +1,6 @@
 package unibo.servicefacade24;
 
+import it.unibo.kactor.MsgUtil;
 import unibo.basicomm23.coap.CoapConnection;
 import unibo.basicomm23.interfaces.IApplMessage;
 import unibo.basicomm23.interfaces.Interaction;
@@ -14,24 +15,15 @@ Adapter verso il QActor che fa da facade
 Usa il file facadeConfig.json
  */
 public class ActorOutIn {
-    private  String senderId;
-    private  String destActor;
-    private ApplguiCore applGuiCore;
+    private ApplguiCore guiCore;
     private WSHandler wsHandler;
     private  Interaction tcpConn;
-    //private String qakSysHost;
-    //private String qakSysPort;
-    //private String qakSysCtx;
-    //private String applActorName;
-//    private String reqid;
-//    private String reqarg;
-    public static String facadePort = "";
-    public static String sysname = "";
 
-    public ActorOutIn( WSHandler wsHandler ) { //deve referenziare ApplGuiCore?
-        this.wsHandler = wsHandler;
+
+    public ActorOutIn( WSHandler wsHandler ) {
         try {
-             String qakSysHost     = ApplSystemInfo.qakSysHost;
+            this.wsHandler        = wsHandler;
+            String qakSysHost     = ApplSystemInfo.qakSysHost;
             String qakSysPort     = ApplSystemInfo.qakSysPort;
             int    ctxport      = ApplSystemInfo.ctxport;
 
@@ -41,6 +33,11 @@ public class ActorOutIn {
             tcpConn = null;
             CommUtils.outred("OUTIN | creation WARNING: " + e.getMessage());
         }
+     }
+
+     //Injection
+     public void setGuiCore(ApplguiCore guiCore){
+         this.guiCore = guiCore;
      }
 
 
@@ -53,12 +50,14 @@ public class ActorOutIn {
                 CommUtils.outmagenta("OUTIN | Got response " + response);
                 if (response != null) {
                     if(response.isRequest()){
-                        //applGuiCore.updateMsg( );
-                        String s =  "Sorry, I'm not able to answet to request " + response.msgId() + ":"+ response.msgContent();
-                        wsHandler.sendToAll( s );
+                        String s =  "Sorry, I'm not able to answer to request " + response.msgId() + ":"+ response.msgContent();
+                        CommUtils.outmagenta("OUTIN |  " + s);
+                        //IApplMessage sorry = MsgUtil.buildReply("gui", response.msgId(), s, response.msgSender());
+                        //wsHandler.sendToAll( s );
+                        guiCore.handleReplyMsg( s  );
                     }else {
-                        wsHandler.sendToAll( response.msgContent() );
-                        //applGuiCore.updateMsg(response.msgContent() );
+                        //wsHandler.sendToAll( response );
+                        guiCore.handleReplyMsg( response.msgContent()  );
                     }
                 }
             }else tcpConn.forward(message);
@@ -80,7 +79,5 @@ public class ActorOutIn {
 //        sendToActor(message, msgId);
     }
 
-    public void sendToAll(String msg){
-        wsHandler.sendToAll( msg  );
-    }
+    public void sendToAll(String msg){ wsHandler.sendToAll( msg  ); }
 }

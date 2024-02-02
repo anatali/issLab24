@@ -10,14 +10,11 @@ import unibo.basicomm23.utils.CommUtils;
 @EnableWebSocket
 public class WebSocketConfiguration implements WebSocketConfigurer {
 
-    //public  WSHandler wsHandler = new WSHandler();
-    public final String wsPath       = "accessgui";
-    //private FacadeBuilder builder = new FacadeBuilder(wsHandler) ;
-    //public final ApplguiCore guiManager = new ApplguiCore(wsHandler);
+    public final String wsPath  = "accessgui";
 
     public WebSocketConfiguration(){
-        //Inovocato alla connessione
-        CommUtils.outred("WebSocketConfiguration onnnnnnnnnnnnnnnnnn");
+        //Inovocato alla CONNESSIONE
+        //CommUtils.outred("WebSocketConfiguration onnnnnnnnnnnnnnnnnn");
     }
 
     @Override

@@ -10,7 +10,6 @@ fun main() = runBlocking {
 	        "localhost", this, "servicemathask.pl", "sysRules.pl", "ctxservice"
 	)
 	//JAN Facade
-	unibo.servicefacade24.Servicefacade24Application.main( arrayOf<String>() );
 	//JAN24 Display
 }
 

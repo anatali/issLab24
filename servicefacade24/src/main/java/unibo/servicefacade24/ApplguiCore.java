@@ -1,4 +1,5 @@
 package unibo.servicefacade24;
+import unibo.basicomm23.interfaces.IApplMessage;
 import unibo.basicomm23.utils.CommUtils;
 
 import java.util.HashMap;
@@ -21,9 +22,14 @@ public class ApplguiCore {
         destActor         = ApplSystemInfo.applActorName;
     }
 
-    public void hanldeMsgFromActor(String msg, String requestId) {
+    //Chiamato da CoapObserver
+    public void handleMsgFromActor(String msg, String requestId) {
         CommUtils.outcyan("AGC | hanldeMsgFromActor " + msg + " requestId=" + requestId) ;
         updateMsg( msg );
+    }
+    public void handleReplyMsg( String msg) { //IApplMessage msg
+        CommUtils.outred("AGC | handleReplyMsg " + msg  ) ;
+        updateMsg( msg  );
     }
 
     public void updateMsg( String msg ) {
