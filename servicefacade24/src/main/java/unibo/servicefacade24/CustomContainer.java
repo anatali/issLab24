@@ -9,15 +9,13 @@ import java.util.List;
 
 @Configuration
 public class CustomContainer implements WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> {
-    public static String appName = "todo";
+    public static String appName ;
     public void customize(ConfigurableServletWebServerFactory factory){
-        List<String> config = QaksysConfigSupport.readConfig("facadeConfig.json");
-         if( config != null ) {
-             int port = Integer.parseInt(config.get(4));
-             factory.setPort(port);
-             appName = config.get(5);
-             CommUtils.outblue("CustomContainer | facade port=" + port + " appName=" + appName);
-         }
+        ApplSystemInfo.readConfig();
+        int port = ApplSystemInfo.facadeport;
+        factory.setPort(port);  //customization
+        appName = ApplSystemInfo.appName;
+        CommUtils.outblue("CustomContainer | facade port=" + port + " appName=" + appName);
     }
 
 }

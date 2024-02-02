@@ -36,8 +36,13 @@ function connect() {
 
 function submitRequest() {
      console.log("submitRequest "+ requestInput.value);
-    sendMessage("request/" + requestInput.value); //arriva a ActorOutIn
+    sendMessage("request/" + requestInput.value); //arriva a ApplGuiCore via WSHandler
     requestInput.value = "";
+}
+
+function submitRequestInfo() {
+     console.log("submitRequestInfo " );
+    sendMessage("requestInfo/actors"  ); //arriva a ApplGuiCore via WSHandler
 
 }
 

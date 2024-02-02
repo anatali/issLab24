@@ -52,13 +52,43 @@ public class WSHandler extends AbstractWebSocketHandler {
     }
 
     protected synchronized  void sendToAll(String message) { //synchronized JAN24
+        //Appena si collega alla appl remota, il CoAP observer riceve dati vecchi
+        //e chiama  sendToAll prima amcora che un utente
+        //abbia aperto la pagina con il browser e che quindi ci sia una WS
         CommUtils.outcyan("WSH | Sending to all " + message);
-        for (WebSocketSession session : sessions) {
-            try {
-                session.sendMessage(new TextMessage(message));
-            } catch (Exception e) {
-                CommUtils.outred("WSH | sendToAll " + message + " ERROR " + e.getMessage() );
+        try {
+            if( sessions.size() > 0 ){
+                for (WebSocketSession session : sessions) {
+                    session.sendMessage(new TextMessage(message));
+                    //CommUtils.outcyan("WSH | sent on current session " + session.getRemoteAddress());
+                }
             }
+            else{
+                CommUtils.outred("WSH | Sorry: no session yet ...");
+            }
+            //qualcuno ha chiamato troppo presto
+            /*
+            new Thread() {
+                public void run() {
+                    try {
+                            while (sessions.size() == 0) {
+                                CommUtils.outcyan("WSH | waiting for session ... ");
+                                Thread.sleep(1500);
+                            }
+
+                            for (WebSocketSession session : sessions) {
+                                session.sendMessage(new TextMessage(message));
+                                //CommUtils.outcyan("WSH | sent on current session " + session.getRemoteAddress());
+                            }
+                            CommUtils.outcyan("WSH | session done ");
+                    } catch (Exception e) {
+                            e.printStackTrace();
+                    }
+                }
+            }.start();
+           */
+        } catch (Exception e) {
+                CommUtils.outred("WSH | sendToAll " + message + " ERROR " + e.getMessage() );
         }
     }
 

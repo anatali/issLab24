@@ -1,16 +1,13 @@
 package unibo.servicefacade24;
 import unibo.basicomm23.coap.CoapConnection;
 import unibo.basicomm23.utils.CommUtils;
-import java.util.List;
 
 public class FacadeBuilder {
     public static  WSHandler wsHandler;
-    //protected   WSHandler wsHandler     ;
     protected   ApplguiCore guiCore  ;
     protected   ActorOutIn outinadapter;
 
     public FacadeBuilder( ){
-        //wsHandler    = this.wsHandler = wsHandler;
         create();
     }
 
@@ -19,22 +16,22 @@ public class FacadeBuilder {
         wsHandler    = new WSHandler();
         outinadapter = new ActorOutIn( wsHandler );
         guiCore      = new ApplguiCore(outinadapter);
-        wsHandler.setGuiCore(guiCore); //Injections
+        wsHandler.setGuiCore(guiCore); //Injection
 
 
-        List<String> config = QaksysConfigSupport.readConfig("facadeConfig.json");
-        if( config != null ) {
-            String qakSysHost = config.get(0);
-            String qakSysPort = config.get(1);
-            String qakSysCtx = config.get(2);
-            String applActorName = config.get(3);
+//        List<String> config = QaksysConfigSupport.readConfig("facadeConfig.json");
+//        if( config != null ) {
+            String qakSysHost    = ApplSystemInfo.qakSysHost;
+            String ctxportStr    = ApplSystemInfo.ctxportStr;
+            String qakSysCtx     = ApplSystemInfo.qakSysCtx;
+            String applActorName = ApplSystemInfo.applActorName;
 
             CoapObserver obs = new CoapObserver(guiCore, applActorName);
-            CoapConnection coapConn = new CoapConnection(qakSysHost + ":" + qakSysPort,
+            CoapConnection coapConn = new CoapConnection(qakSysHost + ":" + ctxportStr,
                     qakSysCtx + "/" + applActorName);
             CommUtils.outblue("FacadeBuilder | Stabilita coapConn : " + coapConn);
 
             coapConn.observeResource(obs);
-        }
+        //}
     }
 }

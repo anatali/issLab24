@@ -7,6 +7,7 @@ import java.util.Map;
 
 /*
 Logica applicativa (domain core) della gui
+Creata da ServiceFacadeController usando FacadeBuilder
  */
 public class ApplguiCore {
     private   ActorOutIn outinadapter;
@@ -16,11 +17,9 @@ public class ApplguiCore {
 
     public ApplguiCore( ActorOutIn outinadapter ) {
         this.outinadapter = outinadapter;
-        List<String> config = QaksysConfigSupport.readConfig("facadeConfig.json");
-        if( config != null ) {
-            destActor = config.get(3);
-        }
-      }
+        ApplSystemInfo.setup();
+        destActor         = ApplSystemInfo.applActorName;
+    }
 
     public void hanldeMsgFromActor(String msg, String requestId) {
         CommUtils.outcyan("AGC | hanldeMsgFromActor " + msg + " requestId=" + requestId) ;
@@ -36,7 +35,7 @@ public class ApplguiCore {
         CommUtils.outcyan("AGC | handleWsMsg $msg"  );
         String[] parts = msg.split("/");
         String message = parts[0];
-        String payload = parts[1];
+            String payload = parts[1];
         CommUtils.outcyan("AGC | handleWsMsg " + message  );
 
         switch (message) {
@@ -45,6 +44,9 @@ public class ApplguiCore {
                 break;
             case "cmd":
                 docmd(payload );
+                break;
+            case "requestInfo":
+                dorequestInfo();
                 break;
             case "exit":
                 System.exit(0);
@@ -61,5 +63,16 @@ public class ApplguiCore {
     }
     private void docmd(String payload ) {
         //outinadapter.docmd(payload );
+    }
+    private void dorequestInfo(  ) {
+
+        //ApplSystemInfo.setup();
+        List<String> actorNames = ApplSystemInfo.getActorNamesInApplCtx();
+        CommUtils.outgreen (" --- ServiceFacadeController | actorNames= "+actorNames  );
+
+        FacadeBuilder.wsHandler.sendToAll(
+                "ACTORS:" + actorNames.toString() +
+                " interacting with:" + ApplSystemInfo.applActorName);
+
     }
 }

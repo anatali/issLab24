@@ -6,6 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import unibo.basicomm23.utils.CommUtils;
 
+import java.util.List;
+
 @Controller
 public class ServiceFacadeController {
     @Value("${spring.application.name}")
@@ -26,6 +28,7 @@ public class ServiceFacadeController {
         viewmodel.addAttribute("appname", CustomContainer.appName);
         String dir = System.getProperty("user.dir");
         CommUtils.outgreen (" --- ServiceFacadeController | entry dir= "+dir  );
+
         return "qakFacadeGUI";
     }
 }
