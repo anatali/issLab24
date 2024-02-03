@@ -4,16 +4,16 @@ Dispatch info : info(SOURCE,TERM)
 
 Context ctxhello ip [host="localhost" port=8004] 
 
-QActor display context ctxhello withobj d using "utils.DisplayObj.create()"{
+QActor display context ctxhello withobj d using "DisplayObj.create()"{
 	State s0 initial{
-		observeResource worker msgid info
-	} 
+		observeResource worker //msgid info 
+	}   
 	Transition t0 whenMsg info -> handleinfo
 	
 	State handleinfo{
 		printCurrentMessage
 		println("$currentMsg") color blue
-		[# 
+		[#  
 		 d.print( currentMsg.toString() )  
 		 d.print( "$currentMsg" )  
 		 d.print( currentMsg.msgContent().toString() )  
@@ -29,17 +29,17 @@ QActor display context ctxhello withobj d using "utils.DisplayObj.create()"{
 	}
 	Transition t0 whenMsg info -> handleinfo
 }
-
+    
 QActor worker context ctxhello  {
  	State s0 initial{
 		[# var n = 0 #]
 		delay 1500
-		updateResource [# "$name hello_${n++}" #]	
-		delay 2000	 
-		updateResource [# "$name hello_${n++}" #]
+		updateResource [#  "$name, hello_${n++}" #] 
+//		delay 2000	 
+//		updateResource [# "m( $name, hello_${n++} )" #]
 	}	 
-} 
+}  
 
 
-  
+
  

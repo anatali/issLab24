@@ -17,14 +17,12 @@ eventedgeattr = {
     'color': 'red',
     'style': 'dotted'
 }
-with Diagram('helloworld2Arch', show=False, outformat='png', graph_attr=graphattr) as diag:
+with Diagram('helloworld4Arch', show=False, outformat='png', graph_attr=graphattr) as diag:
   with Cluster('env'):
      sys = Custom('','./qakicons/system.png')
 ### see https://renenyffenegger.ch/notes/tools/Graphviz/attributes/label/HTML-like/index
      with Cluster('ctxhello', graph_attr=nodeattr):
+          display=Custom('display','./qakicons/symActorWithobjSmall.png')
           worker=Custom('worker','./qakicons/symActorSmall.png')
-          display=Custom('display(coded)','./qakicons/codedQActor.png')
-     f=Custom('f','./qakicons/server.png')
-     f >> Edge(color='blue', style='solid', decorate='true', label='< &harr; >',  fontcolor='blue') >> servicemath
-     worker >> Edge(color='blue', style='solid',  decorate='true', label='<out &nbsp; >',  fontcolor='blue') >> display
+     worker >> Edge(color='blue', style='solid',  decorate='true', label='<coapinfo &nbsp; >',  fontcolor='blue') >> display
 diag

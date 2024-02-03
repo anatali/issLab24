@@ -24,11 +24,10 @@ class Worker ( name: String, scope: CoroutineScope, isconfined: Boolean=false  )
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
+						 var n = 0  
 						delay(1500) 
-						CommUtils.outmagenta("Hello world")
-						forward("out", "out(hello_again)" ,"display" ) 
-						 val OutMsg = "hello hello again"  
-						forward("out", "out($OutMsg)" ,"display" ) 
+						updateResourceRep(  "$name, hello_${n++}"  
+						)
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
