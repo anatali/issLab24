@@ -4,7 +4,7 @@ Dispatch out  : out(TERM)
 Context ctxhello ip [host="localhost" port=8005] 
 
 QActor display context ctxhello 
-			withobj d using "utils.DisplayObj.create()"{
+			withobj d using "DisplayObj.create()"{
 	State s0 initial{		
 	}
 	Transition t0 whenMsg out -> handleout
@@ -28,10 +28,12 @@ QActor worker context ctxhello dynamicOnly{
 	Goto s0 if [#  n <= 3 #] else finish
 	
 	State finish{
+		[# var M = "${name}_terminates"#]
+		forward display -m out:out($M)
 		terminate 0 //remove the actor from the context
 		println("$name BYE") color magenta
 	}
-} 
+}  
 
 QActor creator context ctxhello{
 	State s0 initial{
@@ -42,4 +44,4 @@ QActor creator context ctxhello{
 }  
 
 
-//DisplayHTML d   
+ 

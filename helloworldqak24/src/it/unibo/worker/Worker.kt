@@ -21,13 +21,30 @@ class Worker ( name: String, scope: CoroutineScope, isconfined: Boolean=false  )
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
+		 var n = 0  
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						 var n = 0  
-						delay(1500) 
-						updateResourceRep(  "$name, hello_${n++}"  
-						)
+						delay(1000) 
+						 var M = "${name}_hello_${n++}" 
+						forward("out", "out($M)" ,"display" ) 
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition( edgeName="goto",targetState="s0", cond=doswitchGuarded({  n <= 3  
+					}) )
+					transition( edgeName="goto",targetState="finish", cond=doswitchGuarded({! (  n <= 3  
+					) }) )
+				}	 
+				state("finish") { //this:State
+					action { //it:State
+						 var M = "${name}_terminates" 
+						forward("out", "out($M)" ,"display" ) 
+						//terminate(0)
+						context!!.removeInternalActor(myself)
+						CommUtils.outmagenta("$name BYE")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
