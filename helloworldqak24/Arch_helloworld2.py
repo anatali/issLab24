@@ -24,5 +24,7 @@ with Diagram('helloworld2Arch', show=False, outformat='png', graph_attr=graphatt
      with Cluster('ctxhello', graph_attr=nodeattr):
           worker=Custom('worker','./qakicons/symActorSmall.png')
           display=Custom('display(coded)','./qakicons/codedQActor.png')
+     f=Custom('f','./qakicons/server.png')
+     f >> Edge(color='blue', style='solid', decorate='true', label='< &harr; >',  fontcolor='blue') >> servicemath
      worker >> Edge(color='blue', style='solid',  decorate='true', label='<out &nbsp; >',  fontcolor='blue') >> display
 diag

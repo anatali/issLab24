@@ -5,7 +5,9 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.CoroutineScope
 
-class DisplayCodedQak(name:String ): ActorBasic( name ){
+class DisplayCodedQakOld(name:String, 
+		scope: CoroutineScope = GlobalScope, 
+		confined : Boolean =false): ActorBasic(name,scope, confined){
   val display = utils.DisplayObj.create()
  
   override suspend fun actorBody(msg : IApplMessage){
