@@ -1,0 +1,76 @@
+System mindbody
+Dispatch sensed : sensed(X)
+Dispatch sound  : sound(X)
+Dispatch work   : work(X)
+Dispatch mindcmd: mindcmd(X)  //meglio eventstream
+
+//Messages for the display 
+Dispatch out  : out(S) 
+Dispatch show : show(S)   
+
+Context ctxmb ip [host="localhost" port=8045]  
+
+QActor mind context ctxmb{
+	State s0 initial{
+		println("$name | STARTS ") color magenta
+		observeResource body msgid sensed
+	}
+	Transition t0 whenMsg sensed -> handlesensor
+	
+	
+	State handlesensor{
+		printCurrentMessage color magenta
+		forward body -m mindcmd : mindcmd(a)
+	}
+	Transition t0 whenMsg sensed -> handlesensor
+}
+
+QActor body context ctxmb{
+	State s0 initial{
+		println("$name | STARTS ") color blue
+	}
+	Transition t0 whenMsg sound -> handlesoud
+	
+	State handlesoud{
+		onMsg( sound:sound(X)){
+			[# val SOUT = "sound, ${payloadArg(0)}"#]
+			updateResource [# SOUT #]
+			autodispatch work : work(1)			
+		}
+	}
+	Transition t0 whenTime 1000 -> elab
+	              whenMsg mindcmd -> handlemind
+	              
+	State elab{
+		forward display -m out : out(elab)
+		println("$name | elab ") color blue
+	}
+	
+	State handlemind{
+		printCurrentMessage color blue
+	}
+}
+
+QActor worldmock context ctxmb{
+	State s0 initial{
+		println("$name | STARTS ") color cyan
+		forward body -m sound : sound(1)
+	}
+	
+}
+
+QActor display context ctxmb withobj d using "DisplayObj.create()"{  //
+ 	State s0 initial{		
+	}
+	Transition t0 whenMsg out  -> view
+	              whenMsg show -> view
+	
+	State view{
+		printCurrentMessage color yellow
+		[# val SOUT = "${currentMsg.msgContent()}" #] //inizia con out o con show
+		println("$name | $SOUT ") color yellow
+		updateResource [# "$SOUT" #]
+	} 
+	Transition t0 whenMsg out  -> view
+	              whenMsg show -> view
+}
