@@ -30,24 +30,20 @@ class Display ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t05",targetState="view",cond=whenDispatch("out"))
-					transition(edgeName="t06",targetState="view",cond=whenDispatch("show"))
+					 transition(edgeName="t011",targetState="view",cond=whenDispatch("out"))
+					transition(edgeName="t012",targetState="view",cond=whenDispatch("show"))
 				}	 
 				state("view") { //this:State
 					action { //it:State
-						CommUtils.outyellow("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
-						 	   
 						 val SOUT = "${currentMsg.msgContent()}"  
-						CommUtils.outyellow("$name | $SOUT ")
-						updateResourceRep( "$SOUT"  
-						)
+						 d.write(SOUT)  
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t07",targetState="view",cond=whenDispatch("out"))
-					transition(edgeName="t08",targetState="view",cond=whenDispatch("show"))
+					 transition(edgeName="t013",targetState="view",cond=whenDispatch("out"))
+					transition(edgeName="t014",targetState="view",cond=whenDispatch("show"))
 				}	 
 			}
 		}

@@ -37,7 +37,11 @@ class Mind ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) :
 					action { //it:State
 						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
-						forward("mindcmd", "mindcmd(a)" ,"body" ) 
+						if( checkMsgContent( Term.createTerm("sensed(S,X)"), Term.createTerm("sensed(S,X)"), 
+						                        currentMsg.msgContent()) ) { //set msgArgList
+								 val SOUT = "$name${payloadArg(1)}"  
+								emitLocalStreamEvent("mindcmd", "mindcmd($SOUT)" ) 
+						}
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002

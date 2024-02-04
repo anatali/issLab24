@@ -21,10 +21,12 @@ class Body ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) :
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
+		 var Data = ""  
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
 						CommUtils.outblue("$name | STARTS ")
+						subscribeToLocalActor("mind") 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -36,40 +38,47 @@ class Body ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) :
 					action { //it:State
 						if( checkMsgContent( Term.createTerm("sound(X)"), Term.createTerm("sound(X)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
-								 val SOUT = "sound, ${payloadArg(0)}" 
+								  Data = payloadArg(0); 
+												val SOUT = "sound($Data)"
 								updateResourceRep( SOUT  
 								)
-								forward("work", "work(1)" ,name ) 
 						}
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 				 	 		stateTimer = TimerActor("timer_handlesoud", 
-				 	 					  scope, context!!, "local_tout_"+name+"_handlesoud", 1000.toLong() )  //OCT2023
+				 	 					  scope, context!!, "local_tout_"+name+"_handlesoud", 200.toLong() )  //OCT2023
 					}	 	 
-					 transition(edgeName="t03",targetState="elab",cond=whenTimeout("local_tout_"+name+"_handlesoud"))   
-					transition(edgeName="t04",targetState="handlemind",cond=whenDispatch("mindcmd"))
+					 transition(edgeName="t03",targetState="dojob",cond=whenTimeout("local_tout_"+name+"_handlesoud"))   
+					transition(edgeName="t04",targetState="handlemind",cond=whenEvent("mindcmd"))
 				}	 
-				state("elab") { //this:State
+				state("dojob") { //this:State
 					action { //it:State
-						forward("out", "out(elab)" ,"display" ) 
-						CommUtils.outblue("$name | elab ")
+						emitLocalStreamEvent("bodymemo", "bodymemo(sound($Data))" ) 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
+					 transition(edgeName="t05",targetState="handlesoud",cond=whenDispatch("sound"))
 				}	 
 				state("handlemind") { //this:State
 					action { //it:State
 						CommUtils.outblue("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
+						if( checkMsgContent( Term.createTerm("mindcmd(X)"), Term.createTerm("mindcmd(X)"), 
+						                        currentMsg.msgContent()) ) { //set msgArgList
+								 val SOUT = "mindcmd, ${payloadArg(0)}" 
+								forward("out", "out($SOUT)" ,"display" ) 
+								CommUtils.outblue("$name handlemind | $SOUT")
+						}
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
+					 transition(edgeName="t06",targetState="handlesoud",cond=whenDispatch("sound"))
 				}	 
 			}
 		}
