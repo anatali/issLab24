@@ -26,8 +26,6 @@ with Diagram('mindearArch', show=False, outformat='png', graph_attr=graphattr) a
           ear=Custom('ear','./qakicons/symActorSmall.png')
           worldmock=Custom('worldmock','./qakicons/symActorSmall.png')
           display=Custom('display','./qakicons/symActorWithobjSmall.png')
-     f=Custom('f','./qakicons/server.png')
-     f >> Edge(color='blue', style='solid', decorate='true', label='< &harr; >',  fontcolor='blue') >> servicemath
      ear >> Edge(color='blue', style='solid',  decorate='true', label='<sensed &nbsp; >',  fontcolor='blue') >> mind
      ear >> Edge(color='blue', style='solid',  decorate='true', label='<out &nbsp; >',  fontcolor='blue') >> display
      worldmock >> Edge(color='blue', style='solid',  decorate='true', label='<sound &nbsp; >',  fontcolor='blue') >> ear
