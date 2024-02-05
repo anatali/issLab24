@@ -24,8 +24,10 @@ class Worldmock ( name: String, scope: CoroutineScope, isconfined: Boolean=false
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
+						delay(2000) 
 						CommUtils.outcyan("$name | STARTS ")
-						forward("sound", "sound(1)" ,"body" ) 
+						forward("sound", "sound(1)" ,"ear" ) 
+						forward("sound", "sound(2)" ,"ear" ) 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002

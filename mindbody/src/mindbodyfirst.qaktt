@@ -1,0 +1,152 @@
+System mindbody
+Dispatch sensed : sensed(S,X)
+Dispatch sound  : sound(X)
+Dispatch work   : work(X)
+
+Event   mindcmd  : mindcmd(X)   
+Event   bodymemo : bodymemo(X)  
+
+//Messages for the display 
+Dispatch out  : out(S) 
+Dispatch show : show(S)   
+
+Context ctxmb ip [host="localhost" port=8045]  
+
+QActor mind context ctxmb{
+	State s0 initial{
+		println("$name | STARTS ") color magenta
+		observeResource body msgid sensed
+	}
+	Transition t0 whenMsg sensed -> handlesensor
+	
+	
+	State handlesensor{
+		printCurrentMessage color magenta
+		onMsg( sensed : sensed(S,X) ){
+			[# val SOUT = "$name${payloadArg(1)}" #]
+			
+			//forward body -m mindcmd : mindcmd(a)
+			emitlocalstream mindcmd : mindcmd($SOUT)		
+		}
+	}
+	Transition t0 whenMsg sensed -> handlesensor
+}
+
+/*
+ * 
+ */
+QActor body context ctxmb{
+	[# var Data = "" #]
+	State s0 initial{
+		println("$name | STARTS ") color blue
+		subscribeTo mind 
+		//subscribeTo body //???
+	}
+	Transition t0 whenMsg sound -> handlesoud
+	
+	State handlesoud{
+		onMsg( sound:sound(X)){
+			[#  Data = payloadArg(0); 
+				val SOUT = "sound($Data)"
+			#]
+			updateResource [# SOUT #]  //mind observer
+			//mi mando avanti il msg sensoriale	
+			//emitlocalstream bodymemo : bodymemo( sound($Data) ) //per evitare dispatch
+			//autodispatch work : work(sound($Data))		
+		}
+	}
+	Transition t0 whenTime 200 -> dojob  //< 400 dojob
+	              whenEvent mindcmd -> handlemind
+	              
+	State dojob{
+		//Creo esecutore e gli passo dispatch
+		emitlocalstream bodymemo : bodymemo( sound($Data) ) 
+	}
+	Transition t0 whenMsg sound -> handlesoud
+	
+//	State elab{
+//		onMsg( work : work(X) ){
+//			[# val SOUT = "$name, elab, ${payloadArg(0)}" #]		
+//			forward display -m out : out($SOUT)
+//			println("$name elab since work | $SOUT") color blue		
+//		}
+//	}
+//	Transition t0 whenMsg sound -> handlesoud
+	
+	State handlemind{
+		printCurrentMessage color blue	
+		onMsg( mindcmd:mindcmd(X)){
+			[# val SOUT = "mindcmd, ${payloadArg(0)}"#]
+			forward display -m out : out($SOUT)
+			println("$name handlemind | $SOUT") color blue				
+		}
+	}
+	Transition t0 whenMsg sound -> handlesoud
+//	Transition t0 whenMsg work -> elab
+//	              whenEvent bodymemo -> elab
+}
+
+/*
+ * 
+ */
+QActor bodyexec context ctxmb{
+	State s0 initial{
+		println("$name | STARTS ") color green
+		subscribeTo body //???
+	}
+	Goto work
+
+    State work{
+    	
+    }
+	Transition t0  
+	        whenTime 500 -> forget  
+			whenEvent bodymemo -> elab
+
+	State forget{
+		println("$name | forget ... ") color green
+	}
+	Transition t0  
+	        whenTime 500 -> forget  
+			whenEvent bodymemo -> elab
+
+	State elab{
+		onMsg( bodymemo : bodymemo(X) ){
+			[# val SOUT = "$name, elab, ${payloadArg(0)}" #]		
+			forward display -m out : out($SOUT)
+			println("$name elab since bodymemo | $SOUT") color green		
+		}
+	}
+	Goto work
+}
+
+/*
+ * 
+ */
+QActor worldmock context ctxmb{
+	State s0 initial{
+		println("$name | STARTS ") color cyan
+		forward body -m sound : sound(1)
+	}
+	
+}
+
+/*
+ * 
+ */
+QActor display context ctxmb withobj d using "DisplayObj.create()"{  //
+ 	State s0 initial{		
+	}
+	Transition t0 whenMsg out  -> view
+	              whenMsg show -> view
+	
+	State view{
+		//printCurrentMessage color yellow
+		[# val SOUT = "${currentMsg.msgContent()}" #] //inizia con out o con show
+ 		//println("$name | $SOUT ") color yellow
+//		updateResource [# "$SOUT" #]
+        [# d.write(SOUT) #] 
+	} 
+	Transition t0 whenMsg out  -> view
+	              whenMsg show -> view
+}

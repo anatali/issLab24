@@ -25,7 +25,7 @@ class Mind ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) :
 				state("s0") { //this:State
 					action { //it:State
 						CommUtils.outmagenta("$name | STARTS ")
-						CoapObserverSupport(myself, "localhost","8045","ctxmb","body","sensed")
+						CoapObserverSupport(myself, "localhost","8045","ctxmb","ear","sensed")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -35,12 +35,20 @@ class Mind ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) :
 				}	 
 				state("handlesensor") { //this:State
 					action { //it:State
-						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
-						 	   
+						 var Data = "" 
+								   var SOUT = ""
 						if( checkMsgContent( Term.createTerm("sensed(S,X)"), Term.createTerm("sensed(S,X)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
-								 val SOUT = "$name${payloadArg(1)}"  
+								 val Source = payloadArg(0) 
+											   Data       = payloadArg(1)   //sound($Data)
+								if(  Data == "sound(1)"  
+								 ){ SOUT = "sensor($Source, $Data)"  
+								}
+								else
+								 { SOUT = "sensor($Source, ignore)"  
+								 }
 								emitLocalStreamEvent("mindcmd", "mindcmd($SOUT)" ) 
+								CommUtils.outmagenta("$name $SOUT")
 						}
 						//genTimer( actor, state )
 					}

@@ -30,8 +30,8 @@ class Display ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t011",targetState="view",cond=whenDispatch("out"))
-					transition(edgeName="t012",targetState="view",cond=whenDispatch("show"))
+					 transition(edgeName="t07",targetState="view",cond=whenDispatch("out"))
+					transition(edgeName="t08",targetState="view",cond=whenDispatch("show"))
 				}	 
 				state("view") { //this:State
 					action { //it:State
@@ -42,8 +42,8 @@ class Display ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t013",targetState="view",cond=whenDispatch("out"))
-					transition(edgeName="t014",targetState="view",cond=whenDispatch("show"))
+					 transition(edgeName="t09",targetState="view",cond=whenDispatch("out"))
+					transition(edgeName="t010",targetState="view",cond=whenDispatch("show"))
 				}	 
 			}
 		}

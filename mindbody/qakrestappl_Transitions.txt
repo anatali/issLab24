@@ -1,8 +1,8 @@
 {"actor":"mind", "msgType":"dispatch", "curstate":"s0", "nextstate":"handlesensor", "msgId":"sensed"}
 {"actor":"mind", "msgType":"dispatch", "curstate":"handlesensor", "nextstate":"handlesensor", "msgId":"sensed"}
-{"actor":"body", "msgType":"dispatch", "curstate":"s0", "nextstate":"handlesoud", "msgId":"sound"}
-{"actor":"body", "msgType":"dispatch", "curstate":"dojob", "nextstate":"handlesoud", "msgId":"sound"}
-{"actor":"body", "msgType":"dispatch", "curstate":"handlemind", "nextstate":"handlesoud", "msgId":"sound"}
+{"actor":"ear", "msgType":"dispatch", "curstate":"s0", "nextstate":"handlesoud", "msgId":"sound"}
+{"actor":"ear", "msgType":"dispatch", "curstate":"elabdata", "nextstate":"handlesoud", "msgId":"sound"}
+{"actor":"ear", "msgType":"dispatch", "curstate":"handlemind", "nextstate":"handlesoud", "msgId":"sound"}
 {"actor":"display", "msgType":"dispatch", "curstate":"s0", "nextstate":"view", "msgId":"out"}
 {"actor":"display", "msgType":"dispatch", "curstate":"s0", "nextstate":"view", "msgId":"show"}
 {"actor":"display", "msgType":"dispatch", "curstate":"view", "nextstate":"view", "msgId":"out"}
