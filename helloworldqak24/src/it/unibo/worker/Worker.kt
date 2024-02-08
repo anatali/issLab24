@@ -25,23 +25,21 @@ class Worker ( name: String, scope: CoroutineScope, isconfined: Boolean=false  )
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						delay(1000) 
+						connectToMqttBroker( "tcp://broker.hivemq.com" )
+						delay(2000) 
 						 var M = "${name}_hello_${n++}" 
-						forward("out", "out($M)" ,"display" ) 
+						CommUtils.outblack(M)
+						val m = MsgUtil.buildEvent(name, "write", "write($M)" ) 
+						publish("xxx", m.toString() )  //mqtt.publish( topic, msg, 1, false);
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition( edgeName="goto",targetState="s0", cond=doswitchGuarded({  n <= 3  
-					}) )
-					transition( edgeName="goto",targetState="finish", cond=doswitchGuarded({! (  n <= 3  
-					) }) )
+					 transition( edgeName="goto",targetState="finish", cond=doswitch() )
 				}	 
 				state("finish") { //this:State
 					action { //it:State
-						 var M = "${name}_terminates" 
-						forward("out", "out($M)" ,"display" ) 
 						//terminate(0)
 						context!!.removeInternalActor(myself)
 						CommUtils.outmagenta("$name BYE")
