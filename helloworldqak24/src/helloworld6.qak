@@ -27,17 +27,20 @@ QActor display context ctxhello  {
 	              whenEvent write -> handleout
 }   
    
- 
+  
 QActor worker context ctxhello  {
 	[# var n = 0 #]
- 	State s0 initial{
+ 	State s0 initial{ 
+ 		delay 2000  
  		connectToMqttBroker "tcp://broker.hivemq.com"
-		delay 2000
 		
 		[# var M = "${name}_hello_${n++}"#]
 		println(M)
 		//forward display -m write:write($M)
-		publish "xxx" -m write : write($M)
+		publish "xxx" -m write : write($M) 
+		delay 1000
+		[# var M1 = "${name}_hello_${n++}"#]
+		publish "xxx" -m write : write($M1) 
  	}	 
  	Goto finish
 	//Goto s0 if [#  n <= 20 #] else finish
@@ -45,7 +48,8 @@ QActor worker context ctxhello  {
 	State finish{
 		terminate 0 //remove the actor from the context
 		println("$name BYE") color magenta
-		//[# System.exit(0) #]
+		delay 3000
+		[# System.exit(0) #]
 	}
 }  
   

@@ -25,12 +25,16 @@ class Worker ( name: String, scope: CoroutineScope, isconfined: Boolean=false  )
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						connectToMqttBroker( "tcp://broker.hivemq.com" )
 						delay(2000) 
+						connectToMqttBroker( "tcp://broker.hivemq.com" )
 						 var M = "${name}_hello_${n++}" 
 						CommUtils.outblack(M)
-						val m = MsgUtil.buildEvent(name, "write", "write($M)" ) 
-						publish("xxx", m.toString() )  //mqtt.publish( topic, msg, 1, false);
+						//val m = MsgUtil.buildEvent(name, "write", "write($M)" ) 
+						publish(MsgUtil.buildEvent(name,"write","write($M)").toString(), "xxx" )   
+						delay(1000) 
+						 var M1 = "${name}_hello_${n++}" 
+						//val m = MsgUtil.buildEvent(name, "write", "write($M1)" ) 
+						publish(MsgUtil.buildEvent(name,"write","write($M1)").toString(), "xxx" )   
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -43,6 +47,8 @@ class Worker ( name: String, scope: CoroutineScope, isconfined: Boolean=false  )
 						//terminate(0)
 						context!!.removeInternalActor(myself)
 						CommUtils.outmagenta("$name BYE")
+						delay(3000) 
+						 System.exit(0)  
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
