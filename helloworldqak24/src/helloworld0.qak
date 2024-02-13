@@ -6,4 +6,4 @@ QActor worker context ctxhello{
 	State s0 initial{
 		println("Hello world") color magenta
 	}
-} 
+}   

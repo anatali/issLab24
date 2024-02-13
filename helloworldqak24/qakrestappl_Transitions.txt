@@ -1,2 +1,0 @@
-{"actor":"display", "msgType":"dispatch", "curstate":"s0", "nextstate":"handleout", "msgId":"write"}
-{"actor":"display", "msgType":"dispatch", "curstate":"handleout", "nextstate":"handleout", "msgId":"write"}

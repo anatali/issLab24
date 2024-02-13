@@ -21,34 +21,10 @@ class Worker ( name: String, scope: CoroutineScope, isconfined: Boolean=false  )
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
-		 var n = 0  
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						delay(2000) 
-						connectToMqttBroker( "tcp://broker.hivemq.com" )
-						 var M = "${name}_hello_${n++}" 
-						CommUtils.outblack(M)
-						//val m = MsgUtil.buildEvent(name, "write", "write($M)" ) 
-						publish(MsgUtil.buildEvent(name,"write","write($M)").toString(), "xxx" )   
-						delay(1000) 
-						 var M1 = "${name}_hello_${n++}" 
-						//val m = MsgUtil.buildEvent(name, "write", "write($M1)" ) 
-						publish(MsgUtil.buildEvent(name,"write","write($M1)").toString(), "xxx" )   
-						//genTimer( actor, state )
-					}
-					//After Lenzi Aug2002
-					sysaction { //it:State
-					}	 	 
-					 transition( edgeName="goto",targetState="finish", cond=doswitch() )
-				}	 
-				state("finish") { //this:State
-					action { //it:State
-						//terminate(0)
-						context!!.removeInternalActor(myself)
-						CommUtils.outmagenta("$name BYE")
-						delay(3000) 
-						 System.exit(0)  
+						CommUtils.outmagenta("Hello world")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
