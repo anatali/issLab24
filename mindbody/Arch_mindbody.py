@@ -24,13 +24,10 @@ with Diagram('mindbodyArch', show=False, outformat='png', graph_attr=graphattr) 
      with Cluster('ctxmb', graph_attr=nodeattr):
           mind=Custom('mind','./qakicons/symActorSmall.png')
           body=Custom('body','./qakicons/symActorSmall.png')
-          bodyexec=Custom('bodyexec','./qakicons/symActorSmall.png')
           worldmock=Custom('worldmock','./qakicons/symActorSmall.png')
-          display=Custom('display','./qakicons/symActorWithobjSmall.png')
      f=Custom('f','./qakicons/server.png')
      f >> Edge(color='blue', style='solid', decorate='true', label='< &harr; >',  fontcolor='blue') >> servicemath
-     bodyexec >> Edge(color='blue', style='solid',  decorate='true', label='<out &nbsp; >',  fontcolor='blue') >> display
      worldmock >> Edge(color='blue', style='solid',  decorate='true', label='<sound &nbsp; >',  fontcolor='blue') >> body
-     body >> Edge(color='blue', style='solid',  decorate='true', label='<out &nbsp; >',  fontcolor='blue') >> display
      body >> Edge(color='blue', style='solid',  decorate='true', label='<sensed &nbsp; >',  fontcolor='blue') >> mind
+     mind >> Edge(color='blue', style='solid',  decorate='true', label='<mindcmd &nbsp; >',  fontcolor='blue') >> body
 diag

@@ -23,4 +23,6 @@ with Diagram('helloworld0Arch', show=False, outformat='png', graph_attr=graphatt
 ### see https://renenyffenegger.ch/notes/tools/Graphviz/attributes/label/HTML-like/index
      with Cluster('ctxhello', graph_attr=nodeattr):
           worker=Custom('worker','./qakicons/symActorSmall.png')
+     f=Custom('f','./qakicons/server.png')
+     f >> Edge(color='blue', style='solid', decorate='true', label='< &harr; >',  fontcolor='blue') >> servicemath
 diag

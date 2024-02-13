@@ -1,0 +1,82 @@
+/*
+ * To learn more about Gradle by exploring our Samples at https://docs.gradle.org/8.6/samples
+ */
+plugins {
+        id 'application'
+        id 'java'
+        id 'eclipse'
+}
+
+version '1.0'
+
+java {
+   toolchain.languageVersion.set(JavaLanguageVersion.of(11))
+}
+
+repositories {
+        mavenCentral()
+        flatDir {   dirs '../unibolibs'  }
+}
+
+dependencies {
+        /*  MQTT ************************************************  */
+        implementation group: 'org.eclipse.paho', name: 'org.eclipse.paho.client.mqttv3', version: '1.2.5'
+
+        /* JSON ************************************************** */
+        implementation group: 'org.json', name: 'json', version: '20220320'
+        implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+
+        /* COAP ************************************************** */
+        implementation group: 'org.eclipse.californium', name: 'californium-core', version: '3.5.0'
+        implementation group: 'org.eclipse.californium', name: 'californium-proxy2', version: '3.5.0'
+
+        /* LOG4J ************************************************ */
+        testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.7'
+
+        /* HTTP ************************************************* */
+        implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
+        implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+
+        /* UNIBO **************************************************/
+        implementation name: 'uniboInterfaces'
+        implementation name: '2p301'
+        implementation name: 'unibo.qakactor23-5.0'
+        implementation name: 'unibo.basicomm23-1.0'
+}
+
+sourceSets {
+        main.java.srcDirs += 'src'
+        main.java.srcDirs += 'src/main/java'
+        main.java.srcDirs += 'src/main/kotlin'
+        main.java.srcDirs += 'src/main/resources'
+        test.java.srcDirs += 'src/main/java/test'
+        test.java.srcDirs += 'src/main/kotlin/test'
+}
+
+eclipse {
+        classpath {
+        sourceSets -= [sourceSets.main, sourceSets.test]
+        }
+}
+
+application {
+    mainClass = 'main.HelloWorld'
+}
+
+jar {
+        println("building jar")
+        duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+        from sourceSets.main.allSource
+        from('./') {
+          include '*.pl'
+          include '*.json'
+        }
+        manifest {
+                attributes 'Main-Class': "$mainClassName"
+        }
+}
+
+task dovesiamo {
+        println("projectDir= $projectDir")
+        println("buildDir  = $buildDir")
+}
