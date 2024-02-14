@@ -21,7 +21,7 @@ class Actionexec ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
-		 val math = utils.MathUtils.create()
+		 val math = MathUtils.create()
 		return { //this:ActionBasciFsm
 				state("init") { //this:State
 					action { //it:State
@@ -45,8 +45,7 @@ class Actionexec ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 											   val T0 = getCurrentTime()  
 								 			   var F = math.fibo( ReqArg.toInt() )  
 								 			   val TF  = getDuration(T0)  
-											   val SOUT = "$name, fibo($ReqArg), $F, time=$TF" 
-								CommUtils.outcyan("$SOUT")
+								//			   val SOUT = "$name, fibo($ReqArg), $F, time=$TF" 
 								answer("dofibo", "fibodone", "fibodone($Sender,$ReqArg,$F,$TF)"   )  
 								//terminate(0)
 								context!!.removeInternalActor(myself)

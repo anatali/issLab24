@@ -38,9 +38,9 @@ dependencies {
         implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
 
         /* UNIBO **************************************************/
-        implementation name: 'uniboInterfaces'
+        //implementation name: 'uniboInterfaces'
         implementation name: '2p301'
-        implementation name: 'unibo.qakactor23-5.0'
+        //implementation name: 'unibo.qakactor23-5.0'
         implementation name: 'unibo.basicomm23-1.0'
 }
 
@@ -51,12 +51,12 @@ sourceSets {
 
 eclipse {
         classpath {
-        sourceSets -= [sourceSets.main, sourceSets.test]
+        sourceSets -= [ sourceSets.main ]
         }
 }
 
 application {
-    mainClass = 'main.ServiceCallerTCPNaive'
+    mainClass = 'main.ServiceCallerCoapNaive'
 }
 
 jar {
