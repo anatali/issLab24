@@ -1,0 +1,10 @@
+version: '3'
+services:
+  wenv:
+    image: docker.io/natbodocker/servicemath:1.0
+    #image: servicemath:1.0
+    ports:
+      - 8011:8011
+      - 8020:8020
+
+## docker-compose -f servicemath.yaml  up

@@ -47,10 +47,6 @@ dependencies {
 sourceSets {
         main.java.srcDirs += 'src'
         main.java.srcDirs += 'src/main/java'
-        main.java.srcDirs += 'src/main/kotlin'
-        main.java.srcDirs += 'src/main/resources'
-        test.java.srcDirs += 'src/main/java/test'
-        test.java.srcDirs += 'src/main/kotlin/test'
 }
 
 eclipse {
@@ -60,19 +56,14 @@ eclipse {
 }
 
 application {
-    mainClass = 'main.HelloWorld'
+    mainClass = 'main.ServiceCallerTCPNaive'
 }
 
 jar {
         println("building jar")
-        duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
         from sourceSets.main.allSource
-        from('./') {
-          include '*.pl'
-          include '*.json'
-        }
         manifest {
-                attributes 'Main-Class': "$mainClassName"
+            attributes 'Main-Class': "$mainClassName"
         }
 }
 
