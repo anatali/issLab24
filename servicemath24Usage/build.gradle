@@ -18,7 +18,7 @@ repositories {
         flatDir {   dirs '../unibolibs'  }
 }
 
-dependencies {
+dependencies { 
         /*  MQTT ************************************************  */
         implementation group: 'org.eclipse.paho', name: 'org.eclipse.paho.client.mqttv3', version: '1.2.5'
 
@@ -56,7 +56,8 @@ eclipse {
 }
 
 application {
-    mainClass = 'main.ServiceCallerCoapNaive'
+    mainClass = 'main.ServiceCallerTcpNaive'
+    //mainClass = 'main.ServiceCallerCoapNaive'
 }
 
 jar {
