@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.Socket;
 
 import unibo.basicomm23.interfaces.IApplMessage;
+import unibo.basicomm23.msg.ApplMessage;
 import unibo.basicomm23.utils.CommUtils;
 import unibo.basicomm23.utils.BasicMsgUtil;
 
@@ -31,7 +32,10 @@ public class ServerCallerTCPNaive {
 		InputStream inStream    = socket.getInputStream();
 		BufferedReader inputChannel = new BufferedReader(new InputStreamReader(inStream));
 		String	answer = inputChannel.readLine() ;
+		IApplMessage msg = new ApplMessage(answer);
+		
 		CommUtils.outblue("ServerCallerTCPNaive | answer: " + answer);
+		CommUtils.outblue("ServerCallerTCPNaive | answer: " + msg.msgContent());
 	}
 	protected  void sendUsingTcp( ) throws Exception{
 		IApplMessage req = BasicMsgUtil.buildRequest(sender,msgid,msgcontent,destination);

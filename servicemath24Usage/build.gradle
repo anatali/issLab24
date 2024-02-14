@@ -4,7 +4,7 @@
 plugins {
         id 'application'
         id 'java'
-        id 'eclipse'
+        id 'eclipse' 
 }
 
 version '1.0'
