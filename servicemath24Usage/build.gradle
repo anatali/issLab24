@@ -37,6 +37,12 @@ dependencies {
         implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
         implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
 
+		/* SOCKET.IO  ************************************************* */
+		implementation group: 'javax.websocket', name: 'javax.websocket-api', version: '1.1'
+		 //javax.websocket api is only the specification
+	    implementation group: 'org.glassfish.tyrus.bundles', name: 'tyrus-standalone-client', version: '1.9'
+
+
         /* UNIBO **************************************************/
         //implementation name: 'uniboInterfaces'
         implementation name: '2p301'
