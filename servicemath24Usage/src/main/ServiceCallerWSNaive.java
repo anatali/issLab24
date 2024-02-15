@@ -10,8 +10,6 @@ public class ServiceCallerWSNaive {
 
 private Session session;
 private String addr = "localhost:8088/accessgui";
-
-
 private int fiboNum = 24;
 private String answer ;
 
@@ -41,7 +39,9 @@ private String answer ;
 		    sendMessageWS( ""+fiboNum );
 		    String answer = getAnswer(  );		     
 		    CommUtils.outblue("ServiceCallerWSNaive|answer="+answer   );
+		    Thread.sleep(30000);
 		    session.close();
+		    CommUtils.outblue("ServiceCallerWSNaive | BYE "   );
 		  }catch(Exception e){
 		    CommUtils.outred("ERROR " + e.getMessage() );
 		    

@@ -22,6 +22,7 @@ class Actionexec ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
 		 val math = MathUtils.create()
+		 var SOUT="todo"  
 		return { //this:ActionBasciFsm
 				state("init") { //this:State
 					action { //it:State
@@ -34,8 +35,9 @@ class Actionexec ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 				}	 
 				state("work") { //this:State
 					action { //it:State
-						CommUtils.outgreen("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outcyan("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
+						emit("out", "out(actionexec)" ) 
 						if( checkMsgContent( Term.createTerm("dofibo(N)"), Term.createTerm("dofibo(N)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								   
@@ -43,9 +45,12 @@ class Actionexec ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 								 				var Sender  = currentMsg.msgSender() 
 								 
 											   val T0 = getCurrentTime()  
-								 			   var F = math.fibo( ReqArg.toInt() )  
-								 			   val TF  = getDuration(T0)  
-								//			   val SOUT = "$name, fibo($ReqArg), $F, time=$TF" 
+								 			   var F  = math.fibo( ReqArg.toInt() )  
+								 			   val TF = getDuration(T0)  
+								    		   SOUT   = "fibovalue($ReqArg , $F,  $TF)" 
+								CommUtils.outcyan("$SOUT")
+								updateResourceRep( "$SOUT"  
+								)
 								answer("dofibo", "fibodone", "fibodone($Sender,$ReqArg,$F,$TF)"   )  
 								//terminate(0)
 								context!!.removeInternalActor(myself)

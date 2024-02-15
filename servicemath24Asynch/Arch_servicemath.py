@@ -25,6 +25,7 @@ with Diagram('servicemathArch', show=False, outformat='png', graph_attr=graphatt
           servicemath=Custom('servicemath','./qakicons/symActorSmall.png')
           actionexec=Custom('actionexec','./qakicons/symActorWithobjSmall.png')
      f=Custom('f','./qakicons/server.png')
+     actionexec >> Edge( label='out', **eventedgeattr, decorate='true', fontcolor='red') >> sys
      servicemath >> Edge(color='magenta', style='dotted', decorate='true', label='<currentMsg &nbsp; >',  fontcolor='green') >> actionexec
      f >> Edge(color='blue', style='solid', decorate='true', label='< &harr; >',  fontcolor='blue') >> servicemath
 diag

@@ -34,6 +34,10 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 				}	 
 				state("work") { //this:State
 					action { //it:State
+						updateResourceRep( "working on $currentMsg"  
+						)
+						//val m = MsgUtil.buildEvent(name, "out", "out(servicemath)" ) 
+						publish(MsgUtil.buildEvent(name,"out","out(servicemath)").toString(), "servicemathouttopic" )   
 						delegateCurrentMsgTodynamic("actionexec") 
 						//genTimer( actor, state )
 					}
