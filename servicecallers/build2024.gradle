@@ -11,7 +11,6 @@ plugins {
     id 'eclipse'
 
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
-    //id 'org.jetbrains.kotlin.jvm' version "$kotlinVersion" //sourceCompatibility = '1.8'
     id "org.jetbrains.kotlin.jvm" version "1.9.22"
     
     //Per poter usare qakfacadegui23-1.0 che usa Spring
@@ -23,10 +22,16 @@ plugins {
 }
 
 version '1.0'
-java {
-   sourceCompatibility = '17'
-}
+//java { sourceCompatibility = '11' }
 
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(11))
+}
+kotlin {
+  jvmToolchain {
+    languageVersion.set(JavaLanguageVersion.of("11"))
+  }
+}
 
 repositories {
     // Use Maven Central for resolving dependencies.
@@ -124,8 +129,11 @@ dependencies {
 	
 sourceSets {
     main.java.srcDirs += 'src'
-    main.java.srcDirs += 'resources'
-    test.java.srcDirs += 'test'		//test is specific
+    main.java.srcDirs += 'src/main/java'
+    main.java.srcDirs += 'src/main/kotlin'
+    main.java.srcDirs += 'src/main/resources'
+    test.java.srcDirs += 'src/main/java/test'		//test is specific
+    test.java.srcDirs += 'src/main/kotlin/test'
 }
   
 

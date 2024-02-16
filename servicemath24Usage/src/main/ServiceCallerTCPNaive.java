@@ -18,7 +18,7 @@ public class ServiceCallerTCPNaive {
 
 	public void doJob() {
 		try {
-			socket  =  new Socket( hostAddr, port );
+			socket           =  new Socket( hostAddr, port );
 			IApplMessage req = BasicMsgUtil.buildRequest(sender,msgid,msgcontent,destination);
 			sendUsingTcp( req  );
 			receiveAnswer( );

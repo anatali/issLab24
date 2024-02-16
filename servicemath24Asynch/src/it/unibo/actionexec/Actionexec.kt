@@ -37,7 +37,6 @@ class Actionexec ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 					action { //it:State
 						CommUtils.outcyan("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
-						emit("out", "out(actionexec)" ) 
 						if( checkMsgContent( Term.createTerm("dofibo(N)"), Term.createTerm("dofibo(N)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								   

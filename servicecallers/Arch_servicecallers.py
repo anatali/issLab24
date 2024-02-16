@@ -24,8 +24,11 @@ with Diagram('servicecallersArch', show=False, outformat='png', graph_attr=graph
      with Cluster('ctxcallers', graph_attr=nodeattr):
           display=Custom('display','./qakicons/symActorWithobjSmall.png')
           caller_1=Custom('caller_1','./qakicons/symActorSmall.png')
+     f=Custom('f','./qakicons/server.png')
      with Cluster('ctxservice', graph_attr=nodeattr):
           servicemath=Custom('servicemath(ext)','./qakicons/externalQActor.png')
+     f=Custom('f','./qakicons/server.png')
      caller_1 >> Edge(color='magenta', style='solid', decorate='true', label='<dofibo<font color="darkgreen"> fibodone</font> &nbsp; >',  fontcolor='magenta') >> servicemath
+     f >> Edge(color='blue', style='solid', decorate='true', label='< &harr; >',  fontcolor='blue') >> servicemath
      caller_1 >> Edge(color='blue', style='solid',  decorate='true', label='<out &nbsp; >',  fontcolor='blue') >> display
 diag

@@ -53,7 +53,7 @@ QActor servicemath context ctxservice {
 //			//forward display -m out  : out(  $SOUT  )
             //println("working on $currentMsg") color yellow
             updateResource [# "working on $currentMsg" #]
-            publish "servicemathouttopic" -m  out : out(servicemath)
+            //publish "servicemathouttopic" -m  out : out(servicemath)
 			delegateCurrentMsgTo actionexec
             //emit out : out(servicemathdelegated)
 			//create actionexecutor requestbycreator doaction : doaction ( $ReqId,$ReqArg,$Sender,name ) 
@@ -72,7 +72,7 @@ QActor actionexec  context ctxservice withobj math using "MathUtils.create()" dy
 	
 	State work{
 		printCurrentMessage color cyan
-		emit out : out(actionexec)
+		//emit out : out(actionexec)
 		onMsg( dofibo : dofibo( N ) ){
 			[#   
 				var ReqArg  = payloadArg(0) 
