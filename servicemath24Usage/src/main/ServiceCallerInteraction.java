@@ -12,14 +12,14 @@ import unibo.basicomm23.utils.Connection;
 
 public class ServiceCallerInteraction {
  	private Interaction conn ;
- 	private IApplMessage req = BasicMsgUtil.buildRequest("tester", "dofibo", "dofibo(27)", "servicemath");
+ 	private IApplMessage req = BasicMsgUtil.buildRequest("tester", "dofibo", "dofibo(21)", "servicemath");
 	
 	public void doJob() {
 	 try {
 		//http, ws, tcp, udp, coap, mqtt, bluetooth, serial
 		sendRequest(ProtocolType.tcp);
- 		sendRequest(ProtocolType.mqtt);
- 		sendRequest(ProtocolType.coap);
+// 		sendRequest(ProtocolType.mqtt);
+// 		sendRequest(ProtocolType.coap);
 		// sendRequest(ProtocolType.http);
 		Thread.sleep(10000);
 		conn.close();

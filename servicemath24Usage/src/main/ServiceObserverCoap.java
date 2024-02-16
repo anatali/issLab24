@@ -43,7 +43,7 @@ public void onLoad(CoapResponse response) {
 }
 
 public void shutdown() {
-    CommUtils.outblue("CoapObserverForSonar|shutdown  ");
+    CommUtils.outblue("ServerObserverCoap|shutdown  ");
     client.shutdown();
     if( obsRel != null ) obsRel.proactiveCancel();
 }
