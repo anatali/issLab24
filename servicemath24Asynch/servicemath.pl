@@ -11,4 +11,3 @@ context(ctxservice, "localhost",  "TCP", "8011").
  static(servicemath).
   qactor( actionexec, ctxservice, "it.unibo.actionexec.Actionexec").
 dynamic(actionexec). %%Oct2023 
-tracing.

@@ -3,6 +3,7 @@ import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapResponse;
 import unibo.basicomm23.utils.CommUtils;
 
+//Created by FacadeBuilder
 public class CoapObserver implements CoapHandler {
 
     private final ApplguiCore guiCore;
@@ -15,12 +16,13 @@ public class CoapObserver implements CoapHandler {
 
     @Override
     public void onLoad(CoapResponse response) {
-        CommUtils.outblue("CoapObserver | Got update from " + observedActor + ": " + response.getResponseText());
+        CommUtils.outblue("Facade24  CoapObserver | Got update from " + observedActor + ": " + response.getResponseText());
         guiCore.handleMsgFromActor(response.getResponseText(), "");
     }
 
     @Override
     public void onError() {
-        CommUtils.outred("CoapObserver | Error while receiving update from " + observedActor);
+        CommUtils.outred("Facade24 CoapObserver | Error while receiving update from " + observedActor);
+        guiCore.updateMsg("CoapObserver ERROR");
     }
 }

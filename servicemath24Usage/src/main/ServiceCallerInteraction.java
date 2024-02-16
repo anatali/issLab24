@@ -12,16 +12,18 @@ import unibo.basicomm23.utils.Connection;
 
 public class ServiceCallerInteraction {
  	private Interaction conn ;
- 	private IApplMessage req = BasicMsgUtil.buildRequest("tester", "dofibo", "dofibo(17)", "servicemath");
+ 	private IApplMessage req = BasicMsgUtil.buildRequest("tester", "dofibo", "dofibo(27)", "servicemath");
 	
 	public void doJob() {
 	 try {
 		//http, ws, tcp, udp, coap, mqtt, bluetooth, serial
 		sendRequest(ProtocolType.tcp);
-		sendRequest(ProtocolType.mqtt);
-		sendRequest(ProtocolType.coap);
+ 		sendRequest(ProtocolType.mqtt);
+ 		sendRequest(ProtocolType.coap);
 		// sendRequest(ProtocolType.http);
-		//Thread.sleep(3000);
+		Thread.sleep(10000);
+		conn.close();
+		CommUtils.outblue( "ServiceCallerInteraction | BYE"   ); 
     	System.exit(0);
 	 }catch(Exception e){
 	    CommUtils.outred("ERROR " + e.getMessage() );
@@ -32,7 +34,26 @@ public class ServiceCallerInteraction {
 		switch( protocol ) {
 			case tcp : {
 				conn = TcpConnection.create("localhost", 8011);
-				sendRequest( req, conn, protocol );
+				//sendRequestSynch( req, conn, protocol );
+				//sendRequestAsynch( req, conn, protocol );
+				
+				break;
+			}
+			case coap : {
+				Connection.trace = true;
+				String path = "ctxservice/servicemath";
+				conn = CoapConnection.create("localhost:8011", path);
+				//sendRequestSynch( req, conn, protocol );
+				//sendRequestAsynch( req, conn, protocol );
+				break;
+			}
+			case mqtt : {
+				String servicetopic = "unibo/qak/servicemath"; //"servicemathsynch/events";
+				String brokerAddr = "tcp://broker.hivemq.com"; // : 1883  OPTIONAL
+				//"tcp://test.mosquitto.org"
+ 				conn = MqttConnection.create("javacaller", brokerAddr, servicetopic);
+ 				//sendRequestSynch( req, conn, protocol);
+				//sendRequestAsynch( req, conn, protocol );
 				break;
 			}
 			case http : {
@@ -42,33 +63,25 @@ public class ServiceCallerInteraction {
 				CommUtils.outblue( protocol + " | answer=" + answer );   	
 				break;
 			}
-			case coap : {
-				Connection.trace = true;
-				String path = "ctxservice/servicemath";
-				conn = CoapConnection.create("localhost:8011", path);
-				sendRequest( req, conn, protocol );
-				break;
-			}
-			case mqtt : {
-				String servicetopic = "unibo/qak/servicemath"; //"servicemathsynch/events";
-				String brokerAddr = "tcp://broker.hivemq.com"; // : 1883  OPTIONAL
-				//"tcp://test.mosquitto.org"
- 				conn = MqttConnection.create("javacaller", brokerAddr, servicetopic);
-//				String answer = conn.request(req.toString()); 
-//				CommUtils.outblue("mqtt answwr=" + answer );
-				sendRequest( req, conn, protocol);
-				break;
-			}
-			//WS connection not allowed
+			//WS connection not allowed. Ma potrei?
 			default:{
 				
 			}
 		}
-			
+		if( protocol != ProtocolType.http && conn != null ) 
+			//sendRequestSynch( req, conn, protocol );
+			sendRequestAsynch( req, conn, protocol );	
 	}
-    protected  void sendRequest( IApplMessage m, Interaction conn, ProtocolType protocol  ) throws Exception {
+    protected  void sendRequestSynch( IApplMessage m, Interaction conn, ProtocolType protocol  ) throws Exception {
 		String answer = conn.request(req.toString()); 
 		CommUtils.outblue( protocol + " | answer=" + answer );   	
+    }  
+
+    protected  void sendRequestAsynch( IApplMessage m, Interaction conn, ProtocolType protocol  ) throws Exception {
+    	if(protocol==ProtocolType.mqtt) ((MqttConnection) conn).setupConnectionForAnswer("answ_dofibo_tester"); 
+		conn.forward(req.toString()); 
+		String answer = conn.receiveMsg();
+		CommUtils.outmagenta( protocol + " | sendRequestAsynch answer=" + answer  );   	
     }  
     
     public static void main( String[] args) {

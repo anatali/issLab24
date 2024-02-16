@@ -34,7 +34,9 @@ class Servicemath ( name: String, scope: CoroutineScope, isconfined: Boolean=fal
 				}	 
 				state("work") { //this:State
 					action { //it:State
-						updateResourceRep( "working on $currentMsg"  
+						CommUtils.outcyan("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						 	   
+						updateResourceRep( "$currentMsg"  
 						)
 						delegateCurrentMsgTodynamic("actionexec") 
 						//genTimer( actor, state )
