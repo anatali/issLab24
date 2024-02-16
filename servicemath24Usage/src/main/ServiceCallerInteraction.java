@@ -9,6 +9,7 @@ import unibo.basicomm23.tcp.TcpConnection;
 import unibo.basicomm23.utils.BasicMsgUtil;
 import unibo.basicomm23.utils.CommUtils;
 import unibo.basicomm23.utils.Connection;
+import unibo.basicomm23.utils.ConnectionFactory;
 
 public class ServiceCallerInteraction {
  	private Interaction conn ;
@@ -18,8 +19,8 @@ public class ServiceCallerInteraction {
 	 try {
 		//http, ws, tcp, udp, coap, mqtt, bluetooth, serial
 		sendRequest(ProtocolType.tcp);
-// 		sendRequest(ProtocolType.mqtt);
-// 		sendRequest(ProtocolType.coap);
+ 		sendRequest(ProtocolType.mqtt);
+ 		sendRequest(ProtocolType.coap);
 		// sendRequest(ProtocolType.http);
 		Thread.sleep(10000);
 		conn.close();
@@ -33,7 +34,8 @@ public class ServiceCallerInteraction {
 	protected void sendRequest(ProtocolType protocol) throws Exception{
 		switch( protocol ) {
 			case tcp : {
-				conn = TcpConnection.create("localhost", 8011);
+				//conn = TcpConnection.create("localhost", 8011);
+				conn = ConnectionFactory.createClientSupport(protocol, "localhost", "8011");
 				//sendRequestSynch( req, conn, protocol );
 				//sendRequestAsynch( req, conn, protocol );
 				
@@ -42,16 +44,17 @@ public class ServiceCallerInteraction {
 			case coap : {
 				Connection.trace = true;
 				String path = "ctxservice/servicemath";
-				conn = CoapConnection.create("localhost:8011", path);
+				//conn = CoapConnection.create("localhost:8011", path);
+				conn = ConnectionFactory.createClientSupport(protocol, "localhost:8011", path);
 				//sendRequestSynch( req, conn, protocol );
 				//sendRequestAsynch( req, conn, protocol );
 				break;
 			}
 			case mqtt : {
 				String servicetopic = "unibo/qak/servicemath"; //"servicemathsynch/events";
-				String brokerAddr = "tcp://broker.hivemq.com"; // : 1883  OPTIONAL
-				//"tcp://test.mosquitto.org"
- 				conn = MqttConnection.create("javacaller", brokerAddr, servicetopic);
+				String brokerAddr = "tcp://broker.hivemq.com"; // : 1883  OPTIONAL //"tcp://test.mosquitto.org"
+ 				//conn = MqttConnection.create("javacaller", brokerAddr, servicetopic);
+ 				conn = ConnectionFactory.createClientSupport(protocol, brokerAddr, servicetopic);
  				//sendRequestSynch( req, conn, protocol);
 				//sendRequestAsynch( req, conn, protocol );
 				break;
@@ -69,12 +72,12 @@ public class ServiceCallerInteraction {
 			}
 		}
 		if( protocol != ProtocolType.http && conn != null ) 
-			//sendRequestSynch( req, conn, protocol );
-			sendRequestAsynch( req, conn, protocol );	
+			sendRequestSynch( req, conn, protocol );
+			//sendRequestAsynch( req, conn, protocol );	
 	}
     protected  void sendRequestSynch( IApplMessage m, Interaction conn, ProtocolType protocol  ) throws Exception {
 		String answer = conn.request(req.toString()); 
-		CommUtils.outblue( protocol + " | answer=" + answer );   	
+		CommUtils.outmagenta( protocol + " | answer=" + answer );   	
     }  
 
     protected  void sendRequestAsynch( IApplMessage m, Interaction conn, ProtocolType protocol  ) throws Exception {
