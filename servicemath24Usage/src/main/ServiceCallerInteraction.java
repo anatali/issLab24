@@ -18,70 +18,55 @@ public class ServiceCallerInteraction {
 	public void doJob() {
 	 try {
 		//http, ws, tcp, udp, coap, mqtt, bluetooth, serial
-		sendRequest(ProtocolType.tcp);
- 		sendRequest(ProtocolType.mqtt);
- 		sendRequest(ProtocolType.coap);
-		// sendRequest(ProtocolType.http);
-		Thread.sleep(10000);
-		conn.close();
-		CommUtils.outblue( "ServiceCallerInteraction | BYE"   ); 
-    	System.exit(0);
+		 /*3*/  selectAndSend(ProtocolType.tcp);
+		 /*4*/  selectAndSend(ProtocolType.mqtt);
+		 /*5*/  selectAndSend(ProtocolType.coap);
+		 /*6*/  Thread.sleep(5000);
+		 /*7*/  conn.close();
+		 /*8*/  System.exit(0);
 	 }catch(Exception e){
 	    CommUtils.outred("ERROR " + e.getMessage() );
 	 }      
    }
     
-	protected void sendRequest(ProtocolType protocol) throws Exception{
-		switch( protocol ) {
-			case tcp : {
-				//conn = TcpConnection.create("localhost", 8011);
-				conn = ConnectionFactory.createClientSupport(protocol, "localhost", "8011");
-				//sendRequestSynch( req, conn, protocol );
-				//sendRequestAsynch( req, conn, protocol );
-				
-				break;
-			}
-			case coap : {
-				Connection.trace = true;
-				String path = "ctxservice/servicemath";
-				//conn = CoapConnection.create("localhost:8011", path);
-				conn = ConnectionFactory.createClientSupport(protocol, "localhost:8011", path);
-				//sendRequestSynch( req, conn, protocol );
-				//sendRequestAsynch( req, conn, protocol );
-				break;
-			}
-			case mqtt : {
-				String servicetopic = "unibo/qak/servicemath"; //"servicemathsynch/events";
-				String brokerAddr = "tcp://broker.hivemq.com"; // : 1883  OPTIONAL //"tcp://test.mosquitto.org"
- 				//conn = MqttConnection.create("javacaller", brokerAddr, servicetopic);
- 				conn = ConnectionFactory.createClientSupport(protocol, brokerAddr, servicetopic);
- 				//sendRequestSynch( req, conn, protocol);
-				//sendRequestAsynch( req, conn, protocol );
-				break;
-			}
-			case http : {
-				conn = HttpConnection.create( "localhost:8088" );
-				//sendRequest( req, conn, protocol ); //FA POST => 405,"error":"Method Not Allowed"
-				String answer = conn.request("/"); 
-				CommUtils.outblue( protocol + " | answer=" + answer );   	
-				break;
-			}
-			//WS connection not allowed. Ma potrei?
-			default:{
-				
-			}
-		}
-		if( protocol != ProtocolType.http && conn != null ) 
-			sendRequestSynch( req, conn, protocol );
-			//sendRequestAsynch( req, conn, protocol );	
-	}
-    protected  void sendRequestSynch( IApplMessage m, Interaction conn, ProtocolType protocol  ) throws Exception {
+    protected void selectAndSend(
+            ProtocolType protocol) throws Exception{
+        String hostAddr="";
+        String entry="";
+        switch( protocol ) {
+    /*1*/ case tcp : {
+            hostAddr = "localhost";
+            entry    = "8011";
+            break;
+          }
+    /*2*/  case coap : {
+            Connection.trace = true;
+            hostAddr = "localhost:8011";
+            entry    = "ctxservice/servicemath";
+            break;
+          }
+    /*3*/ case mqtt : {
+            hostAddr = "tcp://broker.hivemq.com";
+            entry    = "unibo/qak/servicemath";
+             break;
+          }
+          default:{               
+          }
+        }//switch
+    /*9*/ conn = ConnectionFactory.createClientSupport(
+                             protocol, hostAddr, entry);             
+    /*10*/ sendRequestSynch( req, conn, protocol );
+    /*11*/ //sendRequestAsynch( req, conn, protocol );	
+    }  
+	
+	protected  void sendRequestSynch( IApplMessage m, Interaction conn, ProtocolType protocol  ) throws Exception {
 		String answer = conn.request(req.toString()); 
 		CommUtils.outmagenta( protocol + " | answer=" + answer );   	
     }  
 
     protected  void sendRequestAsynch( IApplMessage m, Interaction conn, ProtocolType protocol  ) throws Exception {
-    	if(protocol==ProtocolType.mqtt) ((MqttConnection) conn).setupConnectionForAnswer("answ_dofibo_tester"); 
+    	if(protocol==ProtocolType.mqtt) 
+    		((MqttConnection) conn).setupConnectionForAnswer("answ_dofibo_tester"); 
 		conn.forward(req.toString()); 
 		String answer = conn.receiveMsg();
 		CommUtils.outmagenta( protocol + " | sendRequestAsynch answer=" + answer  );   	
