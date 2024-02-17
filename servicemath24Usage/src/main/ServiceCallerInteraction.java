@@ -13,7 +13,9 @@ import unibo.basicomm23.utils.ConnectionFactory;
 
 public class ServiceCallerInteraction {
  	private Interaction conn ;
- 	private IApplMessage req = BasicMsgUtil.buildRequest("tester", "dofibo", "dofibo(21)", "servicemath");
+ 	String  nfibo = "21";
+ 	String payload="dofibo(N)".replace("N", nfibo);
+ 	private IApplMessage req = BasicMsgUtil.buildRequest("tester", "dofibo", payload, "servicemath");
 	
 	public void doJob() {
 	 try {
@@ -21,8 +23,9 @@ public class ServiceCallerInteraction {
 		 /*3*/  selectAndSend(ProtocolType.tcp);
 		 /*4*/  selectAndSend(ProtocolType.mqtt);
 		 /*5*/  selectAndSend(ProtocolType.coap);
+		 /*5*/  selectAndSend(ProtocolType.ws);
 		 /*6*/  Thread.sleep(5000);
-		 /*7*/  conn.close();
+		 /*7*/  //conn.close();
 		 /*8*/  System.exit(0);
 	 }catch(Exception e){
 	    CommUtils.outred("ERROR " + e.getMessage() );
@@ -40,7 +43,6 @@ public class ServiceCallerInteraction {
             break;
           }
     /*2*/  case coap : {
-            Connection.trace = true;
             hostAddr = "localhost:8011";
             entry    = "ctxservice/servicemath";
             break;
@@ -50,24 +52,35 @@ public class ServiceCallerInteraction {
             entry    = "unibo/qak/servicemath";
              break;
           }
+    /*4*/ case ws : {
+        	hostAddr = "localhost:8088/accessgui";
+        	entry    = "request";  
+         break;
+      }
           default:{               
           }
         }//switch
     /*9*/ conn = ConnectionFactory.createClientSupport(
-                             protocol, hostAddr, entry);             
+                             protocol, hostAddr, entry);    
+    	  ((Connection)conn).trace = false;
     /*10*/ sendRequestSynch( req, conn, protocol );
-    /*11*/ //sendRequestAsynch( req, conn, protocol );	
+    //Thread.sleep(1000);
+    /*11*/ sendRequestAsynch( req, conn, protocol );	
+           conn.close();
     }  
 	
 	protected  void sendRequestSynch( IApplMessage m, Interaction conn, ProtocolType protocol  ) throws Exception {
-		String answer = conn.request(req.toString()); 
-		CommUtils.outmagenta( protocol + " | answer=" + answer );   	
+		String answer = "todo";
+		if(protocol==ProtocolType.ws) answer = conn.request(nfibo); 
+		else  answer = conn.request(req.toString()); 
+		CommUtils.outmagenta( protocol + " | sendRequestSynch answer=" + answer );   	
     }  
 
     protected  void sendRequestAsynch( IApplMessage m, Interaction conn, ProtocolType protocol  ) throws Exception {
     	if(protocol==ProtocolType.mqtt) 
-    		((MqttConnection) conn).setupConnectionForAnswer("answ_dofibo_tester"); 
-		conn.forward(req.toString()); 
+    		((MqttConnection) conn).setupConnectionForAnswer("answ_dofibo_tester");    
+    	if(protocol==ProtocolType.ws) conn.forward( nfibo );
+    	else conn.forward(req.toString()); 
 		String answer = conn.receiveMsg();
 		CommUtils.outmagenta( protocol + " | sendRequestAsynch answer=" + answer  );   	
     }  

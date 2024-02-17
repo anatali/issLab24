@@ -42,10 +42,10 @@ public class ServiceCallerInteractionOldOk {
 				break;
 			}
 			case coap : {
-				Connection.trace = true;
 				String path = "ctxservice/servicemath";
 				//conn = CoapConnection.create("localhost:8011", path);
 				conn = ConnectionFactory.createClientSupport(protocol, "localhost:8011", path);
+				//conn.trace = true;
 				//sendRequestSynch( req, conn, protocol );
 				//sendRequestAsynch( req, conn, protocol );
 				break;
