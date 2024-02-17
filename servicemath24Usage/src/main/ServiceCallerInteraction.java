@@ -13,9 +13,10 @@ import unibo.basicomm23.utils.ConnectionFactory;
 
 public class ServiceCallerInteraction {
  	private Interaction conn ;
- 	String  nfibo = "21";
- 	String payload="dofibo(N)".replace("N", nfibo);
- 	private IApplMessage req = BasicMsgUtil.buildRequest("tester", "dofibo", payload, "servicemath");
+ 	private String  nfibo = "21";
+ 	private String payload="dofibo(N)".replace("N", nfibo);
+ 	private IApplMessage req = BasicMsgUtil.buildRequest("clientJava", "dofibo", payload, "servicemath");
+ 	private String mqttAnswerTopic = "answ_dofibo_clientJava";
 	
 	public void doJob() {
 	 try {
@@ -25,17 +26,16 @@ public class ServiceCallerInteraction {
 		 /*5*/  selectAndSend(ProtocolType.coap);
 		 /*5*/  selectAndSend(ProtocolType.ws);
 		 /*6*/  Thread.sleep(5000);
-		 /*7*/  //conn.close();
-		 /*8*/  System.exit(0);
+		 /*7*/  System.exit(0);
 	 }catch(Exception e){
 	    CommUtils.outred("ERROR " + e.getMessage() );
 	 }      
    }
-    
+
     protected void selectAndSend(
             ProtocolType protocol) throws Exception{
         String hostAddr="";
-        String entry="";
+        String entry   ="";
         switch( protocol ) {
     /*1*/ case tcp : {
             hostAddr = "localhost";
@@ -43,6 +43,7 @@ public class ServiceCallerInteraction {
             break;
           }
     /*2*/  case coap : {
+            Connection.trace = true;
             hostAddr = "localhost:8011";
             entry    = "ctxservice/servicemath";
             break;
@@ -53,22 +54,20 @@ public class ServiceCallerInteraction {
              break;
           }
     /*4*/ case ws : {
-        	hostAddr = "localhost:8088/accessgui";
-        	entry    = "request";  
-         break;
-      }
+    	     hostAddr = "localhost:8088/accessgui";
+    	     entry    = "request";  
+    	     break;
+  	      }
           default:{               
           }
         }//switch
-    /*9*/ conn = ConnectionFactory.createClientSupport(
-                             protocol, hostAddr, entry);    
-    	  ((Connection)conn).trace = false;
-    /*10*/ sendRequestSynch( req, conn, protocol );
-    //Thread.sleep(1000);
-    /*11*/ sendRequestAsynch( req, conn, protocol );	
-           conn.close();
-    }  
-	
+    /*6*/ conn = ConnectionFactory.createClientSupport(
+                             protocol, hostAddr, entry);             
+    /*7*/ sendRequestSynch( req, conn, protocol );
+    /*8*/ sendRequestAsynch( req, conn, protocol );	
+    /*9*/ conn.close();
+    }
+  	
 	protected  void sendRequestSynch( IApplMessage m, Interaction conn, ProtocolType protocol  ) throws Exception {
 		String answer = "todo";
 		if(protocol==ProtocolType.ws) answer = conn.request(nfibo); 
@@ -78,7 +77,7 @@ public class ServiceCallerInteraction {
 
     protected  void sendRequestAsynch( IApplMessage m, Interaction conn, ProtocolType protocol  ) throws Exception {
     	if(protocol==ProtocolType.mqtt) 
-    		((MqttConnection) conn).setupConnectionForAnswer("answ_dofibo_tester");    
+    		((MqttConnection) conn).setupConnectionForAnswer(mqttAnswerTopic);    
     	if(protocol==ProtocolType.ws) conn.forward( nfibo );
     	else conn.forward(req.toString()); 
 		String answer = conn.receiveMsg();
