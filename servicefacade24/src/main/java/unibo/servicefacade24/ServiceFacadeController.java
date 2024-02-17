@@ -1,9 +1,13 @@
 package unibo.servicefacade24;
 
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import unibo.basicomm23.utils.CommUtils;
 
 import java.util.List;
@@ -15,7 +19,8 @@ public class ServiceFacadeController {
     protected String sysName = "unknown";
 
     public ServiceFacadeController(){
-         new FacadeBuilder( ) ;
+        CommUtils.outgreen (" --- ServiceFacadeController | STARTS " );
+        new FacadeBuilder( ) ;
     }
     private void updateViewmodel(Model model, String info ){
         model.addAttribute("info", info );
@@ -28,7 +33,7 @@ public class ServiceFacadeController {
         viewmodel.addAttribute("appname", ApplSystemInfo.appName);
         String dir = System.getProperty("user.dir");
         CommUtils.outgreen (" --- ServiceFacadeController | entry dir= "+dir  );
-
         return "qakFacadeGUI";
     }
+
 }

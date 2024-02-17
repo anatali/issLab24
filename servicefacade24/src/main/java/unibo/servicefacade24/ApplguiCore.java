@@ -35,6 +35,8 @@ public class ApplguiCore {
     public void updateMsg( String msg ) {
         CommUtils.outblue("AGC updateMsg " + msg);
         outinadapter.sendToAll(msg);
+        //potrei mandare a M2M ... che poi manda la risposta a REST POST
+        M2MController.m2mCtrl.setAnswer(msg);
     }
 
     public void handleWsMsg(String msg ) {
@@ -63,9 +65,13 @@ public class ApplguiCore {
     }
  
 
-    private void dorequest(String payload ) {
-        outinadapter.dorequest(
-        "gui",destActor,reqid,reqcontent.replace("X",payload) );
+    public void dorequest(String payload ) { //public per M2MController
+        if( payload.startsWith("dofibo")){ //payload from M2M
+            outinadapter.dorequest("gui",destActor,reqid,payload );
+        }else { //payload from GUI
+            outinadapter.dorequest(
+               "gui", destActor, reqid, reqcontent.replace("X", payload));
+        }
     }
     private void docmd(String payload ) {
         //outinadapter.docmd(payload );

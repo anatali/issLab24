@@ -4,7 +4,7 @@ import unibo.basicomm23.utils.CommUtils;
 
 public class FacadeBuilder {
     public static  WSHandler wsHandler;
-    protected   ApplguiCore guiCore  ;
+    public static  ApplguiCore guiCore  ;
     protected   ActorOutIn outinadapter;
 
     public FacadeBuilder( ){

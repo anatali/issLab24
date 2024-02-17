@@ -67,7 +67,7 @@ QActor actionexec  context ctxservice withobj math using "MathUtils.create()" dy
 	[# var SOUT="todo" #]
 	State init initial { 
 		//println("$name | STARTS ")  color cyan
-    }	 
+    }	  
     Transition t0 whenRequest dofibo -> work
 	
 	State work{

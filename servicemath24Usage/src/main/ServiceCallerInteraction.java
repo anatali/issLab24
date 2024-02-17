@@ -13,7 +13,7 @@ import unibo.basicomm23.utils.ConnectionFactory;
 
 public class ServiceCallerInteraction {
  	private Interaction conn ;
- 	private String  nfibo = "21";
+ 	private String  nfibo = "28";
  	private String payload="dofibo(N)".replace("N", nfibo);
  	private IApplMessage req = BasicMsgUtil.buildRequest("clientJava", "dofibo", payload, "servicemath");
  	private String mqttAnswerTopic = "answ_dofibo_clientJava";
@@ -43,7 +43,6 @@ public class ServiceCallerInteraction {
             break;
           }
     /*2*/  case coap : {
-            Connection.trace = true;
             hostAddr = "localhost:8011";
             entry    = "ctxservice/servicemath";
             break;
@@ -61,11 +60,12 @@ public class ServiceCallerInteraction {
           default:{               
           }
         }//switch
-    /*6*/ conn = ConnectionFactory.createClientSupport(
-                             protocol, hostAddr, entry);             
-    /*7*/ sendRequestSynch( req, conn, protocol );
-    /*8*/ sendRequestAsynch( req, conn, protocol );	
-    /*9*/ conn.close();
+        /*5*/ conn = ConnectionFactory.createClientSupport(
+                protocol, hostAddr, entry);
+		/*6*/  //((Connection)conn).trace = false;
+		/*7*/  sendRequestSynch( req, conn, protocol );
+		/*8*/  sendRequestAsynch( req, conn, protocol );
+		/*9*/ conn.close();
     }
   	
 	protected  void sendRequestSynch( IApplMessage m, Interaction conn, ProtocolType protocol  ) throws Exception {
@@ -84,8 +84,23 @@ public class ServiceCallerInteraction {
 		CommUtils.outmagenta( protocol + " | sendRequestAsynch answer=" + answer  );   	
     }  
     
+    
+    protected void useHTTP() {
+   	 try {
+        String hostAddr="localhost:8088/RestApi/testHTTP";
+        String entry   = req.toString();
+        //conn = HttpConnection.create( "localhost:8088" );
+        conn = ConnectionFactory.createClientSupport(ProtocolType.http, hostAddr, "");
+		String answer = conn.request(entry); 
+		CommUtils.outmagenta( "ServiceCallerInteraction | useHTTP answer=" + answer  ); 
+	 }catch(Exception e){
+		CommUtils.outred("ERROR " + e.getMessage() );
+	 }     	
+    }
+    
     public static void main( String[] args) {
-    	new ServiceCallerInteraction().doJob();
+    	//new ServiceCallerInteraction().doJob();
+    	new ServiceCallerInteraction().useHTTP();
     }
 
 }
