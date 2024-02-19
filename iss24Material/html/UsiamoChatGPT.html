@@ -1,0 +1,273 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>UsiamoChatGPT &#8212; iss24 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">UsiamoChatGPT</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="usiamochatgpt">
+<h1>UsiamoChatGPT<a class="headerlink" href="#usiamochatgpt" title="Permalink to this heading">¶</a></h1>
+<section id="chatgpt-fibo">
+<h2>ChatGPT fibo<a class="headerlink" href="#chatgpt-fibo" title="Permalink to this heading">¶</a></h2>
+<p><span class="slide3">vorrei vedere il codice python di una funzione che calcola il n-mo numero di Fibonacci</span></p>
+<p>Ecco un esempio di codice Python per una funzione che calcola l’n-esimo numero di Fibonacci utilizzando un approccio iterativo:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fibonacci</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s2">&quot;Input non valido. Si prega di inserire un numero intero positivo maggiore di zero.&quot;</span>
+        <span class="k">elif</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">elif</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">return</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+                <span class="n">fib</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+                        <span class="n">fib</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fib</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">fib</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+                <span class="k">return</span> <span class="n">fib</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="c1"># Esempio di utilizzo della funzione</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">fibonacci</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Il </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">-esimo numero di Fibonacci è: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Questo codice definisce una funzione fibonacci(n) che restituisce l’n-esimo numero di Fibonacci. L’implementazione utilizza un approccio iterativo per calcolare i numeri di Fibonacci fino all’n-esimo valore. La complessità computazionale di questo algoritmo è O(n), dove n è l’indice del numero di Fibonacci che si desidera calcolare.</p>
+</section>
+<section id="chatgpt-robot">
+<h2>ChatGPT robot<a class="headerlink" href="#chatgpt-robot" title="Permalink to this heading">¶</a></h2>
+<section id="richiesta-di-codice">
+<h3>Richiesta di codice<a class="headerlink" href="#richiesta-di-codice" title="Permalink to this heading">¶</a></h3>
+<p><span class="slide3">Vorrei un **esempio di codice Python** per controllare un differential drive robot in modo che possa percorrere il perimetro di una stanza rettangolare.</span></p>
+<p>Ecco un esempio di codice Python utilizzando il modulo turtle per simulare il movimento di un robot a guida differenziale lungo il perimetro di una stanza rettangolare. Questo codice utilizza la libreria Turtle per la visualizzazione grafica, ma il concetto può essere applicato a un robot fisico controllato da un microcontrollore o un altro dispositivo.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">turtle</span>
+
+<span class="c1"># Impostazioni della finestra</span>
+<span class="n">window_width</span> <span class="o">=</span> <span class="mi">800</span>
+<span class="n">window_height</span> <span class="o">=</span> <span class="mi">600</span>
+
+<span class="c1"># Impostazioni della stanza rettangolare</span>
+<span class="n">room_width</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">room_height</span> <span class="o">=</span> <span class="mi">300</span>
+
+<span class="c1"># Funzione per disegnare la stanza rettangolare</span>
+<span class="k">def</span> <span class="nf">draw_room</span><span class="p">():</span>
+        <span class="n">turtle</span><span class="o">.</span><span class="n">penup</span><span class="p">()</span>
+        <span class="n">turtle</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="o">-</span><span class="n">room_width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="n">room_height</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">turtle</span><span class="o">.</span><span class="n">pendown</span><span class="p">()</span>
+        <span class="n">turtle</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">room_width</span><span class="p">)</span>
+        <span class="n">turtle</span><span class="o">.</span><span class="n">left</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span>
+        <span class="n">turtle</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">room_height</span><span class="p">)</span>
+        <span class="n">turtle</span><span class="o">.</span><span class="n">left</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span>
+        <span class="n">turtle</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">room_width</span><span class="p">)</span>
+        <span class="n">turtle</span><span class="o">.</span><span class="n">left</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span>
+        <span class="n">turtle</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">room_height</span><span class="p">)</span>
+        <span class="n">turtle</span><span class="o">.</span><span class="n">left</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span>
+
+<span class="c1"># Funzione per far muovere il robot lungo il perimetro della stanza</span>
+<span class="k">def</span> <span class="nf">move_robot</span><span class="p">():</span>
+        <span class="n">turtle</span><span class="o">.</span><span class="n">penup</span><span class="p">()</span>
+        <span class="n">turtle</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="o">-</span><span class="n">room_width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="n">room_height</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">turtle</span><span class="o">.</span><span class="n">pendown</span><span class="p">()</span>
+
+        <span class="c1"># Movimento in avanti</span>
+        <span class="n">turtle</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">room_width</span><span class="p">)</span>
+
+        <span class="c1"># Ruotare di 90 gradi a sinistra</span>
+        <span class="n">turtle</span><span class="o">.</span><span class="n">left</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span>
+
+        <span class="c1"># Movimento in avanti</span>
+        <span class="n">turtle</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">room_height</span><span class="p">)</span>
+
+        <span class="c1"># Ruotare di 90 gradi a sinistra</span>
+        <span class="n">turtle</span><span class="o">.</span><span class="n">left</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span>
+
+        <span class="c1"># Movimento in avanti</span>
+        <span class="n">turtle</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">room_width</span><span class="p">)</span>
+
+        <span class="c1"># Ruotare di 90 gradi a sinistra</span>
+        <span class="n">turtle</span><span class="o">.</span><span class="n">left</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span>
+
+        <span class="c1"># Movimento in avanti</span>
+        <span class="n">turtle</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">room_height</span><span class="p">)</span>
+
+<span class="c1"># Configurare la finestra</span>
+<span class="n">turtle</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">window_width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">window_height</span><span class="p">)</span><span class="n">contesti</span>
+<span class="n">turtle</span><span class="o">.</span><span class="n">speed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Disegnare la stanza rettangolare</span>
+<span class="n">draw_room</span><span class="p">()</span>
+
+<span class="c1"># Posizionare il robot all&#39;inizio del percorso</span>
+<span class="n">turtle</span><span class="o">.</span><span class="n">penup</span><span class="p">()</span>
+<span class="n">turtle</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="o">-</span><span class="n">room_width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="n">room_height</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">turtle</span><span class="o">.</span><span class="n">pendown</span><span class="p">()</span>
+
+<span class="c1"># Muovere il robot lungo il perimetro della stanza</span>
+<span class="n">move_robot</span><span class="p">()</span>
+
+<span class="c1"># Chiudere la finestra al clic</span>
+<span class="n">turtle</span><span class="o">.</span><span class="n">done</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Questo codice utilizza la libreria Turtle per disegnare una stanza rettangolare e far muovere un “robot” lungo il perimetro di quella stanza. La funzione draw_room() disegna il perimetro della stanza, mentre la funzione move_robot() fa muovere il robot lungo il perimetro della stanza.</p>
+<p>Si noti che questo è solo un esempio di simulazione grafica e che il codice per controllare un vero robot differenziale dovrebbe essere molto diverso e dipenderebbe dal tipo di robot e dalla piattaforma hardware utilizzata.</p>
+</section>
+<section id="richiesta-di-progetto">
+<h3>Richiesta di progetto<a class="headerlink" href="#richiesta-di-progetto" title="Permalink to this heading">¶</a></h3>
+<p><span class="slide3">Vorrei un **esempio di progetto** per controllare un differential drive robot in modo che possa percorrere il perimetro di una stanza rettangolare</span></p>
+<p>Ecco un esempio di progetto per controllare un robot a guida differenziale in modo che possa percorrere il perimetro di una stanza rettangolare utilizzando un microcontrollore Arduino e un sensore di distanza a ultrasuoni per rilevare le pareti.</p>
+<p>Componenti necessari:</p>
+<ol class="arabic simple">
+<li><p>Robot a guida differenziale con motori e ruote</p></li>
+<li><p>Microcontrollore Arduino (ad esempio, Arduino Uno)</p></li>
+<li><p>Sensore di distanza ad ultrasuoni (ad esempio, HC-SR04)</p></li>
+<li><p>Breadboard e cavi di collegamento</p></li>
+<li><p>Alimentazione per il microcontrollore e il motore del robot</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#include &lt;NewPing.h&gt;</span>
+
+<span class="c1">#define TRIGGER_PIN  11  // Pin trigger del sensore ultrasuoni</span>
+<span class="c1">#define ECHO_PIN     12  // Pin echo del sensore ultrasuoni</span>
+<span class="c1">#define MAX_DISTANCE 200 // Distanza massima di rilevamento in centimetri</span>
+
+<span class="n">NewPing</span> <span class="n">sonar</span><span class="p">(</span><span class="n">TRIGGER_PIN</span><span class="p">,</span> <span class="n">ECHO_PIN</span><span class="p">,</span> <span class="n">MAX_DISTANCE</span><span class="p">);</span> <span class="o">//</span> <span class="n">Oggetto</span> <span class="n">per</span> <span class="n">il</span> <span class="n">sensore</span> <span class="n">ultrasuoni</span>
+
+<span class="c1">#define LEFT_MOTOR_PIN1  4  // Pin 1 del motore sinistro</span>
+<span class="c1">#define LEFT_MOTOR_PIN2  5  // Pin 2 del motore sinistro</span>
+<span class="c1">#define RIGHT_MOTOR_PIN1 6  // Pin 1 del motore destro</span>
+<span class="c1">#define RIGHT_MOTOR_PIN2 7  // Pin 2 del motore destro</span>
+
+<span class="n">void</span> <span class="n">setup</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">LEFT_MOTOR_PIN1</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">LEFT_MOTOR_PIN2</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">RIGHT_MOTOR_PIN1</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
+  <span class="n">pinMode</span><span class="p">(</span><span class="n">RIGHT_MOTOR_PIN2</span><span class="p">,</span> <span class="n">OUTPUT</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">void</span> <span class="n">loop</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nb">int</span> <span class="n">distance</span> <span class="o">=</span> <span class="n">sonar</span><span class="o">.</span><span class="n">ping_cm</span><span class="p">();</span> <span class="o">//</span> <span class="n">Ottieni</span> <span class="n">la</span> <span class="n">distanza</span> <span class="n">rilevata</span> <span class="n">dal</span> <span class="n">sensore</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">distance</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">distance</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">)</span> <span class="p">{</span> <span class="o">//</span> <span class="n">Se</span> <span class="n">il</span> <span class="n">robot</span> <span class="n">è</span> <span class="n">vicino</span> <span class="n">alla</span> <span class="n">parete</span> <span class="p">(</span><span class="n">imposta</span> <span class="n">la</span> <span class="n">soglia</span> <span class="n">desiderata</span><span class="p">)</span>
+        <span class="o">//</span> <span class="n">Arresta</span> <span class="n">il</span> <span class="n">robot</span>
+        <span class="n">digitalWrite</span><span class="p">(</span><span class="n">LEFT_MOTOR_PIN1</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+        <span class="n">digitalWrite</span><span class="p">(</span><span class="n">LEFT_MOTOR_PIN2</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+        <span class="n">digitalWrite</span><span class="p">(</span><span class="n">RIGHT_MOTOR_PIN1</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+        <span class="n">digitalWrite</span><span class="p">(</span><span class="n">RIGHT_MOTOR_PIN2</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+
+        <span class="o">//</span> <span class="n">Ruota</span> <span class="n">di</span> <span class="mi">90</span> <span class="n">gradi</span> <span class="ow">in</span> <span class="n">senso</span> <span class="n">antiorario</span>
+        <span class="n">digitalWrite</span><span class="p">(</span><span class="n">LEFT_MOTOR_PIN1</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+        <span class="n">digitalWrite</span><span class="p">(</span><span class="n">LEFT_MOTOR_PIN2</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+        <span class="n">digitalWrite</span><span class="p">(</span><span class="n">RIGHT_MOTOR_PIN1</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+        <span class="n">digitalWrite</span><span class="p">(</span><span class="n">RIGHT_MOTOR_PIN2</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+        <span class="n">delay</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span> <span class="o">//</span> <span class="n">Tempo</span> <span class="n">per</span> <span class="n">ruotare</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="o">//</span> <span class="n">Avanza</span>
+        <span class="n">digitalWrite</span><span class="p">(</span><span class="n">LEFT_MOTOR_PIN1</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+        <span class="n">digitalWrite</span><span class="p">(</span><span class="n">LEFT_MOTOR_PIN2</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+        <span class="n">digitalWrite</span><span class="p">(</span><span class="n">RIGHT_MOTOR_PIN1</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+        <span class="n">digitalWrite</span><span class="p">(</span><span class="n">RIGHT_MOTOR_PIN2</span><span class="p">,</span> <span class="n">LOW</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Spiegazione del codice:</p>
+<ol class="arabic simple">
+<li><p>Il sensore di distanza ad ultrasuoni viene utilizzato per misurare la distanza tra il robot e le pareti della stanza.</p></li>
+<li><p>Se il robot si avvicina troppo a una parete (distanza inferiore a 10 cm nel nostro esempio), il robot si ferma e ruota di 90 gradi in senso antiorario per seguire il perimetro della stanza.</p></li>
+<li><p>Se il robot non rileva alcuna parete nelle vicinanze, procederà avanti.</p></li>
+</ol>
+<p>Nota:</p>
+<p>Questo è solo un esempio di base e potrebbe richiedere ulteriori miglioramenti,
+come la gestione degli angoli e il controllo più preciso dei motori,
+per un funzionamento ottimale in un ambiente reale.</p>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">UsiamoChatGPT</a><ul>
+<li><a class="reference internal" href="#chatgpt-fibo">ChatGPT fibo</a></li>
+<li><a class="reference internal" href="#chatgpt-robot">ChatGPT robot</a><ul>
+<li><a class="reference internal" href="#richiesta-di-codice">Richiesta di codice</a></li>
+<li><a class="reference internal" href="#richiesta-di-progetto">Richiesta di progetto</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/UsiamoChatGPT.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">UsiamoChatGPT</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>
