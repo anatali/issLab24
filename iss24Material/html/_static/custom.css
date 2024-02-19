@@ -36,11 +36,12 @@ h3{
 
   .pre{
     font-family: Arial;
-    font-weight: bold;
-    font-size: 14px;
-    color: rgba(7, 10, 190, 0.981);     
+    font-style: normal;
+    font-size: 16px;
+    color: rgb(115, 0, 255);
+    
     margin: 0;
-    background-color: #fffed6;
+    
   }  
 
   .n{ 

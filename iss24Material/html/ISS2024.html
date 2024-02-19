@@ -79,8 +79,9 @@
 </tbody>
 </table>
 <p><span class="slide1">1) IL CORSO 2024</span></p>
+</section>
 <section id="promesse-del-corso">
-<h3>Promesse del corso<a class="headerlink" href="#promesse-del-corso" title="Permalink to this heading">¶</a></h3>
+<h2>Promesse del corso<a class="headerlink" href="#promesse-del-corso" title="Permalink to this heading">¶</a></h2>
 <p>Riportiamo qui quanto si legge nel <a class="reference external" href="https://www.unibo.it/it/didattica/insegnamenti/insegnamento/2023/468003">Sito Web del corso</a>  -&gt;:</p>
 <p>Al termine del corso lo studente:</p>
 <ul class="simple">
@@ -113,10 +114,8 @@ che possono agire in modo relativamente autonomo in <span class="blue">diversi</
 senza modificare il software che esprime la ‘business logic’ del problema.</p></li>
 </ul>
 <p><span class="slide1">2) Il nostro metodo di lavoro</span></p>
-</section>
-</section>
 <section id="il-metodo-di-lavoro">
-<h2>Il metodo di lavoro<a class="headerlink" href="#il-metodo-di-lavoro" title="Permalink to this heading">¶</a></h2>
+<h3>Il metodo di lavoro<a class="headerlink" href="#il-metodo-di-lavoro" title="Permalink to this heading">¶</a></h3>
 <ol class="arabic">
 <li><p>Partiamo dall’insieme di requisiti <strong>forniti dal committente</strong> ed espressi in linguaggio naturale</p></li>
 <li><p>Impostiamo lo <code class="docutils literal notranslate"><span class="pre">SPRINT0</span></code> come una <strong>analisi dei requisiti</strong> che mira a esprimerli in modo comprensibile anche alla macchina introducendo:</p>
@@ -156,37 +155,51 @@ il processo di produzione e <span class="brown">non dopo</span> avere sviluppato
 <p><span class="slide1">3) Fasi del corso</span></p>
 </section>
 <section id="fasi-del-corso">
-<h2>Fasi del corso<a class="headerlink" href="#fasi-del-corso" title="Permalink to this heading">¶</a></h2>
+<h3>Fasi del corso<a class="headerlink" href="#fasi-del-corso" title="Permalink to this heading">¶</a></h3>
 <ol class="arabic">
 <li><p>Dalla OOP ai sistemi a scambio di messaggi come programmatori che devono utilizzare un (micro) servizio.
-Il servizio è un sistema software di cui occcorre consosce la <a class="reference internal" href="Intro2024.html#vista-esterna"><span class="std std-ref">Vista esterna</span></a>.</p></li>
+Il servizio è un sistema software di cui occcorre consosce la <a class="reference internal" href="Intro2024.html#vista-esterna"><span class="std std-ref">Vista esterna</span></a>.
+Si veda <a class="reference internal" href="#per-iniziare"><span class="std std-ref">Per iniziare</span></a>.</p></li>
 <li><p>Da programmatori-utilizzatori a progettesti-costruttori del (micro) servizio.
 Il servizio è un sistema software di cui si affronta lo sviluppo della sua
 <a class="reference internal" href="Intro2024.html#vista-interna"><span class="std std-ref">Vista interna</span></a></p>
-<p>In questa fase
-- viene introdotto un linguaggio custom ad attori per lo sviluppo incrementale di prototipi</p>
-<blockquote>
-<div><p>a partire da un insieme di requisiti.</p>
-</div></blockquote>
+<p>In questa fase:</p>
 <ul class="simple">
-<li><p>viene sperimentato il ruolo dei modelli esguibili nella costruizione incrementale del software</p></li>
-<li><dl class="simple">
-<dt>viene approfondito un criterio / metodo di sviluppo top-down secondo il motto, che imposta il</dt><dd><p>processo di progettazione e produzione sulle premesse dei modelli definiti nella fase di analisi</p>
-</dd>
-</dl>
-</li>
+<li><p>viene introdotto un linguaggio custom ad attori per lo sviluppo incrementale di prototipi, a partire da un insieme di requisiti;</p></li>
+<li><p>viene sperimentato il ruolo dei modelli esguibili nella costruizione incrementale del software;</p></li>
+<li><p>viene approfondito un criterio / metodo di sviluppo top-down secondo il motto, che imposta il processo di progettazione
+e produzione sulle premesse dei modelli definiti nella fase di analisi.</p></li>
 </ul>
 </li>
-<li><p>Progetto e sviluppo di un sistema che realizza il gioco <a class="reference external" href="https://it.wikipedia.org/wiki/Gioco_della_vita">Conway Life</a> -&gt; come sistema distribuito .</p></li>
-<li><p>Progetto e sviluppo di un sistema distribuito  nel campo delle applicazioni IOT,
+<li><p>Progetto e sviluppo di un sistema che realizza il gioco <a class="reference external" href="https://it.wikipedia.org/wiki/Gioco_della_vita">Conway Life</a> -&gt; come sistema distribuito
+(si veda anche <a class="reference external" href="https://playgameoflife.com/">Conway Life play</a> -&gt;).</p></li>
+<li><p>Progetto e sviluppo di un sistema distribuito  nel campo delle <strong>applicazioni IOT</strong>,
 che prevede  l’utilizzo di robot virtuali e/o <a class="reference external" href="_static/devsDdr.html">robot reali</a>,</p></li>
 </ol>
 <blockquote>
 <div><a class="reference internal image-reference" href="_images/mbotIot.png"><img alt="_images/mbotIot.png" class="align-center" src="_images/mbotIot.png" style="width: 70%;" /></a>
 </div></blockquote>
+</section>
+<section id="per-iniziare">
+<h3>Per iniziare<a class="headerlink" href="#per-iniziare" title="Permalink to this heading">¶</a></h3>
+<p>Il servizio (implementato in Java) può essere attivato in due modi:</p>
+<ol class="arabic">
+<li><p>eseguendo il file batch <code class="docutils literal notranslate"><span class="pre">unibo.servicemath.bat</span></code> (su windows) o <code class="docutils literal notranslate"><span class="pre">unibo.servicemath</span></code> (su Linux)
+estratto dal file di distribuzione del prodotto (<strong>servicemath24Asynch-1.0.zip</strong>  <a class="reference external" href="./_static/code/servicemath24Asynch-1.0.zip">servicemath24Asynch-1.0</a> ).</p>
+<p><strong>AVVERTENZA</strong> Su Windows fare unzip del file in una directory dal nome brece, ad es. <code class="docutils literal notranslate"><span class="pre">C:/issRun</span></code></p>
+</li>
+<li><p>esegundo il comando docker: <strong>docker-compose</strong>  <a class="reference external" href="./_static/code/servicemathAsynch.yaml">servicemathAsynch.yaml</a>.</p>
+<p>Una volta attivato, il servizio fornisce una pagina HTML, accessibile mediante browser alla porta <code class="docutils literal notranslate"><span class="pre">8088</span></code>:</p>
+<blockquote>
+<div><a class="reference internal image-reference" href="_images/servicefacade24_1.PNG"><img alt="_images/servicefacade24_1.PNG" class="align-center" src="_images/servicefacade24_1.PNG" style="width: 50%;" /></a>
+</div></blockquote>
+</li>
+</ol>
 <p><span class="slide1">4) Cosa si valuta</span></p>
+</section>
+</section>
 <section id="criteri-di-valutazione">
-<h3>Criteri di valutazione<a class="headerlink" href="#criteri-di-valutazione" title="Permalink to this heading">¶</a></h3>
+<h2>Criteri di valutazione<a class="headerlink" href="#criteri-di-valutazione" title="Permalink to this heading">¶</a></h2>
 <ol class="arabic simple">
 <li><p>La costruzione di un prototipo di sistema software che soddisfa l’insieme di requisiti dato nel <a class="reference internal" href="TemaFinale22.html#temafinale22"><span class="std std-ref">Temafinale</span></a>,
 mira a verificare il raggiungimento di adeguate abilità teorico/pratiche
@@ -194,10 +207,8 @@ e può essere effettuata in <span class="remark">modo individuale</span> oppure 
 <li><p>La discussione individuale orale che segue la demo del prototipo è volta a valutare
 <span class="blue">il livello di conoscenza, consapevolezza e di autonomia analitico/progettuale</span> <span class="remark">del singolo studente</span>.</p></li>
 </ol>
-</section>
-</section>
 <section id="dettagli-sul-colloquio-orale">
-<h2>Dettagli sul colloquio orale<a class="headerlink" href="#dettagli-sul-colloquio-orale" title="Permalink to this heading">¶</a></h2>
+<h3>Dettagli sul colloquio orale<a class="headerlink" href="#dettagli-sul-colloquio-orale" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>48 h prima del colloqio, il codice del sistema finale deve essere stato pubblicato sul sito del prototipo
 (individuale o di gruppo),
@@ -223,8 +234,10 @@ Al termine di questa fase, il singolo studente può raggiungere un <span class="
 <li><p>Altre domande rivolte dal docente a singole persone. Al termine di questa fase, il singolo studente
 può raggiungere il <span class="remark">punteggio di 30 e lode</span>.</p></li>
 </ol>
+</section>
+</section>
 <section id="note-dopo-le-interazioni-con-gli-studenti">
-<h3>Note dopo le interazioni con gli studenti<a class="headerlink" href="#note-dopo-le-interazioni-con-gli-studenti" title="Permalink to this heading">¶</a></h3>
+<h2>Note dopo le interazioni con gli studenti<a class="headerlink" href="#note-dopo-le-interazioni-con-gli-studenti" title="Permalink to this heading">¶</a></h2>
 <ol class="arabic simple">
 <li><p>Lo scopo del tema finale <strong>NON è</strong> (solo) risolvere il problema ma avere un
 <span class="blue">caso di studio su cui ragionare sul processo di costruzione del software</span>.</p></li>
@@ -281,7 +294,6 @@ del sistema (con i link al modello e ai Test).
 Questa pagina sarà l’inizio del documento relativo allo SPRINT successivo.
 E’ opportuno anche inserire istruzioni su come eseguire il software sviluppato, ad uso dell’utente finale.</p></li>
 </ol>
-</section>
 <section id="come-organizzare-gli-sprint">
 <h3>Come organizzare gli sprint<a class="headerlink" href="#come-organizzare-gli-sprint" title="Permalink to this heading">¶</a></h3>
 <p>Lo scopo dello SPRINT0 dovrebbe essere quello di formalizzare i singoli termini del testo
@@ -343,8 +355,8 @@ Il componente QAk che definisce la logica di <em>wastewervicewtatusgui</em> potr
 o (forse, preferibilmente) <span class="blue">riusato</span> all’interno di questa web-application.</p>
 </section>
 </section>
-<section id="possibili-domande-finali">
-<h2>Possibili domande finali<a class="headerlink" href="#possibili-domande-finali" title="Permalink to this heading">¶</a></h2>
+<section id="esempi-di-possibili-domande-finali">
+<h2>Esempi di possibili domande finali<a class="headerlink" href="#esempi-di-possibili-domande-finali" title="Permalink to this heading">¶</a></h2>
 <p>Riportiamo qui un elenco di possibili domande finali durante i colloqui orali:</p>
 <ul class="simple">
 <li><p>Abbiamo appena visto il funzionamento della applicazione. Possiamo vedere il progetto?
@@ -428,21 +440,22 @@ E docker-compose? Se sì quali sono i criteri/motivazioni per la ripartizione di
     <h3><a href="index.html">Table of Contents</a></h3>
     <ul>
 <li><a class="reference internal" href="#">ISS2024</a><ul>
-<li><a class="reference internal" href="#intro2024-indice">Intro2024 indice</a><ul>
-<li><a class="reference internal" href="#promesse-del-corso">Promesse del corso</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#intro2024-indice">Intro2024 indice</a></li>
+<li><a class="reference internal" href="#promesse-del-corso">Promesse del corso</a><ul>
 <li><a class="reference internal" href="#il-metodo-di-lavoro">Il metodo di lavoro</a></li>
-<li><a class="reference internal" href="#fasi-del-corso">Fasi del corso</a><ul>
-<li><a class="reference internal" href="#criteri-di-valutazione">Criteri di valutazione</a></li>
+<li><a class="reference internal" href="#fasi-del-corso">Fasi del corso</a></li>
+<li><a class="reference internal" href="#per-iniziare">Per iniziare</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#dettagli-sul-colloquio-orale">Dettagli sul colloquio orale</a><ul>
-<li><a class="reference internal" href="#note-dopo-le-interazioni-con-gli-studenti">Note dopo le interazioni con gli studenti</a></li>
+<li><a class="reference internal" href="#criteri-di-valutazione">Criteri di valutazione</a><ul>
+<li><a class="reference internal" href="#dettagli-sul-colloquio-orale">Dettagli sul colloquio orale</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#note-dopo-le-interazioni-con-gli-studenti">Note dopo le interazioni con gli studenti</a><ul>
 <li><a class="reference internal" href="#come-organizzare-gli-sprint">Come organizzare gli sprint</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#possibili-domande-finali">Possibili domande finali</a></li>
+<li><a class="reference internal" href="#esempi-di-possibili-domande-finali">Esempi di possibili domande finali</a></li>
 </ul>
 </li>
 </ul>
