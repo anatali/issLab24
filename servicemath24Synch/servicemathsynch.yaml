@@ -1,0 +1,11 @@
+version: '3'
+services:
+  servicemathasynch:
+    image: docker.io/natbodocker/servicemathsynch:1.0
+    #image: servicemathsynch:1.0
+    ports:
+      - 8011:8011/tcp
+      - 8011:8011/udp
+      - 8088:8088 
+
+## docker-compose -f servicemathsynch.yaml  up
