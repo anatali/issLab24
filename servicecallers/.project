@@ -9,11 +9,11 @@
 	</natures>
 	<buildSpec>
 		<buildCommand>
-			<name>org.eclipse.buildship.core.gradleprojectbuilder</name>
+			<name>org.eclipse.jdt.core.javabuilder</name>
 			<arguments/>
 		</buildCommand>
 		<buildCommand>
-			<name>org.eclipse.jdt.core.javabuilder</name>
+			<name>org.eclipse.buildship.core.gradleprojectbuilder</name>
 			<arguments/>
 		</buildCommand>
 	</buildSpec>

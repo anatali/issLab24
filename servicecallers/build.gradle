@@ -85,6 +85,7 @@ application {
 
 jar {
         println("building jar")
+        duplicatesStrategy(DuplicatesStrategy.EXCLUDE)  //per via di locgback.xml quando si usa spring
         from sourceSets.main.allSource
         manifest {
                 attributes 'Main-Class': "$mainClassName"
