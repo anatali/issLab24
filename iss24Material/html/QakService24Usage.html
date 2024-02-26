@@ -17,8 +17,8 @@
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="QakService24WithInteraction" href="QakService24WithInteraction.html" />
-    <link rel="prev" title="QakActorsIntro24" href="QakActorsIntro24.html" /> 
+    <link rel="next" title="Primi passi operativi 24" href="Primipassioperativi24.html" />
+    <link rel="prev" title="ISS2024" href="ISS2024.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -27,10 +27,10 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="QakService24WithInteraction.html" title="QakService24WithInteraction"
+          <a href="Primipassioperativi24.html" title="Primi passi operativi 24"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="QakActorsIntro24.html" title="QakActorsIntro24"
+          <a href="ISS2024.html" title="ISS2024"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">QakService24Usage</a></li> 
@@ -45,7 +45,7 @@
   <section id="qakservice24usage">
 <h1>QakService24Usage<a class="headerlink" href="#qakservice24usage" title="Permalink to this heading">¶</a></h1>
 <p><span class="slide3">Progetto servicemath24Usage</span></p>
-<p><span class="slide">Indice:</span>  <a class="reference internal" href="QakService24Init.html#indice-service24"><span class="std std-ref">Indice Service24</span></a></p>
+<p><span class="slide">Indice:</span>  <span class="xref std std-ref">Indice Service24</span></p>
 <section id="il-servizio-servicemath">
 <h2>Il servizio servicemath<a class="headerlink" href="#il-servizio-servicemath" title="Permalink to this heading">¶</a></h2>
 <p>La nostra ditta (<code class="docutils literal notranslate"><span class="pre">disiUnibo</span></code>) ha realizzato un
@@ -54,11 +54,11 @@ richieste di calcolo dell’<code class="docutils literal notranslate"><span cla
 <p><span class="slide2">AVVERTENZA</span>: questo caso di studio si basa su uno schema di calcolo dei numeri di
 Fibonacci basato su  doppia ricorsione, in modo da poter apprezzare differenze temporali,
 anche sensibili, nella esecuzione del servizio.</p>
-<p>In questa fase ci occuperemo solo della <a class="reference internal" href="QakServiceSynch24.html#vista-esterna"><span class="std std-ref">Vista esterna</span></a> del servizio, con l’obiettivo di
+<p>In questa fase ci occuperemo solo della <a class="reference internal" href="Intro2024.html#vista-esterna"><span class="std std-ref">Vista esterna</span></a> del servizio, con l’obiettivo di
 capire come accedere al servizio e come utilizzarlo sia mediante browser sia mediante programmi.</p>
-<p>Dalls sezione <a class="reference internal" href="QakService24Init.html#qakservice24init"><span class="std std-ref">QakService24Init</span></a> inizieremo invece ad affrontare il tema della <a class="reference internal" href="QakServiceSynch24.html#vista-interna"><span class="std std-ref">Vista interna</span></a>
+<p>Dalls sezione <span class="xref std std-ref">QakService24Init</span> inizieremo invece ad affrontare il tema della <a class="reference internal" href="Intro2024.html#vista-interna"><span class="std std-ref">Vista interna</span></a>
 del servizio adottando il punto di vista del costruttore del servizio, introducendo anche elementi importanti
-della sua <a class="reference internal" href="QakServiceSynch24.html#vista-sommersa"><span class="std std-ref">Vista sommersa</span></a>.</p>
+della sua <a class="reference internal" href="Intro2024.html#vista-sommersa"><span class="std std-ref">Vista sommersa</span></a>.</p>
 <section id="servicemath-attivazione">
 <h3>servicemath: attivazione<a class="headerlink" href="#servicemath-attivazione" title="Permalink to this heading">¶</a></h3>
 <p>Il servizio (implementato in Java) può essere attivato in due modi:</p>
@@ -253,7 +253,7 @@ può inviare via <code class="docutils literal notranslate"><span class="pre">TC
 <p>Il servizio è utilizzabile anche inviando messaggi di richiesta alla porta <code class="docutils literal notranslate"><span class="pre">8011</span></code> mediante il protocollo <code class="docutils literal notranslate"><span class="pre">CoAP</span></code>.
 L’uso di <code class="docutils literal notranslate"><span class="pre">CoAP</span></code>:</p>
 <ol class="arabic">
-<li><p>promuove una <a class="reference internal" href="QakServiceSynch24.html#vista-esterna"><span class="std std-ref">Vista esterna</span></a> del servizio come <span class="slide2">risorsa</span> accessibile in stile <a class="reference internal" href="AppuntiAPIRest.html#id1"><span class="std std-ref">REST</span></a> su supporto
+<li><p>promuove una <a class="reference internal" href="Intro2024.html#vista-esterna"><span class="std std-ref">Vista esterna</span></a> del servizio come <span class="slide2">risorsa</span> accessibile in stile <span class="xref std std-ref">REST</span> su supporto
 <code class="docutils literal notranslate"><span class="pre">UDP</span></code> anzichè <code class="docutils literal notranslate"><span class="pre">TCP</span></code>. Nel nostro caso l’<a class="reference external" href="https://it.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a> del servizio-risorsa è</p>
 <blockquote>
 <div><div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nl">IP</span><span class="p">:</span><span class="mi">8011</span><span class="o">/</span><span class="n">ctxservice</span><span class="o">/</span><span class="n">servicemath</span>
@@ -278,7 +278,7 @@ L’uso di <code class="docutils literal notranslate"><span class="pre">CoAP</sp
 <li><p>il servizio è utilizzabile anche inviando messaggi di richiesta alla porta <code class="docutils literal notranslate"><span class="pre">8011</span></code> mediante il protocollo <code class="docutils literal notranslate"><span class="pre">MQTT</span></code>,
 il cui utilizzo`:</p>
 <ol class="arabic">
-<li><p>promuove una <a class="reference internal" href="QakServiceSynch24.html#vista-esterna"><span class="std std-ref">Vista esterna</span></a> del servizio come ente capace di pubblicare informazioni su topic.
+<li><p>promuove una <a class="reference internal" href="Intro2024.html#vista-esterna"><span class="std std-ref">Vista esterna</span></a> del servizio come ente capace di pubblicare informazioni su topic.
 Nel nostro caso il servizio riceve richieste sulla topic:</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">unibo</span><span class="o">/</span><span class="n">qak</span><span class="o">/</span><span class="n">servicemath</span>
 </pre></div>
@@ -335,6 +335,38 @@ alla porta <code class="docutils literal notranslate"><span class="pre">8088</sp
 <p>Il codice riportato su sito del docente può servire come punto di riferimento in caso di difficoltaà.</p>
 <section id="modifiche-al-file-build-gradle">
 <h3>Modifiche al file build.gradle<a class="headerlink" href="#modifiche-al-file-build-gradle" title="Permalink to this heading">¶</a></h3>
+<p>Rispetto a quanto introdotto in <a class="reference internal" href="Primipassioperativi24.html#un-primo-build-gradle"><span class="std std-ref">Un primo build.gradle</span></a> estendiamo l’insieme delle dipendenze:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dependencies</span> <span class="p">{</span>
+        <span class="o">/*</span>  <span class="n">MQTT</span> <span class="o">************************************************</span>  <span class="o">*/</span>
+        <span class="n">implementation</span> <span class="n">group</span><span class="p">:</span> <span class="s1">&#39;org.eclipse.paho&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="s1">&#39;org.eclipse.paho.client.mqttv3&#39;</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="s1">&#39;1.2.5&#39;</span>
+
+        <span class="o">/*</span> <span class="n">JSON</span> <span class="o">**************************************************</span> <span class="o">*/</span>
+        <span class="n">implementation</span> <span class="n">group</span><span class="p">:</span> <span class="s1">&#39;org.json&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="s1">&#39;json&#39;</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="s1">&#39;20220320&#39;</span>
+        <span class="n">implementation</span> <span class="s1">&#39;com.googlecode.json-simple:json-simple:1.1.1&#39;</span>
+
+        <span class="o">/*</span> <span class="n">COAP</span> <span class="o">**************************************************</span> <span class="o">*/</span>
+        <span class="n">implementation</span> <span class="n">group</span><span class="p">:</span> <span class="s1">&#39;org.eclipse.californium&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="s1">&#39;californium-core&#39;</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="s1">&#39;3.5.0&#39;</span>
+        <span class="n">implementation</span> <span class="n">group</span><span class="p">:</span> <span class="s1">&#39;org.eclipse.californium&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="s1">&#39;californium-proxy2&#39;</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="s1">&#39;3.5.0&#39;</span>
+
+        <span class="o">/*</span> <span class="n">LOG4J</span> <span class="o">************************************************</span> <span class="o">*/</span>
+        <span class="n">testImplementation</span> <span class="n">group</span><span class="p">:</span> <span class="s1">&#39;org.slf4j&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="s1">&#39;slf4j-simple&#39;</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="s1">&#39;2.0.7&#39;</span>
+
+        <span class="o">/*</span> <span class="n">HTTP</span> <span class="o">*************************************************</span> <span class="o">*/</span>
+        <span class="n">implementation</span> <span class="n">group</span><span class="p">:</span> <span class="s1">&#39;org.apache.httpcomponents&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="s1">&#39;httpclient&#39;</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="s1">&#39;4.5.13&#39;</span>
+        <span class="n">implementation</span> <span class="n">group</span><span class="p">:</span> <span class="s1">&#39;commons-io&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="s1">&#39;commons-io&#39;</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="s1">&#39;2.11.0&#39;</span>
+
+        <span class="o">/*</span> <span class="n">SOCKET</span><span class="o">.</span><span class="n">IO</span>  <span class="o">*************************************************</span> <span class="o">*/</span>
+        <span class="n">implementation</span> <span class="n">group</span><span class="p">:</span> <span class="s1">&#39;javax.websocket&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="s1">&#39;javax.websocket-api&#39;</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="s1">&#39;1.1&#39;</span>
+        <span class="o">//</span><span class="n">javax</span><span class="o">.</span><span class="n">websocket</span> <span class="n">api</span> <span class="ow">is</span> <span class="n">only</span> <span class="n">the</span> <span class="n">specification</span>
+        <span class="n">implementation</span> <span class="n">group</span><span class="p">:</span> <span class="s1">&#39;org.glassfish.tyrus.bundles&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="s1">&#39;tyrus-standalone-client&#39;</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="s1">&#39;1.9&#39;</span>
+
+
+        <span class="o">/*</span> <span class="n">UNIBO</span> <span class="o">**************************************************/</span>
+       <span class="n">implementation</span> <span class="n">name</span><span class="p">:</span> <span class="s1">&#39;2p301&#39;</span>
+        <span class="n">implementation</span> <span class="n">name</span><span class="p">:</span> <span class="s1">&#39;unibo.basicomm23-1.0&#39;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </section>
 <section id="un-primo-client-tcp">
 <h3>Un primo client TCP<a class="headerlink" href="#un-primo-client-tcp" title="Permalink to this heading">¶</a></h3>
@@ -436,7 +468,7 @@ il programma potrebbe eseguire altro codice</p></li>
 <tbody>
 <tr class="row-odd"><td><p><strong>ServiceCallerCoapNaive</strong></p>
 <p><span class="slide2">il servizio come risorsa REST</span></p>
-<p>Si veda <a class="reference internal" href="Principi.html#il-protocollo-coap"><span class="std std-ref">Il protocollo Coap</span></a> e <a class="reference internal" href="AppuntiTecnologie.html#interazioni-coap"><span class="std std-ref">Interazioni CoAP</span></a></p>
+<p>Si veda <span class="xref std std-ref">Il protocollo Coap</span> e <span class="xref std std-ref">Interazioni CoAP</span></p>
 <ol class="arabic simple">
 <li><p>Nome del servizio da usare</p></li>
 <li><p>Nome del client</p></li>
@@ -717,7 +749,7 @@ In questo caso l’interazione è vincolata dalle politche racchiuse nella pagin
 <section id="http-get">
 <h4>HTTP GET<a class="headerlink" href="#http-get" title="Permalink to this heading">¶</a></h4>
 <p>Per realizzare interazione <strong>Machine-To-Machine</strong> (<span class="remark">M2M</span>) è più opportuno usare una libreria che permetta
-l’uso di <a class="reference internal" href="AppuntiAPIRest.html#api-rest"><span class="std std-ref">API REST</span></a>.  Nel caso del nostro servizio però:</p>
+l’uso di <span class="xref std std-ref">API REST</span>.  Nel caso del nostro servizio però:</p>
 <ul class="simple">
 <li><p>Tutta la interazione di lvello applicativo è realizzata mediante <a class="reference internal" href="#interazione-con-websocket"><span class="std std-ref">WebSocket</span></a>.</p></li>
 <li><p>L’unico metodo HTTP-REST che funziona è il metodo <code class="docutils literal notranslate"><span class="pre">GET</span></code>, che restituisce la pagina HTML, come nel caso
@@ -814,7 +846,7 @@ dell’esempio che segue. (Di utile consultaszione: <a class="reference external
 <tbody>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ServiceCallerWSNaive</span></code></p>
 <ol class="arabic simple">
-<li><p>una classe decorata con questa <a class="reference internal" href="AppuntiTecnologie.html#annotazioni-java"><span class="std std-ref">Annotazione</span></a> viene trattata come un client WS</p></li>
+<li><p>una classe decorata con questa <span class="xref std std-ref">Annotazione</span> viene trattata come un client WS</p></li>
 <li><p>URI di accesso</p></li>
 <li><p>un metodo annotato con <code class="docutils literal notranslate"><span class="pre">&#64;OnMessage</span></code>  riceve le informazioni dal contenitore WS
 quando un messaggio (risposta) viene inviato all’endpoint dal service.</p></li>
@@ -893,8 +925,10 @@ quando un messaggio (risposta) viene inviato all’endpoint dal service.</p></li
 </table>
 </section>
 </section>
+<section id="il-servizio-come-sistema-osservabile">
+<h2>Il servizio come sistema osservabile<a class="headerlink" href="#il-servizio-come-sistema-osservabile" title="Permalink to this heading">¶</a></h2>
 <section id="osservabilita-via-ws">
-<h2>Osservabilità via WS<a class="headerlink" href="#osservabilita-via-ws" title="Permalink to this heading">¶</a></h2>
+<h3>Osservabilità via WS<a class="headerlink" href="#osservabilita-via-ws" title="Permalink to this heading">¶</a></h3>
 <p>Facciamo ora il seguente esperimento:</p>
 <ol class="arabic simple">
 <li><p>Manteniamo attivo il programma che realizza la <a class="reference internal" href="#interazione-con-websocket"><span class="std std-ref">Interazione con WebSocket</span></a></p></li>
@@ -902,11 +936,12 @@ quando un messaggio (risposta) viene inviato all’endpoint dal service.</p></li
 <li><p>Vedremo che il metodo <strong>onMessage</strong> (punto <code class="docutils literal notranslate"><span class="pre">3</span></code>)  scrive il messaggio <code class="docutils literal notranslate"><span class="pre">fibodone(gui,44,701408733,1684)</span></code></p></li>
 </ol>
 <p>Infatti il servizio invia aggiornamenti a tutti i client che sono connessi tramite WS.</p>
+<p>TODO: esempio di programma</p>
 <p>Ma vi sono altri modi per osservare il funzionamento del servizio, legati al fatto che l’attore
 che realizza il servizio invia aggiornamenti anche tramite CoAP e MQTT.</p>
 </section>
 <section id="osservabilita-via-coap">
-<h2>Osservabilità via CoAP<a class="headerlink" href="#osservabilita-via-coap" title="Permalink to this heading">¶</a></h2>
+<h3>Osservabilità via CoAP<a class="headerlink" href="#osservabilita-via-coap" title="Permalink to this heading">¶</a></h3>
 <table class="docutils align-default" style="width: 100%">
 <colgroup>
 <col style="width: 40%" />
@@ -992,7 +1027,7 @@ che realizza il servizio invia aggiornamenti anche tramite CoAP e MQTT.</p>
 </table>
 </section>
 <section id="osservabilita-via-mqtt">
-<h2>Osservabilità via MQTT<a class="headerlink" href="#osservabilita-via-mqtt" title="Permalink to this heading">¶</a></h2>
+<h3>Osservabilità via MQTT<a class="headerlink" href="#osservabilita-via-mqtt" title="Permalink to this heading">¶</a></h3>
 <p>Il servizio si rende osservabile via MQTT usando una topic
 di nome <code class="docutils literal notranslate"><span class="pre">servicemathouttopic</span></code> su cui fa  <span class="slide2">emit</span> di informazioni.</p>
 <p>Un client che voglia operare come osservare del servizio,
@@ -1074,6 +1109,7 @@ l’applicazione stessa.</p>
 </tbody>
 </table>
 </section>
+</section>
 <section id="il-cosa-e-il-come">
 <h2>Il COSA e il COME<a class="headerlink" href="#il-cosa-e-il-come" title="Permalink to this heading">¶</a></h2>
 <p>Avere introdotto un diverso programma per ogni specifico protocollo di interazione con il servizio
@@ -1142,9 +1178,12 @@ dipendente da una specifica tecnologia di comunicazione.</p>
 <li><a class="reference internal" href="#interazione-con-websocket">Interazione con WebSocket</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#il-servizio-come-sistema-osservabile">Il servizio come sistema osservabile</a><ul>
 <li><a class="reference internal" href="#osservabilita-via-ws">Osservabilità via WS</a></li>
 <li><a class="reference internal" href="#osservabilita-via-coap">Osservabilità via CoAP</a></li>
 <li><a class="reference internal" href="#osservabilita-via-mqtt">Osservabilità via MQTT</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#il-cosa-e-il-come">Il COSA e il COME</a></li>
 </ul>
 </li>
@@ -1153,13 +1192,13 @@ dipendente da una specifica tecnologia di comunicazione.</p>
   </div>
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="QakActorsIntro24.html"
-                          title="previous chapter">QakActorsIntro24</a></p>
+    <p class="topless"><a href="ISS2024.html"
+                          title="previous chapter">ISS2024</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="QakService24WithInteraction.html"
-                          title="next chapter">QakService24WithInteraction</a></p>
+    <p class="topless"><a href="Primipassioperativi24.html"
+                          title="next chapter">Primi passi operativi 24</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -1189,10 +1228,10 @@ dipendente da una specifica tecnologia di comunicazione.</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="QakService24WithInteraction.html" title="QakService24WithInteraction"
+          <a href="Primipassioperativi24.html" title="Primi passi operativi 24"
              >next</a> |</li>
         <li class="right" >
-          <a href="QakActorsIntro24.html" title="QakActorsIntro24"
+          <a href="ISS2024.html" title="ISS2024"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">QakService24Usage</a></li> 

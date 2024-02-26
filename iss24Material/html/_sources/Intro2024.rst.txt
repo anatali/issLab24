@@ -1,0 +1,733 @@
+.. role:: red 
+.. role:: blue 
+.. role:: brown 
+.. role:: magenta    
+.. role:: remark
+.. role:: worktodo
+.. role:: slide
+.. role:: slide1
+.. role:: slide2
+.. role:: slide3     
+.. role:: slidekp
+
+.. _Akka: https://akka.io/
+.. _Modello computazionale ad attori: https://en.wikipedia.org/wiki/Actor_model
+.. _Akka Actors: https://doc.akka.io//docs/akka/current/typed/guide/actors-motivation.html
+.. _Domain Specific Language: https://www.jetbrains.com/mps/concepts/domain-specific-languages/
+.. _API: https://it.wikipedia.org/wiki/Application_programming_interface
+.. _Metamodellazione: https://it.wikipedia.org/wiki/Metamodellazione
+.. _Ingegneria dei requisiti: https://it.wikipedia.org/wiki/Ingegneria_dei_requisiti#:~:text=L'ingegneria%20dei%20requisiti%20%C3%A8,e%20nell'ingegneria%20del%20software
+.. _waterfall : https://it.wikipedia.org/wiki/Modello_a_cascata
+.. _Metodologia agile : https://it.wikipedia.org/wiki/Metodologia_agile
+.. _SCRUM : https://it.wikipedia.org/wiki/Scrum_(informatica)
+.. _SCRUM Guide :   https://scrumguides.org/
+.. _AWS Lambda: https://aws.amazon.com/it/getting-started/hands-on/run-serverless-code/?pg=gs&sec=lyfa
+.. _FaaS: https://it.wikipedia.org/wiki/Function_as_a_service
+.. _AWS Services: https://it.wikipedia.org/wiki/Amazon_Web_Services
+.. _Lectures2024: ./LectureBologna2024.html
+
+====================================
+Intro2024
+====================================
+
+  
+
+---------------------------------------------
+72939 INGEGNERIA DEI SISTEMI SOFTWARE
+---------------------------------------------
+
+.. list-table:: 
+  :widths: 20,80
+  :width: 100%
+  
+  * - :slidekp:`INGEGNERIA`
+    - enfasi sulla costruzione consapevole e motivata di artefatti basata su analisi,
+      progettazione, sviluppo, distribuzione e manutenzione di prodotti
+  * - :slidekp:`SISTEMI`
+    - si veda :ref:`Sistema: cosa intendiamo?` 
+  * - :slidekp:`SOFTWARE`
+    - si veda :ref:`Il software` 
+  * - :slidekp:`M`
+    - corso di laurea magistrale, con finalità diverse da quello di un corso di laurea triennale:
+      la acquisizione di  conoscenza e pratiche è rivolta principalmente alla 
+
+      :remark:`formazione specialistica, alla progettazione e alla innovazione` 
+      
+      (di prodotto e di processo)
+ 
+:slide2:`LINKS`
+
+
+.. list-table:: 
+  :widths: 25,75
+  :width: 100%
+  
+  * - Insegnamento
+    - https://www.unibo.it/it/didattica/insegnamenti/insegnamento/2023/468003
+  * - Virtuale
+    - https://virtuale.unibo.it/course/view.php?id=35152 
+  * - Wooclap 
+    - https://app.wooclap.com/events/ISS24STARTING
+  * - GITHUB del corso 
+    - https://github.com/anatali/issLab24 
+  * - Lectures 
+    - `Lectures2024`_
+  
+
++++++++++++++++++++++++++++++++
+Intro2024 indice
++++++++++++++++++++++++++++++++
+
+
+#. :ref:`Sistema: cosa intendiamo?`
+#. :ref:`Sistema software`
+#. :ref:`Componenti software`
+#. :ref:`Archittettura software`
+#. :ref:`Metodologie per lo sviluppo del software`
+#. :ref:`Modelli e metamodelli`
+#. :ref:`Processi agili e incrementali`
+#. :ref:`Il corso ISS 2024<ISS2024>`
+ 
+ 
+
+:slide1:`0) SISTEMA?`
+
+---------------------------------------------
+Sistema: cosa intendiamo?
+---------------------------------------------
+
+- Sistema fisico ‘classico’ 
+- Sistema fisico quantistico  
+- Sistema meccanico  
+- Sistema logico (completo e/o consistente)
+- Sistema di elaborazione dell'informazione (hardware, computer)
+- Sistema software
+- ...
+- Sistema vivente
+
+Possiamo anche parlare di alcune proprietà generali:
+
+- Sistemi chiusi o sistemi aperti (alla informazione, energia, etc)
+- Sistemi statici o dinamici
+- Sistemi riduzionistici o sistemi olistici
+- Sistemi deterministici o non
+- Sistemi osservabili e/o interagibili
+- Sistemi concentrati e sistemi distribuiti
+- Sistemi autoorganizzanti
+- ...
+
+Un sistema  è tale perchè possiamo **distinguere** in esso più :remark:`componenti`,
+che occorre introdurre e definire in modo opportuno (come vedremo per i :ref:`Componenti software`).
+ 
+
+
+:slide1:`1) SISTEMA SOFTWARE`
+
+---------------------------------------------
+Sistema software
+---------------------------------------------
+
+In questa sede limiteremo la nostra attenzione ai sistemi software,
+intendendo per :remark:`software` *l’insieme dei programmi che possono essere impiegati su un sistema fisico 
+di elaborazione*.
+
++++++++++++++++++++++++++++++
+Il software
++++++++++++++++++++++++++++++ 
+
+Storicamente, il software nasce come l'insieme di **istruzioni-macchina** che deve essere
+esguito da un computer su un insieme di **dati** per realizzare un algoritmo.
+
+.. :slidekp:`1) SISTEMI SOFTWARE`
+
+L'evoluzione di linguaggi ad alto livello ha quasi subito visto la introduzione di
+costrutti capaci di esprimere semplici forme di aggregazioni di istruzioni e dati 
+(si veda :ref:`Componenti software di base`) che sono poi prpgressivamente evolute in veri e propri
+:ref:`Componenti software`.
+
+L'uso del termine :blue:`sistema software` enfatizza, 
+in genere, prodotti  complessi, costruiti o studiati in termini   
+della  organizzazione e della interazione tra i componenti che formano il prodotto. 
+
+Vi è quindi una stretta relazione con il concetto di :ref:`Archittettura software`  .
+
+.. struttura di un sistema
+
++++++++++++++++++++++++++++++++++++++++++
+Viste di un sistema software
++++++++++++++++++++++++++++++++++++++++++
+.. list-table:: 
+  :widths: 70,30
+  :width: 100%
+  
+  * - Un sistema software può essere descritto da diversi punti di vista.
+    -
+        .. image:: ./_static/img/Architectures/Viste.PNG
+                :align: center
+                :width: 80%  
+
+
+ 
+
+ 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Vista esterna
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. list-table:: 
+  :widths: 25,75
+  :width: 100%
+  
+  * - :slide2:`Vista esterna`
+    
+    - Il sistema  viene visto come una entità accessibile attraverso una  `API`_ 
+      (**Application Programming Interface**)
+      intesa come il punto di contatto che consente l'interazione tra codici in esecuzione
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Vista interna
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. list-table:: 
+  :widths: 25,75
+  :width: 100%
+  
+  * - :slide2:`Vista interna`
+    - Il sistema  viene visto come un insieme di enti computazionali (funzioni, oggetti, processi, etc.) che operano  
+      interagendo tra loro e con il mondo esterno (clienti, dispositivi, etc.) usando adeguati supporti
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Vista sommersa
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. list-table:: 
+  :widths: 25,75
+  :width: 100%
+  
+  * - :slide2:`Vista sommersa`
+    - Il sistema  è l'ultimo livello (:blue:`layer`) di uno stack i cui livelli sottostanti 
+      (librerie, infrastrutura, etc. ) forniscono il supporto alla esecuzione. 
+
+Nel corso degli anni sono stati proposti e usati diversi tipi di componenti software,
+che hanno contribuito a formare lo :remark:`spazio concettuale` dei linguaggi di programmazione 
+di alto livello.
+
+
+
+:slide1:`2) COMPONENTI SOFTWARE`
+
+---------------------------------------------
+Componenti software 
+---------------------------------------------
+In generale, il concetto di :remark:`componente software` può essere definito come:
+
+:slide3:`una unità autonoma e riusabile di codice che svolge una funzione specifica all'interno di un 
+sistema software, promuovendo la riusabilità, la modularità e la manutenibilità del codice`
+
+Questa idea di base ha subito una profonda evoluzione nel corso degli anni, tanto che
+occrrrebbe un corso ad hoc per descriverla. 
+
+Trascurando molti rilevanti aspetti, noi cercheremo di 
+delienarne alcuni punti importanti sia sul piano concettuale, sia sul piano pragamatico
+delle moderne pratiche di costruione di sistemi sofwtare.
+
+https://mia-platform.eu/it/blog/creare-componenti-software-componibili/
+
++++++++++++++++++++++++++++++++++++++++++++++++
+Componenti software di base
++++++++++++++++++++++++++++++++++++++++++++++++
+
+I linguaggi di programmazione più diffusi permettono di costruire sistemi software 
+composti da due specie di componenti-base:
+
+.. list-table:: 
+  :widths: 20,80
+  :width: 100%
+  
+  * -   
+
+       .. image:: ./_static/img/Actors24/funz.PNG
+                :align: center
+                :width: 70%  
+
+    -  
+      Una funzione rappresenta un componente che permette la definizione parametrica di 
+      istruzioni e la loro esecuzione mediante trasferimento di controllo.
+
+      *Linguaggio di riferimento*: ``JavaScript`` (``Node.js``)
+  * -   
+
+       .. image:: ./_static/img/Actors24/obj.PNG
+                :align: center
+                :width: 80%  
+
+    -  
+      Un oggetto incapsula uno stato e un insieme di funzioni (metodi), la cui esecuzione
+      avviene mediante chiamata di procedura (trasferimento di controllo).
+
+      *Linguaggio di riferimento*: ``Java``.
+
+      Un oggetto può essere dotato di comportamento autonomo incapsulando un **Thread**.
+
+
++++++++++++++++++++++++++++++++++++++++
+Oltre gli oggetti
++++++++++++++++++++++++++++++++++++++++
+
+- Lo sviluppo delle reti informatiche e di Internet ha promosso la costruzione di **sistemi software 
+  distribuiti** su più nodi di elaborazione, su ciascuno dei quali possono essere eseguiti
+  programmi espressi medianti linguaggi diversi.
+
+- La costruzione di :remark:`sistemi software distributi eterogenei` è resa possibile dall'uso 
+  (entro funzioni ed oggetti) di protocolli di comunicazione (come ``UDP, TCP, HTTP, MQTT, CoAP``, etc.)
+  e richiede logicamente componenti  capaci di interagire 
+  (spesso in modo ``asincrono``) mediante :slide2:`scambio di messaggi` e non più mediante trasferimento 
+  di controllo con chiamate di procedura.
+
+------------------------------------------
+Gli attori
+------------------------------------------
+
+- I linguaggi di programmazione più diffusi non hanno ancora introdotto componenti intrinsecamente capaci 
+  di interagire a messaggi, evidenziando una lacuna che può essere colmata attraverso l'introduzione 
+  di **librerie**, come ad esempio la libreria `Akka`_ -> per Java/Scala, che trae ispirazione dal 
+  `Modello computazionale ad attori`_ ->.
+
+Le motivazioni introdotte in `Akka Actors`_ -> sono condivise da molti e verranno prese anche qui come riferiemto.
+
+- Un modo alternativo, rispetto all'uso di una libreira, per introdurre componenti che operano come attori, 
+  è quello di definire un linguaggio di programmazione custom,
+  con un adeguato livello di astrazione, avvalendosi di tecniche sviluppate 
+  nel campo dei  :ref:`Domain Specific Languages`.
+
+Questo approccio è stato adottatto per definire il
+linguaggio denominato :ref:`qak<QakActors24>`, con lo scopo di esprimere concetti di alto livello 
+(technology-independent) per definire componenti software capaci di interagire attraverso
+scambio di messaggi.
+
+Il linguaggio :ref:`qak<QakActors24>`
+
+- intende promuovere la definzione di :ref:`modelli eseguibili<Modelli e metamodelli>`  di un sistema software,
+  da utilizzare durante l’analisi di un problema e il progetto e lo sviluppo di prototipi di sistemi distribuiti.
+  In molti casi, può anche essere usato  per costruire il prodotto finale;
+
+- non è un linguaggio general-purpose, ma piuttosto un 
+  :slide2:`meta-modello` (si veda `Metamodellazione`_ ->) per 
+  la definizione e costruzione di architetture software distribuite;
+
+- introduce componenti software che portano in primo piano
+  l'idea di :ref:`attore<QakActors24>` e di :ref:`interazione<Interaction>` tra attori, 
+  lasciando sullo sfondo (nella :ref:`parte sommersa<Vista sommersa>`) i dettagli implementativi,
+  grazie alla :ref:`Qak factory`.
+
++++++++++++++++++++++++++++++++++++
+Attori qak
++++++++++++++++++++++++++++++++++++
+ 
+
+.. list-table:: 
+  :widths: 30,70
+  :width: 100%
+  
+ 
+  * -   
+
+       .. image:: ./_static/img/Actors24/actor.PNG
+                :align: center
+                :width: 70%  
+
+    -  
+      Un :ref:`attore<Actors24: l'attore>` è un componente software dotato di comportamento autonomo,
+      capace di ricevere e trasmettere messaggi 
+      e di gestire i messaggi in modo da porre in esecuzione funzioni e/o oggetti. 
+
+      .. Può operare in modo :ref:`message-driven<Il comportamento di un attore>` o  come un :ref:`FSM<Automi a stati finiti>` (*Finite State Machine*).
+
+ 
+
+Un sistema basato su attori :slide2:`esclude la presenza di memoria conune`  tra componenti,
+prefigurando la possibilità che i componenti di uno stesso sistema  possano eseere distribuiti
+su nodi di elaborazione diversi.
+
+Per rendere concreta questa psssibilità, occorre l'introduzione di server e l'uso di protocolli
+di comunicazione con cui rendere possibile l'invio di messaggi avvalendosi delle infrastrutture di rete.
+
+Per rendee questo dettaglio tecnologico trasparente a livello applicativo, il 
+linguaggio :ref:`qak<QakActors24>` introduce il concetto di :ref:`contesto<Contesti>` come 
+elemento capace di abilitare il passaggio da conmunicazioni locali a comunicazione renote.
+
++++++++++++++++++++++++++++++++++++
+Contesti qak
++++++++++++++++++++++++++++++++++++
+
+
+.. list-table:: 
+  :widths: 30,70
+  :width: 100%
+  
+ 
+   
+  * -  
+       .. image:: ./_static/img/Actors24/context.PNG
+                :align: center
+                :width: 100%  
+
+    -  Un :ref:`contesto<QakActors24>` è un componente software 
+       che gestisce (in modo sommerso) ``N>0`` :ref:`Attori`, **abilitandoli** alla ricezione e trasmissione
+       di messaggi :slide2:`via rete`  attraverso l'introduzione di un server TCP e un server CoAP.
+ 
+       La parte sommarsa è fornita da una libreria che crea la :ref:`Qak infrastructure`.
+
+
+:slide1:`3) ARCHITETTURA SOFTWARE`
+
+---------------------------------------
+Archittettura software
+---------------------------------------
+
+Una volta accettato che un sistema software sia composto da un insieme di componenti di una qualche
+natura, il concetto di :ref:`architettura<Architetture>` assume, dagli anni ``90`` del secolo scorso
+in avanti, un ruolo progressivamente più importante.
+
+
+++++++++++++++++++++++++++++++++++++++++
+Evoluzione delle architetture
+++++++++++++++++++++++++++++++++++++++++
+
+Si sviluppano e si affermano  
+nuovi modi di concepire le architetture software, partendo non più da compoenenti come oggetti, ma 
+da componenti orientati al `Modello computazionale ad attori`_ ->
+e che  assumono la forma di **servizi**.
+
+.. list-table:: 
+  :widths: 40,60
+  :width: 100%
+ 
+  * -  
+      L'evoluzione delle architetture software può essere riassunta 
+      in una progressiva trasformazioni di un sistema monolitico in un sistema composto 
+      da :ref:`micro servizi` e :ref:`nano servizi`.
+    
+    -
+       .. image:: ./_static/img/AWS/evoluitionSW.PNG
+          :align: center
+          :width: 100%  
+
+      Un :ref:`attore<Attori>`  :ref:`qak<QakActors24>`  può essere visto 
+      come un :slide2:`micro-servizio`, con precise responsabilità,
+      incluso in un :ref:`contesto<Contesti>` allocato su un nodo 
+      (fisico o virtuale) di elaborazione.
+
+ 
+
+++++++++++++++++++++++++++++++++++++++++
+Architetture di integrazione
+++++++++++++++++++++++++++++++++++++++++
+
+.. list-table:: 
+  :widths: 40,60
+  :width: 100%
+ 
+  * -  Nascono anche nuovi approcci alle
+    
+       :slide2:`architetture di integrazione`
+
+       che consentano il flusso di dati tra sistemi e applicazioni software.
+
+
+    -
+       .. image:: ./_static/img/AWS/EvolutionProgModels.PNG
+          :align: center
+          :width: 100%  
+       
+       Nelle architetture di integrazione a microservizi,
+       un ruolo-chiave è relativo ai diversi modi con cui è possibile far interagire gli attori
+  
+++++++++++++++++++++++++++++++++++++++++
+nano servizi
+++++++++++++++++++++++++++++++++++++++++
+
+Il concetto di **nano-servizio** viene introdtto da `AWS Lambda`_ ->, come forma di `FaaS`_ ->
+(:remark:`Function as a service`) in cui le  :ref:`Funzioni`
+offrono servizi accessibili in rete, liberando il loro progettista 
+dalla necessità di occuparsi delle infrastrutture e della gestione dei server.
+
+Le funzioni `AWS Lambda`_ -> possono anche agire come **collante** tra `AWS Services`_ -> concepiti 
+come sorgenti di :remark:`eventi` a cui le funzioni stesse possono reagire.
+ 
+- Il linguaggio :ref:`qak<QakActors24>` permette di **modellare la struttura logica** di architetture di questo tipo
+  e di ragionare sulla loro possibile organizzazione.
+
+- Anche in questi caso il progettista non dovrà occuparsi delle infrastrutture e della gestione dei server,
+  che viene realizata in modo sommerso nella :ref:`Qak infrastructure`.
+  Ovviamente sarenno assenti le features legate alla scalabilità etc. ma l'intendo 
+  è di usare :ref:`qak<QakActors24>` anche nella progettazione e nello sviluppo
+  di applicazioni IOT e non solo cloud.
+
+
+
+:slide1:`4) LA PRODUZIONE DEL SOFTWARE`
+
+
+---------------------------------------------
+Metodologie per lo sviluppo del software
+---------------------------------------------
+
+La necessità/opportunità di definire un'appropriata architettura del software è strettamente correlata
+al processo di *definire, documentare e mantenere* i :slide2:`requisiti` del sistema.
+
+++++++++++++++++++++++++++++++++++
+Cosa e come
+++++++++++++++++++++++++++++++++++
+
+Mentre l'architettura del software si rivolge allo "spazio della soluzione" o al :slidekp:`"come"`, 
+la  `Ingegneria dei requisiti`_ -> si rivolge allo "spazio del problema" o al :slidekp:`"cosa"`. 
+ 
+
+.. - Si sviluppano e si affermano metodologie agili dello sviluppo del software 
+.. - Tra queste SCRUM: si veda `SCRUM Guide`_. 
+.. - Ma c'è ancora bisogno di questo con i :slidekp:`nuovi strumenti di AI`? Discutiamo :ref:`UsiamoChatGPT`.
+
+Per costruire (capendo e motivando quello che si fa) occorre avere:
+
+-  un :ref:`metodo di sviluppo<Metodologie per lo sviluppo del software>`
+-  un insieme (evolutivo) di :ref:`Principi ispiratori` di rifermento 
+-  un modo :remark:`compatto ed efficace di descrivere` problematiche e scelte progettuali. 
+   
+   Auspicabilmente, questa 
+   descrizione dovrebbe essere **comprensibile sia agli esseri umani sia alla macchina**, al fine di evitare 
+   ambiguità e errori di 'trascrizione'. L'uso di modelli :ref:`qak<QakActors24>` è motivata da questa necessità.
+
+
+.. Noi cercheremo di fissare un punto di riferimento introducendo un motto e attenendoci a  consolidati principi ispiratori.
+
+
+.. list-table:: 
+  :widths: 62,38
+  :width: 100%
+
+  * - :slide2:`Processi e conoscenza` 
+    
+      - Il lavoro di diversi attori (*committente, product-owner, analista, progettista, programmatore, etc.*)
+        si basa du un insieme di **assunzioni, conoscenze e decisioni** che rimangono spesso implicite 
+        all'iterno di un processo di produzione
+      - Occorre :remark:`esprimere in modo esplicito e non ambiguo` tali assunzioni, conoscenze e decisioni
+
+    - :slide2:`Modelli`
+
+      - Un modo tradizionalmente usato nell'ingegneria è la introduzione di **modelli del sistema** espressi 
+        con un linguaggio 'formale',
+        cioè dotato di sintassi e semantica comprensibile sia all'uomo sia alla macchina.
+
+
+
+Ma c'è ancora bisogno di questo con i :slide2:`nuovi strumenti di AI`? Perchè non  :ref:`UsiamoChatGPT` ?.
+
+:slide1:`5) IL RUOLO DEI MODELLI`
+
+++++++++++++++++++++++++++++++++++
+Modelli e metamodelli
+++++++++++++++++++++++++++++++++++
+
+:slide2:`Modello=rappresentazione dell'essenza di un sistema`
+
+.. list-table::
+  :widths: 60,40
+  :width: 100%
+  
+  * - .. image:: ./_static/img/Intro/Modello.PNG
+         :width: 100%
+         :align: center
+    - .. image:: ./_static/img/Intro/ModelloNumeri.PNG
+         :width: 100%
+         :align: center
+
+Si veda: :ref:`Modelli` nella sezione :ref:`Principi`.
+
+
+
+++++++++++++++++++++++++++++++++++
+Processi BottomUp e TopDown
+++++++++++++++++++++++++++++++++++
+
+
+Nello sviluppo 'naive' del software la prassi è quella di procedere in modo :slide2:`bottom-up`, procedendo **per 
+sintesi**,  a partire dai componenti software a disposiione.
+
+Nella costruzione di sistemi meccanici o di costruzioni edili questo metodo è ovviamente impossibile:
+occorre procedre in modo :slide2:`top-down` partendo dai requsiti e dalle problematiche che questi requisiti
+introducono.
+
+La costruzione del prodotto deve essere preceduta 
+da un **progetto** 'sulla carta', a sua volta preceduto da una 
+accurata **analisi del problema**, per evitare che quanto costruito non soddisifi i requisiti o, peggio,
+non funzioni o crolli.
+
+L'assenza di una accurata fase di analisi e di progettazione nel campo del software induce 
+molti a pensare che i 'programmatori'  non siano veri ingegneri.
+
+La figura che segue mostra come sia possibile contrastare questo (immeritato) giudizio 
+facendo sì che anche nello sviluppo del software la fase 
+del **COME** (la codifica) sia **prededuta** da una opportuna analisi del **COSA** e da un **progetto**.
+
+
+
+.. image:: ./_static/img/Intro/TopDownHowWhat.png
+   :align: center
+   :width: 70%
+
+
+
+
+.. .. image:: ./_static/img/Intro/Motto.png 
+    
++++++++++++++++++++++++
+Il  motto
++++++++++++++++++++++++
+
+Dall figura si evince un motto di riferimento anche per chi produce software:
+
+:slide3:`Non c'è codice senza progetto, non c'è progetto senza analisi del problema, non c'è problema senza requisiti`
+
++++++++++++++++++++++++
+Abstraction gap
++++++++++++++++++++++++
+
+
+
+Con il termine :blue:`abstraction gap` intendiamo denotare
+la **distanza** tra le mosse di base fornite da un automa o da un linguaggio di 
+programmazione (general-purpose) e quelle necessarie per affrontare
+in modo adeguato un problema applicativo.
+
+Un abstraction gap elevato induce ad impostare il processo di produzione in modo :blue:`TopDown`,
+cercando di trovare le strategie migliori per colmare il gap, **scegliendo o sviluppando**
+le tecnologie disponibili più opportune, che non sono più un assunto a-priori.
+
+.. list-table::
+  :widths: 60,40
+  :width: 100%
+  
+  * - .. image:: ./_static/img/Intro/TopDownBottomUp1.PNG
+    - .. image:: ./_static/img/Intro/topDown.png
+
+.. :slide2:`Principi ispiratori`
+
++++++++++++++++++++++++
+Principi ispiratori
++++++++++++++++++++++++
+
+Dovendo far precedere la codifica a un progetto,
+si può fare ricorso a un insieme di consolidati :ref:`Principi`,
+tra cui in particolare:
+
+- :ref:`Design patterns`
+- :ref:`SOLID`
+- :ref:`12 Factor App`
+- :ref:`Architettura esagonale`
+
+Un punto-chiave del ribaltamento del bottum-up a favore del top-down è che il progettista software:
+
+-  è pienemaente consapevole e padrone delle tecnologie edegli strumenti di produzione, ma ...
+-  ... pone al centro della sua attenzione il problema da affrontare
+   nell'ambito di un preciso :blue:`(modello del) dominio` applicativo.
+- sfrutta la peculiarità del software (rispetto ai sistemi meccanici o edili) di essere 
+  facilmente modificabile adottando una `Metodologia agile`_ di tipo **iterativo e incrementale** di sviluppo.
+ 
+.. image:: ./_static/img/Intro/agileEMDE.PNG
+   :align: center
+   :width: 70%
+
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Evoluzione dei processi di produzione
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. I processi  `waterfall`_ dell'ingegneria tradizionale, lasciano il posto a processi basati su
+.. `Metodologia agile`_, di tipo **iterativo** e **incrementale**.
+
+Nell'**ingegneria tradizionale** (meccanica, edile, etc) il costo del materiale costituisce spesso più del 50% 
+del costo totale di un progetto, mentre nella produzione del software è il costo del lavoro ad essere preponderante: 
+si parte dal 70% fino a giungere quasi al 100%. 
+      
+L'ingegneria tradizionale ha anche sperimentato che un cambiamento 
+di costo 1 in fase di analisi potrebbe costare 1000 in fase di produzione.
+
+ .. list-table::
+  :widths: 60,40
+  :width: 100%
+  
+  * - .. image:: ./_static/img/Intro/WaterFall.PNG
+        :width: 100%
+    - Per questo l'ingegneria classica diversifica le fasi di produzione delineando un ben noto flusso di lavoro 
+      (*workflow*) costituito da un insieme di passi (o tasks): 
+
+      #. definizione e analisi dei requisiti
+      #. analisi del problema
+      #. progetto della soluzione
+      #. realizzazione del prodotto
+      #. collaudo 
+      #. messa in opera e manutenzione
+
+
+.. ./_static/img/Intro/Spiral.PNG
+
+:slide2:`Waterfall poco adatto per il software`
+
+Nella costruzione del software, il modello a cascata (`waterfall`_ ) porta spesso ad 
+alti costi di produzione del software spesso dovuti al modello a cascata, 
+a causa delle specifiche poco complete e ai molti interventi successivi per introdurre funzionalità 
+non previste in partenza. 
+
+Capita, quindi, che le pecche del modello vadano a ricadere sulla **manutenzione**, causandone costi crescenti, 
+o che, al contrario, si operi con una manutenzione sommaria producendo un software con un'implementazione 
+che diverge dalle specifiche dei requisiti.
+
+La letteratura  (si veda ad esempio `SEDisasters`_) riporta inoltre casi di fallimento di un numero 
+sorprendentemente rilevante di progetti software, evidenziando un insieme di cause principali:
+
+- Cattiva specifica e gestione dei requisiti.
+- Comunicazioni ambigue ed imprecise tra i diversi attori del processo di produzione 
+  (utenti, manager, analisti, progettisti, implementatori).
+- Architetture finali del sistema fragili (non robuste).
+- Inconsistenze tra requisiti, progetto e realizzazione.
+- Collaudi inadeguati o insufficienti.
+- Inadeguata capacità di valutare e gestire i rischi e di controllare la propagazione dei cambiamenti.
+
+Queste potenziali fonti di insuccesso hanno amplificato la loro influenza nel momento in cui 
+l'intera disciplina ha vissuto la :blue:`transizione` da una dimensione prevalentemente :blue:`algoritmico-trasformazionale` 
+a un dimensione fortemente :blue:`sistemistico-architetturale`.
+
+:slide1:`6) Processi agili`
+
++++++++++++++++++++++++++++++++++
+Processi agili e incrementali
++++++++++++++++++++++++++++++++++
+
+Oggi si ritiene che un approccio :blue:`INCREMENTALE` sia  indispensabile per aggredire la complessità del problema e per
+mettere in luce in primis gli aspetti
+PIU' IMPORTANTI e PIU' CRITICHE senza perdersi in dettagli che possono distogliere
+l'attenzione per formare un quadro generale di riferimento.
+
+L'approccio :blue:`AGILE` descritto in `SCRUM Guide`_ è oggi un punto di riferimento.
+
+
+
+.. image:: ./_static/img/Intro/AgileDevelop.PNG
+   :align: center
+   :width: 90%
+  
+
+I vari SPRINT dovrebbero effettuare uno ZOOMING entro MACRO-COMPONENTI
+innescando un processo ITERATIVO di analisi, progetto , sviluppo e testing di
+quel componente o del SOTTOSISTEMA  che lo SPRINT vuole costruire.
+
+Si veda anche: :ref:`Come organizzare gli sprint`
+
+
+ 
+:slide2:`NEXT-->` : :ref:`ISS2024` 
+
+.. delle  :ref:`Lezioni 2024`

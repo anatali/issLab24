@@ -1,0 +1,224 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>ProdConsSystem &#8212; iss24 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="QakActors24" href="QakActors24.html" />
+    <link rel="prev" title="QakService24WithInteraction" href="QakService24WithInteraction.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="QakActors24.html" title="QakActors24"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="QakService24WithInteraction.html" title="QakService24WithInteraction"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">ProdConsSystem</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="prodconssystem">
+<h1>ProdConsSystem<a class="headerlink" href="#prodconssystem" title="Permalink to this heading">¶</a></h1>
+<p><span class="slide3">Progetto ProdCons</span></p>
+<p>Un caso di studio con cui iniziare ad affrontatre l’analisi e la progettazione di sistemi distribuiti
+è un sistema formato da a <code class="docutils literal notranslate"><span class="pre">N</span></code> <em>Produttori</em> che inviano informazione a <code class="docutils literal notranslate"><span class="pre">1</span></code> <em>Consumatore</em>.</p>
+<section id="prodscons-requisiti">
+<h2>ProdsCons: requisiti<a class="headerlink" href="#prodscons-requisiti" title="Permalink to this heading">¶</a></h2>
+<p>Costruire un sistema software distribuito costituio da <code class="docutils literal notranslate"><span class="pre">N</span></code> (<code class="docutils literal notranslate"><span class="pre">N&gt;=1</span></code>) Produttori che
+inviano informazione a  <code class="docutils literal notranslate"><span class="pre">1</span></code> Consumatore, il quale deve elaborare tale informazione.</p>
+<p>La dislocazione dei componenti sui nodi di elaborazione può essere:</p>
+<ul class="simple">
+<li><p><span class="brown">OneNode</span>: tutti i componenti operano nello stesso nodo;</p></li>
+<li><p><span class="brown">TwoNodes</span>: gli <code class="docutils literal notranslate"><span class="pre">N</span></code> <em>Produttori</em> operano in uno stesso nodo, mentre il <em>Consumatore</em> opera in un diverso nodo;</p></li>
+<li><p><span class="brown">ManyNodes</span>: il <em>Consumatore</em> opera in suo proprio nodo, mentre i <em>Produttori</em> operano su <code class="docutils literal notranslate"><span class="pre">K</span></code>  nodi diversi (<code class="docutils literal notranslate"><span class="pre">1&lt;K&lt;=N</span></code>).</p></li>
+</ul>
+</section>
+<section id="prodscons-analisi-dei-requisiti">
+<h2>ProdsCons: analisi dei requisiti<a class="headerlink" href="#prodscons-analisi-dei-requisiti" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>I Produttori e il Consumatore sono enti computazionali attivi e autonomi.</p></li>
+<li><p>I requisiti non stabiliscono come l’informazione debba essere trasmessa e ricevuta.</p></li>
+<li><p>I Produttori e il Consumatore potrebbero essere realizzati con linguaggi di programmazione diversi.</p></li>
+</ul>
+</section>
+<section id="prodscons-analisi-del-problema">
+<h2>ProdsCons: analisi del problema<a class="headerlink" href="#prodscons-analisi-del-problema" title="Permalink to this heading">¶</a></h2>
+<p><span class="slide2">Interazione logica</span></p>
+<ul class="simple">
+<li><p>I <em>Producer</em> possonon inviare informazione in forma <strong>fire-and-forget</strong>. Va però osservato che
+l’uso del protocollo <code class="docutils literal notranslate"><span class="pre">HTTP</span></code> o <code class="docutils literal notranslate"><span class="pre">CoAP</span></code> implica sempre l’invio di informazione di
+<strong>risposta</strong> dal <em>Consumer</em> al <em>Producer</em>.</p></li>
+<li><p>i requisiti non precisano questo aspetto e l’analisi non ha detto nulla in merito: è opportuno
+<span class="slidekp">sottoporre la questione in modo esplicito al comittente</span>.</p></li>
+</ul>
+<p><span class="slide2">Architettura logica</span></p>
+<p>L’architettura logica del prodotto da realizzare può essere impostata come un sistema in cui:</p>
+<ol class="arabic">
+<li><p>il <em>Consumer</em> opera come un server. e i <em>Producer</em> operano come client: <span class="slide3">Produttori connessi al Consumatore</span></p>
+<p>Sembra infatti <strong>inopportuno</strong> pensare che il <em>Consumer</em> ottenga informazione ‘chidendola’ ai <em>Producer</em>.
+In quati caso, i <em>Producer</em> dovrebbero operare come server e il <em>Consumer</em> come client.</p>
+<p>Una architettura client-server induce a introdurre una conessione in cui i <em>Producer</em> devono conoscere
+i valori <code class="docutils literal notranslate"><span class="pre">hostAddr:entry</span></code> del (server del) <em>Consumer</em> e il <em>Consumer</em> non deve conoscere nulla dei <em>Producer</em>.</p>
+<p><em>Esempio nel mondo reale</em>: una persona suona il campanello di una abitazione.</p>
+</li>
+<li><p>un <em>Producer</em> depone l’informazione su un ‘oggetto intermediario’
+da cui il <em>Consumer</em> può prelevarla: <span class="slide3">Schema publish-subscribe</span>.</p>
+<p>In un sistema concentrato, questo intermediario sarebbe un Buffer, mentre in un sistema distribuito
+potrebbe essere un Broker MQTT.</p>
+<p>Usando MQTT, i <em>Producer</em> possono depositare (<strong>publish</strong>) le loro informazioni sulla <strong>topic</strong> su cui ‘sanno’ che il <em>Consumer</em>
+fa una <strong>subscribe</strong>.</p>
+<p><em>Esempio nel mondo reale</em>: un componente pone una lettera in una cassetta postale da cui un altro componente
+può prelevarla.</p>
+</li>
+<li><p>il <em>Consumer</em> opera come <strong>observer</strong> dei <em>Producer</em>: dopo avere prodotto
+informazione, un <em>Producer</em> fa in modo che essa risulti percepibile dal <em>Consumer</em>:
+<span class="slide3">Produttori come emettitori di eventi</span>.</p>
+<p><em>Esempio nel mondo reale</em>:  una ambulanza accende la sirena.</p>
+</li>
+</ol>
+<section id="scenari">
+<h3>Scenari<a class="headerlink" href="#scenari" title="Permalink to this heading">¶</a></h3>
+<p>Come analsti, <span class="slidekp">discutiamo con il committente e con il responsabile aziendale</span> queste alternative.</p>
+<p>Un possibile risulatoi della riunione è che:</p>
+<ul class="simple">
+<li><p>tutti gli scenari sono possibili e andrebbero realizzati/sperimentati</p></li>
+<li><p>si ritiene opportuno (inziare con lo) sviluppare il primo scenario usando lo schema 1 (<em>Produttori connessi al Consumatore</em>)
+e il protocollo <code class="docutils literal notranslate"><span class="pre">TCP</span></code>.</p></li>
+</ul>
+</section>
+</section>
+<section id="prodscons-progettazione">
+<h2>ProdsCons: progettazione<a class="headerlink" href="#prodscons-progettazione" title="Permalink to this heading">¶</a></h2>
+<p>Dopo l’analisi dei requisiti e del problema, si tratta di realizzare un <strong>sistema client-server</strong>
+in cui il <em>Consumer</em> funge da server-TCP e ogni <em>Producer</em> opera come un client-TCP.</p>
+<p>Come progettisti osserviamo che:</p>
+<ol class="arabic">
+<li><p>possiamo usare Java come linguaggio di programmazione, insieme a una libreria di supporto
+relativa al protocollo.</p></li>
+<li><p>possiamo usare Java come linguaggio di programmazione e la libreria <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23"><span class="std std-ref">unibo.basicomm23</span></a>
+che permette di velocizzare la progettazione e la realizzazione del prodotto.</p>
+<p>L’uso di questa libreria promuove condice basato sul concetto di
+<a class="reference internal" href="Interaction.html#interaction"><span class="std std-ref">Interaction</span></a> che facilita la possibilità di modifica del protocollo.</p>
+<p><span class="slide2">Architettura di progetto</span></p>
+<p>L’architettura logica di progetto può essere schematizzata come in figura:</p>
+<a class="reference internal image-reference" href="_images/ProdCons.png"><img alt="_images/ProdCons.png" class="align-center" src="_images/ProdCons.png" style="width: 100%;" /></a>
+</li>
+<li><p>dopo la produzione in ‘tempi brevi’ del primo prototipo, potrebbe essere utile un refactoring del codice
+usando gli <a class="reference internal" href="unibo.basicomm23.html#abilitatori-di-comunicazione"><span class="std std-ref">Abilitatori di comunicazione</span></a> di <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23"><span class="std std-ref">unibo.basicomm23</span></a>.</p>
+<p>Il vantaggio consiste nella definizione di un prodotto che potrebbe costitire la base con cui affrontare in tempi
+brevi lo sviluppo di prodotti secondo gli altri <a class="reference internal" href="#scenari"><span class="std std-ref">Scenari</span></a>.</p>
+<blockquote>
+<div><a class="reference internal image-reference" href="_images/ProdConsEspansa.png"><img alt="_images/ProdConsEspansa.png" class="align-center" src="_images/ProdConsEspansa.png" style="width: 100%;" /></a>
+</div></blockquote>
+</li>
+</ol>
+<section id="prodsconsnaive">
+<h3>ProdsConsNaive<a class="headerlink" href="#prodsconsnaive" title="Permalink to this heading">¶</a></h3>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">ProdConsSystem</a><ul>
+<li><a class="reference internal" href="#prodscons-requisiti">ProdsCons: requisiti</a></li>
+<li><a class="reference internal" href="#prodscons-analisi-dei-requisiti">ProdsCons: analisi dei requisiti</a></li>
+<li><a class="reference internal" href="#prodscons-analisi-del-problema">ProdsCons: analisi del problema</a><ul>
+<li><a class="reference internal" href="#scenari">Scenari</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#prodscons-progettazione">ProdsCons: progettazione</a><ul>
+<li><a class="reference internal" href="#prodsconsnaive">ProdsConsNaive</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="QakService24WithInteraction.html"
+                          title="previous chapter">QakService24WithInteraction</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="QakActors24.html"
+                          title="next chapter">QakActors24</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/ProdConsSystem.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="QakActors24.html" title="QakActors24"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="QakService24WithInteraction.html" title="QakService24WithInteraction"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">ProdConsSystem</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>

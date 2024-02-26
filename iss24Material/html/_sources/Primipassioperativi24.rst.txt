@@ -1,0 +1,266 @@
+.. role:: red 
+.. role:: blue 
+.. role:: brown 
+.. role:: magenta    
+.. role:: remark
+.. role:: worktodo
+.. role:: slide
+.. role:: slide1
+.. role:: slide2
+.. role:: slide3     
+.. role:: slidekp 
+
+.. _rst editor: http://rst.ninjs.org/
+
+.. _Domain Driven Design : https://it.wikipedia.org/wiki/Domain-driven_design
+.. _gradle: https://gradle.org/ 
+.. _GradleIntro: ../../../../GradleIntro/userdocs/Gradle.intro.html
+.. _IntelliJ: https://www.jetbrains.com/idea/
+.. _template: _static/templateToFill.html
+.. _Eclipse IDE for Java and DSL Developers: https://www.eclipse.org/downloads/packages/
+.. _Basic Git commands: https://confluence.atlassian.com/bitbucketserver/basic-git-commands-776639767.html
+.. _Video on GIT: https://www.youtube.com/watch?v=HVsySz-h9r4
+.. _github: https://github.com/
+.. _opinionated: https://govdevsecopshub.com/2021/02/26/opinionated-software-what-it-is-and-how-it-enables-devops/
+
+================================
+Primi passi operativi 24
+================================
+
+----------------------------------
+Installazioni su PC
+----------------------------------
+
+#. Installare :blue:`Java JDK 11`  (non useremo versioni più recenti) *Windows->Preferences->Java->InstalledJRE*
+#. Installare :blue:`GIT` :brown:`PERSONALE PRIVATO` e **dare accesso al docente**
+#. Compilare il `template`_ inserendo **fotografia, email e numero di matricola**
+#. Clonare https://github.com/anatali/issLab24 in una directory vuota e.g. ``C:/.../issLab24``
+#. Installare :blue:`Gradle`  (8.6 o 7.6)  (per *System Properties Advanced* su Windows: ``sysdm.cpl``)
+#. Installare  :blue:`Eclipse IDE`: `Eclipse IDE for Java and DSL Developers`_ (2023 12)  
+#. Installare :blue:`IntelliJ`
+#. Installare :blue:`Docker`
+#. Installare :blue:`Node.js`
+#. Installare :blue:`Python (3.8.8)`
+ 
+----------------------------------
+Creazione progetto con Gradle
+----------------------------------
+La costruzione di un sistema software non può oggi prescindere dall'uso di un **IDE** e di 
+strumenti di come `Gradle`_, uno strumento open source per automatizzare la costruzione (build) del software.
+
+Gradle è ormai uno standard di fatto in questo settore ed è interessante non solo in quanto
+strumento, ma anche perchè applica i principi del `Domain Driven Design`_ (**DDD**) 
+per modellare il suo proprio  domain-building software.
+
+Ne consegue che non poco tempo deve essere dedicato allo studio di questi tools e 
+alla preparazione del file ``build.gradle`` che governa lo sviluppo e il deployment
+del sistema software.
+
+In questa prima fase il file ``build.gradle`` necessario viene fornito, lasciando 
+a un momento successivo un approfondimento su come costruirlo.
+
+
+Anticipiamo però anche che noi useremo un :ref:`software factory<>` custom che produrrà questo
+e altri numerosi file in modo automatico, a partire da un descrizione di alto
+livello del sistema, scritto nel linguaggio custom :ref:`qak`.
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Impostazione di un progetto
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. Window > Preferences > General > Editors > Auto-save
+
+#. imposto una directory di lavoro per il corso (ad esempio **issLab24**) e mi posiziono in essa
+
+#. Creo la directory **unibolibs**, che conterrà le librerie (file ``.jar``) da noi sviluppate.
+   Per il momento, inserisco le seguenti librerie:
+
+   - ``unibo.basicomm23-1.0.jar``
+   - ``uniboInterfaces.jar``
+#. creo directory ``project0`` e mi posiziono in essa
+#. eseguo ``gradle init`` e rispondo: :remark:`1 2 default default`
+#. importo in Eclipse il progetto gradle 
+#. aggiorno il file ``build.gradle`` con il contenuto riportato in :ref:`Un primo build.gradle`
+#. click mouse destro su ``project0`` 
+   e seleziono **show in LocalTerminal->Terminal**  (oppore uso un *CommandPrompt*)
+
+.. #. eseguo :remark:`gradlew build` (faccio refresh F5)
+
+#. eseguo :remark:`gradlew eclipse` (refresh F5 e vedo .classpath o *Project->Properties->Java Bsuild Path->Libraries*)
+#. creo un nuovo sourcefolder ``src``
+#. in **src**, creo il package ``main``
+#. inserisco il file :ref:`HelloWorld.java` nel  ``package main``
+#. eseguo ``gradlew build`` e/o  ``gradlew run``
+ 
+
+++++++++++++++++++++++++++++++++++++
+Un primo build.gradle
+++++++++++++++++++++++++++++++++++++
+
+.. code:: 
+
+	plugins {
+		id 'application'
+		id 'java'
+		id 'eclipse'
+	}
+
+	version '1.0'
+
+	java {
+		toolchain.languageVersion.set(JavaLanguageVersion.of(11))
+	}
+	 
+	repositories {
+		mavenCentral()
+		flatDir {   dirs '../unibolibs'	 }
+	}
+
+	dependencies {
+		/* JSON ************************************************** */
+		implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+
+		/* UNIBO **************************************************/
+		implementation name: 'unibo.basicomm23-1.0'
+	}
+
+	sourceSets {
+		main.java.srcDirs += 'src'
+		main.java.srcDirs += 'src/main'
+	}
+
+	eclipse {
+		classpath {
+	        sourceSets -= [ sourceSets.main ]	
+		}	
+	}
+
+	application {
+		mainClass = 'main.HelloWorld'
+	}
+
+	jar {
+		println("building jar")
+		from sourceSets.main.allSource
+		manifest {
+			attributes 'Main-Class': "$mainClassName"
+		}
+	}
+
+	task dovesiamo {
+		println("projectDir= $projectDir")  
+		println("buildDir  = $buildDir")    
+	}
+
+++++++++++++++++++++++++++++++++++
+HelloWorld.java
+++++++++++++++++++++++++++++++++++
+
+.. code::
+
+	package main;
+	import unibo.basicomm23.utils.CommUtils;
+
+	public class HelloWorld {
+		public static void main( String[] args) {
+			System.out.println("Hello world from project0");
+			CommUtils.outblue("Hello world again from project0");
+		}
+	}
+
+++++++++++++++++++++++++++++++++++++++++++
+Utility CommUtils
+++++++++++++++++++++++++++++++++++++++++++
+
+La classe ``unibo.basicomm23.utils.CommUtils`` è una utility che permette la visualizzazione 
+di messaggi colorati (*black, blue, green, magenta, red, yellow*) sullo standard output.
+
+Per abilitare i colori, installare dal *MarketPlace* il plugin **ansi-escape-console**.
+
+
+Questa utility svolge un ruolo molto più importante coe supporto alle comunicazioni via rete.
+Si veda: :ref:`unibo.basicomm23`.
+
+
+
+----------------------------------
+Uso di GIT
+----------------------------------
+Una volta creato il progetto, è opportuno salvarlo su un nostro repository GIT.
+
+
+Per un aiuto ad usare GIT può essere utile consultare `Basic Git commands`_
+e/o guardare il video `Video on GIT`_ di cui  riportiamo l'inizio di alcuni punti salienti:
+
+.. code::
+
+    0:00  - Introduction
+    1:31  - Distributed vs Central Version Control
+    3:17  - Installing Git
+    3:39  - First Time Setup
+    6:36  - Getting Started (Local repository)
+    10:41 - Git File Control
+    14:55 - Getting Started (Remote repository)
+    20:37 - Branching
+    20:50 - Common Workflow
+    23:03 - Push Branch on remote
+    27:38 - Faster Example
+    29:41 - Conclusion
+
+
+Per quanto riguarda il nostro progetto:
+
+#. Mi posiziono sulla directory  ``issLab24``.
+#. Eseguo:
+   
+   .. code::
+
+       git init  //creates the directory .git	
+       git status
+
+#. Osservo il contenuto del file generato ``.gitignore`` :
+
+   .. code::
+ 
+      # Ignore Gradle project-specific cache directory
+      .gradle
+      # Ignore Gradle build output directory
+      build
+        
+      git status --ignored	//see ignored files 
+
+
+
+   I files elencati non saranno salvati sul repository.
+#. Eseguo i comandi     
+   .. code::
+ 
+       git add -A
+       git commit -m "Appl1"
+       git log   //q to exit
+       git status
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Creazione di un repository remoto   
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+#. Supponendo di avere accesso su `github`_ come user di nome ``userxyz``, creiamo un repository personale di nome 
+   ``issLab24``, selezionando il tipo **private**, con *README* file e   **Add .gitignore** (*template Java*). 
+   Quindi aggiungiamo il nostro progetto al repository:
+
+    .. code::
+
+        git remote add origin https://github.com/userxyz/issLab24 
+        git remote -v   //osservo
+
+#. Rendo visibile al docente del corso il progetto su `github`_ 
+#. Posizionato sulla directory ``issLab24``, salvo il progetto corrente sul repository remoto.
+   
+    .. code::
+
+       git push origin master
+
+
+.. Si ricordi :ref:`Esempi di uso di servicemath`

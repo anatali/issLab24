@@ -1,0 +1,1583 @@
+.. role:: red 
+.. role:: blue 
+.. role:: brown 
+.. role:: magenta    
+.. role:: remark
+.. role:: worktodo
+.. role:: slide
+.. role:: slide1
+.. role:: slide2
+.. role:: slide3     
+.. role:: slidekp 
+
+.. _tuPrologNew: https://apice.unibo.it/xwiki/bin/view/Tuprolog/
+.. _tuProlog: http://amsacta.unibo.it/5450/7/tuprolog-guide.pdf
+.. _Prolog: https://it.wikipedia.org/wiki/Prolog
+.. _Json: https://it.wikipedia.org/wiki/JavaScript_Object_Notation
+.. _californium: https://www.eclipse.org/californium/
+.. _SpringBoot: https://spring.io/projects/spring-boot
+
+=============================
+unibo.basicomm23
+=============================
+
+:slide3:`Progetto unibo.basicomm23`
+
+Il progetto intende  realizzare il concetto di :ref:`Interconnessione`,
+fornendo supporti di tipo generale per le comunicazioni via rete mediante un insieme di 
+:ref:`protocolli<unibo.basicomm23.msg.ProtocolType>`.  
+
+
+Protocolli punto-a-punto come ``TCP, HTTP, CoAP``, etc.
+sono in grado di stabilire una :blue:`connessione` stabile sulla quale inviare e ricevere messaggi.
+Il protocollo ``UDP`` non stabilisce una connessione, ma può comunque essere usato per inviare messaggi 
+e ricevere risposte.
+
+--------------------------------
+Interconnessione 
+--------------------------------
+
+Nel seguito, useremo il termine :blue:`Interconnessione` nel senso **astratto** di 
+*canale di comunicazione bidirezionale*
+tra due end-points.
+
+A partire da questo concetto, introdurremmo un insieme di interfacce e classi:
+
+.. , realizzato  da un oggetto che implementa l'interfaccia :ref:`unibo.basicomm23.interfaces.Interaction`.
+
+
+.. list-table:: 
+  :widths: 60,40
+  :width: 100%
+
+  * - Metodi comuni a ogni :ref:`Interconnessione`  
+    - :ref:`unibo.basicomm23.interfaces.Interaction`
+  * - Classe astratta per la implementazione di :ref:`Interaction<unibo.basicomm23.interfaces.Interaction>`   
+    - :ref:`unibo.basicomm23.utils.Connection` 
+  * - Interfaccia standard dei messaggi   
+    - :ref:`unibo.basicomm23.interfaces.IApplMessage` 
+  * -  Classe di implementazione dei messaggi  
+    - :ref:`unibo.interaction.msg.ApplMessage` 
+  * -  Interfaccia per gli oggetti di gestione dei messaggi ricevuti
+    - :ref:`unibo.basicomm23.interfaces.IApplMsgHandler` 
+  * -    
+    -  
+
+
+
+:slide1:`Interfaccia Interaction`
+
++++++++++++++++++++++++++++++++++++++++++++++
+unibo.basicomm23.interfaces.Interaction
++++++++++++++++++++++++++++++++++++++++++++++
+
+.. list-table:: 
+  :widths: 60,40
+  :width: 100%
+
+  * - Un oggetto che implementa l'interfaccia *Interaction* realizza in modo concreto 
+      il concetto astratto di :ref:`Interconnessione` usando uno specifico :ref:`protocollo<unibo.basicomm23.msg.ProtocolType>`.
+      
+      Ogni metodo rappresenta una modalità di invio (**forward/reply/request**) o di ricezione (**receiveMsg**) 
+      di informazione dal punto di vista applicativo.
+ 
+    -
+      .. code:: java
+
+        interface Interaction  {	  
+          public void forward( String msg ) throws Exception;
+          public String request(  String msg ) throws Exception;
+          public void reply(  String msg ) throws Exception;
+          public String receiveMsg(  )  throws Exception;
+
+          public void forward(  IApplMessage msg ) throws Exception;
+          public IApplMessage request(  IApplMessage msg ) throws Exception;
+          public void reply(  IApplMessage msg ) throws Exception;
+          public IApplMessage receive(  ) throws Exception ;
+
+          public void close( )  throws Exception;
+        }
+
+      La creazione di oggetti di questo tipo è affiadata alla 
+      :ref:`ConnectionFactory<unibo.basicomm23.utils.ConnectionFactory>`.
+
+:slide2:`L'informazione scambiata`
+
+L'informazione scambiata è rappresenta in due modi:
+
+- con una ``String``, che è un tipo di dato presente in tutti i linguaggi di programmazione. I metodi che usano ``String`` 
+  non impongono particolari vincoli sulla struttura sintattica e semantica della stringa-messaggio, ma proprio 
+  per questo possono causare problemi di interpretazione;
+- con un oggetto di tipo :ref:`IApplMessage<unibo.basicomm23.interfaces.IApplMessage>`, che rappresenta 
+  uno :blue:`standard interno` sulla struttura delle informazioni  scambiate via rete:.
+  I metodi che usano ``IApplMessage`` verranno implementati da supporti 
+  che invieranno e riceveranno ``String``  della forma descritta in :ref:`Struttura dei messaggi`.
+
+:slide2:`Metodi per la comunicazione`
+
+- Il metodo ``forward`` è un metodo di trasmissione :blue:`'fire-and-forget'`, mentre il metodo ``request`` denota 
+  l'invio di informazione cui deve corrispondere una *ack* o una :blue:`response` da parte del ricevente.
+- Concettualmente, un componente che invia una *response/ack* sulla *comunicazione connessa* con un client,
+  effettua una operazione di ``reply``, assimilabile alla ``forward`` di un messaggio con appropriato contenuto informativo. 
+- La ``String`` restituita dal metodo ``receiveMsg`` rappresenta un messaggio qualsiasi, tra cui
+  la risposta a un messaggio inviato in precedenza con ``forward``.  
+- Il metodo ``receive`` restituisce un messaggio organizzato secondo :ref:`Struttura dei messaggi`.
+
+
+-----------------------------------------------
+Natura e struttura dei messaggi applicativi
+-----------------------------------------------
+I messaggi  sono logicamente suddivisi in diverse categorie:
+
+ .. code:: java
+
+  enum ApplMessageType{
+      event, dispatch, request, reply, invitation
+  }   
+
++++++++++++++++++++++++++++++++++++++++++
+Tipi di messaggi
++++++++++++++++++++++++++++++++++++++++++
+
+.. list-table:: 
+  :widths: 70,30
+  :width: 100%
+
+  * - - :blue:`dispatch`: un messaggio inviato a un preciso destinatario senza attesa  di una risposta 
+        (in modo detto anche  `fire-and-forget`);
+      - :blue:`invitation`: un messaggio inviato a un preciso destinatario aspettandosi un 'ack' da parte di questi;
+      - :blue:`request`: un messaggio inviato a un preciso destinatario aspettandosi da parte di questi una 
+        :blue:`reply` **logicamente correlata alla richiesta**;
+      - :blue:`event`: un messaggio inviato a chiunque sia in grado di elaborarlo.
+
+    - .. image:: ./_static/img/Architectures/legendMessages.PNG
+        :align: center
+        :width: 60%
+
+
++++++++++++++++++++++++++++++++++++++++++
+Struttura dei messaggi
++++++++++++++++++++++++++++++++++++++++++
+
+Le stringhe che denotano  messaggi :ref:`IApplMessage<unibo.basicomm23.interfaces.IApplMessage>` hanno la forma:
+
+ .. code:: java
+
+     msg( MSGID, MSGTYPE, SENDER, RECEIVER, CONTENT, SEQNUM ) 
+
+ove
+
+ .. code:: java
+
+  - MSGID:    identificativo del messaggio
+  - MSGTYPE:  tipo del msg (Dispatch, Invitation,Request,Reply,Event)  
+  - SENDER:   nome del componente che invia il messaggio
+  - CONTENT:  contenuto applicativo (payload) del messaggio 
+  - RECEIVER: nome del componente chi riceve il messaggio 
+  - SEQNUM:   numero di sequenza del messaggio
+
+Questa struttura  costituisce uno :blue:`standard interno` sulla struttura delle stringhe-messaggio
+scambiate via rete.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Sintassi delle stringhe-messaggio
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+La rappresentazione in forma di ``String`` dei messaggi segue (per motivi 'storici') le regole della sintassi `Prolog`_. 
+In particolare:
+
+- gli identificatori ``MSGID,SENDER,RECEIVER`` sono espressi da **atomi** Prolog formati da :remark:`lettere minuscole`;
+- ``MSGTYPE`` è un atomo prefissato: ``dispatch, request, reply, event``;
+- ``CONTENT`` è un **termine** Prolog;
+- ``SEQNUM`` è un intero.
+
+
+:slide1:`IApplMessage`
+
+
++++++++++++++++++++++++++++++++++++++++++++
+unibo.basicomm23.interfaces.IApplMessage
++++++++++++++++++++++++++++++++++++++++++++
+
+.. list-table:: 
+  :widths: 60,40
+  :width: 100%
+
+  * - Un oggetto che implementa l'interfaccia *IApplMessage*  rappresenta  un messaggio che segue 
+      uno :blue:`standard interno` sulla struttura delle informazioni  scambiate via rete.
+ 
+    -
+      .. code:: java
+
+        public interface IApplMessage {
+          public String msgId();
+          public String msgType();
+          public String msgSender();
+          public String msgReceiver();
+          public String msgContent();
+          public String msgNum();
+          public boolean isDispatch();
+          public boolean isRequest();
+          public boolean isReply();
+          public boolean isEvent();
+        }
+
+
+
+:slide1:`ApplMessage`
+
+++++++++++++++++++++++++++++++++++++++++++
+unibo.interaction.msg.ApplMessage
+++++++++++++++++++++++++++++++++++++++++++
+
+.. list-table:: 
+  :widths: 60,40
+  :width: 100%
+
+  * - La classe che implementa :ref:`IApplMessage<unibo.basicomm23.interfaces.IApplMessage>`
+      segue la :ref:`Sintassi delle stringhe-messaggio`.
+ 
+    -
+      .. code:: java
+ 
+          public class ApplMessage implements IApplMessage {
+
+            //Costruttori
+            public ApplMessage( String MSGID, String MSGTYPE, 
+                String SENDER, String RECEIVER, String CONTENT, String SEQNUM ) { ...  }
+            public ApplMessage( String msg ) {
+                Struct msgStruct = (Struct) Term.createTerm(msg);
+                ...
+            }
+            //Predicati 
+            public boolean isDispatch(){
+                return msgType.equals( ApplMessageType.dispatch.toString() );
+            }
+            public boolean isRequest(){ ... }
+            public boolean isReply(){ ... }
+            ...
+          }
+
+
+
+
+ 
+
+:slide1:`Protocolli`
+
+--------------------------------------
+unibo.basicomm23.msg.ProtocolType
+--------------------------------------
+
+Per ogni protocollo viene definito un package che ne contiene i supporti low-level.
+
+.. list-table:: 
+  :widths: 25,75
+  :width: 100%
+
+  * - .. image:: ./_static/img/Intro/basicComm23.png
+         :width: 100% 
+
+    - 
+      .. code:: java
+
+          public enum ProtocolType {
+              http, ws, tcp, udp, coap, mqtt, bluetooth, serial
+          }
+
+
+ 
+.. Come implicito nel modello delle :ref:`inversioni di dipendenza<Dependency inversion>`, 
+.. le istanziazioni di variabili richiedono l'implementazione di un :remark:`pattern creazionale` come un *factory method* 
+.. o il *pattern factory*, o l'uso di un framework di *dependency-injection*.
+
+Per ogni protocollo viene definito un oggetto di supporto che implementa 
+:ref:`Interaction<unibo.basicomm23.interfaces.Interaction>`
+come specializzazione della classe :ref:`Connection<unibo.basicomm23.utils.Connection>`.
+
+
+
+:slide1:`ConnectionFactory`
+
+Per costruire un oggetto di supporto alla connessione realizzata mediante uno speciifoc protocoll,
+si può usare una Factory.
+
+---------------------------------------------
+unibo.basicomm23.utils.ConnectionFactory
+---------------------------------------------
+
+.. list-table:: 
+  :widths: 50,50
+  :width: 100%
+
+  * - 
+      #. restituisce un supporto che permette di utilizzare il protocollo dato in ``protocol`` 
+         per inviare informazioni al nodo di indirizzo ``hostAddr``.      
+      #. La stringa relativa al parametro :blue:`entry` 
+         denota valori che dipendono  dal protocollo: di solito è un numero di una porta, 
+         ma potrebbe essere anche 
+         un *Uniform Resource Identifier* (URI) o altro ancora.
+      #. caso di :ref:`connession HTTP<unibo.basicomm23.http.HttpConnection>`
+      #. caso di :ref:`connession WS<unibo.basicomm23.ws.WsConnection>`
+      #. caso di :ref:`connession TCP<unibo.basicomm23.tcp.TcpConnection>`
+      #. caso di :ref:`connession UDP<unibo.basicomm23.udp.UdpConnection>`
+      #. caso di :ref:`connession CoAP<unibo.basicomm23.coap.CoapConnection>`
+      #. caso di :ref:`connession MQTT<unibo.basicomm23.mqtt.MqttConnection>`
+
+    -
+      .. code::
+
+        public class ConnectionFactory {
+
+        /*1*/public static Interaction createClientSupport( 
+                ProtocolType protocol, 
+                String hostAddr, 
+        /*2*/   String entry ) {
+          try {
+            switch( protocol ){
+              case http: { 
+                return HttpConnection.create(  host ); }
+              case ws  : { 
+                return WsConnection.create( host, entry ); }
+              case tcp : { 
+                return TcpConnection.create(host,Integer.valueOf(entry));} 
+              case udp : { 
+                return UdpConnection.create(host,Integer.valueOf(entry));} 
+              case coap: { 
+                return CoapConnection.create(host, entry); }
+              case mqtt: { 
+                return MqttConnection.create("clientcomm",host,entry); }    
+              ...  
+        }
+        }
+
+L'oggetto di supporto alle comunicazioni restituito dalla factory implementa l'interfaccia 
+:ref:`Interaction<unibo.basicomm23.interfaces.Interaction>`,
+nascondendo al livello applicativo i dettagli relativi al protocollo.
+
+Ogni oggetto di supporto specializza la classe astratta  :ref:`unibo.basicomm23.utils.Connection`
+che gestisce messaggi di tipo :ref:`IApplMessage<unibo.basicomm23.interfaces.IApplMessage>` 
+realizzando i metodi che trattano messaggi di tipo ``String``.
+
+:slide1:`Connection`
+
+-------------------------------------------
+unibo.basicomm23.utils.Connection
+-------------------------------------------
+
+.. list-table:: 
+  :widths: 50,50
+  :width: 100%
+
+  * -  
+      E' una classe astratta che rappresenta 
+      l'idea generale di :ref:`interconnessione` implementando le operazioni di  
+      :ref:`Interaction<unibo.basicomm23.interfaces.Interaction>` 
+      con argomenti di tipo :ref:`IApplMessage<unibo.basicomm23.interfaces.IApplMessage>`,
+      invocando le omonime operazioni con argomenti ``String``, la cui realizzazione è lasciata a classi 
+      specializzate.
+    
+      Se la variabile :blue:`boolean trace` è posta ``true``, i metodi visualizzano informazioni 
+      utili a meglio comprendere il funzionamento run-time del sistema.
+
+      I metodi abstract sono realizzati da classi che specializzano *Connection* per un determinato protocollo:
+
+      :ref:`HttpConnection<unibo.basicomm23.http.HttpConnection>`, 
+      :ref:`WsConnection<unibo.basicomm23.ws.WsConnection>`,
+      :ref:`CoapConnection<unibo.basicomm23.coap.CoapConnection>`,
+
+    
+    - 
+      .. code:: java
+
+        public abstract class Connection implements Interaction{
+        public  boolean trace = false;
+          @Override
+            public void forward(IApplMessage msg) throws Exception{
+              forward( msg.toString() );
+            }
+
+            @Override
+            public IApplMessage request(IApplMessage msg) throws Exception{
+                String answer = request(msg.toString());
+                return new ApplMessage(answer);
+            }
+
+            @Override
+            public IApplMessage request(IApplMessage msg, int tout) throws Exception{
+            //Requst che genera una eccezione 
+            //se la risposta non giunge entro il timeout specificato
+            }
+
+            @Override
+            public IApplMessage receive() throws Exception{
+                String msg = receiveMsg();
+                return new ApplMessage(msg);
+            }
+            @Override
+            public void reply(IApplMessage msg) throws Exception{
+                reply(msg.toString());
+            }
+            @Override
+            public abstract void forward(String msg) throws Exception;
+            @Override
+            public abstract String request(String msg) throws Exception;
+            @Override
+            public abstract void reply(String reqid) throws Exception;
+            @Override
+            public abstract String receiveMsg() throws Exception;
+            @Override
+            public abstract void close() throws Exception;
+        }
+
+ 
+
+ 
+
+:slide1:`TcpConnection`
+
++++++++++++++++++++++++++++++++++++++++++
+unibo.basicomm23.tcp.TcpConnection
++++++++++++++++++++++++++++++++++++++++++
+
+.. list-table:: 
+  :widths: 60,40
+  :width: 100%
+
+  * - **TcpConnection: impostazione** 
+   
+      #. La classe  costituisce una specializzazione della classe astratta :ref:`Connection<unibo.basicomm23.utils.Connection>`
+      #. Facory method che eegue un numero limitto di tentaitvi
+      #. Costruttore che crea una socket
+      #. Costruttore che riceve un socket
+
+ 
+      .. Noi abbiamo usato `okhttp3`_, adatta anche per Kotlin. La semplicità consiste nel fatto che si tratta di realizzare schemi request-response sincroni.
+    
+    - 
+      .. code:: java
+
+        public class TcpConnection 
+        /*1*/    extends Connection {  
+        private DataOutputStream outputChannel;
+        private BufferedReader inputChannel;
+        private Socket socket;
+        private int port;
+
+        /*2*/public static Interaction create(
+              String host, int port) throws Exception{
+          for( int i=1; i<=10; i++ ) {
+            try {
+              Socket socket      =  new Socket( host, port );
+              Interaction  conn  =  new TcpConnection( socket );
+              return conn;
+            }catch(Exception e) {
+              ColorsOut.out("    +++ TcpConnection | Another attempt ...");
+              Thread.sleep(500);
+            }
+          }
+          throw new Exception("    +++ TcpConnection ERROR");
+        }
+        /*3*/public TcpConnection( String host, int port  ) throws Exception {
+          this( new Socket( host, port ) );
+        }
+        /*4*/public TcpConnection( Socket socket  )  throws Exception {
+            this.socket = socket;
+            OutputStream outStream = socket.getOutputStream();
+            InputStream inStream   = socket.getInputStream();
+            outputChannel = new DataOutputStream(outStream);
+            inputChannel  = new BufferedReader(new InputStreamReader(inStream));
+        }
+
+.. list-table:: 
+  :widths: 60,40
+  :width: 100%
+
+  * - **TcpConnection come Connection** 
+   
+      #. Metodo di invio di un :ref:`dispatch<Tipi di messaggi>` (fire-and-forget)
+      #. Metodo di invio di una :ref:`request<Tipi di messaggi>` con attesa della risposta
+      #. Metodo di invio di una :ref:`reply<Tipi di messaggi>`
+      #. Ricezione di una risposta: il metodo si blocca in lettura
+      #. Chiusura della connessione
+     
+    - 
+      .. code:: java
+
+        @Override
+        /*1*/public void forward(String msg)  throws Exception {
+          try {
+            outputChannel.writeBytes( msg+"\n" );
+            outputChannel.flush();
+          } catch (IOException e) { ... }	
+        }
+
+        @Override
+        /*2*/public String request(String msg)  throws Exception {
+          forward(  msg );
+          return receiveMsg();
+        }
+
+        @Override
+        /*3*/public void reply(String msg) throws Exception {
+          forward(msg);
+        }
+
+        @Override
+        /*4*/public String receiveMsg()  {  
+          try {
+            String	line = inputChannel.readLine() ;  
+            return line;
+          } catch ( Exception e   ) {
+            return null;
+          }		
+        }
+
+        @Override
+        /*5*/public void close() {   
+          try {
+            socket.close();
+          } catch (IOException e) { ... }
+        }
+
+:slide1:`UDPConnection`
+
++++++++++++++++++++++++++++++++++++++++++
+unibo.basicomm23.udp.UdpConnection
++++++++++++++++++++++++++++++++++++++++++
+
+.. list-table:: 
+  :widths: 60,40
+  :width: 100%
+
+  * - **UdpConnection: impostazione** 
+   
+      #. La classe  costituisce una specializzazione della classe astratta :ref:`Connection<unibo.basicomm23.utils.Connection>`
+   
+ 
+      .. Noi abbiamo usato `okhttp3`_, adatta anche per Kotlin. La semplicità consiste nel fatto che si tratta di realizzare schemi request-response sincroni.
+    
+    - 
+      .. code:: java
+
+        public class UdpConnection 
+        /*1*/          extends Connection {
+        public static final int MAX_PACKET_LEN = 1025;
+        public static final String closeMsg    = "@+-systemUdpClose@+-";
+        protected DatagramSocket socket;
+        protected UdpEndpoint endpoint;
+        protected boolean closed;
+
+          public static Interaction create(
+                  String host, int port) throws Exception {
+            DatagramSocket socket = new DatagramSocket();
+            InetAddress address   = InetAddress.getByName(host);
+            UdpEndpoint server    = new UdpEndpoint(address, port);
+            Interaction  conn     = new UdpConnection(socket, server);
+            return conn;
+          }
+
+          public UdpConnection( 
+              DatagramSocket socket, UdpEndpoint endpoint) throws Exception {
+            closed        = false;
+            this.socket   = socket;
+            this.endpoint = endpoint;
+          }
+
+.. list-table:: 
+  :widths: 60,40
+  :width: 100%
+
+  * - **UdpConnection come Connection** 
+   
+      #. Metodo di invio di un :ref:`dispatch<Tipi di messaggi>` (fire-and-forget)
+      #. Metodo di invio di una :ref:`request<Tipi di messaggi>` con attesa della risposta
+      #. Metodo di invio di una :ref:`reply<Tipi di messaggi>`
+      #. Ricezione di una risposta: il metodo si blocca in lettura
+      #. Chiusura della connessione
+
+ 
+      .. Noi abbiamo usato `okhttp3`_, adatta anche per Kotlin. La semplicità consiste nel fatto che si tratta di realizzare schemi request-response sincroni.
+    
+    - 
+      .. code:: java
+
+          @Override
+          /*1*/public void forward(String msg)  throws Exception {
+             if (closed) { 
+              throw new Exception("The connection is closed"); 
+             }
+            try {
+              byte[] buf = msg.getBytes();
+              DatagramPacket packet = new DatagramPacket(
+                  buf,buf.length,endpoint.getAddress(),endpoint.getPort());
+                  socket.send(packet);
+             } catch (IOException e) {
+              throw e;
+            }	
+          }
+
+          @Override
+          /*2*/public String request(String msg)  throws Exception {
+            forward(  msg );
+            String answer = receiveMsg();
+            return answer;
+          }
+          
+          @Override
+          /*3*/public void reply(String msg) throws Exception {
+            forward(msg);
+          } 
+          
+          @Override
+          /*4*/public String receiveMsg()  {
+            String line;
+            try {
+              if(closed) {
+                line = null;  
+              }else {
+                byte[] buf = new byte[UdpConnection.MAX_PACKET_LEN];
+                DatagramPacket packet = new DatagramPacket(buf, buf.length);
+                 socket.receive(packet);  //CREA UN Thread
+                 line = new String(packet.getData(), 0, packet.getLength());
+                if( line.equals(closeMsg)) {
+                  close();
+                }
+                packet = null;
+              }
+               return line;
+            } catch ( Exception e ) {
+               return null;
+            }		
+          }
+ 
+          @Override
+          /*5*/public void close() {
+            try {
+               forward(closeMsg);
+            } catch (Exception e) {...}
+            closed = true;
+            socket.close();
+          }
+          }
+
+:slide1:`HttpConnection`
+ 
++++++++++++++++++++++++++++++++++++++++++
+unibo.basicomm23.http.HttpConnection
++++++++++++++++++++++++++++++++++++++++++
+
+La implementazione di :ref:`Interaction<unibo.basicomm23.interfaces.Interaction>` per HTTP non pone particolari problemi: 
+si tratta di utilizzare una libreria che fornisce un *HTTP-client*. 
+Qui usiamo la libreria *org.apache.http*.
+
+.. list-table:: 
+  :widths: 60,40
+  :width: 100%
+
+  * - **HttpConnection: impostazione** 
+   
+      #. La classe costituisce una specializzazione della classe astratta :ref:`Connection<unibo.basicomm23.utils.Connection>`
+      #. Mappa delle connessioni attive
+      #. client della libreria ``org.apache.http``
+      #. Factory method
+      #. Costruttore che inizializza l'URL della connessione
+
+ 
+      .. Noi abbiamo usato `okhttp3`_, adatta anche per Kotlin. La semplicità consiste nel fatto che si tratta di realizzare schemi request-response sincroni.
+    
+    - 
+      .. code:: java
+
+        public class HttpConnection 
+        /*1*/            extends Connection {
+        /*2*/private static HashMap<String, HttpConnection> connMap = 
+                      new HashMap<String, HttpConnection>();
+        /*3*/private HttpClient client =  HttpClients.createDefault();
+             private  String URL;
+        //Factory
+        /*4*/public static Interaction create(String addr ){
+          if( ! connMap.containsKey(addr)){
+            connMap.put(addr, new HttpConnection( addr ) );
+          }
+          return connMap.get(addr);
+        }
+        //Costruttore
+        /*5*/public HttpConnection(String url) {
+          URL = "http://" +url;
+        }
+
+  * - 
+       **HttpConnection come Connection**
+      
+       I metodi di :ref:`Interaction<unibo.basicomm23.interfaces.Interaction>` con argomenti ``String`` sono
+       realizzati nella sola forma sincrona. 
+      
+       I metodi ``reply`` e ``receiveMsg`` solo al di fuori 
+       del modello di interazione ``HTTP`` e quindi la loro chiamata provoca una eccezione.
+
+    - 
+      .. code:: java
+
+        @Override 
+        public String request(String msg) throws Exception {
+          return sendHttp( msg );
+        }
+        @Override
+        public void forward( String msg) throws Exception {
+          sendHttp( msg ); //answer ingnored
+        }
+        @Override
+        public void reply(String msgJson) throws Exception {
+        throw new Exception("HttpConnection does not implement reply");
+        }
+        @Override
+        public String receiveMsg() throws Exception {
+        throw new Exception("HttpConnection does not implement receiveMsg");
+        }
+  
+  * - **HttpConnection sendHttp**
+      
+      Metodo usato per realizzare l'invio di messaggi in forma di ``String``.    
+    - 
+      .. code:: java
+
+        public String sendHttp( String msgJson){
+          ...
+          HttpPost httpPost = new HttpPost( URL );
+          httpPost.setEntity(new StringEntity(msgJson));
+          HttpResponse response = client.execute(httpPost);          
+          return EntityUtils.toString( response.getEntity() );
+        }
+  * - **HttpConnection getHttp**
+  
+      Metodo per comunicazioni *HumanToMachine* (:slidekp:`HMI`) con ``HTTP GET``, che restistuisca una stringa.    
+          
+    - 
+      .. code:: java
+
+        public String getHttp( String msg){
+          ...
+        }
+  
+  * - **HttpConnection callHttp**
+  
+      Metodo per comunicazioni *MAchineToMachine* (:slidekp:`M2M`) con ``HTTP POST``, che restistuisca una stringa
+      convertibile in un oggetto JSON.
+          
+    - 
+      .. code:: java
+
+        public JSONObject callHttp( String msg){
+          ...
+        }
+
+:slide1:`WsConnection`
+
++++++++++++++++++++++++++++++++++++++++++
+unibo.basicomm23.ws.WsConnection
++++++++++++++++++++++++++++++++++++++++++
+
+La implementazione di :ref:`Interaction<unibo.basicomm23.interfaces.Interaction>` 
+per WS (WebSocket) induce a modifiche rilevanti nella struttura del codice applicativo,
+in quanto le interazioni sono :blue:`asincrone`.  
+
+Inoltre, 
+su una WS-connection possono giungere informazioni 
+che sono risposte a messaggi inviati in precedenza o anche di altro tipo 
+(ad esempio dati di un sensore, allarmi, messaggi di stato, etc.).
+
+Per meglio gestire queste informazioni in ingresso,
+questo tipo di connessione è stato realizzato come un :blue:`POJO  osservabile` 
+(che implementa :ref:`IObservable<unibo.basicomm23.interfaces.IObservable>`), 
+in modo da permettere al livello
+applicativo di gestire i messaggi in arrivo da parte di ossservatori 
+che implementano :ref:`IObserver<unibo.basicomm23.interfaces.IObserver>`.
+
+Implementa il concetto di :ref:`Interconnessione` 
+(interfaccia :ref:`Interaction<unibo.basicomm23.interfaces.Interaction>`)
+su ``WebSocket``, utilizzando la libreria ``javax.websocket``. 
+
+
+.. list-table:: 
+  :widths: 50,50
+  :width: 100% 
+
+  * -  **WsConnection Impostazione**
+  
+       #. La libreria ``javax.websocket`` induce a configurare gli endpoint mediante :ref:`Annotazioni`.
+          Una classe decorata con ``@ClientEndpoint`` viene trattata come un client WebSocket.
+       #. La classe costituisce una specializzazione della classe astratta :ref:`Connection<unibo.basicomm23.utils.Connection>`
+       #. La natura :blue:`asincrona` delle interazioni su questo tipo di connessione,
+          induce la classe ad implementare l'interfaccia :ref:`IObservable<unibo.basicomm23.interfaces.IObservable>` in modo da realizzare un componente
+          osservabile da parte di altri componenti (oggetti) che implementano 
+          :ref:`IObserver<unibo.basicomm23.interfaces.IObserver>`
+       #. Mappa delle connessioni attive
+       #. Lista degli osservatori registrati
+       #. Sessione corrente
+       #. Risposta corrente
+       #. Parametro entry
+
+
+    - 
+      .. code:: java
+
+        /*1*/@ClientEndpoint
+        public class WsConnection  
+        /*2*/        extends Connection 
+        /*3*/        implements  IObservable{  
+        
+        /*4*/private static HashMap<String,WsConnection> connMap= 
+                            new HashMap<String,WsConnection>();
+        /*5*/private Vector<IObserver> observers= 
+                            new Vector<IObserver>();
+
+        /*6*/private Session userSession = null;
+        /*7*/private String answer       = "unknown";
+        /*8*/private String entry        = "";
+
+        //Costruzione
+        ...
+        //Metodi perchè ClientEndpoint
+        ...
+        //Metodi perchè Connection
+        ...
+        //Metodi perchè IObservable
+        ...
+
+.. list-table:: 
+  :widths: 50,50
+  :width: 100% 
+
+  * -  **WsConnection Costruzione**
+
+       #. Factory Method
+       #. Costruttore privato
+       #. Metodo per stabilire la conessione con this come endpoint
+
+    - 
+      .. code:: java
+
+        //Factory Method
+        /*1*/public static WsConnection create(String addr, String entry){
+            if( ! connMap.containsKey(addr)){
+              connMap.put(addr, new WsConnection( addr,entry ) );
+            }else {
+              //ALREADY connected to " + addr ;
+            }
+            return connMap.get(addr);
+          }
+
+        /*2*/private WsConnection( String addr, String entry  ) {
+          this.entry = entry;
+          wsconnect(addr);
+        }
+
+        /*3*/private void wsconnect(String wsAddr){ 
+          try {
+              WebSocketContainer container = 
+                  ContainerProvider.getWebSocketContainer();
+              URI uri = new URI("ws://"+wsAddr);
+              container.connectToServer(this, uri);
+          } catch ( Exception ex) {
+            ...
+          }
+        }
+        
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+WsConnection come ClientEndpoint
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+.. list-table:: 
+  :widths: 50,50
+  :width: 100%
+
+  * -  **WsConnection come ClientEndpoint**
+ 
+       #. Alla apertura della connessione aggiorna la ``userSession``
+       #. Alla chiusura della connessione fa il reset della ``userSession``
+       #. All'arrivo di un messaggio modifica ``curInfo`` e aggiorna gli observer
+       #. Ogni observer è un POJO che viene aggiornato invocandone il metodo ``update``
+ 
+       Nota: l'aggiornamento degli observer potrebbe essere delegato a un nuovo Thread,
+       per evitare di dare questa responsabilità alla connessione.
+    -  
+      .. code:: java
+
+        @OnOpen
+        /*1*/public void onOpen(Session userSession) {
+            this.userSession = userSession;
+        }
+
+        @OnClose
+        /*2*/public void onClose(Session userSession, CloseReason reason) {
+            this.userSession = null;
+        }
+
+        @OnMessage
+        /*3*/public void onMessage(String message)   {
+          curInfo = message;
+          updateObservers(message);
+        }
+
+        /*4*/protected void updateObservers( String msg ){
+            observers.forEach( v -> v.update(null, msg) );
+        }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+WsConnection as Connection
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. list-table:: 
+  :widths: 50,50
+  :width: 100%
+
+  * -  **WsConnection come Connection**
+
+       #. Metodo di utilità per inviare un messaggio sulla connessione corrente
+          che restituisce il controllo quando la trasmissione è avvenuta
+       #. Metodo di utilità per inviare un messaggio sulla connessione corrente
+          che non attende che la trasmissione sia avvenuta
+       #. Metodo di invio di un :ref:`dispatch<Tipi di messaggi>` (*fire-and-forget*)
+       #. Metodo di invio di una :ref:`request<Tipi di messaggi>` con attesa della risposta
+       #. Metodo di invio di una :ref:`reply<Tipi di messaggi>`
+       #. Ricezione di una risposta: il metodo si blocca fino a che ``curInfo`` è ``null``
+       #. Chiusura della connessione
+
+
+        Nota: una connessione di questo tipo dovrebbe realizzare operazioni di ricezione 
+        di messaggi-risposta con  l’intervento di observer applicativi.
+        Il metodo ``receiveMsg`` (usato da ``request``) viene fornito come utility da usare
+        dopo attenta riflessione.
+
+    -  
+      .. code:: java
+        
+        /*1*/public void sendMessageSynch(String message ) 
+                                          throws Exception {
+          userSession.getBasicRemote().sendText(entry+"/"+ message);
+          //blocks until the message has been transmitted
+        }
+        /*2*/public void sendMessageAsynch(String message ) 
+                                                  throws Exception {
+          userSession.getAsyncRemote().sendText(entry+"/"+ message);
+        }
+
+        @Override
+        /*3*/public void forward( String msg) throws Exception {
+            sendMessageSynch(msg);
+        }
+
+        @Override
+       /*4*/public String request(String msg) throws Exception {
+          forward(msg);
+          return receiveMsg();
+        }
+
+        @Override
+        /*5*/public void reply(String msg) throws Exception {
+          forward(msg);
+        }
+
+        @Override
+        /*6*/public String receiveMsg() throws Exception {
+          while( curInfo.equals("unknown") ) {
+            Thread.sleep(300);
+          }
+          return curInfo;
+        }
+
+        @Override
+        /*7*/public void close() throws Exception {
+          userSession.close();
+        }
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+WsConnection come IObservable
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. list-table:: 
+  :widths: 50,50
+  :width: 100%
+
+  * -  **WsConnection come IObservable**
+
+       #. Aggiunta di un POJO osservatore
+       #. Eliminazione  di un POJO osservatore registrato in precedenza
+    -  
+      .. code:: java
+
+
+        @Override
+        /*1*/public void addObserver(IObserver obs) {
+           observers.add( obs);
+        }
+        @Override
+        /*2*/public void deleteObserver(IObserver obs) {
+          observers.remove( obs);
+        }
+
+
+
+
+:slide1:`CoapConnection`
+
++++++++++++++++++++++++++++++++++++++++++
+unibo.basicomm23.coap.CoapConnection
++++++++++++++++++++++++++++++++++++++++++
+
+
+.. list-table:: 
+  :widths: 50,50
+  :width: 100%
+
+  * -  **CoapConnection impostazione**
+
+       #. estende
+    -  
+      .. code:: java
+
+
+        public class CoapConnection 
+        /*1*/     extends Connection {
+        protected CoapClient client;  
+        protected String url;
+        private String answer = "unknown";
+
+          public static Interaction create(
+                String host, String path) throws Exception {
+            return new CoapConnection(host,path);
+          }
+
+          public CoapConnection( String address, String path) { 
+            //"coap://localhost:5683/" + path
+            setCoapClient(address,path);
+          }
+
+          protected void setCoapClient(
+                        String addressWithPort, String path) {
+            url      = "coap://"+addressWithPort + "/"+ path;
+            client   = new CoapClient( url );
+            client.useExecutor(); //To be shutdown
+            client.setTimeout( 1000L );		 		
+          }
+ 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+CoapConnection come Connection
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+.. list-table:: 
+  :widths: 50,50
+  :width: 100%
+
+  * - **CoapConnection come Connection**
+
+      #. Metodo di invio di un :ref:`dispatch<Tipi di messaggi>` (fire-and-forget)
+      #. Metodo di invio di una :ref:`request<Tipi di messaggi>` con attesa della risposta
+      #. Metodo di invio di una :ref:`reply<Tipi di messaggi>`
+      #. Ricezione di una risposta: il metodo si blocca in lettura
+      #. Chiusura della connessione
+
+    -  
+      .. code:: java
+
+        @Override
+        /*1*/public void forward(String msg)   {
+            if( client != null ) {
+              CoapResponse resp = client.put(msg, MediaTypeRegistry.TEXT_PLAIN); //Blocking!
+              if( resp != null ) {
+                answer = resp.getResponseText();
+              }else {
+                  CommUtils.outred("    +++ CoapConn | forward - resp null for " + msg  );
+              }  
+            } 
+          }
+
+          
+          @Override
+        /*2*/public String request(String query)   {
+            String param = query.isEmpty() ? "" :  "?q="+query;
+            client.setURI(url+param); 
+            CoapResponse response = client.put(query, MediaTypeRegistry.TEXT_PLAIN);  
+            if( response != null ) {
+              answer = response.getResponseText();
+              return answer;
+            }else {
+               return null;
+            }
+          }
+                    
+          @Override
+        /*3*/public void reply(String reqid) throws Exception {
+            throw new Exception( "   +++ CoapConn | reply not allowed");
+          } 
+
+          @Override
+        /*4*/public String receiveMsg() throws Exception {
+            while( answer.equals( "unknown" ) ){ 
+              Thread.sleep(500);
+            }
+            return answer;
+          }
+
+          @Override
+        /*5*/public void close()  {
+            client.shutdown();	
+          }
+        }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+CoapConnection come  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+.. list-table:: 
+  :widths: 50,50
+  :width: 100%
+
+  * -  **CoapConnection impostazione**
+
+       #. estende
+    -  
+      .. code:: java
+ 
+          public String toString(){
+            return url;
+          }
+
+          public void removeObserve(CoapObserveRelation relation) {
+            relation.proactiveCancel();
+          }
+
+          public CoapObserveRelation observeResource(CoapHandler handler){
+            CoapObserveRelation relation = 
+                      client.observe( handler ); 
+            return relation;
+          }
+
+
+:slide1:`MQTTConnection`
+
++++++++++++++++++++++++++++++++++++++++++
+unibo.basicomm23.mqtt.MqttConnection
++++++++++++++++++++++++++++++++++++++++++
+
+.. list-table:: 
+  :widths: 60,40
+  :width: 100%
+
+  * - **MqttConnection: impostazione**     
+   
+      #. La classe  costituisce una specializzazione della classe astratta :ref:`Connection<unibo.basicomm23.utils.Connection>`
+   
+ 
+      .. Noi abbiamo usato `okhttp3`_, adatta anche per Kotlin. La semplicità consiste nel fatto che si tratta di realizzare schemi request-response sincroni.
+    
+    - 
+      .. code:: java
+
+        public class MqttConnection 
+        /*1*/          extends Connection {
+          ...
+        }
+
+
+
+
+
+:slide:`Abilitatori`
+
+I componenti di un sistema distribuito devono, di norma, essere capaci di 
+
+#. *ricevere messaggi*. Normalmente questo obiettivo viene raggiunto introducendo un :blue:`server`.
+#. *inviare messaggi*. Normalmente questo obiettivo viene raggiunto 
+   facendo operare il componente come un :blue:`client` di un  server .
+
+Il progetto :ref:`unibo.basicomm23` fornisce supporti per entrambe queste esigenze, attraverso  classi che forniscono
+una sorta di 'enti abilitatori' alle comunicazioni.
+
+-----------------------------------------------
+Abilitatori di comunicazione
+-----------------------------------------------
+
+Parliamo di classi che abilitano alle comunicazioni per enfatizzare il fatto che queste classi 
+:remark:`non includono logica applicativa`.
+
+- :ref:`ServerFactory`: costruisce server legati a speoifici protocolli.
+- :ref:`ActorNaiveCaller`: fornisce supporto per inviare messaggi a un server.
+
+:slide1:`Abilitatori per la ricezione`
+ 
++++++++++++++++++++++++++++++++++++++++
+ServerFactory
++++++++++++++++++++++++++++++++++++++++
+Costruisce server  che danno la capacità di ricevere messaggi usando uno dei protocolli definiti 
+in :ref:`ProtocolType<unibo.basicomm23.msg.ProtocolType>`. 
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+unibo.basicomm23.enablers.ServerFactory
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. list-table:: 
+  :widths: 60,40
+  :width: 100%
+
+  * - Realizza un server che riceve messaggi, delegandone la gestione a un oggetto che 
+      implementa :ref:`IApplMsgHandler<unibo.basicomm23.interfaces.IApplMsgHandler>`.    
+   
+      #. Factory Method
+      #. Costruttore
+    
+    - 
+      .. code:: java
+ 
+
+        public class SeverFactory   {
+        /*1*/  public static IServer create(String name, int port, 
+                    ProtocolType protocol, IApplMsgHandler handler){
+            return new ServerFactory(name,   port,   protocol, handler);
+          }
+
+        /*2*/ public SeverFactory(
+              String name, int port, ProtocolType protocol, IApplMsgHandler handler ){
+                ...
+                setServerSupport( port, protocol, handler  );
+          }
+
+          protected void setServerSupport( 
+            int port, ProtocolType protocol, IApplMsgHandler handler) throws Exception{
+            /*
+            Attiva un server per tcp, udp, coap
+            */
+          }
+        }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+unibo.basicomm23.interfaces.IServer
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. code:: java
+
+  public interface IServer {
+      public String getName();
+      public boolean isActive();
+      public void  start();
+      public void stop();
+  }
+
+Al momento la factory crea i seguenti server:
+
+- per il protocollo ``Tcp``: :blue:`TcpServer` .
+- per il protocollo ``Udp``: :blue:`UdpServer`: .
+- per il protocollo ``Coap``: :blue:`CoapApplServer`, che specializza ``org.eclipse.californium.core.CoapServer``.
+
+Inoltre:
+
+- per il protocollo ``Mqtt``, deve essere ovviamente usato uno dei broker disponibili come:
+
+  - :slide3:`"tcp://broker.hivemq.com”`
+  - :slide3:`“tcp://test.mosquitto.org”`
+
+- per  protocollo ``HTTP``, è opportuno usare una delle numerose  piattaforme Web oggi disposbili, come
+  ad esempio `SpringBoot`_ ->.
+
+
+
+La gestione dei messaggi a livello applicativo
+è delegata a un oggetto definito dall'application designer 
+(si veda :ref:`ApplMsgHandler<unibo.interaction.msg.ApplMsgHandler>`,  
+che implementa l'interfaccia :ref:`IApplMsgHandler<unibo.basicomm23.interfaces.IApplMsgHandler>`
+secondo il seguente schema architetturale:
+
+.. image::  ./_static/img/Architectures/AbilitatoreServer.PNG
+    :align: center 
+    :width: 70% 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+unibo.basicomm23.enablers.ConnectionHandler
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+.. list-table:: 
+  :widths: 40,60
+  :width: 100%
+
+  * - Gestisce i messaggi in arrivo su una connessione lato server e li ridirige all'handler applicativo dato.
+   
+      #. E' un componente attivo
+      #. Opera su una connessione, dato un handler applicativo
+      #. Attende un messaggio in forma di String
+      #. Trasforma il messaggio in messaggio applicativo :ref:`ApplMsgHandler<unibo.interaction.msg.ApplMsgHandler>`
+      #. Invoca l'handler applicativo passandogli il messaggio
+      #. Torna in attesa di un messaggio in forma di String
+    
+    - 
+      .. code:: java
+
+        public class ConnectionHandler 
+        /*1*/    extends Thread{
+            private String name;
+            private IApplMsgHandler handler ;
+            private Interaction conn;
+
+            public ConnectionHandler(String name, 
+        /*2*/ IApplMsgHandler handler, Interaction conn ) {
+                this.name    = name;
+                this.handler = handler;
+                this.conn    = conn;
+                this.start();
+            }
+
+            @Override
+            public void run() {
+              while( true ) {
+              try {
+          /*3*/String msg = conn.receiveMsg();
+                if( msg == null ) {
+                  conn.close();	 
+                   break;
+                } else{
+          /*4*/IApplMessage m = new ApplMessage(msg);
+                  handler.elaborate( m, conn );
+                }
+              }catch( Exception e) { ...  }
+              }    
+          /*5*/}
+        }   
+
+:slide2:`Handler di messaggi`
+
++++++++++++++++++++++++++++++++++++++++++++++++
+unibo.basicomm23.interfaces.IApplMsgHandler
++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. code:: java
+
+    public interface IApplMsgHandler  {
+      public String getName(); 
+      public void elaborate( IApplMessage message, Interaction  conn ); 
+    }
+
+Un oggetto che implementa l'interfaccia *IApplMsgHandler* deve essere definito dall'application designer per 
+specificare, data una :ref:`Interaction`  ``conn``, il modo di gestire un messaggio ricevuto (metodo ``elaborate``) 
+e come inviare repliche o risposte al chiamante su ``conn``.
+
+Oggetti di questo tipo sono usati dai server forniti da 
+:ref:`ServerFactory<unibo.basicomm23.enablers.ServerFactory>`.
+
+++++++++++++++++++++++++++++++++++++++++++
+unibo.interaction.msg.ApplMsgHandler
+++++++++++++++++++++++++++++++++++++++++++
+
+.. code::
+
+  public abstract class ApplMsgHandler implements IApplMsgHandler {  
+  protected String name;
+    public ApplMsgHandler( String name  ) {  this.name = name; }  
+    public String getName() { return name; }	 
+    public abstract void elaborate(IApplMessage message, Interaction  conn) ;   
+  }
+
+
+:slide1:`Abilitatori per la trasmissione`
+
++++++++++++++++++++++++++++++++++++++++
+ActorNaiveCaller
++++++++++++++++++++++++++++++++++++++++
+
+.. list-table:: 
+  :widths: 50,50
+  :width: 100%
+
+  * - Permette a un oggetto applicativo di 
+      inviare messaggi usando uno dei protocolli definiti in :ref:`ProtocolType<unibo.basicomm23.msg.ProtocolType>`.
+     
+    - 
+      .. image::  ./_static/img/Architectures/AbilitatoreCaller.PNG
+            :align: center 
+            :width: 60%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+unibo.basicomm23.enablers.ActorNaiveCaller
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Realizza una prima versione di un attore capace di stabilire una :ref:`Interconnessione` con un server remoto
+che opera su un nodo con  ``hostAddr`` dato.
+E' definito cme una classe astratta che delega alle sue specializzazioni la definizione di un metodo 
+(:blue:`body`) che dovrà contenere il funzionamento logico di livello applicativo.
+
+.. list-table:: 
+  :widths: 50,50
+  :width: 100%
+
+  * - Il *body* verrà eseguito all'interno di un Thread creato dopo una esplicita attivazione
+      (metodo :blue:`activate`).
+      Prima della esecuzione del *body*, il Thread invoca il metodo :blue:`connect` per stabilire una connessione
+      di tipo :ref:`Interaction<unibo.basicomm23.interfaces.Interaction>` 
+      con il server, avvalendosi di :ref:`ConnectionFactory<unibo.basicomm23.utils.ConnectionFactory>`.
+
+     
+    - 
+      .. code:: java
+
+        public abstract class ActorNaiveCaller
+          protected String name;
+          protected Interaction connSupport;
+          protected ProtocolType protocol;
+          protected String hostAddr;
+          protected String entry;
+          protected boolean connected = false;
+
+          public ActorNaiveCaller(String name, 
+               ProtocolType protocol, String hostAddr, String entry){
+              this.name     = name;
+              this.protocol = protocol;
+              this.hostAddr = hostAddr;
+              this. entry   = entry;
+          }
+
+          protected abstract void body() throws Exception;
+
+          protected void connect(){
+              if( connected ) return;
+              connected   = true;
+              connSupport = ConnectionFactory.createClientSupport(
+                                          protocol, hostAddr, entry);
+          }
+
+          public void activate(){
+              new Thread(){
+                  public void run(){
+                      try {
+                          connect();
+                          body();
+                        } catch (Exception e) {...}
+                  }
+              }.start();
+          }
+
+
+:slide:`Componenti osservabili in remoto`
+
+------------------------------------------
+Osservabili e osservatori
+------------------------------------------
+ 
+
+++++++++++++++++++++++++++++++++++++++++++++++
+unibo.basicomm23.interfaces.IObserver
+++++++++++++++++++++++++++++++++++++++++++++++
+
+.. code:: java
+
+  public interface IObserver extends java.util.Observer{
+    public void update( String value );
+    //public void update(Observable o, Object news) //From Observer 
+  }
+
+Notiamo che ``java.util.Observer`` è :blue:`deprecated` da **Java9** in avanti.  Dovremo approfondire le ragioni di ciò,
+ma al momento osserviamo che non viene messa in discussione l'idea di osservabilità, ma solo il modo 
+in cui viene realizzata nel mondo della *oop classica*.
+
+++++++++++++++++++++++++++++++++++++++++++++++
+unibo.basicomm23.interfaces.IObservable
+++++++++++++++++++++++++++++++++++++++++++++++
+
+.. code:: java
+
+  public interface IObservable  {
+    public void addObserver(IObserver obs );  
+    public void deleteObserver(IObserver obs );  
+  }
+
+La classe ``java.util.Observable`` implementa i metodi di *IObservable*, in quanto 
+:ref:`IObserver<unibo.basicomm23.interfaces.IObserver>` estende ``java.util.Observer``.
+
+++++++++++++++++++++++++++++++++++++++++++++
+unibo.basicomm23.utilsApplAbstractObserver
+++++++++++++++++++++++++++++++++++++++++++++
+
+La classe astratta ``unibo.basicomm23.utils.ApplAbstractObserver`` fornisce lo scheletro di un observer 
+che implementa :ref:`IObserver<unibo.basicomm23.interfaces.IObserver>`, lasciando non specificato 
+il metodo ``public void update(String msg)``.
+
+.. code::
+
+    public abstract  class ApplAbstractObserver implements IObserver{
+      @Override
+      public void update(Observable o, Object arg) {
+        update(arg.toString());		
+      }
+      @Override
+      public abstract void update(String value);
+    }
+
+
+
+
+:slide1:`CommUtils`
+
+-------------------------------------
+unibo.basicomm23.utils.CommUtils
+-------------------------------------
+
+Nel package ``utils`` del progetto, viene definita la classe *CommUtils*  che definisce 
+vari metodi *static* di utilità.
+
+++++++++++++++++++++++++++++
+Metodi di uso comune
+++++++++++++++++++++++++++++
+
+- ``void delay(Int)``: per sospendere l'esecuzione del Thred corrente
+- ``void outxxx(String)``, con ``xxx=blue,red,grenn,yellow, ...`` per visualizzare messaggi colorati su ``System.out``,
+  una feature che risultà utile per differenzare le informazioni emesse dai diversi componenti delle nostre applicazioni
+
+
+++++++++++++++++++++++++++++++++++++++++++
+Metodi per la costruzione di messaggi
+++++++++++++++++++++++++++++++++++++++++++
+
+La classe definisce anche metodi statici che agevolano la costruzione e l'invio di 
+:ref:`messaggi applicativi<Natura e struttura dei messaggi applicativi>`
+
+.. code::
+
+    JSONObject parseForJson(String message) 
+    IApplMessage buildDispatch(String sender, String msgId, String payload, String dest) 
+    IApplMessage buildRequest(String sender, String msgId, String payload, String dest) 
+    IApplMessage buildReply(String sender, String msgId, String payload, String dest) 
+    IApplMessage prepareReply(IApplMessage requestMsg, String answer) 
+
+Il metodo ``prepareReply`` confeziona una reply relativa alla ``requestMsg`` data in ingresso, da cui 
+determina il nome del chiamante.
+
+
+++++++++++++++++++++++++++++++++++++++++++
+Metodi per modificare stringhe-messaggio
+++++++++++++++++++++++++++++++++++++++++++
+
+La trasmissione/ricezione di stringhe che contengono ``\n`` può spesso portare a malfunzionamenti.
+Conviene dunque sostituire il carattere in trasmissione, per poi ripristinarlo in ricezione.
+
+.. code::
+
+    public static String convertToSend(String s){
+      return "'"+s.replace("\n","@!@")+"'";
+    }
+    public static String restoreFromConvertToSend(String s){
+      return s.replace("@!@","\n");
+    }
+ 
+ 
+
+
+
+ 
+
+ 

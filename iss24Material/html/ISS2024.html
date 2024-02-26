@@ -18,8 +18,8 @@
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="AWS" href="aws.html" />
-    <link rel="prev" title="Lezioni 2024" href="Lezioni2024.html" /> 
+    <link rel="next" title="QakService24Usage" href="QakService24Usage.html" />
+    <link rel="prev" title="Intro2024" href="Intro2024.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -28,10 +28,10 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="aws.html" title="AWS"
+          <a href="QakService24Usage.html" title="QakService24Usage"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="Lezioni2024.html" title="Lezioni 2024"
+          <a href="Intro2024.html" title="Intro2024"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">ISS2024</a></li> 
@@ -53,7 +53,7 @@
 <li><p><a class="reference internal" href="#il-metodo-di-lavoro"><span class="std std-ref">Il metodo di lavoro</span></a></p></li>
 <li><p><a class="reference internal" href="#fasi-del-corso"><span class="std std-ref">Fasi del corso</span></a></p></li>
 <li><p><a class="reference internal" href="#criteri-di-valutazione"><span class="std std-ref">Criteri di valutazione</span></a></p></li>
-<li><p><a class="reference internal" href="Towards2024.html#towards2024"><span class="std std-ref">Towards2024</span></a></p></li>
+<li><p><span class="xref std std-ref">Towards2024</span></p></li>
 </ol>
 <p><span class="slide2">LINKS</span></p>
 <table class="docutils align-default" style="width: 100%">
@@ -125,7 +125,7 @@ senza modificare il software che esprime la ‘business logic’ del problema.</
 <li><p>un (primo) insieme di piani di test funzionali</p></li>
 </ul>
 </li>
-<li><p>Imppostiamo una <strong>analisi del problema</strong> che mira a definire:</p>
+<li><p>Impostiamo una <strong>analisi del problema</strong> che mira a definire:</p>
 <ul class="simple">
 <li><p>una architettura logica del sistema come risultato dall’analisi</p></li>
 <li><p>un piano di lavoro</p></li>
@@ -148,7 +148,7 @@ che sarà l’input dello SPRINT <span class="math notranslate nohighlight">\(n+
 le decisioni, i modelli, etc. introdotti nello SPRINT,
 fornendo indicazioni all’utente finale su come eseguire lo SPRINT.</p>
 <p><span class="slidekp">Il template come diario di bordo</span></p>
-<p><a class="reference internal" href="Template23.html#il-template"><span class="std std-ref">Il template</span></a> va inteso come un <span class="remark">logbook</span> (<em>diario di bordo</em>), da compilare <strong>in itinere</strong>
+<p><span class="xref std std-ref">Il template</span> va inteso come un <span class="remark">logbook</span> (<em>diario di bordo</em>), da compilare <strong>in itinere</strong>
 con indicazioni <strong>sintetiche ed essenziali</strong>, man mano si svolge
 il processo di produzione e <span class="brown">non dopo</span> avere sviluppato il codice.</p>
 </li>
@@ -159,11 +159,11 @@ il processo di produzione e <span class="brown">non dopo</span> avere sviluppato
 <h3>Fasi del corso<a class="headerlink" href="#fasi-del-corso" title="Permalink to this heading">¶</a></h3>
 <ol class="arabic">
 <li><p>Dalla OOP ai sistemi a scambio di messaggi come programmatori che devono utilizzare un (micro) servizio.
-Il servizio è un sistema software di cui occcorre consosce la <a class="reference internal" href="QakServiceSynch24.html#vista-esterna"><span class="std std-ref">Vista esterna</span></a>.
+Il servizio è un sistema software di cui occcorre consosce la <a class="reference internal" href="Intro2024.html#vista-esterna"><span class="std std-ref">Vista esterna</span></a>.
 Si veda <a class="reference internal" href="#per-iniziare"><span class="std std-ref">Per iniziare</span></a>.</p></li>
 <li><p>Da programmatori-utilizzatori a progettesti-costruttori del (micro) servizio.
 Il servizio è un sistema software di cui si affronta lo sviluppo della sua
-<a class="reference internal" href="QakServiceSynch24.html#vista-interna"><span class="std std-ref">Vista interna</span></a></p>
+<a class="reference internal" href="Intro2024.html#vista-interna"><span class="std std-ref">Vista interna</span></a></p>
 <p>In questa fase:</p>
 <ul class="simple">
 <li><p>viene introdotto un linguaggio custom ad attori per lo sviluppo incrementale di prototipi, a partire da un insieme di requisiti;</p></li>
@@ -184,11 +184,13 @@ che prevede  l’utilizzo di robot virtuali e/o <a class="reference external" hr
 <section id="per-iniziare">
 <h3>Per iniziare<a class="headerlink" href="#per-iniziare" title="Permalink to this heading">¶</a></h3>
 <p>Il servizio (implementato in Java) può essere attivato in due modi:</p>
-<ol class="arabic">
+<ol class="arabic simple">
 <li><p>eseguendo il file batch <code class="docutils literal notranslate"><span class="pre">unibo.servicemath.bat</span></code> (su windows) o <code class="docutils literal notranslate"><span class="pre">unibo.servicemath</span></code> (su Linux)
-estratto dal file di distribuzione del prodotto (<strong>servicemath24Asynch-1.0.zip</strong>  <a class="reference external" href="./_static/code/servicemath24Asynch-1.0.zip">servicemath24Asynch-1.0</a> ).</p>
-<p><strong>AVVERTENZA</strong> Su Windows fare unzip del file in una directory dal nome brece, ad es. <code class="docutils literal notranslate"><span class="pre">C:/issRun</span></code></p>
-</li>
+estratto dal file di distribuzione del prodotto (<strong>servicemath24Asynch-1.0.zip</strong>).</p></li>
+</ol>
+<blockquote>
+<div></div></blockquote>
+<ol class="arabic">
 <li><p>eseguendo il comando docker: <strong>docker-compose</strong>  <a class="reference external" href="./_static/code/servicemathAsynch.yaml">servicemathAsynch.yaml</a>.</p>
 <p>Una volta attivato, il servizio fornisce una pagina HTML, accessibile mediante browser alla porta <code class="docutils literal notranslate"><span class="pre">8088</span></code>:</p>
 <blockquote>
@@ -203,8 +205,8 @@ estratto dal file di distribuzione del prodotto (<strong>servicemath24Asynch-1.0
 <li><p>Installare <span class="blue">GIT</span> <span class="brown">PERSONALE PRIVATO</span> e <strong>dare accesso al docente</strong></p></li>
 <li><p>Compilare il <a class="reference external" href="_static/templateToFill.html">template</a> inserendo <strong>fotografia, email e numero di matricola</strong></p></li>
 <li><p>Clonare <a class="reference external" href="https://github.com/anatali/issLab24">https://github.com/anatali/issLab24</a> in una directory vuota e.g. <code class="docutils literal notranslate"><span class="pre">C:/.../issLab24</span></code></p></li>
-<li><p>Installare <span class="blue">Gradle</span>  (8.6 o 7.6)  (per <em>System Proèertire Advanced</em> su Windows: <code class="docutils literal notranslate"><span class="pre">sysdm.cpl</span></code>)</p></li>
-<li><p>Installare  <span class="blue">Eclipse IDE</span>: <a href="#id1"><span class="problematic" id="id2">`Eclipse IDE for Java and DSL Developers`_</span></a> (2023 12)</p></li>
+<li><p>Installare <span class="blue">Gradle</span>  (8.6 o 7.6)  (per <em>System Properties Advanced</em> su Windows: <code class="docutils literal notranslate"><span class="pre">sysdm.cpl</span></code>)</p></li>
+<li><p>Installare  <span class="blue">Eclipse IDE</span>: <a class="reference external" href="https://www.eclipse.org/downloads/packages/">Eclipse IDE for Java and DSL Developers</a> (2023 12)</p></li>
 <li><p>Installare <span class="blue">IntelliJ</span></p></li>
 <li><p>Installare <span class="blue">Docker</span></p></li>
 <li><p>Installare <span class="blue">Node.js</span></p></li>
@@ -217,7 +219,7 @@ estratto dal file di distribuzione del prodotto (<strong>servicemath24Asynch-1.0
 <section id="criteri-di-valutazione">
 <h2>Criteri di valutazione<a class="headerlink" href="#criteri-di-valutazione" title="Permalink to this heading">¶</a></h2>
 <ol class="arabic simple">
-<li><p>La costruzione di un prototipo di sistema software che soddisfa l’insieme di requisiti dato nel <a class="reference internal" href="TemaFinale22.html#temafinale22"><span class="std std-ref">Temafinale</span></a>,
+<li><p>La costruzione di un prototipo di sistema software che soddisfa l’insieme di requisiti dato nel <span class="xref std std-ref">Temafinale</span>,
 mira a verificare il raggiungimento di adeguate abilità teorico/pratiche
 e può essere effettuata in <span class="remark">modo individuale</span> oppure in un <span class="remark">gruppo di non più di tre studenti</span>.</p></li>
 <li><p>La discussione individuale orale che segue la demo del prototipo è volta a valutare
@@ -389,7 +391,7 @@ per poterne discutere in modo pragmaticamente utile (cioè non solo in modo vago
 come deliverable della fase di analisi del problema?</p></li>
 <li><p>Quali sono i punti salienti che sono stati posti in luce nella fase di analisi del problema?
 E’ stato evidenziato qualche punto particolamente critico?</p></li>
-<li><p>Quali sono i <a class="reference internal" href="Principi.html#principi"><span class="std std-ref">Principi</span></a> su cui si  basata la progettazione del sowftware?</p></li>
+<li><p>Quali sono i <span class="xref std std-ref">principi</span> su cui si  basata la progettazione del sowftware?</p></li>
 <li><p>E’ possibile, secondo lei, definire un modello eseguibile del sistema già al termine della fase di
 analisi dei requisiti? Se sì, quali vantaggi se ne potrebbero trarre?
 Se no, perchè non lo ritiene possibile?</p></li>
@@ -482,13 +484,13 @@ E docker-compose? Se sì quali sono i criteri/motivazioni per la ripartizione di
   </div>
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="Lezioni2024.html"
-                          title="previous chapter">Lezioni 2024</a></p>
+    <p class="topless"><a href="Intro2024.html"
+                          title="previous chapter">Intro2024</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="aws.html"
-                          title="next chapter">AWS</a></p>
+    <p class="topless"><a href="QakService24Usage.html"
+                          title="next chapter">QakService24Usage</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -518,10 +520,10 @@ E docker-compose? Se sì quali sono i criteri/motivazioni per la ripartizione di
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="aws.html" title="AWS"
+          <a href="QakService24Usage.html" title="QakService24Usage"
              >next</a> |</li>
         <li class="right" >
-          <a href="Lezioni2024.html" title="Lezioni 2024"
+          <a href="Intro2024.html" title="Intro2024"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">ISS2024</a></li> 

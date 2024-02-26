@@ -1,0 +1,482 @@
+.. role:: red 
+.. role:: blue 
+.. role:: brown 
+.. role:: magenta    
+.. role:: remark
+.. role:: worktodo
+.. role:: slide
+.. role:: slide1
+.. role:: slide2
+.. role:: slide3     
+.. role:: slidekp
+
+.. _Akka: https://akka.io/
+.. _Modello computazionale ad attori: https://en.wikipedia.org/wiki/Actor_model
+.. _Akka Actors: https://doc.akka.io//docs/akka/current/typed/guide/actors-motivation.html
+.. _Domain Specific Language: https://www.jetbrains.com/mps/concepts/domain-specific-languages/
+.. _API: https://it.wikipedia.org/wiki/Application_programming_interface
+.. _Metamodellazione: https://it.wikipedia.org/wiki/Metamodellazione
+.. _Ingegneria dei requisiti: https://it.wikipedia.org/wiki/Ingegneria_dei_requisiti#:~:text=L'ingegneria%20dei%20requisiti%20%C3%A8,e%20nell'ingegneria%20del%20software
+
+.. _AWS Lambda: https://aws.amazon.com/it/getting-started/hands-on/run-serverless-code/?pg=gs&sec=lyfa
+.. _FasS: https://it.wikipedia.org/wiki/Function_as_a_service
+.. _AWS Services: https://it.wikipedia.org/wiki/Amazon_Web_Services
+.. _Sito Web del corso : https://www.unibo.it/it/didattica/insegnamenti/insegnamento/2023/468003
+
+.. _Conway Life: https://it.wikipedia.org/wiki/Gioco_della_vita
+.. _Conway Life play: https://playgameoflife.com/
+.. _robot reali: _static/devsDdr.html
+.. _Lectures2024: _static/LectureBologna2024.html
+.. _Sprint review : https://www.agileway.it/sprint-review-meeting/
+
+.. _servicemath24Asynch-1.0: ./_static/code/servicemath24Asynch-1.0.zip  
+.. _servicemathAsynch.yaml:  ./_static/code/servicemathAsynch.yaml 
+.. _template: _static/templateToFill.html
+.. _Eclipse IDE for Java and DSL Developers: https://www.eclipse.org/downloads/packages/
+
+====================================
+ISS2024
+====================================
+
+
+---------------------------
+Intro2024 indice
+---------------------------
+
+
+#. :ref:`Introduzione<Intro2024>`
+#. :ref:`Promesse del corso`
+#. :ref:`Il metodo di lavoro`
+#. :ref:`Fasi del corso`
+#. :ref:`Criteri di valutazione`
+#. :ref:`Towards2024` 
+
+:slide2:`LINKS`
+
+.. list-table:: 
+  :widths: 25,75
+  :width: 100%
+  
+  * - Insegnamento
+    - https://www.unibo.it/it/didattica/insegnamenti/insegnamento/2023/468003
+  * - Virtuale
+    - https://virtuale.unibo.it/course/view.php?id=35152 
+  * - Wooclap 
+    - https://app.wooclap.com/events/ISS24STARTING
+  * - GITHUB del corso 
+    - https://github.com/anatali/issLab24 
+  * - Lezioni svolte 
+    - https://anatali.github.io/issLab24/iss24Material/LectureBologna2024.html
+
+.. https://app.wooclap.com/home
+ 
+:slide1:`1) IL CORSO 2024`
+
+--------------------------------------------
+Promesse del corso
+--------------------------------------------
+
+Riportiamo qui quanto si legge nel `Sito Web del corso`_  ->:  
+ 
+
+Al termine del corso lo studente:
+
+- è in grado di impostare :blue:`processi di sviluppo cooperativo` del software basati su approcci agili 
+  (in particolare SCRUM) avvalendosi anche di modelli eseguibili, espressi mediante meta-modelli custom;
+- è' in grado di progettare e sviluppare sistemi software e relativi piani di testing in modo :blue:`incrementale 
+  ed evolutivo`, partendo dal problema e dal dominio applicativo piuttosto che dalla tecnologia realizzativa, 
+  attraverso la definizione di modelli eseguibili dell':blue:`analisi dei requisiti e dell'analisi del problema`;
+- è in grado di :blue:`valutare in modo critico` le continua evoluzione delle tecnologie informatiche, 
+  sia a livello computazionale, sia livello di sviluppo-software, acquisendo :blue:`conoscenze teorico-operative` 
+  su linguaggi, metododologie e strumenti quali *Kotlin, Gradle, SCRUM, SpringBoot, Docker*;
+- è in grado di comprendere il ruolo dei diversi :blue:`stili di architetture software` 
+  (layers, client-server, pipeline, microkernel, service-based, event-driven, space-based, microservices) 
+  e di come :blue:`scegliere lo stile architetturale più opportuno` per i diversi sotto-sistemi individuati;
+- è in grado di affrontare l'analisi, il progetto e la costruzione di applicazioni distribuite ed eterogenee 
+  di tipo proattivo e/o reattivo (unitamente a loro possibili piattaforme di sviluppo e di supporto run-time) 
+  con particolare riferimento a :blue:`modelli computazionali a scambio di messaggi e ad eventi`;
+- è in grado di realizzare le :blue:`interazioni a scambio di messaggi` tra componenti distribuiti utilizzando 
+  modelli logici di alto livello e implementazioni basate su protocolli diversi (TCP, UDP, HTTP, CoAP, MQTT);
+- è in grado di comprendere come sia possibile progettare e costruire ambienti di sviluppo custom capaci 
+  di :blue:`generazione automatica di codice` (Software Factories in 'ecosistemi' come Eclipse/IntelliJ), 
+  basandosi su *Model Driven Software Development* (MDSD) e sull'uso di Domain Specific Languages (DSL);
+- è in grado di sviluppare applicazioni :blue:`capaci di combinare` aspetti di alto livello (in particolare di AI) 
+  con aspetti di basso livello relativi a dispositivi di Internet of Things (IOT), utilizzando sia ambienti 
+  virtuali sia dispositivi reali costruibili utilizzando elaboratori a basso costo quali RaspberryPi e Arduino;
+- è in grado di :blue:`applicare` i concetti, i dispositivi, e gli strumenti sviluppati in modo concreto ed operativo 
+  durante il corso per lo sviluppo di una :blue:`applicazione finale` che utilizza uno o più dispositivi IOT 'situati', 
+  con particolare riferimento a *Differental Drive Robots* (DDR) con sensori 
+  che possono agire in modo relativamente autonomo in :blue:`diversi` ambienti virtuali o reali, 
+  senza modificare il software che esprime la 'business logic' del problema.
+
+:slide1:`2) Il nostro metodo di lavoro`
+
++++++++++++++++++++++++++++++++++++++
+Il metodo di lavoro
++++++++++++++++++++++++++++++++++++++
+
+#. Partiamo dall'insieme di requisiti **forniti dal committente** ed espressi in linguaggio naturale 
+#. Impostiamo lo ``SPRINT0`` come una **analisi dei requisiti** che mira a esprimerli in modo comprensibile anche alla macchina introducendo:
+
+   - un modello (eseguibile) dell'architattura del sistema desunta dai requisiti 
+   - un (primo) insieme di piani di test funzionali
+   
+#. Impostiamo una **analisi del problema** che mira a definire:
+ 
+   - una architettura logica del sistema come risultato dall'analisi
+   - un piano di lavoro
+   - una possibile estensione ai piani di testing 
+   - la definizione del primo SPRINT relizzativo
+ 
+#. Impostiamo ogni SPRINT come un **sottoprogetto** con sua propria spiegazione e testing. 
+
+   - Lo SPRINT :math:`n+1` parte dai risultati dello sprint :math:`n` e costruisce un sottosistema (funzionante) 
+     che sarà l'input dello SPRINT :math:`n+2`.
+#. Facciamo seguire ad ogni SPRINT una fase di `Sprint review`_ -> i cui meeting saranno
+ 
+   - :remark:`un nuovo modo di concepire le ore di ricevimento-studenti`.
+#. Per ogni  SPRINT, compiliamo un documento (si veda :ref:`template2024`)  per :blue:`rendere esplcite` le conoscenze, 
+   le decisioni, i modelli, etc. introdotti nello SPRINT, 
+   fornendo indicazioni all'utente finale su come eseguire lo SPRINT. 
+
+   :slidekp:`Il template come diario di bordo`
+
+   :ref:`Il template` va inteso come un :remark:`logbook` (*diario di bordo*), da compilare **in itinere** 
+   con indicazioni **sintetiche ed essenziali**, man mano si svolge 
+   il processo di produzione e :brown:`non dopo` avere sviluppato il codice.
+
+
+:slide1:`3) Fasi del corso`
+
++++++++++++++++++++++++++++++++++++++
+Fasi del corso
++++++++++++++++++++++++++++++++++++++    
+
+
+#. Dalla OOP ai sistemi a scambio di messaggi come programmatori che devono utilizzare un (micro) servizio.
+   Il servizio è un sistema software di cui occcorre consosce la :ref:`Vista esterna`.
+   Si veda :ref:`Per iniziare`.
+
+#. Da programmatori-utilizzatori a progettesti-costruttori del (micro) servizio.
+   Il servizio è un sistema software di cui si affronta lo sviluppo della sua
+   :ref:`Vista interna`
+
+   In questa fase:
+
+   - viene introdotto un linguaggio custom ad attori per lo sviluppo incrementale di prototipi, a partire da un insieme di requisiti;
+   - viene sperimentato il ruolo dei modelli esguibili nella costruizione incrementale del software;
+   - viene approfondito un criterio / metodo di sviluppo top-down secondo il motto, che imposta il processo di progettazione 
+     e produzione sulle premesse dei modelli definiti nella fase di analisi.
+
+#. Progetto e sviluppo di un sistema che realizza il gioco `Conway Life`_ -> come sistema distribuito 
+   (si veda anche `Conway Life play`_ ->).
+#. Progetto e sviluppo di un sistema distribuito  nel campo delle **applicazioni IOT**, 
+   che prevede  l'utilizzo di robot virtuali e/o `robot reali`_, 
+
+  .. image:: ./_static/img/Intro/mbotIot.png 
+    :align: center
+    :width: 70%
+
+
++++++++++++++++++++++++++++++++++++++
+Per iniziare
++++++++++++++++++++++++++++++++++++++
+
+Il servizio (implementato in Java) può essere attivato in due modi:
+
+#. eseguendo il file batch ``unibo.servicemath.bat`` (su windows) o ``unibo.servicemath`` (su Linux)
+   estratto dal file di distribuzione del prodotto (**servicemath24Asynch-1.0.zip**).
+
+  .. `servicemath24Asynch-1.0`_ ELIMINATO perchè > 100MB
+
+   **AVVERTENZA** Su Windows fare unzip del file in una directory dal nome brece, ad es. ``C:/issRun``
+
+#. eseguendo il comando docker: **docker-compose**  `servicemathAsynch.yaml`_.
+   
+   Una volta attivato, il servizio fornisce una pagina HTML, accessibile mediante browser alla porta ``8088``:
+           
+     .. image:: ./_static/img/Actors24/servicefacade24_1.PNG
+              :align: center
+              :width: 50%
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Da fare sul proprio PC
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+#. Installare :blue:`Java JDK 11`  (non useremo versioni più recenti)
+#. Installare :blue:`GIT` :brown:`PERSONALE PRIVATO` e **dare accesso al docente**
+#. Compilare il `template`_ inserendo **fotografia, email e numero di matricola**
+#. Clonare https://github.com/anatali/issLab24 in una directory vuota e.g. ``C:/.../issLab24``
+#. Installare :blue:`Gradle`  (8.6 o 7.6)  (per *System Properties Advanced* su Windows: ``sysdm.cpl``)
+#. Installare  :blue:`Eclipse IDE`: `Eclipse IDE for Java and DSL Developers`_ (2023 12)  
+#. Installare :blue:`IntelliJ`
+#. Installare :blue:`Docker`
+#. Installare :blue:`Node.js`
+#. Installare :blue:`Python (3.8.8)`
+
+
+:slide1:`4) Cosa si valuta`
+
+---------------------------------
+Criteri di valutazione
+---------------------------------
+
+#. La costruzione di un prototipo di sistema software che soddisfa l'insieme di requisiti dato nel :ref:`Temafinale<TemaFinale22>`, 
+   mira a verificare il raggiungimento di adeguate abilità teorico/pratiche 
+   e può essere effettuata in :remark:`modo individuale` oppure in un :remark:`gruppo di non più di tre studenti`.
+#. La discussione individuale orale che segue la demo del prototipo è volta a valutare  
+   :blue:`il livello di conoscenza, consapevolezza e di autonomia analitico/progettuale` :remark:`del singolo studente`.
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Dettagli sul colloquio orale
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+- 48 h prima del colloqio, il codice del sistema finale deve essere stato pubblicato sul sito del prototipo
+  (individuale o di gruppo), 
+  dandone relativa informazione via mail al docente.
+
+- Il giorno del colloquio, ogni gruppo deve avere effettuato gli opportuni preparativi per la/le demo, 
+  in modo da essere subito operativo.
+
+L'ordine di presentazione dei gruppi verrà opportunamente stabilito dal docente e si svolgerà come qui di seguito
+indicato.
+
+#. Presentazione (collettiva di gruppo) di una :slide1:`demo 'live' del sistema finale` di durata 10-15(max) minuti.
+   La demo deve mostrare la esecuzione di almeno un Test(Plan) automatizzato ritenuto significativo.
+   Per applicazioni che NON usano robot reali NON sono ammessi video, 
+   che potrebbero essere invece utili per mostrare il funzionamento di robot reali 
+   o di sistemi che includono il RaspberryPi o altri dispositivi
+#. Presentazione (collettiva di gruppo) del progetto del sistema e della sua relazione 
+   con la fase di analisi. In questa fase è RICHIESTA la preparazione di 
+   :slide1:`5-7 SLIDES  di illustrazione del processo e dell'architettura finale` con figure e (se ritenuto utile) riferimenti al codice. 
+   Al termine di queste fasi il gruppo può raggiungere un :remark:`punteggio massimo di 27/30`.
+#. Domande (per esempi, si veda qui sotto) rivolte dal docente a singole persone, 
+   riguardo al prodotto, al progetto e alla analisi del problema/requisiti. 
+   Al termine di questa fase, il singolo studente può raggiungere un :remark:`punteggio massimo di 29/30`.
+#. Altre domande rivolte dal docente a singole persone. Al termine di questa fase, il singolo studente
+   può raggiungere il :remark:`punteggio di 30 e lode`.
+
+---------------------------------------------
+Note dopo le interazioni con gli studenti
+---------------------------------------------
+
+#. Lo scopo del tema finale NON è (solo) risolvere il problema ma avere un :blue:`caso di studio su cui ragionare sul 
+   processo di costruzione del software`.
+
+#. L'uso del linguaggio **qak** non va preso come un vincolo a priori. 
+   Ne va invece motivato l'uso (come per ogni altra tecnologia) in relazione alle caratteristiche del (sotto)problema esaminato.
+   Poichè il lettore potrebbe non consoscere questo linguaggio, è opportuno scrivere - una volta sola - un 
+   (breve) documento che spiega per quali caratteristiche si ritiene opportuno usare i qak. 
+   Il documento dovrebbe porre in luce gli aspetti salienti, rinviando (con links) gli approfondimenti ai documenti 'ufficiali', 
+   in modo da porre in evidenza il perchè lo si propone, nel contesto del problema.  
+
+#. I link tra i vari documenti dovrebbero essere possibilmente locali, in modo da poter leggere i documenti stessi senza 
+   (ove possibile) connessione di rete.
+
+#. Lo :blue:`scopo della analisi dei requisiti` è ridefinire il testo dato dal committente in modo 'preciso' (e formale, cioè
+   per noi, comprensibile alla macchina). Per le varie entità menzionate nel testo, occorre dare risposta ad alcune
+   precise domande, tra cui (altri tipi di domande sarebbe bene fossero individuate da voi):
+
+   - cosa intende il committente per xxx (ad esempio DDR robot, Virtual Robot)?
+   - il committenete fornisce indicazioni sul software da usare per xxx?
+   - se si, è possibile fornire un modello di tale software (per capire bene cosa bisogna sapere per usarlo)?
+
+  Si tenga conto di quanto detto in :ref:`` 
+
+#. Occorre anche porre molta attenzione alle frasi scritte in linguaggio naturale e dare loro una interpretazione
+   non ambigua. Ad esempio: 
+
+   - per la frase *a DDR robot working as a transport trolley*, che relazione si pensa debba esistere tra 
+     l'entità *trolley* e l'entità *DDR robot*?
+#. Ogni fase (a partire dai requisiti) dovrebbe terminare con la specifica di un modello (anche non eseguibile) 
+   che costituisce l'inizio della fase successiva.  Al modello dovrebbe essere associato un insieme di TestPlan 
+   (ne basta anche solo uno signficativo) di tipo funzionale per chiarire cosa ci si aspetta (come ouput) dal software 
+   che *dovrà essere sviluppato per quel requisito*, una volta date le opportune info di ingresso.
+#. Ogni modello dovrebbe essere accompagnato da almeno un TestPlan funzionale significativo.
+#. Lo :blue:`scopo della fase di analisi del problema` è definire una modello (eseguibile) della architettura logica e 
+   dare elementi utili per la costruzione di un *piano di lavoro* e per la :blue:`suddivsione dei compiti` tra i componenti
+   del Team.
+#. Il primo SPRINT dovrebbe scaturire dal piano di lavoro e iniziare a partire dal modello dell'analisi 
+#. Ogni SPRINT dovrebbe:
+
+   - essere associato a un preciso obiettivo (SCRUM goal) 
+   - approfondire l'analisi relativa al sottoproblema relativo al goal dello SPRINT 
+   - estendere/precisare l'architettura logica e i TestPlan
+   - definire una architettura di progetto e Test relativi 
+   - terminare con un prototipo eseguibile (da discutere con il committente)  e una proposta di nuovo SPRINT 
+     (che potrebbe anche consistere in una revisione dell'analisi, se si vede che è stata fatta male)
+#. Ogni SPRINT dovrebbe :blue:`terminare con una pagina di sintesi` che riporta l'architettura finale 
+   del sistema (con i link al modello e ai Test). 
+   Questa pagina sarà l'inizio del documento relativo allo SPRINT successivo.
+   E' opportuno anche inserire istruzioni su come eseguire il software sviluppato, ad uso dell'utente finale.
+
+
+.. #. I file HTML  in *userdocs* non devono essere visti come  'documentazione', ma come una sorta di :blue:`'diario di bordo'`
+..   che appunta (in modo sintetico,  in linguaggio naturale e con link al codice) i punti essenziali 
+..   che hanno portato a quei modelli.
+
++++++++++++++++++++++++++++++++ 
+Come organizzare gli sprint
++++++++++++++++++++++++++++++++ 
+
+ 
+Lo scopo dello SPRINT0 dovrebbe essere quello di formalizzare i singoli termini del testo 
+(usando un qualche linguaggio di programmazione e/o con modelli) e anche quello di fornire  una prima visione 
+di insieme del sistema da realizzare.
+
+Lo SPRINT0 dovrebbe concludersi fornendo un modello delle macro-parti del sistema,
+evidenziando quali componenti sono forniti dal committente (ad esempio DDRrobot, Sonar, etc.) e quelli che invece 
+bisogna sviluppare.
+I  messaggi che questi componenti si scambiano potrebbero essere veri e propri requisiti ma anche *solo indicativi* 
+di chi dovrà inviare informazione e di chi dovrà riceverla.  
+
+Ad esempio, si potrebbe introdurre un modello come quello che segue:
+
+   .. image::  ./_static/img/TF22/sprint0.png 
+     :align: center 
+     :width: 75%
+
+Questa immagine viene generata in modo automatico da un  MODELLO Qak che può essere scritto 
+in pochi minuti, per CATTURARE GLI ASPETTI RITENUTI ESSENZIALI
+(e certo - almeno per ora - non perchè sia eseguibile).
+
+Lo scopo di questo modello è di costituire un :blue:`SISTEMA LOGICO  DI RIFERIMENTO` e di evidenziare che: 
+
+- Il sistema è distribuito su almeno 3 nodi computazionali diversi (il *driver* è un simulatore).
+- Saremo chiamati a sviluppare i macro-componenti  *wasteservice, transporttrolley, sonaronrasp, wastewervicewtatusgui*.
+- La interazione *driver-wasteservice* è di tipo request-response ed è implicata dal testo dei requsiti.
+- La interazione *sonaronrasp-transporttrolley* è modellata come un evento, ma non è un requisito. Dunque potrebbe essere 
+  modificata negli sviluppi successivi, mentre potrebbe essere ritenuto un requisito che l'informazione prodotta dal 
+  sottosistema su *ctxrasp* non sia di pertinenza del *wasteservice* (cosa questa da discutere e da approfondire con 
+  il committente).
+- Risulta invece un requisito architetturale il fatto che il *wasteservice* 'non vede' il *basicrobot* 
+  (che è un componente dato dal committente).
+
+  
+Questo modello dovrebbe fornire il quadro architetturale complessivo dal quale dedurre 
+un possibile piano di lavoro che conduce allo SPRINT1.
+
+Ad esempio, se il team e il committente concordano sulla opportunità di affrontare in primis il 
+**core-business** del problema, allora 
+lo SPRINT1 potrebbe escludere di trattare la GUI  e la parte su Rasp (se non in modo astratto
+o simulato) e avere come :blue:`GOAL` (si veda SCRUM) quello di fornire un primo prototipo 
+che realizza le funzionalità fondamentali del sistema.  
+
+Lo SPRINT1  (come ogni altro sprint in futuro) dovrebbe quindi affrontare un 
+:blue:`preciso sottoinsieme dei requisiti`, che va individuato  ed associato a uno o più Test-plan funzionali.
+
+Nel caso specifico, si tatta di analizzare il problema della interazione *wasteservice-transporttrolley-basicrobot*
+a partire dalla richiesta del driver.
+
+Ogni sprint deve quindi fare uno :blue:`ZOOMING` entro una parte della architettura di RIFERIMENTO,
+analizzando le problematiche poste dal sottoinsieme dei requisiti considerato. Ad esempio
+l'analista di questo SPRINT1 potrebbe :
+
+- affrontarre il problema di quando sia opportuno rispondere al driver,
+- discutere su chi abbia la responsabilità di muovere il *transporttrolley* (il *wasteservice*, inviando 
+  (macro) comandi o il *transporttrolley stesso* ), 
+- studiate il problema di chi debba aggiornare la gui e quando
+- etc. etc. 
+
+Alla fine della analisi del problema, il modello di riferimento avrà subito una :blue:`evoluzione` che fornisce 
+una una :blue:`nuova architattura logica`, che sarà il punto di partenza per un nuovo piano di lavoro.
+Infatti sia l'analista prima che il progettista poi, potrebbero precisare la natura di alcune interazioni e 
+introdurre nuovi componenti all'interno di *ctxwasteservice*.
+
+Sottolineiamo che, al termine dello SPRINT,
+un componente ptrebbe anche essere realizzato non come un QAk actor. 
+Ad esempio,   la *WasteServiceStatusGUI*  potrebbe essere realizzata come web-application.
+Il componente QAk che definisce la logica di *wastewervicewtatusgui* potrebbe essere 'dimenticato'
+o (forse, preferibilmente) :blue:`riusato` all'interno di questa web-application.
+
+
+---------------------------------------
+Esempi di possibili domande finali
+---------------------------------------
+
+Riportiamo qui un elenco di possibili domande finali durante i colloqui orali:
+
+- Abbiamo appena visto il funzionamento della applicazione. Possiamo vedere il progetto? 
+  Quale rappresentazione (linguaggio naturale, diagrammi UML, modelli, figure, parti di codice, ...) 
+  propone per l'esposizione del progetto?
+- Che forma assume il deliverable di progetto e come è stato prodotto? 
+  Vi sono connessioni cone la fase di analisi del problema? E con la fase di analisi dei requisiti?
+- Come ci può convincere che l'applicazione 'copre' tutti i requisiti dati senza doverla eseguire 
+  caso per caso?
+- Può mostrare la struttura della architettura finale del sistema? 
+  In quale forma ritiene sia più opportuno presentare l'architettura (o in generale una architettura software)
+  per poterne discutere in modo pragmaticamente utile (cioè non solo in modo vago e discorsivo)?
+- L'architettura finale è' stata preceduta dalla definizione di una archittura logica scaturita 
+  come deliverable della fase di analisi del problema?
+- Quali sono i punti salienti che sono stati posti in luce nella fase di analisi del problema? 
+  E' stato evidenziato qualche punto particolamente critico?
+- Quali sono i :ref:`principi` su cui si  basata la progettazione del sowftware?
+- E' possibile, secondo lei, definire un modello eseguibile del sistema già al termine della fase di 
+  analisi dei requisiti? Se sì, quali vantaggi se ne potrebbero trarre? 
+  Se no, perchè non lo ritiene possibile?
+- Immagino che come linguaggio di codifica si sia usato principlamente Java e/o Kotlin, 
+  insieme a qualche parte scritta in C, C++, Python, JavaScript, etc). 
+  Nella fase di analisi del problema, è stato evidenziato qualche macroscopico gap rispetto queste tecnologie? 
+  Se sì' come si è pensato di colmare questo 'abstraction gap'?
+- Fino a che punto è utile introdurre diagrammmi ``UML`` e per quali scopi? 
+  Quali sono le motivazioni che possono indurre una software-house a definire linguaggi 
+  (o metamodelli) Domain-specific?
+- In ambiente industriale non è possibile pensare che sia possibile utilizzare il metamodello ``QActor``. 
+  Ma di certo è diffuso l'uso delle librerie. Secondo lei sarebbe possibile affrontare lo sviluppo 
+  di applicazioni distribuite usando solo la libreria ``it.unibo.qakactor-x.y.jar`` e quelle ad essa necessarie?
+- Ha trovato un qualche vantaggio nell'uso dei ``QActor`` attraverso un linguaggio custom (di ispirazione ``DSL``) 
+  dotato di un suo proprio IDE? Ha una idea di come sia stato prodotto l'IDE per i QActor in ambiente Eclipse?
+- Le mostro l'architettura logica proposta dal gruppo xyz. Trova questa architettura logica concordante 
+  con la sua o è possibile evidenziare macroscopiche differenze?. 
+  Se nota differenze, le possiamo tollerare o no?
+- In quale fase (analisi, progetto,...) è stata decisa la natura software dei componenti del sistema; 
+  quali sono le motivazioni per queste scelte, e dove sono riportate/discusse?
+- In quale fase (analisi, progetto,...) è stata decisa la interazione tra i componenti del sistema; 
+  quali sono le motivazioni per queste scelte, e dove sono riportate/discusse?
+- In quale fase dello sviluppo è stata definita una pianificazione dei lavori e una loro ripartizione 
+  tra i componenti del team?
+- In quanti Sprint Scrum-like si è svolto lo sviluppo del software?
+- Durante la fase di sviluppo, è stato necessario rivedere qualche parte della analisi del problema? 
+  In altre parole, sono state trovate situazioni che l'analista non aveva previsto o aveva affrontato 
+  in modo incompleto? Se sì, ha qualche esempio? E come si è procduto in questo caso?
+- E' possibilie sapere, per ciascun componente del team, di quali aspetti del sistema si è 
+  specificatamente occupato? Quando sono state definite e da chi queste ripartizioni dello sviluppo?
+- In quale fase dello sviluppo sono stati impostati programmi per il testing? 
+  Quali tipi di test (unit, integration, ...) sono stati pensati e quali effettivamente realizzati?
+- L'architettura finale del sistema mostra qualche pattern architetturale riconoscibile 
+  (ad es. client-server, layer, clean ...) e in quale fase dello sviluppo (analisi/progetto) 
+  è stato deciso di introdurlo? E perchè? Queste motivazioni sono riportate/discusse in qualche documento?
+- E' possibile utilizzare l'applicazione avvalendosi di un Browser? Se no, per quale motivo 
+  si e' esclusa questa possibilità?
+- Come è stato affrontato il requisito xyz? 
+- Come viene rappresentato lo stato del sistema? 
+  E' uno stato 'concentrato', cioè gestito da un solo componente o distribuito tra più componenti? 
+  Chi e quando ha preso una decisione in merito a questo punto?
+ 
+- Il sistema finale utilizza solo un DDR virtuale. Cosa bisognerebbe fare per utilizzare un robot fisico 
+  e quanto tempo sarebbe necessario per il refactoring del sistema?
+- Il sistema finale e' stato sviluppato tenendo conto dei principi SOLID? E' possibile vederne qualche esempio?
+- E' stato utilizzato il linguaggio Prolog? Se sì, per quale motivo?
+- Sono state utilizzate annotazioni Java? Se sì, in quali parti o in quali funzionalità e per quale motivo?
+- Per un eventuale supporto Web, quale framework è stato utilizzato? Spring o Node/Express? Quali sono le motivazioni della scelta?
+- Il sistema finale coinvolge anche un RasperryPi? 
+  Se si, quale parte del sistema è stato deployed sul Rasp e in quale modo?
+- E' stato tentato un deplyoment della applicazione (o di parti di essa) utilizzando docker? 
+  E docker-compose? Se sì quali sono i criteri/motivazioni per la ripartizione di parti applicative su docker?
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+

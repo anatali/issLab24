@@ -1,0 +1,65 @@
+.. role:: red 
+.. role:: blue 
+.. role:: brown 
+.. role:: remark
+.. role:: worktodo
+.. role:: slide
+.. role:: slide1
+.. role:: slide2
+.. role:: slidekp
+.. role:: worktodo 
+
+==================================
+Studenti2024
+==================================
+
+.. list-table::
+  :widths: 30,70
+  :width: 100%
+  
+  * - ``Arasi Stefano``
+    - stefano.arasi@studio.unibo.it
+  * - ``Bertoni Brian``
+    - bryan.bertoni@studio.unibo.it
+  * - ``Carrozzini Pierantonio``
+    - https://github.com/PierCarrozzini/IssProject
+  * - ``Cavallini Danilo``
+    - danilo.cavallini@studio.unibo.it
+  * - ``Govoni Dario``
+    - dario.govoni3@studio.unibo.it
+  * - ``de Respinis Valentina``
+    - valentina.derespinis@studio.unibo.it
+  * - ``P'yeshchyk  Marko``
+    - marko.pyeshchyk@studio.unibo.it
+  * - ``Mazziotti Samuele``
+    - Samuele.mazziotti@studio.unibo.it
+  * - ``Riccardi Lorenzo``
+    - lorenzo.riccardi@studio.unibo.it
+  * - ``Sindaco Daniele`` 
+    - daniele.sindaco@studio.unibo.it
+  * - ``Armilotta Michele`` (WheelyMcBones)
+    -  michele.armillotta2@studio.unibo.it 
+  * - ``Sgreggia Tommaso``
+    -  tommaso.sgreccia@studio.unibo.it
+  * - ``Ciociola Giuseppe``
+    -  giuseppe.ciociola2@studio.unibo.it
+  * - ``Raffaelli Andrea``
+    -  andrea.raffaelli2@studio.unibo.it
+  * - ``jjulespop``
+    -  
+  * - ``Giulianelli Nicole``
+    - 
+  * - ``delinsq`` 
+    - 
+  * - ``Piombo4`` 
+    - 
+
+
+ 
+
+
+
+
+.. WebAssembly e WASI
+.. https://github.com/ilcors-dev
+.. https://thenewstack.io/webassembly/webassembly-what-beginners-need-to-know/
