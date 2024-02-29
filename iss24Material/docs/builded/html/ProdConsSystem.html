@@ -123,7 +123,7 @@ relativa al protocollo.</p></li>
 <li><p>possiamo usare Java come linguaggio di programmazione e la libreria <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23"><span class="std std-ref">unibo.basicomm23</span></a>
 che permette di velocizzare la progettazione e la realizzazione del prodotto.</p>
 <p>L’uso di questa libreria promuove condice basato sul concetto di
-<span class="xref std std-ref">Interaction</span> che facilita la possibilità di modifica del protocollo.</p>
+<a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-interfaces-interaction"><span class="std std-ref">Interaction</span></a> che facilita la possibilità di modifica del protocollo.</p>
 <p><span class="slide2">Architettura di progetto</span></p>
 <p>L’architettura logica di progetto può essere schematizzata come in figura:</p>
 <a class="reference internal image-reference" href="_images/ProdCons.png"><img alt="_images/ProdCons.png" class="align-center" src="_images/ProdCons.png" style="width: 100%;" /></a>
@@ -190,7 +190,49 @@ Opzionalmente, può attendere messaggi di risposta sulla socket.</p></td>
 </tr>
 </tbody>
 </table>
+<p><span class="slide1">Un primo passo verso gli attori</span></p>
 </section>
+</section>
+<section id="towards-actors">
+<h2>Towards Actors<a class="headerlink" href="#towards-actors" title="Permalink to this heading">¶</a></h2>
+<p>Le classi inserite nel package <code class="docutils literal notranslate"><span class="pre">unibo.towardsactors24</span></code> della libreria <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23"><span class="std std-ref">unibo.basicomm23</span></a> sono
+un esempio di una possibile implementazione del concetto di  <a class="reference internal" href="Intro2024.html#attori-qak"><span class="std std-ref">Actor</span></a> limitato ad un
+ambiente locale.</p>
+<p>Un attore che specilizza la classe <a class="reference external" href="../../../../unibo.basicomm23/src/unibo/towardsactors24/ActorBasic24.java">unibo.towardsactors24.ActorBasic24</a> e che appartiene
+a un <a class="reference internal" href="Intro2024.html#contesti-qak"><span class="std std-ref">contesto</span></a> realizzato dalla classe <a class="reference external" href="../../../../unibo.basicomm23/src/unibo/towardsactors24/ActorContext24.java">unibo.towardsactors24.ActorContext24</a>, può:</p>
+<ul class="simple">
+<li><p>inviare messaggi di tipo <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-interfaces-iapplmessage"><span class="std std-ref">IApplMessage</span></a> ad altri Attori locali</p></li>
+<li><p>ricevere messaggi da attori locali e da componentoi remoti, detti <span class="slide2">Alien</span>
+(per un esempio si veda il package <a class="reference external" href="../../../../unibo.basicomm23/src/unibo/towardsactors24/example">unibo.towardsactors24.example</a>).</p></li>
+</ul>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 65%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference external" href="../../../../unibo.basicomm23/src/unibo/towardsactors24/ActorBasic24.java">unibo.towardsactors24.ActorBasic24</a></p></td>
+<td><p>Classe astratta che realizza il concetto di actor in Java, come componentoi attivo dotato di
+una coda di messaggi di tipo <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-interfaces-iapplmessage"><span class="std std-ref">IApplMessage</span></a> che gestisce
+in modo FIFO invocando il metodo abstract  <code class="docutils literal notranslate"><span class="pre">elabMsg(</span> <span class="pre">IApplMessage</span> <span class="pre">msg</span> <span class="pre">)</span></code>.
+La classe fornisce anche metodi per l’invio di messaggi  (forward, request, reply)
+ad altri attori locali al contesto.
+<span class="slide2">dello stesso Contesto</span>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="../../../../unibo.basicomm23/src/unibo/towardsactors24/ActorContext24.java">unibo.towardsactors24.ActorContext24</a></p></td>
+<td><p>Classe astratta che realizza il concetto di Contesto in Java, attivando un server TCP che gestisce
+i messaggi usando un <a class="reference external" href="../../../../unibo.basicomm23/src/unibo/towardsactors24/ContextMsgHandler.java">unibo.towardsactors24.ContextMsgHandler</a></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="../../../../unibo.basicomm23/src/unibo/towardsactors24/ContextMsgHandler.java">unibo.towardsactors24.ContextMsgHandler</a></p></td>
+<td><p>Classe che estende <a class="reference internal" href="unibo.basicomm23.html#unibo-interaction-msg-applmsghandler"><span class="std std-ref">ApplMsgHandler</span></a>.  Gestisce i messaggi compatibili
+con <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-interfaces-iapplmessage"><span class="std std-ref">IApplMessage</span></a>
+in arrivo sulla connesisone TCP, inserendoli nella coda dei messaggi dell’attore destinatario locale (se esiste).
+Nel caso di <strong>request</strong> da componente <span class="slide2">Alien</span> remoto, inserisce nel messaggio
+<span class="slide2">un rifermento alla connessione</span>, per rendere possibile il corretto
+invio della risposta.</p></td>
+</tr>
+</tbody>
+</table>
 <section id="prodsconstowardsactors24">
 <h3>ProdsConsTowardsActors24<a class="headerlink" href="#prodsconstowardsactors24" title="Permalink to this heading">¶</a></h3>
 <table class="docutils align-default" style="width: 100%">
@@ -206,7 +248,7 @@ Opzionalmente, può attendere messaggi di risposta sulla socket.</p></td>
 <td><p>Un attore che opera nel Contesto di nome <em>ctxprodcons</em>: invia messaggi dispatch e request al Consumer</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="../../../../ProdCons/src/main/towardsactors24/MainOneNodeWithActors24.java">main.towardsactors24.MainOneNodeWithActors24</a></p></td>
-<td><p>Main program che crea il Contesto e gli attori</p></td>
+<td><p>Main program che crea il Contesto <em>ctxprodcons</em> e gli attori Producer e Consumer</p></td>
 </tr>
 </tbody>
 </table>
@@ -235,6 +277,9 @@ Opzionalmente, può attendere messaggi di risposta sulla socket.</p></td>
 <li><a class="reference internal" href="#prodscons-progetti">ProdsCons: progetti</a><ul>
 <li><a class="reference internal" href="#prodsconsnaive">ProdsConsNaive</a></li>
 <li><a class="reference internal" href="#prodsconsenablers">ProdsConsEnablers</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#towards-actors">Towards Actors</a><ul>
 <li><a class="reference internal" href="#prodsconstowardsactors24">ProdsConsTowardsActors24</a></li>
 </ul>
 </li>
