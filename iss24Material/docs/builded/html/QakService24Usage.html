@@ -1,0 +1,1245 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>QakService24Usage &#8212; iss24 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Primi passi operativi 24" href="Primipassioperativi24.html" />
+    <link rel="prev" title="ISS2024" href="ISS2024.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="Primipassioperativi24.html" title="Primi passi operativi 24"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="ISS2024.html" title="ISS2024"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">QakService24Usage</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="qakservice24usage">
+<h1>QakService24Usage<a class="headerlink" href="#qakservice24usage" title="Permalink to this heading">¶</a></h1>
+<p><span class="slide3">Progetto servicemath24Usage</span></p>
+<p><span class="slide">Indice:</span>  <span class="xref std std-ref">Indice Service24</span></p>
+<section id="il-servizio-servicemath">
+<h2>Il servizio servicemath<a class="headerlink" href="#il-servizio-servicemath" title="Permalink to this heading">¶</a></h2>
+<p>La nostra ditta (<code class="docutils literal notranslate"><span class="pre">disiUnibo</span></code>) ha realizzato un
+servizio stateless, accessibile via rete, che esegue (al momento)
+richieste di calcolo dell’<code class="docutils literal notranslate"><span class="pre">N</span></code>-mo (<code class="docutils literal notranslate"><span class="pre">N&gt;=0</span></code>) numero di Fibonacci.</p>
+<p><span class="slide2">AVVERTENZA</span>: questo caso di studio si basa su uno schema di calcolo dei numeri di
+Fibonacci basato su  doppia ricorsione, in modo da poter apprezzare differenze temporali,
+anche sensibili, nella esecuzione del servizio.</p>
+<p>In questa fase ci occuperemo solo della <a class="reference internal" href="Intro2024.html#vista-esterna"><span class="std std-ref">Vista esterna</span></a> del servizio, con l’obiettivo di
+capire come accedere al servizio e come utilizzarlo sia mediante browser sia mediante programmi.</p>
+<p>Dalls sezione <span class="xref std std-ref">QakService24Init</span> inizieremo invece ad affrontare il tema della <a class="reference internal" href="Intro2024.html#vista-interna"><span class="std std-ref">Vista interna</span></a>
+del servizio adottando il punto di vista del costruttore del servizio, introducendo anche elementi importanti
+della sua <a class="reference internal" href="Intro2024.html#vista-sommersa"><span class="std std-ref">Vista sommersa</span></a>.</p>
+<section id="servicemath-attivazione">
+<h3>servicemath: attivazione<a class="headerlink" href="#servicemath-attivazione" title="Permalink to this heading">¶</a></h3>
+<p>Il servizio (implementato in Java) può essere attivato in due modi:</p>
+<ol class="arabic">
+<li><p>eseguendo il file batch <code class="docutils literal notranslate"><span class="pre">unibo.servicemath.bat</span></code> (su windows) o <code class="docutils literal notranslate"><span class="pre">unibo.servicemath</span></code> (su Linux)
+etsratto dal file di distribuzione del prodotto (<strong>unibo.servicemathsynchbase-1.0.zip</strong>)</p>
+<p><strong>AVVERTENZA</strong> Su Windows fare unzip del file in una directory dal nome brece, ad es. <code class="docutils literal notranslate"><span class="pre">C:/issRun</span></code></p>
+</li>
+<li><p>esegundo il comando docker: <strong>docker-compose servicemath.yaml</strong></p></li>
+</ol>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Una volta attivato, il servizio fornisce una pagina HTML,
+accessibile mediante browser alla porta <code class="docutils literal notranslate"><span class="pre">8088</span></code>, in cui compare:</p>
+<ul class="simple">
+<li><p>una zona di input, per la immissione del valore <code class="docutils literal notranslate"><span class="pre">N</span></code></p></li>
+<li><p>una zona di output, per visualizzare la risposta e altre informazioni.</p></li>
+</ul>
+</td>
+<td><a class="reference internal image-reference" href="_images/servicefacade24_1.PNG"><img alt="_images/servicefacade24_1.PNG" class="align-center" src="_images/servicefacade24_1.PNG" style="width: 100%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="uso-del-servizio-servicemath">
+<h2>Uso del servizio servicemath<a class="headerlink" href="#uso-del-servizio-servicemath" title="Permalink to this heading">¶</a></h2>
+<p>Come utenti, ci aspettiamo che il servizio sia accessibile in rete
+attraverso una qualche <em>interfaccia di programmazione delle applicazioni</em> (<span class="slide2">API</span>)
+intesa come intermediario software tra il servizio stesso e i client
+che vogliono interagire con lui.</p>
+<p>Le <span class="blue">API</span> semplificano la programmazione dei client perchè di solito nascondono
+i dettagli interni del servizio,
+esponendo parti che sono mantenute coerenti anche nel caso di modifiche interne al servizio.</p>
+<p>Per poter usare il nostro servzio, occorre conoscere:</p>
+<ul class="simple">
+<li><p>il protocollo da usare per l’invio dei messaggi di richiesta via rete</p></li>
+<li><p>la struttura dei <span class="slide2">messaggi</span> che il servizio è capace di <span class="slide2">interpretare</span>.</p></li>
+</ul>
+<p>Il servizio è amche una entità <span class="remark">osservabile</span>, nel senso che emette informazioni percebili da client
+connessi come osservatori e non come emettitori di comandi. Si veda:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#osservabilita-via-ws"><span class="std std-ref">Osservabilità via WS</span></a></p></li>
+<li><p><a class="reference internal" href="#osservabilita-via-coap"><span class="std std-ref">Osservabilità via CoAP</span></a></p></li>
+<li><p><a class="reference internal" href="#osservabilita-via-mqtt"><span class="std std-ref">Osservabilità via MQTT</span></a></p></li>
+</ul>
+<section id="descrizione-della-api-in-linguaggio-naturale">
+<h3>Descrizione della API in linguaggio naturale<a class="headerlink" href="#descrizione-della-api-in-linguaggio-naturale" title="Permalink to this heading">¶</a></h3>
+<p>Di solito, le informazioni su come usare un servizio vengono date attraverso qualche documento scritto in linguaggio naturale.
+Ad esempio:</p>
+<section id="protocolli-utilizzabili">
+<h4>Protocolli utilizzabili<a class="headerlink" href="#protocolli-utilizzabili" title="Permalink to this heading">¶</a></h4>
+<p>Il servizio è accessibile mediante diversi protocolli:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#il-servizio-usato-via-tcp"><span class="std std-ref">TCP</span></a></p></li>
+<li><p><a class="reference internal" href="#il-servizio-come-risorsa-coap"><span class="std std-ref">CoAP</span></a></p></li>
+<li><p><a class="reference internal" href="#il-servizio-come-publisher-subscriber"><span class="std std-ref">MQTT</span></a></p></li>
+<li><p><a class="reference internal" href="#il-servizio-usato-via-browser"><span class="std std-ref">HTTP</span></a></p></li>
+<li><p><a class="reference internal" href="#il-servizio-usato-via-websocket"><span class="std std-ref">WS</span></a></p></li>
+</ul>
+<p>Indipendentemente dal protocollo, la struttura dei messaggi che ogni client deve inviare
+è fissata come qui di seguito indicato.</p>
+</section>
+</section>
+<section id="struttura-generale-dei-messaggi">
+<h3>Struttura generale dei messaggi<a class="headerlink" href="#struttura-generale-dei-messaggi" title="Permalink to this heading">¶</a></h3>
+<ul>
+<li><p>i messaggi  devono avere la seguente struttura:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">msg</span><span class="p">(</span><span class="w"> </span><span class="n">MSGID</span><span class="p">,</span><span class="w"> </span><span class="n">MSGTYPE</span><span class="p">,</span><span class="w"> </span><span class="n">SENDER</span><span class="p">,</span><span class="w"> </span><span class="n">RECEIVER</span><span class="p">,</span><span class="w"> </span><span class="n">CONTENT</span><span class="p">,</span><span class="w"> </span><span class="n">SEQNUM</span><span class="w"> </span><span class="p">)</span>
+</pre></div>
+</div>
+<p>ove</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="w"> </span><span class="n">MSGID</span><span class="p">:</span><span class="w">    </span><span class="n">identificativo</span><span class="w"> </span><span class="n">del</span><span class="w"> </span><span class="n">messaggio</span>
+<span class="o">-</span><span class="w"> </span><span class="n">MSGTYPE</span><span class="p">:</span><span class="w">  </span><span class="n">tipo</span><span class="w"> </span><span class="n">del</span><span class="w"> </span><span class="n">msg</span>
+<span class="o">-</span><span class="w"> </span><span class="n">SENDER</span><span class="p">:</span><span class="w">   </span><span class="n">nome</span><span class="w"> </span><span class="n">del</span><span class="w"> </span><span class="n">componente</span><span class="w"> </span><span class="n">che</span><span class="w"> </span><span class="n">invia</span><span class="w"> </span><span class="n">il</span><span class="w"> </span><span class="n">messaggio</span>
+<span class="o">-</span><span class="w"> </span><span class="n">CONTENT</span><span class="p">:</span><span class="w">  </span><span class="n">contenuto</span><span class="w"> </span><span class="nf">applicativo</span><span class="w"> </span><span class="p">(</span><span class="n">payload</span><span class="p">)</span><span class="w"> </span><span class="n">del</span><span class="w"> </span><span class="n">messaggio</span>
+<span class="o">-</span><span class="w"> </span><span class="n">RECEIVER</span><span class="p">:</span><span class="w"> </span><span class="n">nome</span><span class="w"> </span><span class="n">del</span><span class="w"> </span><span class="n">componente</span><span class="w"> </span><span class="n">chi</span><span class="w"> </span><span class="n">riceve</span><span class="w"> </span><span class="n">il</span><span class="w"> </span><span class="n">messaggio</span>
+<span class="o">-</span><span class="w"> </span><span class="n">SEQNUM</span><span class="p">:</span><span class="w">   </span><span class="n">numero</span><span class="w"> </span><span class="n">di</span><span class="w"> </span><span class="n">sequenza</span><span class="w"> </span><span class="n">del</span><span class="w"> </span><span class="n">messaggio</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>L’argomento <code class="docutils literal notranslate"><span class="pre">MSGTYPE</span></code> può assumere uno dei seguenti valori: <span class="blue">dispatch, request, reply, event</span></p></li>
+<li><p>La struttura dei messaggi non cambia al variare non solo del protocollo, ma anche del servizio.</p></li>
+<li><p>Al variare del servizio o del tipo di messaggio, cambiano gli altri argomenti del messaggio.</p></li>
+</ul>
+</li>
+</ul>
+<p>Essendo questa la struttura dei messaggi <code class="docutils literal notranslate"><span class="pre">qak</span></code>, il servizio stesso è molto probabilmente
+realizzato internamente da  uno o più <a class="reference internal" href="Intro2024.html#attori-qak"><span class="std std-ref">Attori qak</span></a>.</p>
+</section>
+<section id="contenuto-specifico-dei-messaggi">
+<h3>Contenuto specifico dei messaggi<a class="headerlink" href="#contenuto-specifico-dei-messaggi" title="Permalink to this heading">¶</a></h3>
+<p>Nel caso del nostro servizio, il messaggio per richiedere il calcolo di un numero di Fibonacci
+assume la froma che segue:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">msg</span><span class="p">(</span> <span class="n">MSGID</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">callername</span><span class="p">,</span> <span class="n">CONTENT</span><span class="p">,</span> <span class="n">servicemath</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul>
+<li><p>le parti <code class="docutils literal notranslate"><span class="pre">MSGID</span></code> e <code class="docutils literal notranslate"><span class="pre">CONTENT</span></code> devono avere la forma</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MSGID</span>  <span class="p">:</span> <span class="n">dofibo</span>
+<span class="n">CONTENT</span><span class="p">:</span> <span class="n">dofibo</span><span class="p">(</span> <span class="n">N</span> <span class="p">)</span> <span class="o">|</span><span class="n">N</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">,</span> <span class="n">numero</span> <span class="n">di</span> <span class="n">Fibonacci</span> <span class="n">da</span> <span class="n">valutare</span>
+</pre></div>
+</div>
+</li>
+<li><p>il servizio fornisce la risposta  con un messaggio in cui
+la parte <code class="docutils literal notranslate"><span class="pre">CONTENT</span></code> assume la forma che segue:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">fibodone</span><span class="p">(</span><span class="w"> </span><span class="n">CALLER</span><span class="p">,</span><span class="n">N</span><span class="p">,</span><span class="n">RESULT</span><span class="p">,</span><span class="n">TIME</span><span class="w"> </span><span class="p">)</span>
+</pre></div>
+</div>
+<p>ove</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="w"> </span><span class="n">CALLER</span><span class="p">:</span><span class="w"> </span><span class="n">nome</span><span class="w"> </span><span class="n">del</span><span class="w"> </span><span class="n">client</span><span class="w"> </span><span class="n">che</span><span class="w"> </span><span class="n">ha</span><span class="w"> </span><span class="n">invocato</span><span class="w"> </span><span class="n">il</span><span class="w"> </span><span class="n">servizio</span>
+<span class="o">-</span><span class="w"> </span><span class="n">N</span><span class="p">:</span><span class="w"> </span><span class="n">numero</span><span class="w"> </span><span class="n">di</span><span class="w"> </span><span class="n">Fibonacci</span><span class="w"> </span><span class="n">che</span><span class="w"> </span><span class="n">il</span><span class="w"> </span><span class="n">client</span><span class="w"> </span><span class="n">ha</span><span class="w"> </span><span class="n">chiesto</span><span class="w"> </span><span class="n">di</span><span class="w"> </span><span class="n">valutare</span>
+<span class="o">-</span><span class="w"> </span><span class="n">RESULT</span><span class="p">:</span><span class="w"> </span><span class="n">valore</span><span class="w"> </span><span class="n">del</span><span class="w"> </span><span class="n">numero</span><span class="w"> </span><span class="n">di</span><span class="w"> </span><span class="n">Fibonacci</span><span class="w"> </span><span class="n">di</span><span class="w"> </span><span class="n">posizione</span><span class="w"> </span><span class="n">N</span>
+<span class="o">-</span><span class="w"> </span><span class="n">TIME</span><span class="p">:</span><span class="w"> </span><span class="n">tempo</span><span class="w"> </span><span class="n">richiesto</span><span class="w"> </span><span class="n">per</span><span class="w"> </span><span class="n">il</span><span class="w"> </span><span class="n">calcolo</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+<section id="uso-naive-del-servizio">
+<h2>Uso naive del servizio<a class="headerlink" href="#uso-naive-del-servizio" title="Permalink to this heading">¶</a></h2>
+<p>L’uso del servizio consiste nella scelta di un protocollo e nella scrittura di
+un programma che utilizza tale protocollo per inviare una richiesta e ricevere la risposta.</p>
+<section id="basicmsgutil-kt">
+<h3>BasicMsgUtil.kt<a class="headerlink" href="#basicmsgutil-kt" title="Permalink to this heading">¶</a></h3>
+<p>Per facilitare la costruzione di messaggi secondo la <a class="reference internal" href="#struttura-generale-dei-messaggi"><span class="std std-ref">Struttura generale dei messaggi</span></a>
+indicata, viene fornita la classe <code class="docutils literal notranslate"><span class="pre">unibo.basicomm23.utils.BasicMsgUtil.kt</span></code> come parte della libreria
+<span class="remark">unibo.basicomm23-1.0.jar</span> descritta in <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23"><span class="std std-ref">unibo.basicomm23</span></a>.</p>
+<p>Questa utility fornisce metodi per cstruire i diversi tipi di messaggio
+<span class="blue">dispatch, request, reply, event</span> come oggetti che implementano la interfaccia
+<a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-interfaces-iapplmessage"><span class="std std-ref">IApplMessage</span></a>.</p>
+</section>
+<section id="iapplmessage">
+<h3>IApplMessage<a class="headerlink" href="#iapplmessage" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Per comodità di lettura, riportiamo qui  <strong>unibo.basicomm23.interfaces.IApplMessage</strong>
+della libreria <span class="remark">unibo.basicomm23-1.0.jar</span></p></td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="n">interface</span> <span class="n">IApplMessage</span> <span class="p">{</span>
+  <span class="n">public</span> <span class="n">String</span> <span class="n">msgId</span><span class="p">();</span>
+  <span class="n">public</span> <span class="n">String</span> <span class="n">msgType</span><span class="p">();</span>
+  <span class="n">public</span> <span class="n">String</span> <span class="n">msgSender</span><span class="p">();</span>
+  <span class="n">public</span> <span class="n">String</span> <span class="n">msgReceiver</span><span class="p">();</span>
+  <span class="n">public</span> <span class="n">String</span> <span class="n">msgContent</span><span class="p">();</span>
+  <span class="n">public</span> <span class="n">String</span> <span class="n">msgNum</span><span class="p">();</span>
+  <span class="n">public</span> <span class="n">boolean</span> <span class="n">isDispatch</span><span class="p">();</span>
+  <span class="n">public</span> <span class="n">boolean</span> <span class="n">isRequest</span><span class="p">();</span>
+  <span class="n">public</span> <span class="n">boolean</span> <span class="n">isReply</span><span class="p">();</span>
+  <span class="n">public</span> <span class="n">boolean</span> <span class="n">isEvent</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>L’aspetto <span class="slidekp">naive</span> consiste nella scrittura di un diverso programma per ogni diverso
+protocollo, il che conduce a un <span class="remark">prolificazione di codice</span> ricco di dettagli tecnologici,
+quando invece  <span class="slide2">la logica è la stessa</span>  in ogni caso, e preciasamente:</p>
+<ul class="simple">
+<li><p>inviare un messaggio di richiesta e gestire il previsto messaggio di risposta</p></li>
+</ul>
+<p>Riprenderemo questo importante punto più avanti, nella sezione <a class="reference internal" href="#il-cosa-e-il-come"><span class="std std-ref">Il COSA e il COME</span></a>.</p>
+</section>
+<section id="il-servizio-usato-via-tcp">
+<h3>Il servizio usato via TCP<a class="headerlink" href="#il-servizio-usato-via-tcp" title="Permalink to this heading">¶</a></h3>
+<p>Un client di nome <strong>clientjava</strong> che vuole ottenere il <code class="docutils literal notranslate"><span class="pre">33°</span></code> numero di Fibonacci
+può inviare via <code class="docutils literal notranslate"><span class="pre">TCP</span></code>  alla porta <code class="docutils literal notranslate"><span class="pre">8011</span></code>  il seguente messaggio di richiesta:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">msg</span><span class="p">(</span><span class="n">dofibo</span><span class="p">,</span><span class="n">request</span><span class="p">,</span><span class="n">clientjava</span><span class="p">,</span><span class="n">seevicemath</span><span class="p">,</span><span class="n">dofibo</span><span class="p">(</span><span class="mi">33</span><span class="p">),</span><span class="n">K</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="n">con</span><span class="w"> </span><span class="n">Int</span><span class="w"> </span><span class="n">K</span><span class="o">&gt;</span><span class="mi">0</span>
+</pre></div>
+</div>
+<p>Il client riceverà (sulla sua connessione <code class="docutils literal notranslate"><span class="pre">TCP</span></code>)  un messaggio di risposta quale:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">msg</span><span class="p">(</span><span class="n">fibodone</span><span class="p">,</span><span class="n">reply</span><span class="p">,</span><span class="n">servicemath</span><span class="p">,</span><span class="n">servicemath</span><span class="p">,</span><span class="n">fibodone</span><span class="p">(</span><span class="n">servicemath</span><span class="p">,</span><span class="mi">33</span><span class="p">,</span><span class="mi">3524578</span><span class="p">,</span><span class="mi">14</span><span class="w"> </span><span class="p">),</span><span class="n">J</span><span class="p">)</span><span class="o">|</span><span class="n">con</span><span class="w"> </span><span class="n">Int</span><span class="w"> </span><span class="n">J</span><span class="o">&gt;</span><span class="mi">0</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Per un esempio di uso con <code class="docutils literal notranslate"><span class="pre">TCP</span></code>, si veda <a class="reference internal" href="#un-primo-client-tcp"><span class="std std-ref">Un primo client TCP</span></a>.</p></li>
+</ul>
+</section>
+<section id="il-servizio-come-risorsa-coap">
+<h3>Il servizio come risorsa CoAP<a class="headerlink" href="#il-servizio-come-risorsa-coap" title="Permalink to this heading">¶</a></h3>
+<p>Il servizio è utilizzabile anche inviando messaggi di richiesta alla porta <code class="docutils literal notranslate"><span class="pre">8011</span></code> mediante il protocollo <code class="docutils literal notranslate"><span class="pre">CoAP</span></code>.
+L’uso di <code class="docutils literal notranslate"><span class="pre">CoAP</span></code>:</p>
+<ol class="arabic">
+<li><p>promuove una <a class="reference internal" href="Intro2024.html#vista-esterna"><span class="std std-ref">Vista esterna</span></a> del servizio come <span class="slide2">risorsa</span> accessibile in stile <span class="xref std std-ref">REST</span> su supporto
+<code class="docutils literal notranslate"><span class="pre">UDP</span></code> anzichè <code class="docutils literal notranslate"><span class="pre">TCP</span></code>. Nel nostro caso l’<a class="reference external" href="https://it.wikipedia.org/wiki/Uniform_Resource_Identifier">URI</a> del servizio-risorsa è</p>
+<blockquote>
+<div><div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nl">IP</span><span class="p">:</span><span class="mi">8011</span><span class="o">/</span><span class="n">ctxservice</span><span class="o">/</span><span class="n">servicemath</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Per un esempio, si veda <a class="reference internal" href="#un-primo-client-coap"><span class="std std-ref">Un primo client CoAP</span></a>.</p>
+</li>
+<li><p>rende il servizio osservabile da parte di clienti <code class="docutils literal notranslate"><span class="pre">CoAP</span></code> che fanno una <strong>subscribe</strong> alla topic:</p>
+<blockquote>
+<div><div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">ctxservice</span><span class="o">/</span><span class="n">servicemath</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Per un esempio, si veda <a class="reference internal" href="#osservabilita-via-coap"><span class="std std-ref">Osservabilità via CoAP</span></a>.</p>
+</li>
+</ol>
+</section>
+<section id="il-servizio-come-publisher-subscriber">
+<h3>Il servizio come publisher-subscriber<a class="headerlink" href="#il-servizio-come-publisher-subscriber" title="Permalink to this heading">¶</a></h3>
+<ul>
+<li><p>il servizio è utilizzabile anche inviando messaggi di richiesta alla porta <code class="docutils literal notranslate"><span class="pre">8011</span></code> mediante il protocollo <code class="docutils literal notranslate"><span class="pre">MQTT</span></code>,
+il cui utilizzo`:</p>
+<ol class="arabic">
+<li><p>promuove una <a class="reference internal" href="Intro2024.html#vista-esterna"><span class="std std-ref">Vista esterna</span></a> del servizio come ente capace di pubblicare informazioni su topic.
+Nel nostro caso il servizio riceve richieste sulla topic:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">unibo</span><span class="o">/</span><span class="n">qak</span><span class="o">/</span><span class="n">servicemath</span>
+</pre></div>
+</div>
+<p>Per un esempio, si veda <a class="reference internal" href="#un-client-mqtt"><span class="std std-ref">Un client MQTT</span></a>.</p>
+</li>
+<li><p>comporta che il servizio emetta (puublich) <a class="reference internal" href="#struttura-generale-dei-messaggi"><span class="std std-ref">messaggi qak</span></a>
+di tipo <span class="blue">event</span> sulla <strong>topic</strong> di nome</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">servicemath</span><span class="o">/</span><span class="n">events</span>
+</pre></div>
+</div>
+</li>
+<li><p>comporta che il servizio <strong>pubblichi</strong> informazioni sulla <strong>topic</strong> di nome</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">servertopoc</span>
+</pre></div>
+</div>
+<p>Per un esempio, si veda <a class="reference internal" href="#osservabilita-via-mqtt"><span class="std std-ref">Osservabilità via MQTT</span></a>.</p>
+</li>
+</ol>
+</li>
+</ul>
+</section>
+<section id="il-servizio-usato-via-browser">
+<h3>Il servizio usato via Browser<a class="headerlink" href="#il-servizio-usato-via-browser" title="Permalink to this heading">¶</a></h3>
+<ul>
+<li><p>il servizio è utilizzabile inviando messaggi di richiesta mediante il protocollo <code class="docutils literal notranslate"><span class="pre">HTTP</span></code>
+in quanto fornisce una pagina HTML alla porta <code class="docutils literal notranslate"><span class="pre">8088</span></code> che può essere aperta da un comune browser.
+In questo caso la interazione di I/O col servizio è vincolata dalle politiche racchiuse nella pagina.</p>
+<p>Si veda <a class="reference internal" href="#interazione-http-hmi"><span class="std std-ref">Interazione HTTP HMI</span></a>.</p>
+</li>
+</ul>
+</section>
+<section id="il-servizio-usato-via-websocket">
+<h3>Il servizio usato via WebSocket<a class="headerlink" href="#il-servizio-usato-via-websocket" title="Permalink to this heading">¶</a></h3>
+<ul>
+<li><p>il servizio è utilizzabile inviando messaggi di richiesta mediante   <code class="docutils literal notranslate"><span class="pre">WebSocket</span></code>
+alla porta <code class="docutils literal notranslate"><span class="pre">8088</span></code>.
+.. In questo caso la interazione di I/O col servizio è vincolata dalle politiche racchiuse nella pagina.</p>
+<p>Si veda <a class="reference internal" href="#interazione-con-websocket"><span class="std std-ref">Interazione con WebSocket</span></a>.</p>
+</li>
+</ul>
+</section>
+</section>
+<section id="esempi-di-uso-naive-di-servicemath">
+<h2>Esempi di uso ‘naive’ di servicemath<a class="headerlink" href="#esempi-di-uso-naive-di-servicemath" title="Permalink to this heading">¶</a></h2>
+<p>Progetto <code class="docutils literal notranslate"><span class="pre">servicemath24Usage</span></code></p>
+<p>Il progetto indicato contiene il codice di esempio che riportimao qui di seguito.</p>
+<p>Si prega il lettore di:</p>
+<ol class="arabic simple">
+<li><p>creare un suo progetto di nome <em>servicemath24Usage</em> seguedo quanto riportato in <a class="reference internal" href="Primipassioperativi24.html#primi-passi-operativi-24"><span class="std std-ref">Primi passi operativi 24</span></a>.</p></li>
+<li><p>introdurre nel file  <code class="docutils literal notranslate"><span class="pre">build.gradle</span></code> visto in <a class="reference internal" href="Primipassioperativi24.html#un-primo-build-gradle"><span class="std std-ref">Un primo build.gradle</span></a> nuove dipendenze</p></li>
+<li><p>definire in modo appropriato la <strong>mainClass</strong> del progetto</p></li>
+</ol>
+<p>Il codice riportato su sito del docente può servire come punto di riferimento in caso di difficoltaà.</p>
+<section id="modifiche-al-file-build-gradle">
+<h3>Modifiche al file build.gradle<a class="headerlink" href="#modifiche-al-file-build-gradle" title="Permalink to this heading">¶</a></h3>
+<p>Rispetto a quanto introdotto in <a class="reference internal" href="Primipassioperativi24.html#un-primo-build-gradle"><span class="std std-ref">Un primo build.gradle</span></a> estendiamo l’insieme delle dipendenze:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dependencies</span> <span class="p">{</span>
+        <span class="o">/*</span>  <span class="n">MQTT</span> <span class="o">************************************************</span>  <span class="o">*/</span>
+        <span class="n">implementation</span> <span class="n">group</span><span class="p">:</span> <span class="s1">&#39;org.eclipse.paho&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="s1">&#39;org.eclipse.paho.client.mqttv3&#39;</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="s1">&#39;1.2.5&#39;</span>
+
+        <span class="o">/*</span> <span class="n">JSON</span> <span class="o">**************************************************</span> <span class="o">*/</span>
+        <span class="n">implementation</span> <span class="n">group</span><span class="p">:</span> <span class="s1">&#39;org.json&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="s1">&#39;json&#39;</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="s1">&#39;20220320&#39;</span>
+        <span class="n">implementation</span> <span class="s1">&#39;com.googlecode.json-simple:json-simple:1.1.1&#39;</span>
+
+        <span class="o">/*</span> <span class="n">COAP</span> <span class="o">**************************************************</span> <span class="o">*/</span>
+        <span class="n">implementation</span> <span class="n">group</span><span class="p">:</span> <span class="s1">&#39;org.eclipse.californium&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="s1">&#39;californium-core&#39;</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="s1">&#39;3.5.0&#39;</span>
+        <span class="n">implementation</span> <span class="n">group</span><span class="p">:</span> <span class="s1">&#39;org.eclipse.californium&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="s1">&#39;californium-proxy2&#39;</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="s1">&#39;3.5.0&#39;</span>
+
+        <span class="o">/*</span> <span class="n">LOG4J</span> <span class="o">************************************************</span> <span class="o">*/</span>
+        <span class="n">testImplementation</span> <span class="n">group</span><span class="p">:</span> <span class="s1">&#39;org.slf4j&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="s1">&#39;slf4j-simple&#39;</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="s1">&#39;2.0.7&#39;</span>
+
+        <span class="o">/*</span> <span class="n">HTTP</span> <span class="o">*************************************************</span> <span class="o">*/</span>
+        <span class="n">implementation</span> <span class="n">group</span><span class="p">:</span> <span class="s1">&#39;org.apache.httpcomponents&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="s1">&#39;httpclient&#39;</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="s1">&#39;4.5.13&#39;</span>
+        <span class="n">implementation</span> <span class="n">group</span><span class="p">:</span> <span class="s1">&#39;commons-io&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="s1">&#39;commons-io&#39;</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="s1">&#39;2.11.0&#39;</span>
+
+        <span class="o">/*</span> <span class="n">SOCKET</span><span class="o">.</span><span class="n">IO</span>  <span class="o">*************************************************</span> <span class="o">*/</span>
+        <span class="n">implementation</span> <span class="n">group</span><span class="p">:</span> <span class="s1">&#39;javax.websocket&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="s1">&#39;javax.websocket-api&#39;</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="s1">&#39;1.1&#39;</span>
+        <span class="o">//</span><span class="n">javax</span><span class="o">.</span><span class="n">websocket</span> <span class="n">api</span> <span class="ow">is</span> <span class="n">only</span> <span class="n">the</span> <span class="n">specification</span>
+        <span class="n">implementation</span> <span class="n">group</span><span class="p">:</span> <span class="s1">&#39;org.glassfish.tyrus.bundles&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="s1">&#39;tyrus-standalone-client&#39;</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="s1">&#39;1.9&#39;</span>
+
+
+        <span class="o">/*</span> <span class="n">UNIBO</span> <span class="o">**************************************************/</span>
+       <span class="n">implementation</span> <span class="n">name</span><span class="p">:</span> <span class="s1">&#39;2p301&#39;</span>
+        <span class="n">implementation</span> <span class="n">name</span><span class="p">:</span> <span class="s1">&#39;unibo.basicomm23-1.0&#39;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="un-primo-client-tcp">
+<h3>Un primo client TCP<a class="headerlink" href="#un-primo-client-tcp" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ServiceCallerTcpNaive</span></code></p>
+<ol class="arabic simple">
+<li><p>Nome del servizio da usare</p></li>
+<li><p>Nome del client</p></li>
+<li><p>IP dell’host del servizio</p></li>
+<li><p>Porta del servizio</p></li>
+<li><p>Identificatore del messaggio</p></li>
+<li><p>Contenuto del messaggio</p></li>
+<li><p>Socket di connessione</p></li>
+<li><p>Messaggio di richiesta  <a class="reference internal" href="#iapplmessage"><span class="std std-ref">IApplMessage</span></a> da inviare</p></li>
+<li><p>Invio della richiesta</p></li>
+<li><p>Ricezione della risposta</p></li>
+<li><p>Lettura della stringa di risposta sulla socket</p></li>
+<li><p>Costruzione del messaggio di risposta <a class="reference internal" href="#iapplmessage"><span class="std std-ref">IApplMessage</span></a></p></li>
+<li><p>Stampa della stringa di risposta</p></li>
+<li><p>Stampa del contenuto (payload) della risposta</p></li>
+</ol>
+<p>Si noti</p>
+<ul class="simple">
+<li><p>l’uso della utility <a class="reference internal" href="#basicmsgutil-kt"><span class="std std-ref">BasicMsgUtil.kt</span></a> al punto <code class="docutils literal notranslate"><span class="pre">8</span></code></p></li>
+<li><p>la  interazione <span class="slide2">asincrona</span>:  tra i punti  <code class="docutils literal notranslate"><span class="pre">9</span></code>  e <code class="docutils literal notranslate"><span class="pre">10</span></code>
+il programma potrebbe eseguire altro codice</p></li>
+</ul>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">package</span> <span class="n">main</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.io.</span><span class="o">*</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.net.Socket</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">unibo.basicomm23.interfaces.IApplMessage</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">unibo.basicomm23.msg.ApplMessage</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">unibo.basicomm23.utils.CommUtils</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">unibo.basicomm23.utils.BasicMsgUtil</span><span class="p">;</span>
+
+<span class="n">public</span> <span class="k">class</span> <span class="nc">ServiceCallerTCPNaive</span> <span class="p">{</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span>  <span class="n">private</span> <span class="n">final</span> <span class="n">String</span> <span class="n">destination</span> <span class="o">=</span> <span class="s2">&quot;servicemath&quot;</span><span class="p">;</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span>  <span class="n">private</span> <span class="n">final</span> <span class="n">String</span> <span class="n">sender</span>      <span class="o">=</span> <span class="s2">&quot;clientjava&quot;</span><span class="p">;</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span>  <span class="n">private</span> <span class="n">final</span> <span class="n">String</span> <span class="n">hostAddr</span>    <span class="o">=</span> <span class="s2">&quot;localhost&quot;</span><span class="p">;</span>
+<span class="o">/*</span><span class="mi">4</span><span class="o">*/</span>  <span class="n">private</span> <span class="n">final</span> <span class="nb">int</span>    <span class="n">port</span>        <span class="o">=</span> <span class="mi">8011</span><span class="p">;</span>
+<span class="o">/*</span><span class="mi">5</span><span class="o">*/</span>  <span class="n">private</span> <span class="n">final</span> <span class="n">String</span> <span class="n">msgid</span>       <span class="o">=</span> <span class="s2">&quot;dofibo&quot;</span><span class="p">;</span>
+<span class="o">/*</span><span class="mi">6</span><span class="o">*/</span>  <span class="n">private</span> <span class="n">final</span> <span class="n">String</span> <span class="n">msgcontent</span>  <span class="o">=</span> <span class="s2">&quot;dofibo(39)&quot;</span><span class="p">;</span>
+<span class="o">/*</span><span class="mi">7</span><span class="o">*/</span>  <span class="n">private</span> <span class="n">Socket</span> <span class="n">socket</span>   <span class="p">;</span>
+
+  <span class="n">public</span> <span class="n">void</span> <span class="n">doJob</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="n">socket</span>  <span class="o">=</span>  <span class="n">new</span> <span class="n">Socket</span><span class="p">(</span> <span class="n">hostAddr</span><span class="p">,</span> <span class="n">port</span> <span class="p">);</span>
+<span class="o">/*</span><span class="mi">8</span><span class="o">*/</span><span class="n">IApplMessage</span> <span class="n">req</span> <span class="o">=</span>
+        <span class="n">BasicMsgUtil</span><span class="o">.</span><span class="n">buildRequest</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span><span class="n">msgid</span><span class="p">,</span><span class="n">msgcontent</span><span class="p">,</span><span class="n">destination</span><span class="p">);</span>
+<span class="o">/*</span><span class="mi">9</span><span class="o">*/</span> <span class="n">sendUsingTcp</span><span class="p">(</span> <span class="n">req</span>  <span class="p">);</span>
+<span class="o">/*</span><span class="mi">10</span><span class="o">*/</span><span class="n">receiveAnswer</span><span class="p">(</span> <span class="p">);</span>
+      <span class="n">socket</span><span class="o">.</span><span class="n">close</span><span class="p">();</span>
+    <span class="p">}</span><span class="n">catch</span><span class="p">(</span><span class="ne">Exception</span> <span class="n">e</span><span class="p">){</span>
+      <span class="n">CommUtils</span><span class="o">.</span><span class="n">outred</span><span class="p">(</span><span class="s2">&quot;ERROR &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="n">getMessage</span><span class="p">()</span> <span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="n">protected</span> <span class="n">void</span> <span class="n">receiveAnswer</span><span class="p">(</span> <span class="p">)</span> <span class="n">throws</span> <span class="ne">Exception</span> <span class="p">{</span>
+    <span class="n">InputStream</span> <span class="n">inStream</span>    <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">getInputStream</span><span class="p">();</span>
+    <span class="n">BufferedReader</span> <span class="n">inputChannel</span> <span class="o">=</span>
+        <span class="n">new</span> <span class="n">BufferedReader</span><span class="p">(</span><span class="n">new</span> <span class="n">InputStreamReader</span><span class="p">(</span><span class="n">inStream</span><span class="p">));</span>
+<span class="o">/*</span><span class="mi">11</span><span class="o">*/</span><span class="n">String</span>  <span class="n">answer</span> <span class="o">=</span> <span class="n">inputChannel</span><span class="o">.</span><span class="n">readLine</span><span class="p">()</span> <span class="p">;</span>
+<span class="o">/*</span><span class="mi">12</span><span class="o">*/</span><span class="n">IApplMessage</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">new</span> <span class="n">ApplMessage</span><span class="p">(</span><span class="n">answer</span><span class="p">);</span>
+<span class="o">/*</span><span class="mi">13</span><span class="o">*/</span><span class="n">CommUtils</span><span class="o">.</span><span class="n">outblue</span><span class="p">(</span><span class="s2">&quot;ServiceCallerTCPNaive|answer:&quot;</span><span class="o">+</span><span class="n">answer</span><span class="p">);</span>
+<span class="o">/*</span><span class="mi">14</span><span class="o">*/</span><span class="n">CommUtils</span><span class="o">.</span><span class="n">outblue</span><span class="p">(</span><span class="s2">&quot;ServiceCallerTCPNaive|content:&quot;</span><span class="o">+</span><span class="n">msg</span><span class="o">.</span><span class="n">msgContent</span><span class="p">());</span>
+  <span class="p">}</span>
+
+  <span class="n">protected</span>  <span class="n">void</span> <span class="n">sendUsingTcp</span><span class="p">(</span><span class="n">IApplMessage</span> <span class="n">req</span><span class="p">)</span> <span class="n">throws</span> <span class="ne">Exception</span><span class="p">{</span>
+    <span class="n">OutputStream</span> <span class="n">outStream</span>  <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">getOutputStream</span><span class="p">();</span>
+    <span class="n">DataOutputStream</span> <span class="n">outputChannel</span> <span class="o">=</span> <span class="n">new</span> <span class="n">DataOutputStream</span><span class="p">(</span><span class="n">outStream</span><span class="p">);</span>
+    <span class="n">outputChannel</span><span class="o">.</span><span class="n">writeBytes</span><span class="p">(</span><span class="n">req</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="p">);</span>
+    <span class="n">outputChannel</span><span class="o">.</span><span class="n">flush</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="n">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">main</span><span class="p">(</span> <span class="n">String</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>   <span class="p">{</span>
+    <span class="n">new</span> <span class="n">ServiceCallerTCPNaive</span><span class="p">()</span><span class="o">.</span><span class="n">doJob</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="un-primo-client-coap">
+<h3>Un primo client CoAP<a class="headerlink" href="#un-primo-client-coap" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>ServiceCallerCoapNaive</strong></p>
+<p><span class="slide2">il servizio come risorsa REST</span></p>
+<p>Si veda <span class="xref std std-ref">Il protocollo Coap</span> e <span class="xref std std-ref">Interazioni CoAP</span></p>
+<ol class="arabic simple">
+<li><p>Nome del servizio da usare</p></li>
+<li><p>Nome del client</p></li>
+<li><p>IP dell’host del servizio</p></li>
+<li><p>Porta del servizio</p></li>
+<li><p>Identificatore del messaggio</p></li>
+<li><p>Contenuto del messaggio</p></li>
+<li><p>Path della risorsa</p></li>
+<li><p>Msg di richiesta da inviare</p></li>
+<li><p>Client coap</p></li>
+<li><p>Richiesta (bloccante)</p></li>
+<li><p>Estrazione della stringa di risposta</p></li>
+</ol>
+<p>Si noti la</p>
+<p><span class="slide2">request bloccante</span></p>
+<p>che nasconde interazioni asincrone di più basso livello.</p>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">package</span> <span class="n">javacallers</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">unibo.basicomm23.utils.BasicMsgUtil</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.eclipse.californium.core.CoapClient</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.eclipse.californium.core.CoapResponse</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.eclipse.californium.core.coap.MediaTypeRegistry</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">unibo.basicomm23.interfaces.IApplMessage</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">unibo.basicomm23.utils.CommUtils</span><span class="p">;</span>
+
+<span class="n">public</span> <span class="k">class</span> <span class="nc">ServiceCallerCoapNaive</span> <span class="p">{</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span><span class="n">private</span> <span class="n">final</span> <span class="n">String</span> <span class="n">destination</span> <span class="o">=</span> <span class="s2">&quot;servicemath&quot;</span><span class="p">;</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span><span class="n">private</span> <span class="n">final</span> <span class="n">String</span> <span class="n">sender</span>      <span class="o">=</span> <span class="s2">&quot;clientcoapjava&quot;</span><span class="p">;</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span><span class="n">private</span> <span class="n">final</span> <span class="n">String</span> <span class="n">hostAddr</span>    <span class="o">=</span> <span class="s2">&quot;localhost&quot;</span><span class="p">;</span>
+<span class="o">/*</span><span class="mi">4</span><span class="o">*/</span><span class="n">private</span> <span class="n">final</span> <span class="nb">int</span>    <span class="n">port</span>        <span class="o">=</span> <span class="mi">8011</span><span class="p">;</span>
+<span class="o">/*</span><span class="mi">5</span><span class="o">*/</span><span class="n">private</span> <span class="n">final</span> <span class="n">String</span> <span class="n">msgid</span>       <span class="o">=</span> <span class="s2">&quot;dofibo&quot;</span><span class="p">;</span>
+<span class="o">/*</span><span class="mi">6</span><span class="o">*/</span><span class="n">private</span> <span class="n">final</span> <span class="n">String</span> <span class="n">msgcontent</span>  <span class="o">=</span> <span class="s2">&quot;dofibo(28)&quot;</span><span class="p">;</span>
+
+    <span class="n">private</span> <span class="n">CoapClient</span> <span class="n">client</span><span class="p">;</span>
+    <span class="n">private</span> <span class="n">String</span> <span class="n">url</span><span class="p">;</span>
+<span class="o">/*</span><span class="mi">7</span><span class="o">*/</span><span class="n">private</span> <span class="n">String</span> <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;ctxservice/&quot;</span><span class="o">+</span><span class="n">destination</span><span class="p">;</span>
+    <span class="n">private</span> <span class="n">CoapResponse</span> <span class="n">response</span><span class="p">;</span>
+
+    <span class="n">public</span> <span class="n">void</span> <span class="n">doJob</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">try</span> <span class="p">{</span>
+<span class="o">/*</span><span class="mi">8</span><span class="o">*/</span>  <span class="n">IApplMessage</span> <span class="n">req</span> <span class="o">=</span>
+        <span class="n">BasicMsgUtil</span><span class="o">.</span><span class="n">buildRequest</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span><span class="n">msgid</span><span class="p">,</span><span class="n">msgcontent</span><span class="p">,</span><span class="n">destination</span><span class="p">);</span>
+          <span class="n">String</span> <span class="n">answer</span> <span class="o">=</span> <span class="n">sendUsingCoap</span><span class="p">(</span> <span class="n">req</span>  <span class="p">);</span>
+          <span class="k">if</span><span class="p">(</span> <span class="n">anwer</span> <span class="o">!=</span> <span class="n">null</span> <span class="p">)</span>
+             <span class="n">CommUtils</span><span class="o">.</span><span class="n">outblue</span><span class="p">(</span>
+                <span class="s2">&quot;ServiceCallerCoapNaive|answer=&quot;</span><span class="o">+</span><span class="n">answer</span><span class="p">);</span>
+        <span class="p">}</span><span class="n">catch</span><span class="p">(</span><span class="ne">Exception</span> <span class="n">e</span><span class="p">){</span>
+          <span class="n">CommUtils</span><span class="o">.</span><span class="n">outred</span><span class="p">(</span><span class="s2">&quot;ERROR &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="n">getMessage</span><span class="p">()</span> <span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">protected</span> <span class="n">String</span> <span class="n">sendUsingCoap</span><span class="p">(</span> <span class="n">IApplMessage</span> <span class="n">req</span>  <span class="p">)</span> <span class="p">{</span>
+      <span class="k">try</span> <span class="p">{</span>
+        <span class="n">url</span>  <span class="o">=</span> <span class="s2">&quot;coap://&quot;</span><span class="o">+</span><span class="n">hostAddr</span><span class="o">+</span><span class="s2">&quot;:&quot;</span><span class="o">+</span><span class="n">port</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span><span class="o">+</span> <span class="n">path</span><span class="p">;</span>
+<span class="o">/*</span><span class="mi">9</span><span class="o">*/</span>   <span class="n">client</span>  <span class="o">=</span> <span class="n">new</span> <span class="n">CoapClient</span><span class="p">(</span> <span class="n">url</span> <span class="p">);</span>
+<span class="o">/*</span><span class="mi">10</span><span class="o">*/</span>  <span class="n">response</span><span class="o">=</span>
+          <span class="n">client</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">toString</span><span class="p">(),</span><span class="n">MediaTypeRegistry</span><span class="o">.</span><span class="n">TEXT_PLAIN</span><span class="p">);</span>
+          <span class="k">return</span> <span class="n">getAnswer</span><span class="p">(</span><span class="n">response</span> <span class="p">);</span>
+      <span class="p">}</span><span class="n">catch</span><span class="p">(</span><span class="ne">Exception</span> <span class="n">e</span><span class="p">){</span>
+        <span class="n">CommUtils</span><span class="o">.</span><span class="n">outred</span><span class="p">(</span><span class="s2">&quot;ERROR &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="n">getMessage</span><span class="p">()</span> <span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">protected</span> <span class="n">String</span> <span class="n">getAnswer</span><span class="p">(</span> <span class="n">CoapResponse</span> <span class="n">response</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span><span class="p">(</span> <span class="n">response</span> <span class="o">!=</span> <span class="n">null</span> <span class="p">)</span> <span class="p">{</span>
+              <span class="n">CommUtils</span><span class="o">.</span><span class="n">outblue</span><span class="p">(</span>
+        <span class="s2">&quot;ServerCallerCoapNaive|response=&quot;</span><span class="o">+</span><span class="n">response</span><span class="p">);</span><span class="o">//</span><span class="n">ACK</span><span class="o">-</span><span class="mf">2.05</span> <span class="o">...</span>
+<span class="o">/*</span><span class="mi">11</span><span class="o">*/</span>  <span class="n">String</span> <span class="n">answer</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">getResponseText</span><span class="p">();</span>
+        <span class="k">return</span> <span class="n">answer</span><span class="p">;</span>
+      <span class="p">}</span><span class="k">else</span> <span class="p">{</span>
+        <span class="n">CommUtils</span><span class="o">.</span><span class="n">outred</span><span class="p">(</span><span class="s2">&quot;ServiceCallerCoapNaive RESPONSE NULL&quot;</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">null</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">main</span><span class="p">(</span> <span class="n">String</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">new</span> <span class="n">ServiceCallerCoapNaive</span><span class="p">()</span><span class="o">.</span><span class="n">doJob</span><span class="p">();</span>
+      <span class="n">CommUtils</span><span class="o">.</span><span class="n">outyellow</span><span class="p">(</span><span class="s2">&quot;sendUsingCoap BYE &quot;</span>  <span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="un-client-mqtt">
+<h3>Un client MQTT<a class="headerlink" href="#un-client-mqtt" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ServiceCallerMQTTNaive</span></code></p>
+<ol class="arabic simple">
+<li><p>Topic di accesso al service</p></li>
+<li><p>Topic per la risposta</p></li>
+<li><p>Indirizzo del broker MQTT</p></li>
+<li><p>Creazione di un MQTT client</p></li>
+<li><p>Connessione del client al broker</p></li>
+<li><p>Messaggio di richiesta</p></li>
+<li><p>Invio della richiesta</p></li>
+<li><p>Ricezione della risposta</p></li>
+<li><p>Creazioone di un handler</p></li>
+<li><p>Associazione dell’handler al client</p></li>
+<li><p>Sottoscrizione del client alla topic per la risposta</p></li>
+<li><p>Acquisione  (con attesa) della risposta dall’handler</p></li>
+</ol>
+<p>Tra i punti <code class="docutils literal notranslate"><span class="pre">7</span></code> e <code class="docutils literal notranslate"><span class="pre">8</span></code> il programma può eseguire altre operazioni,
+data la natura <span class="slide2">asincrona</span> della interazione.</p>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>  <span class="n">package</span> <span class="n">main</span><span class="p">;</span>
+
+  <span class="kn">import</span> <span class="nn">org.eclipse.paho.client.mqttv3.MqttClient</span><span class="p">;</span>
+  <span class="kn">import</span> <span class="nn">org.eclipse.paho.client.mqttv3.MqttException</span><span class="p">;</span>
+  <span class="kn">import</span> <span class="nn">org.eclipse.paho.client.mqttv3.MqttMessage</span><span class="p">;</span>
+  <span class="kn">import</span> <span class="nn">org.eclipse.paho.client.mqttv3.MqttSecurityException</span><span class="p">;</span>
+  <span class="kn">import</span> <span class="nn">org.eclipse.paho.client.mqttv3.persist.MemoryPersistence</span><span class="p">;</span>
+  <span class="kn">import</span> <span class="nn">unibo.basicomm23.interfaces.IApplMessage</span><span class="p">;</span>
+  <span class="kn">import</span> <span class="nn">unibo.basicomm23.mqtt.MqttConnection</span><span class="p">;</span>
+  <span class="kn">import</span> <span class="nn">unibo.basicomm23.utils.BasicMsgUtil</span><span class="p">;</span>
+  <span class="kn">import</span> <span class="nn">unibo.basicomm23.utils.CommUtils</span><span class="p">;</span>
+
+  <span class="n">public</span> <span class="k">class</span> <span class="nc">ServiceCallerMQTTNaive</span> <span class="p">{</span>
+    <span class="n">private</span> <span class="n">final</span> <span class="n">String</span> <span class="n">destination</span> <span class="o">=</span> <span class="s2">&quot;servicemath&quot;</span><span class="p">;</span>
+    <span class="n">private</span> <span class="n">final</span> <span class="n">String</span> <span class="n">sender</span>      <span class="o">=</span> <span class="s2">&quot;clientmqtt&quot;</span><span class="p">;</span>
+    <span class="n">private</span> <span class="n">final</span> <span class="n">String</span> <span class="n">msgid</span>       <span class="o">=</span> <span class="s2">&quot;dofibo&quot;</span><span class="p">;</span>
+    <span class="n">private</span> <span class="n">final</span> <span class="n">String</span> <span class="n">msgcontent</span>  <span class="o">=</span> <span class="s2">&quot;dofibo(33)&quot;</span><span class="p">;</span>
+    <span class="n">private</span> <span class="n">MqttClient</span> <span class="n">client</span><span class="p">;</span>
+
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span><span class="n">private</span> <span class="n">String</span> <span class="n">servicetopic</span>       <span class="o">=</span> <span class="s2">&quot;unibo/qak/servicemath&quot;</span><span class="p">;</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span><span class="n">private</span> <span class="n">String</span> <span class="n">serviceanswertopic</span> <span class="o">=</span> <span class="s2">&quot;answ_dofibo_clientmqtt&quot;</span><span class="p">;</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span><span class="n">private</span> <span class="n">String</span> <span class="n">brokerAddr</span><span class="o">=</span><span class="s2">&quot;tcp://broker.hivemq.com&quot;</span><span class="p">;</span><span class="o">//</span><span class="p">:</span><span class="mi">1883</span>  <span class="n">OPTIONAL</span>
+
+    <span class="n">public</span> <span class="n">void</span> <span class="n">doJob</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">try</span> <span class="p">{</span>
+<span class="o">/*</span><span class="mi">4</span><span class="o">*/</span>  <span class="n">client</span> <span class="o">=</span> <span class="n">new</span> <span class="n">MqttClient</span><span class="p">(</span>
+          <span class="n">brokerAddr</span><span class="p">,</span> <span class="s2">&quot;answerconsumer&quot;</span><span class="p">,</span> <span class="n">new</span> <span class="n">MemoryPersistence</span><span class="p">());</span>
+<span class="o">/*</span><span class="mi">5</span><span class="o">*/</span>  <span class="n">client</span><span class="o">.</span><span class="n">connect</span><span class="p">();</span>
+<span class="o">/*</span><span class="mi">6</span><span class="o">*/</span>  <span class="n">IApplMessage</span> <span class="n">req</span> <span class="o">=</span> <span class="n">BasicMsgUtil</span><span class="o">.</span><span class="n">buildRequest</span><span class="p">(</span>
+                <span class="n">sender</span><span class="p">,</span> <span class="n">msgid</span><span class="p">,</span> <span class="n">msgcontent</span><span class="p">,</span> <span class="n">destination</span><span class="p">);</span>
+<span class="o">/*</span><span class="mi">7</span><span class="o">*/</span>  <span class="n">sendMessageMqtt</span><span class="p">(</span> <span class="n">req</span> <span class="p">);</span>
+<span class="o">/*</span><span class="mi">8</span><span class="o">*/</span>  <span class="n">receiveAnswer</span><span class="p">(</span> <span class="p">);</span>
+      <span class="n">System</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+      <span class="p">}</span><span class="n">catch</span><span class="p">(</span><span class="ne">Exception</span> <span class="n">e</span><span class="p">){</span>
+        <span class="n">CommUtils</span><span class="o">.</span><span class="n">outred</span><span class="p">(</span><span class="s2">&quot;ERROR &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="n">getMessage</span><span class="p">()</span> <span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">protected</span>  <span class="n">void</span> <span class="n">sendMessageMqtt</span><span class="p">(</span> <span class="n">IApplMessage</span> <span class="n">m</span>  <span class="p">)</span>
+                <span class="n">throws</span> <span class="n">MqttSecurityException</span><span class="p">,</span> <span class="n">MqttException</span> <span class="p">{</span>
+      <span class="n">MqttMessage</span> <span class="n">mqttmsg</span> <span class="o">=</span> <span class="n">new</span> <span class="n">MqttMessage</span><span class="p">();</span>
+      <span class="n">mqttmsg</span><span class="o">.</span><span class="n">setQos</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+      <span class="n">mqttmsg</span><span class="o">.</span><span class="n">setPayload</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">toString</span><span class="p">()</span><span class="o">.</span><span class="n">getBytes</span><span class="p">());</span>
+      <span class="n">client</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">servicetopic</span><span class="p">,</span> <span class="n">mqttmsg</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">protected</span> <span class="n">void</span> <span class="n">receiveAnswer</span><span class="p">(</span> <span class="p">)</span> <span class="n">throws</span> <span class="ne">Exception</span> <span class="p">{</span>
+<span class="o">/*</span><span class="mi">9</span><span class="o">*/</span> <span class="n">MqttMsgHandler</span> <span class="n">msgHandler</span> <span class="o">=</span> <span class="n">new</span> <span class="n">MqttMsgHandler</span><span class="p">();</span>
+<span class="o">/*</span><span class="mi">10</span><span class="o">*/</span><span class="n">client</span><span class="o">.</span><span class="n">setCallback</span><span class="p">(</span><span class="n">msgHandler</span><span class="p">);</span>
+<span class="o">/*</span><span class="mi">11</span><span class="o">*/</span><span class="n">client</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span> <span class="n">serviceanswertopic</span> <span class="p">);</span>
+<span class="o">/*</span><span class="mi">12</span><span class="o">*/</span><span class="n">String</span> <span class="n">answer</span> <span class="o">=</span> <span class="n">msgHandler</span><span class="o">.</span><span class="n">getMsg</span><span class="p">();</span> <span class="o">//</span><span class="n">waits</span> <span class="o">...</span>
+      <span class="n">CommUtils</span><span class="o">.</span><span class="n">outblue</span><span class="p">(</span><span class="s2">&quot;receiveAnswer : &quot;</span> <span class="o">+</span> <span class="n">answer</span> <span class="p">);</span>
+      <span class="n">client</span><span class="o">.</span><span class="n">disconnect</span><span class="p">();</span>
+      <span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="n">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">main</span><span class="p">(</span> <span class="n">String</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>   <span class="p">{</span>
+      <span class="n">new</span> <span class="n">ServiceCallerMQTTNaive</span><span class="p">()</span><span class="o">.</span><span class="n">doJob</span><span class="p">();</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><p>Il client MQTT, dopo avere inviato (punto <code class="docutils literal notranslate"><span class="pre">7</span></code>) il messaggio di richiesta al servizio <code class="docutils literal notranslate"><span class="pre">servicemath</span></code> sulla
+topic <code class="docutils literal notranslate"><span class="pre">unibo/qak/servicemath</span></code>, si sottoscrive alla topic <code class="docutils literal notranslate"><span class="pre">answ_dofibo_clientmqtt</span></code>
+(specifica per un dato chiamante e per una data richiesta) su cui il servizio
+invia la risposta.</p></li>
+<li><p>Per la ricezione della risposta, il client deve essere asscociato (punto <code class="docutils literal notranslate"><span class="pre">10</span></code>) a un oggetto
+(<a class="reference internal" href="#mqttmsghandler"><span class="std std-ref">MqttMsgHandler</span></a>) che deve implementare la interfaccia <a class="reference external" href="https://eclipse.dev/paho/files/javadoc/org/eclipse/paho/client/mqttv3/MqttCallback.html">MqttCallback</a>.</p></li>
+</ul>
+<section id="mqttmsghandler">
+<h4>MqttMsgHandler<a class="headerlink" href="#mqttmsghandler" title="Permalink to this heading">¶</a></h4>
+<p>La presenza di un gestore dei messaggi pubblicati su una topic enfatizza la natura
+asincrona della interazione.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ServiceCallerMQTTNaive</span></code></p>
+<ol class="arabic simple">
+<li><p>Handler di gestione messaggi ricevuti su topic subscribed  (<code class="docutils literal notranslate"><span class="pre">answ_dofibo_clientmqtt</span></code>)</p></li>
+<li><p>Metodo invocato alla ricezione di un messaggio</p></li>
+<li><p>Metodo per acquisizione (con attesa) del messaggio ricevuto</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">package</span> <span class="n">main</span><span class="p">;</span>
+ <span class="kn">import</span> <span class="nn">org.eclipse.paho.client.mqttv3.IMqttDeliveryToken</span><span class="p">;</span>
+ <span class="kn">import</span> <span class="nn">org.eclipse.paho.client.mqttv3.MqttCallback</span><span class="p">;</span>
+ <span class="kn">import</span> <span class="nn">org.eclipse.paho.client.mqttv3.MqttMessage</span><span class="p">;</span>
+ <span class="kn">import</span> <span class="nn">unibo.basicomm23.interfaces.IApplMessage</span><span class="p">;</span>
+ <span class="kn">import</span> <span class="nn">unibo.basicomm23.msg.ApplMessage</span><span class="p">;</span>
+ <span class="kn">import</span> <span class="nn">unibo.basicomm23.utils.CommUtils</span><span class="p">;</span>
+
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span><span class="n">public</span> <span class="k">class</span> <span class="nc">MqttMsgHandler</span> <span class="n">implements</span> <span class="n">MqttCallback</span><span class="p">{</span>
+ <span class="n">private</span> <span class="n">MqttMessage</span> <span class="n">message</span> <span class="o">=</span> <span class="n">null</span><span class="p">;</span>
+
+   <span class="nd">@Override</span>
+   <span class="n">public</span> <span class="n">void</span> <span class="n">connectionLost</span><span class="p">(</span><span class="n">Throwable</span> <span class="n">cause</span><span class="p">)</span> <span class="p">{</span>
+     <span class="o">//</span> <span class="n">TODO</span> <span class="n">Auto</span><span class="o">-</span><span class="n">generated</span> <span class="n">method</span> <span class="n">stub</span>
+   <span class="p">}</span>
+
+   <span class="nd">@Override</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span><span class="n">public</span> <span class="n">void</span> <span class="n">messageArrived</span><span class="p">(</span>
+         <span class="n">String</span> <span class="n">topic</span><span class="p">,</span> <span class="n">MqttMessage</span> <span class="n">msg</span><span class="p">)</span> <span class="n">throws</span> <span class="ne">Exception</span> <span class="p">{</span>
+     <span class="n">this</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">msg</span><span class="p">;</span>
+   <span class="p">}</span>
+
+   <span class="nd">@Override</span>
+   <span class="n">public</span> <span class="n">void</span> <span class="n">deliveryComplete</span><span class="p">(</span><span class="n">IMqttDeliveryToken</span> <span class="n">token</span><span class="p">)</span> <span class="p">{</span>
+     <span class="o">//</span> <span class="n">TODO</span> <span class="n">Auto</span><span class="o">-</span><span class="n">generated</span> <span class="n">method</span> <span class="n">stub</span>
+   <span class="p">}</span>
+
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span><span class="n">public</span> <span class="n">synchronized</span> <span class="n">String</span> <span class="n">getMsg</span><span class="p">()</span> <span class="n">throws</span> <span class="ne">Exception</span> <span class="p">{</span>
+     <span class="k">while</span><span class="p">(</span> <span class="n">message</span> <span class="o">==</span> <span class="n">null</span> <span class="p">)</span> <span class="p">{</span>
+       <span class="n">CommUtils</span><span class="o">.</span><span class="n">outyellow</span><span class="p">(</span><span class="s2">&quot;MqttMsgHandler|waits ... &quot;</span><span class="p">);</span>
+       <span class="n">Thread</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>
+     <span class="p">}</span>
+     <span class="n">IApplMessage</span> <span class="n">answer</span> <span class="o">=</span> <span class="n">new</span> <span class="n">ApplMessage</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">toString</span><span class="p">());</span>
+     <span class="k">return</span> <span class="n">answer</span><span class="o">.</span><span class="n">msgContent</span><span class="p">();</span>
+   <span class="p">}</span>
+ <span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="interazione-http-hmi">
+<h3>Interazione HTTP HMI<a class="headerlink" href="#interazione-http-hmi" title="Permalink to this heading">¶</a></h3>
+<p>Il servizio permette interazione <strong>Human-To-Machine</strong> (<span class="remark">HMI</span>) via HTTP usando un comune browser.
+In questo caso l’interazione è vincolata dalle politche racchiuse nella pagina e nel server HTTP.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 55%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">localhost:8088</span></code></p>
+<ol class="arabic simple">
+<li><p>Il campo di input con label <strong>dofibo</strong> permette di inserire un numero <code class="docutils literal notranslate"><span class="pre">N</span></code>.</p></li>
+<li><p>Il pulsante SEND permette di inviare una richiesta di valutazione <code class="docutils literal notranslate"><span class="pre">dofibo(N)</span></code> al server del servizio.</p></li>
+<li><p>L’area di output visualizza la risposta alla richieste e altre informazioni da parte del server.</p></li>
+</ol>
+</td>
+<td><a class="reference internal image-reference" href="_images/servicefacade24.PNG"><img alt="_images/servicefacade24.PNG" class="align-center" src="_images/servicefacade24.PNG" style="width: 360%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+<section id="usare-curl">
+<h4>usare curl<a class="headerlink" href="#usare-curl" title="Permalink to this heading">¶</a></h4>
+<p>La pagina HTML può essere ottenuta anche utilizzando  il tool <a class="reference external" href="https://curl.se/">curl</a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">curl</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;Content-Type: application/json&quot;</span> <span class="o">-</span><span class="n">X</span> <span class="n">GET</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">8088</span><span class="o">/</span>
+</pre></div>
+</div>
+</section>
+<section id="http-get">
+<h4>HTTP GET<a class="headerlink" href="#http-get" title="Permalink to this heading">¶</a></h4>
+<p>Per realizzare interazione <strong>Machine-To-Machine</strong> (<span class="remark">M2M</span>) è più opportuno usare una libreria che permetta
+l’uso di <span class="xref std std-ref">API REST</span>.  Nel caso del nostro servizio però:</p>
+<ul class="simple">
+<li><p>Tutta la interazione di lvello applicativo è realizzata mediante <a class="reference internal" href="#interazione-con-websocket"><span class="std std-ref">WebSocket</span></a>.</p></li>
+<li><p>L’unico metodo HTTP-REST che funziona è il metodo <code class="docutils literal notranslate"><span class="pre">GET</span></code>, che restituisce la pagina HTML, come nel caso
+dell’esempio che segue. (Di utile consultaszione: <a class="reference external" href="https://it.wikipedia.org/wiki/Codici_di_stato_HTTP">https://it.wikipedia.org/wiki/Codici_di_stato_HTTP</a>).</p></li>
+</ul>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ServiceCallerHTTPNaive</span></code></p>
+<ol class="arabic simple">
+<li><p>Creazione di un client HTTP</p></li>
+<li><p>Invio richiesta sincrona per pagina iniziale</p></li>
+<li><p>Estrazione del payload della risposta HTTP (la pagina HTML)</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">package</span> <span class="n">main</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.http.impl.client.CloseableHttpClient</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.http.impl.client.HttpClients</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">unibo.basicomm23.utils.CommUtils</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.http.entity.StringEntity</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.http.client.methods.HttpUriRequest</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.http.client.methods.RequestBuilder</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.http.ParseException</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.http.client.methods.CloseableHttpResponse</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.http.util.EntityUtils</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.net.URI</span><span class="p">;</span>
+
+<span class="n">public</span> <span class="k">class</span> <span class="nc">ServiceCallerHTTPNaive</span> <span class="p">{</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span><span class="n">private</span> <span class="n">final</span> <span class="n">CloseableHttpClient</span> <span class="n">httpclient</span><span class="o">=</span>
+                                <span class="n">HttpClients</span><span class="o">.</span><span class="n">createDefault</span><span class="p">();</span>
+
+  <span class="n">public</span> <span class="n">void</span> <span class="n">doJob</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span> <span class="n">CloseableHttpResponse</span> <span class="n">response</span> <span class="o">=</span> <span class="n">sendMessageHTTP</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">);</span>
+      <span class="k">if</span><span class="p">(</span> <span class="n">response</span> <span class="o">!=</span> <span class="n">null</span> <span class="p">)</span> <span class="p">{</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span>   <span class="n">String</span> <span class="n">answer</span> <span class="o">=</span> <span class="n">getAnswer</span><span class="p">(</span><span class="n">response</span><span class="p">);</span>
+        <span class="n">CommUtils</span><span class="o">.</span><span class="n">outblue</span><span class="p">(</span><span class="s2">&quot;ServiceCallerHTTPNaive|answer=&quot;</span><span class="o">+</span><span class="n">answer</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="n">System</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="p">}</span><span class="n">catch</span><span class="p">(</span><span class="ne">Exception</span> <span class="n">e</span><span class="p">){</span>
+      <span class="n">CommUtils</span><span class="o">.</span><span class="n">outred</span><span class="p">(</span><span class="s2">&quot;ERROR &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="n">getMessage</span><span class="p">()</span> <span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+    <span class="n">public</span> <span class="n">CloseableHttpResponse</span> <span class="n">sendMessageHTTP</span><span class="p">(</span> <span class="n">String</span> <span class="n">msg</span> <span class="p">)</span>  <span class="p">{</span>
+      <span class="n">CloseableHttpResponse</span> <span class="n">response</span> <span class="o">=</span> <span class="n">null</span><span class="p">;</span>
+        <span class="n">String</span> <span class="n">URL</span> <span class="o">=</span> <span class="s2">&quot;http://localhost:8088&quot;</span> <span class="p">;</span>
+        <span class="k">try</span> <span class="p">{</span>
+            <span class="n">StringEntity</span> <span class="n">entity</span> <span class="o">=</span> <span class="n">new</span> <span class="n">StringEntity</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
+            <span class="n">HttpUriRequest</span> <span class="n">httpget</span> <span class="o">=</span> <span class="n">RequestBuilder</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+                    <span class="o">.</span><span class="n">setUri</span><span class="p">(</span><span class="n">new</span> <span class="n">URI</span><span class="p">(</span><span class="n">URL</span><span class="p">))</span>
+                    <span class="o">.</span><span class="n">setHeader</span><span class="p">(</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">,</span> <span class="s2">&quot;application/json&quot;</span><span class="p">)</span>
+                    <span class="o">.</span><span class="n">setHeader</span><span class="p">(</span><span class="s2">&quot;Accept&quot;</span><span class="p">,</span> <span class="s2">&quot;application/json&quot;</span><span class="p">)</span>
+                    <span class="o">.</span><span class="n">setEntity</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>
+                    <span class="o">.</span><span class="n">build</span><span class="p">();</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">httpclient</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">httpget</span><span class="p">);</span>
+    <span class="n">CommUtils</span><span class="o">.</span><span class="n">outyellow</span><span class="p">(</span> <span class="s2">&quot;ServiceCallerHTTPNaive|response=&quot;</span> <span class="o">+</span><span class="n">response</span> <span class="p">);</span>
+        <span class="p">}</span> <span class="n">catch</span><span class="p">(</span><span class="ne">Exception</span> <span class="n">e</span><span class="p">){</span>
+    <span class="n">CommUtils</span><span class="o">.</span><span class="n">outred</span><span class="p">(</span><span class="s2">&quot;ServiceCallerHTTPNaive|ERROR&quot;</span><span class="o">+</span><span class="n">e</span><span class="o">.</span><span class="n">getMessage</span><span class="p">());</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">response</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">protected</span> <span class="n">String</span> <span class="n">getAnswer</span><span class="p">(</span><span class="n">CloseableHttpResponse</span> <span class="n">response</span> <span class="p">)</span>
+                          <span class="n">throws</span> <span class="n">ParseException</span><span class="p">,</span> <span class="n">IOException</span> <span class="p">{</span>
+        <span class="n">String</span> <span class="n">answer</span> <span class="o">=</span> <span class="n">EntityUtils</span><span class="o">.</span><span class="n">toString</span><span class="p">(</span> <span class="n">response</span><span class="o">.</span><span class="n">getEntity</span><span class="p">()</span> <span class="p">);</span>
+        <span class="k">return</span> <span class="n">answer</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">main</span><span class="p">(</span> <span class="n">String</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>   <span class="p">{</span>
+      <span class="n">new</span> <span class="n">ServiceCallerHTTPNaive</span><span class="p">()</span><span class="o">.</span><span class="n">doJob</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="interazione-con-websocket">
+<h3>Interazione con WebSocket<a class="headerlink" href="#interazione-con-websocket" title="Permalink to this heading">¶</a></h3>
+<p>Si veda: <a class="reference external" href="https://www.baeldung.com/java-websockets">https://www.baeldung.com/java-websockets</a></p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ServiceCallerWSNaive</span></code></p>
+<ol class="arabic simple">
+<li><p>una classe decorata con questa <span class="xref std std-ref">Annotazione</span> viene trattata come un client WS</p></li>
+<li><p>URI di accesso</p></li>
+<li><p>un metodo annotato con <code class="docutils literal notranslate"><span class="pre">&#64;OnMessage</span></code>  riceve le informazioni dal contenitore WS
+quando un messaggio (risposta) viene inviato all’endpoint dal service.</p></li>
+<li><p>crea un oggetto contenitore WS  (di controllo delle sessioni)</p></li>
+<li><p>connette al server l’oggetto annotato corrente</p></li>
+<li><p>invio della richiesta usando sessione corrente</p></li>
+<li><p>attesa della risposta ricevuta da <code class="docutils literal notranslate"><span class="pre">&#64;OnMessage</span></code></p></li>
+<li><p>chiusura della sessione</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">package</span> <span class="n">main</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">unibo.basicomm23.utils.CommUtils</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.net.URI</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">javax.websocket.</span><span class="o">*</span><span class="p">;</span>
+
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span><span class="nd">@ClientEndpoint</span>
+<span class="n">public</span> <span class="k">class</span> <span class="nc">ServiceCallerWSNaive</span> <span class="p">{</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span><span class="n">private</span> <span class="n">String</span> <span class="n">addr</span> <span class="o">=</span> <span class="s2">&quot;localhost:8088/accessgui&quot;</span><span class="p">;</span>
+<span class="n">private</span> <span class="nb">int</span> <span class="n">fiboNum</span> <span class="o">=</span> <span class="mi">24</span><span class="p">;</span>
+<span class="n">private</span> <span class="n">String</span> <span class="n">answer</span> <span class="p">;</span>
+<span class="n">private</span> <span class="n">Session</span> <span class="n">session</span><span class="p">;</span>
+
+<span class="n">private</span> <span class="nb">int</span> <span class="n">fiboNum</span> <span class="o">=</span> <span class="mi">24</span><span class="p">;</span>
+
+    <span class="nd">@OnOpen</span>
+    <span class="n">public</span> <span class="n">void</span> <span class="n">onOpen</span><span class="p">(</span><span class="n">Session</span> <span class="n">userSession</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">CommUtils</span><span class="o">.</span><span class="n">outblue</span><span class="p">(</span><span class="s2">&quot;TestMovesUsingWs|opening websocket&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="nd">@OnClose</span>
+    <span class="n">public</span> <span class="n">void</span> <span class="n">onClose</span><span class="p">(</span><span class="n">Session</span> <span class="n">userSession</span><span class="p">,</span> <span class="n">CloseReason</span> <span class="n">reason</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">CommUtils</span><span class="o">.</span><span class="n">outblue</span><span class="p">(</span><span class="s2">&quot;TestMovesUsingWs|closing websocket&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span><span class="nd">@OnMessage</span>
+    <span class="n">public</span> <span class="n">void</span> <span class="n">onMessage</span><span class="p">(</span><span class="n">String</span> <span class="n">message</span><span class="p">)</span>  <span class="p">{</span>
+      <span class="n">CommUtils</span><span class="o">.</span><span class="n">outmagenta</span><span class="p">(</span><span class="s2">&quot;TestMovesUsingWs|onMessage:&quot;</span> <span class="o">+</span> <span class="n">message</span> <span class="p">);</span>
+      <span class="n">answer</span> <span class="o">=</span> <span class="n">message</span><span class="p">;</span>
+    <span class="p">}</span>
+
+  <span class="n">public</span> <span class="n">void</span> <span class="n">doJob</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">try</span> <span class="p">{</span>
+<span class="o">/*</span><span class="mi">4</span><span class="o">*/</span>   <span class="n">WebSocketContainer</span> <span class="n">container</span> <span class="o">=</span>
+<span class="o">/*</span><span class="mi">5</span><span class="o">*/</span>   <span class="n">ContainerProvider</span><span class="o">.</span><span class="n">getWebSocketContainer</span><span class="p">();</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">container</span><span class="o">.</span><span class="n">connectToServer</span><span class="p">(</span><span class="n">this</span><span class="p">,</span> <span class="n">new</span> <span class="n">URI</span><span class="p">(</span><span class="s2">&quot;ws://&quot;</span><span class="o">+</span><span class="n">addr</span><span class="p">));</span>
+        <span class="n">sendMessageWS</span><span class="p">(</span> <span class="s2">&quot;&quot;</span><span class="o">+</span><span class="n">fiboNum</span> <span class="p">);</span>
+        <span class="n">String</span> <span class="n">answer</span> <span class="o">=</span> <span class="n">getAnswer</span><span class="p">(</span>  <span class="p">);</span>
+        <span class="n">CommUtils</span><span class="o">.</span><span class="n">outblue</span><span class="p">(</span><span class="s2">&quot;ServiceCallerWSNaive|answer=&quot;</span><span class="o">+</span><span class="n">answer</span>   <span class="p">);</span>
+        <span class="n">Thread</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">30000</span><span class="p">);</span>
+<span class="o">/*</span><span class="mi">6</span><span class="o">*/</span>   <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">();</span>
+        <span class="n">CommUtils</span><span class="o">.</span><span class="n">outblue</span><span class="p">(</span><span class="s2">&quot;ServiceCallerWSNaive | BYE &quot;</span>   <span class="p">);</span>
+      <span class="p">}</span><span class="n">catch</span><span class="p">(</span><span class="ne">Exception</span> <span class="n">e</span><span class="p">){</span>
+        <span class="n">CommUtils</span><span class="o">.</span><span class="n">outred</span><span class="p">(</span><span class="s2">&quot;ERROR &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="n">getMessage</span><span class="p">()</span> <span class="p">);</span>
+      <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="n">public</span> <span class="n">void</span> <span class="n">sendMessageWS</span><span class="p">(</span> <span class="n">String</span> <span class="n">msg</span> <span class="p">)</span>  <span class="p">{</span>
+<span class="o">/*</span><span class="mi">6</span><span class="o">*/</span>  <span class="n">session</span><span class="o">.</span><span class="n">getAsyncRemote</span><span class="p">()</span><span class="o">.</span><span class="n">sendText</span><span class="p">(</span><span class="s2">&quot;request/&quot;</span> <span class="o">+</span> <span class="n">msg</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="n">protected</span> <span class="n">String</span> <span class="n">getAnswer</span><span class="p">()</span> <span class="n">throws</span> <span class="n">InterruptedException</span> <span class="p">{</span>
+<span class="o">/*</span><span class="mi">7</span><span class="o">*/</span><span class="k">while</span><span class="p">(</span> <span class="n">answer</span> <span class="o">==</span> <span class="n">null</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="n">Thread</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+      <span class="n">CommUtils</span><span class="o">.</span><span class="n">outblue</span><span class="p">(</span><span class="s2">&quot;ServiceCallerWSNaive | wait ... &quot;</span>   <span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">answer</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="n">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">main</span><span class="p">(</span> <span class="n">String</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>   <span class="p">{</span>
+    <span class="n">new</span> <span class="n">ServiceCallerWSNaive</span><span class="p">()</span><span class="o">.</span><span class="n">doJob</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="il-servizio-come-sistema-osservabile">
+<h2>Il servizio come sistema osservabile<a class="headerlink" href="#il-servizio-come-sistema-osservabile" title="Permalink to this heading">¶</a></h2>
+<section id="osservabilita-via-ws">
+<h3>Osservabilità via WS<a class="headerlink" href="#osservabilita-via-ws" title="Permalink to this heading">¶</a></h3>
+<p>Facciamo ora il seguente esperimento:</p>
+<ol class="arabic simple">
+<li><p>Manteniamo attivo il programma che realizza la <a class="reference internal" href="#interazione-con-websocket"><span class="std std-ref">Interazione con WebSocket</span></a></p></li>
+<li><p>Prima di chiudere la sessione (punto <code class="docutils literal notranslate"><span class="pre">6</span></code>) inviamo via Browser il comando <code class="docutils literal notranslate"><span class="pre">24</span></code></p></li>
+<li><p>Vedremo che il metodo <strong>onMessage</strong> (punto <code class="docutils literal notranslate"><span class="pre">3</span></code>)  scrive il messaggio <code class="docutils literal notranslate"><span class="pre">fibodone(gui,44,701408733,1684)</span></code></p></li>
+</ol>
+<p>Infatti il servizio invia aggiornamenti a tutti i client che sono connessi tramite WS.</p>
+<p>TODO: esempio di programma</p>
+<p>Ma vi sono altri modi per osservare il funzionamento del servizio, legati al fatto che l’attore
+che realizza il servizio invia aggiornamenti anche tramite CoAP e MQTT.</p>
+</section>
+<section id="osservabilita-via-coap">
+<h3>Osservabilità via CoAP<a class="headerlink" href="#osservabilita-via-coap" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ServiceObserverCoap</span></code></p>
+<ol class="arabic simple">
+<li><p>IP dell’host del servizio</p></li>
+<li><p>Porta del servizio</p></li>
+<li><p>Path della risorsa</p></li>
+<li><p>Client coap</p></li>
+<li><p><span class="slide2">Osservazione</span> della risorsa</p></li>
+<li><p>Valore osservato</p></li>
+<li><p>Entry-point in caso di errore</p></li>
+<li><p>Attesa prima di terminare</p></li>
+<li><p>Terminazione</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">package</span> <span class="n">main</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.eclipse.californium.core.CoapClient</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.eclipse.californium.core.CoapHandler</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.eclipse.californium.core.CoapObserveRelation</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.eclipse.californium.core.CoapResponse</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">unibo.basicomm23.utils.CommUtils</span><span class="p">;</span>
+
+<span class="n">public</span> <span class="k">class</span> <span class="nc">ServiceObserverCoap</span> <span class="n">implements</span> <span class="n">CoapHandler</span><span class="p">{</span>
+  <span class="n">private</span> <span class="n">CoapClient</span> <span class="n">client</span><span class="p">;</span>
+  <span class="n">private</span> <span class="n">CoapObserveRelation</span> <span class="n">obsRel</span><span class="p">;</span>
+
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span> <span class="n">private</span> <span class="n">final</span> <span class="n">String</span> <span class="n">hostAddr</span>    <span class="o">=</span> <span class="s2">&quot;localhost&quot;</span><span class="p">;</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span>  <span class="n">private</span> <span class="n">final</span> <span class="nb">int</span>    <span class="n">port</span>        <span class="o">=</span> <span class="mi">8011</span><span class="p">;</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span>  <span class="n">private</span> <span class="n">String</span> <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;ctxservice/servicemath&quot;</span><span class="p">;</span>
+
+<span class="n">public</span> <span class="n">void</span> <span class="n">doJob</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="n">createObserver</span><span class="p">();</span>
+    <span class="p">}</span><span class="n">catch</span><span class="p">(</span><span class="ne">Exception</span> <span class="n">e</span><span class="p">){</span>
+      <span class="n">CommUtils</span><span class="o">.</span><span class="n">outred</span><span class="p">(</span><span class="s2">&quot;ERROR &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="n">getMessage</span><span class="p">()</span> <span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">protected</span> <span class="n">void</span> <span class="n">createObserver</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">String</span> <span class="n">uri</span> <span class="o">=</span> <span class="n">hostAddr</span><span class="o">+</span><span class="s2">&quot;:&quot;</span><span class="o">+</span><span class="n">port</span><span class="o">+</span><span class="s2">&quot;/&quot;</span><span class="o">+</span><span class="n">path</span><span class="p">;</span>
+    <span class="o">//</span><span class="n">uri</span><span class="o">==</span><span class="s2">&quot;localhost:8011/ctxservice/servicemath&quot;</span>
+  <span class="o">/*</span><span class="mi">4</span><span class="o">*/</span><span class="n">client</span> <span class="o">=</span> <span class="n">new</span> <span class="n">CoapClient</span><span class="p">(</span><span class="s2">&quot;coap://&quot;</span><span class="o">+</span><span class="n">uri</span><span class="p">);</span>
+  <span class="o">/*</span><span class="mi">5</span><span class="o">*/</span><span class="n">obsRel</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">this</span><span class="p">);</span>
+    <span class="n">CommUtils</span><span class="o">.</span><span class="n">outblue</span><span class="p">(</span>
+        <span class="s2">&quot;ServiceObserverCoap|observing on &quot;</span> <span class="o">+</span> <span class="n">uri</span> <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nd">@Override</span>
+<span class="n">public</span> <span class="n">void</span> <span class="n">onLoad</span><span class="p">(</span><span class="n">CoapResponse</span> <span class="n">response</span><span class="p">)</span> <span class="p">{</span>
+<span class="o">/*</span><span class="mi">6</span><span class="o">*/</span><span class="n">String</span> <span class="n">content</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">getResponseText</span><span class="p">();</span>
+    <span class="n">CommUtils</span><span class="o">.</span><span class="n">outblue</span><span class="p">(</span>
+        <span class="s2">&quot;ServiceObserverCoap|onLoad receives: &quot;</span><span class="o">+</span><span class="n">content</span><span class="p">);</span>
+  <span class="p">}</span>
+
+<span class="nd">@Override</span>
+<span class="o">/*</span><span class="mi">7</span><span class="o">*/</span><span class="n">public</span> <span class="n">void</span> <span class="n">onError</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">CommUtils</span><span class="o">.</span><span class="n">outred</span><span class="p">(</span><span class="s2">&quot;ServiceObserverCoap|ERROR&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">public</span> <span class="n">void</span> <span class="n">shutdown</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">CommUtils</span><span class="o">.</span><span class="n">outblue</span><span class="p">(</span><span class="s2">&quot;CoapObserverForSonar|shutdown  &quot;</span><span class="p">);</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">shutdown</span><span class="p">();</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">obsRel</span> <span class="o">!=</span> <span class="n">null</span> <span class="p">)</span> <span class="n">obsRel</span><span class="o">.</span><span class="n">proactiveCancel</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">main</span><span class="p">(</span> <span class="n">String</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span> <span class="n">throws</span> <span class="ne">Exception</span><span class="p">{</span>
+      <span class="n">ServiceObserverCoap</span> <span class="n">appl</span> <span class="o">=</span> <span class="n">new</span> <span class="n">ServiceObserverCoap</span><span class="p">();</span>
+      <span class="n">appl</span><span class="o">.</span><span class="n">doJob</span><span class="p">();</span>
+<span class="o">/*</span><span class="mi">8</span><span class="o">*/</span> <span class="n">Thread</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">60000</span><span class="p">);</span>
+      <span class="n">CommUtils</span><span class="o">.</span><span class="n">outyellow</span><span class="p">(</span><span class="s2">&quot;ServiceObserverCoap BYE &quot;</span>  <span class="p">);</span>
+<span class="o">/*</span><span class="mi">9</span><span class="o">*/</span> <span class="n">appl</span><span class="o">.</span><span class="n">shutdown</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="osservabilita-via-mqtt">
+<h3>Osservabilità via MQTT<a class="headerlink" href="#osservabilita-via-mqtt" title="Permalink to this heading">¶</a></h3>
+<p>Il servizio si rende osservabile via MQTT usando una topic
+di nome <code class="docutils literal notranslate"><span class="pre">servicemathouttopic</span></code> su cui fa  <span class="slide2">emit</span> di informazioni.</p>
+<p>Un client che voglia operare come osservare del servizio,
+fa una <strong>subscribe</strong> alla <code class="docutils literal notranslate"><span class="pre">servicemathouttopic</span></code>, e usa un oggetto
+che implementa
+l’interfaccia <em>org.eclipse.paho.client.mqttv3.MqttCallback</em> per gestire
+in modo asincrono le informazioni pubblicate dal serivizio.</p>
+<p>Nell’esempio che segue questo oggetto di gestione è
+l’applicazione stessa.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 55%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ServiceObserverMqtt</span></code></p>
+<ol class="arabic simple">
+<li><p>Appl che implementa MqttCallback</p></li>
+<li><p>Nome della topic di output del server</p></li>
+<li><p>Indirizzo del broker MQTT</p></li>
+<li><p>Nome del client</p></li>
+<li><p>Connessione MQTT</p></li>
+<li><p>Settaggio della callback</p></li>
+<li><p>Sottoscrizione alla topic di output</p></li>
+<li><p>Metodo invocato alla ricezione di un msg</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">package</span> <span class="n">main</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.eclipse.paho.client.mqttv3.IMqttDeliveryToken</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.eclipse.paho.client.mqttv3.MqttMessage</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">unibo.basicomm23.mqtt.MqttConnection</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.eclipse.paho.client.mqttv3.MqttCallback</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">unibo.basicomm23.utils.CommUtils</span><span class="p">;</span>
+
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span><span class="n">public</span> <span class="k">class</span> <span class="nc">ServiceObserverMqtt</span>
+                              <span class="n">implements</span> <span class="n">MqttCallback</span><span class="p">{</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span><span class="n">private</span> <span class="n">String</span> <span class="n">serverouttopic</span><span class="o">=</span><span class="s2">&quot;servicemathouttopic&quot;</span><span class="p">;</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span>  <span class="n">private</span> <span class="n">String</span> <span class="n">brokerAddr</span>  <span class="o">=</span>
+                             <span class="s2">&quot;tcp://broker.hivemq.com&quot;</span><span class="p">;</span>
+<span class="o">/*</span><span class="mi">4</span><span class="o">*/</span>  <span class="n">private</span> <span class="n">final</span> <span class="n">String</span> <span class="n">sender</span><span class="o">=</span><span class="s2">&quot;clientjava&quot;</span><span class="p">;</span>
+  <span class="n">private</span> <span class="n">MqttConnection</span> <span class="n">connMqtt</span><span class="p">;</span>
+
+  <span class="n">public</span> <span class="n">void</span> <span class="n">doJob</span><span class="p">()</span> <span class="p">{</span>
+   <span class="k">try</span> <span class="p">{</span>
+    <span class="n">MqttConnection</span> <span class="n">connMqtt</span> <span class="o">=</span> <span class="n">MqttConnection</span><span class="o">.</span><span class="n">create</span><span class="p">();</span>
+<span class="o">/*</span><span class="mi">5</span><span class="o">*/</span><span class="n">connMqtt</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">brokerAddr</span><span class="p">);</span>
+<span class="o">/*</span><span class="mi">6</span><span class="o">*/</span><span class="n">connMqtt</span><span class="o">.</span><span class="n">setCallback</span><span class="p">(</span> <span class="n">this</span> <span class="p">);</span>
+<span class="o">/*</span><span class="mi">7</span><span class="o">*/</span><span class="n">connMqtt</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span> <span class="n">serverouttopic</span> <span class="p">);</span>
+   <span class="p">}</span><span class="n">catch</span><span class="p">(</span><span class="ne">Exception</span> <span class="n">e</span><span class="p">){</span>
+      <span class="n">CommUtils</span><span class="o">.</span><span class="n">outred</span><span class="p">(</span><span class="s2">&quot;ERROR &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="n">getMessage</span><span class="p">()</span> <span class="p">);</span>
+   <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="o">/*</span>
+  <span class="o">*</span> <span class="n">Metodi</span> <span class="n">di</span> <span class="n">IApplMsgHandlerMqtt</span>
+  <span class="o">*/</span>
+  <span class="nd">@Override</span>
+  <span class="o">/*</span><span class="mi">8</span><span class="o">*/</span><span class="n">public</span> <span class="n">void</span> <span class="n">messageArrived</span><span class="p">(</span><span class="n">String</span> <span class="n">topic</span><span class="p">,</span>
+           <span class="n">MqttMessage</span> <span class="n">message</span><span class="p">)</span> <span class="n">throws</span> <span class="ne">Exception</span> <span class="p">{</span>
+    <span class="n">CommUtils</span><span class="o">.</span><span class="n">outblue</span><span class="p">(</span>
+      <span class="s2">&quot;ServerCallerMqtt|arrived:&quot;</span><span class="o">+</span><span class="n">message</span><span class="o">+</span><span class="s2">&quot; on:&quot;</span><span class="o">+</span><span class="n">topic</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="nd">@Override</span>
+  <span class="n">public</span> <span class="n">void</span> <span class="n">connectionLost</span><span class="p">(</span><span class="n">Throwable</span> <span class="n">cause</span><span class="p">)</span> <span class="p">{</span>
+    <span class="o">//</span> <span class="n">TODO</span> <span class="n">Auto</span><span class="o">-</span><span class="n">generated</span> <span class="n">method</span> <span class="n">stub</span>
+  <span class="p">}</span>
+  <span class="nd">@Override</span>
+  <span class="n">public</span> <span class="n">void</span> <span class="n">deliveryComplete</span><span class="p">(</span><span class="n">IMqttDeliveryToken</span> <span class="n">token</span><span class="p">)</span> <span class="p">{</span>
+    <span class="o">//</span> <span class="n">TODO</span> <span class="n">Auto</span><span class="o">-</span><span class="n">generated</span> <span class="n">method</span> <span class="n">stub</span>
+  <span class="p">}</span>
+
+  <span class="n">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">main</span><span class="p">(</span> <span class="n">String</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">new</span> <span class="n">ServiceObserverMqtt</span><span class="p">()</span><span class="o">.</span><span class="n">doJob</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="il-cosa-e-il-come">
+<h2>Il COSA e il COME<a class="headerlink" href="#il-cosa-e-il-come" title="Permalink to this heading">¶</a></h2>
+<p>Avere introdotto un diverso programma per ogni specifico protocollo di interazione con il servizio
+è un chiaro indizio che alla macchina bisogna dire in modo non ambiguo <span class="slidekp">COME agire</span> ,
+mentre nella nostra mente di progettisti è chiaro un denominatore  comune che può
+essere sintetizzato nel <span class="slidekp">COSA fare</span>:</p>
+<ul class="simple">
+<li><p>inviare un messaggio di richiesta al servizio e gestire il previsto messaggio di risposta</p></li>
+</ul>
+<p><span class="slide1">Verso una logica della interazione</span></p>
+<p>Nella prossima sezione, <a class="reference internal" href="QakService24WithInteraction.html#qakservice24withinteraction"><span class="std std-ref">QakService24WithInteraction</span></a>, cercheremo un modo per esprimere a livello di
+codice <strong>solo la logica della interazione</strong>, lascando a una <span class="remark">parte sommersa</span> il compito di realizzarla in modo
+dipendente da una specifica tecnologia di comunicazione.</p>
+<p>Sarà il nostro <span class="slide2">primo passo nel cammino che porta dagli oggetti agli attori e ai modelli</span>.</p>
+<p><span class="slide2">NEXT–&gt;</span> : <a class="reference internal" href="QakService24WithInteraction.html#qakservice24withinteraction"><span class="std std-ref">QakService24WithInteraction</span></a></p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">QakService24Usage</a><ul>
+<li><a class="reference internal" href="#il-servizio-servicemath">Il servizio servicemath</a><ul>
+<li><a class="reference internal" href="#servicemath-attivazione">servicemath: attivazione</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#uso-del-servizio-servicemath">Uso del servizio servicemath</a><ul>
+<li><a class="reference internal" href="#descrizione-della-api-in-linguaggio-naturale">Descrizione della API in linguaggio naturale</a><ul>
+<li><a class="reference internal" href="#protocolli-utilizzabili">Protocolli utilizzabili</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#struttura-generale-dei-messaggi">Struttura generale dei messaggi</a></li>
+<li><a class="reference internal" href="#contenuto-specifico-dei-messaggi">Contenuto specifico dei messaggi</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#uso-naive-del-servizio">Uso naive del servizio</a><ul>
+<li><a class="reference internal" href="#basicmsgutil-kt">BasicMsgUtil.kt</a></li>
+<li><a class="reference internal" href="#iapplmessage">IApplMessage</a></li>
+<li><a class="reference internal" href="#il-servizio-usato-via-tcp">Il servizio usato via TCP</a></li>
+<li><a class="reference internal" href="#il-servizio-come-risorsa-coap">Il servizio come risorsa CoAP</a></li>
+<li><a class="reference internal" href="#il-servizio-come-publisher-subscriber">Il servizio come publisher-subscriber</a></li>
+<li><a class="reference internal" href="#il-servizio-usato-via-browser">Il servizio usato via Browser</a></li>
+<li><a class="reference internal" href="#il-servizio-usato-via-websocket">Il servizio usato via WebSocket</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#esempi-di-uso-naive-di-servicemath">Esempi di uso ‘naive’ di servicemath</a><ul>
+<li><a class="reference internal" href="#modifiche-al-file-build-gradle">Modifiche al file build.gradle</a></li>
+<li><a class="reference internal" href="#un-primo-client-tcp">Un primo client TCP</a></li>
+<li><a class="reference internal" href="#un-primo-client-coap">Un primo client CoAP</a></li>
+<li><a class="reference internal" href="#un-client-mqtt">Un client MQTT</a><ul>
+<li><a class="reference internal" href="#mqttmsghandler">MqttMsgHandler</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#interazione-http-hmi">Interazione HTTP HMI</a><ul>
+<li><a class="reference internal" href="#usare-curl">usare curl</a></li>
+<li><a class="reference internal" href="#http-get">HTTP GET</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#interazione-con-websocket">Interazione con WebSocket</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#il-servizio-come-sistema-osservabile">Il servizio come sistema osservabile</a><ul>
+<li><a class="reference internal" href="#osservabilita-via-ws">Osservabilità via WS</a></li>
+<li><a class="reference internal" href="#osservabilita-via-coap">Osservabilità via CoAP</a></li>
+<li><a class="reference internal" href="#osservabilita-via-mqtt">Osservabilità via MQTT</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#il-cosa-e-il-come">Il COSA e il COME</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="ISS2024.html"
+                          title="previous chapter">ISS2024</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="Primipassioperativi24.html"
+                          title="next chapter">Primi passi operativi 24</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/QakService24Usage.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="Primipassioperativi24.html" title="Primi passi operativi 24"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="ISS2024.html" title="ISS2024"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">QakService24Usage</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>

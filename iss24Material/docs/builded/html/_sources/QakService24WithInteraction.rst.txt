@@ -1,0 +1,398 @@
+.. role:: red 
+.. role:: blue 
+.. role:: brown 
+.. role:: magenta    
+.. role:: remark
+.. role:: worktodo
+.. role:: slide
+.. role:: slide1
+.. role:: slide2
+.. role:: slide3     
+.. role:: slidekp
+
+======================================
+QakService24WithInteraction
+======================================
+
+:slide3:`Progetto servicemath24Usage`
+
+.. :ref:`Indice Service24`
+  
+------------------------------------------
+Oltre i singoli protocolli
+------------------------------------------
+
+Costruiamo un client che interagisce con il servizio introdotto in :ref:`QakService24Usage`
+in modo diverso da quanto visto in quella sede, lasciando sullo 
+sfondo  i dettagli del protocollo usato.
+ 
+L'obiettivo è rendere il **progetto del client e il suo codice**   
+:slide2:`focalizzato sulla logica  applicativa:` 
+e sul tipo :remark:`sincrono/asincrono` di comunicazione che si vuole realizzare.
+
+In altre parole, facciamo un primo passo verso una direzione che pone in primo piano
+il :slidekp:`COSA fare`, piuttosto che sul :slidekp:`COME fare`. 
+
+:slide2:`Ma ... il diavolo si nasconde nei dettagli !`
+
+++++++++++++++++++++++++++++++++++++
+Svantaggi nell'uso di astrazioni
+++++++++++++++++++++++++++++++++++++
+
+Il passaggio dal *come* al *cosa* significa che molti aspetti, anche rilevanti,
+sull'uso dei protocolli verranno inseriti nella :ref:`parte sommersa<Vista sommersa>` del client.
+
+Con questo modo di procedere si **perderà il controllo** di molti particolari, 
+che potrebbero rilverarsi importanti.
+
+++++++++++++++++++++++++++++++++++++
+Vantaggi con l'uso di astrazioni
+++++++++++++++++++++++++++++++++++++
+
+Avremo però il vantaggio  di maggiore astrazione ed economia concettuale,
+utile nelle prime fasi fasi del processo di sviluppo software: l'**analisi** 
+dei requisiti e del problema e l'impostazione di una **prima progettazione dell'archiettura** del sistema.
+(Si veda la domanda :ref:`ChatGPT Ingegneria del software`).
+
+Su questo punto focalizzeremo l'attenzione di buona parte delle nostre attività future.
+
+:slide1:`Dai protocolli a Interaction`
+
+La libreria :ref:`unibo.basicomm23` fornisce supporti che:
+
+
+- introducono un concetto (**astrazione**) di alto livello: quello di :ref:`Interconnessione` punto-punto 
+  tra due  componenti software
+- definiscono l'interfaccia :ref:`Interaction<unibo.basicomm23.interfaces.Interaction>` come :slide2:`contratto`
+  che gli oggetti che dovranno realizzare l'astrazione dovranno rispettare
+- realizzano utility per l'uso di vari :ref:`protocolli<unibo.basicomm23.msg.ProtocolType>`, implementando
+  l'interfaccia :ref:`Interaction<unibo.basicomm23.interfaces.Interaction>` 
+  per alcuni di essi (``tcp, udp, coap, mqtt, ws, http``).
+- forniscono la  classe :ref:`unibo.basicomm23.utils.ConnectionFactory` come factory degli oggetti-supporto che realizzano 
+  l'astrazione :ref:`Interconnessione`.
+ 
+
+Lo schema del codice di un client può ora essere schematizzato come segue:
+
+.. list-table:: 
+  :widths: 65,35
+  :width: 100%
+
+  * -  :remark:`Creazione oggetto di supporto`
+
+       #. Definizione del :ref:`protocollo<unibo.basicomm23.msg.ProtocolType>` da usare 
+       #. Definizione del messaggio di richiesta
+       #. Specifica (protocol-related) dell'host del servizio 
+       #. Specifica (protocol-related) dell'accesso al servizio 
+       #. Creazione mediante :ref:`ConnectionFactory<unibo.basicomm23.utils.ConnectionFactory>` 
+          di un oggetto che implementa :ref:`Interaction<unibo.basicomm23.interfaces.Interaction>`
+
+    - 
+      .. code::
+          
+        /*1*/ProtocolType protocol = ProtocolType. ...;
+        /*2*/IApplMessage req = ....;
+        /*3*/String hostAddr = "...";
+        /*4*/String entry    = "..."
+
+        /*5*/Interaction conn = 
+              ConnectionFactory.createClientSupport(
+                            protocol, hostAddr, entry);
+  * -  :remark:`Richiesta sincrona`
+
+       #. Il metodo  ``request`` blocca il client fino alla ricezione della risposta.
+    - 
+      .. code::
+          
+          /*1*/ String answer = 
+                      conn.request(req.toString());
+
+  * -  :remark:`Richiesta asincrona`
+
+       #. Il metodo ``forward`` è di tipo fire-and-forget
+       #. Il metodo ``receiveMsg`` blocca il client fino alla ricezione della risposta.
+        
+        Tra le due chiamate, il client può eseguire altre azioni.
+    - 
+      .. code::
+          
+          /*1*/ conn.forward(req.toString());
+          ...
+          /*2*/ String answer = conn.receiveMsg();
+
+
+Riscriviamo dunque quanto fatto in :ref:`QakService24Usage`.
+
+------------------------------------------
+ServiceCallerInteraction
+------------------------------------------
+
+La impostazione del client è, come al solito, relativa alla definizione di un metodo ``doJob``, 
+cui affidiamo, in questo caso, il compito di usare tutti i protocolli. 
+
+.. list-table:: 
+  :widths: 50,50
+  :width: 100%
+  
+  * - **ServiceCallerInteraction: impostazione**
+  
+      #. Dichiarazione del supporto che realizza :ref:`Interaction<unibo.basicomm23.interfaces.Interaction>`  
+      #. Definizione del messaggio di richiesta
+      #. Definizione della topic MQTT usata per la risposta
+      #. Invio della richiesta usando TCP
+      #. Invio della richiesta usando MQTT
+      #. Invio della richiesta usando CoAP
+      #. Invio della richiesta usando WebSocket
+      #. Attesa, per non perdere possibili ricezioni asincrone delle risposte
+      #. Terminazione del client
+      #. Specifica del metodo di invio richiesta
+       
+    -
+      .. code::
+
+        package main;
+        import unibo.basicomm23.interfaces.IApplMessage;
+        import unibo.basicomm23.interfaces.Interaction;
+        import unibo.basicomm23.mqtt.MqttConnection;
+        import unibo.basicomm23.msg.ProtocolType;
+        import unibo.basicomm23.utils.BasicMsgUtil;
+        import unibo.basicomm23.utils.CommUtils;
+        import unibo.basicomm23.utils.ConnectionFactory;
+
+        public class ServiceCallerInteraction {
+        /*1*/ private Interaction conn ;
+              private String  nfibo = "21";
+              private String payload="dofibo(N)".replace("N", nfibo);
+        /*2*/  private IApplMessage req = BasicMsgUtil.buildRequest(
+                "clientJava", "dofibo", payload,"servicemath");
+        /*3*/ private String mqttAnswerTopic = "answ_dofibo_clientJava";
+          
+         public void doJob() {
+          try {
+        /*4*/  selectAndSend(ProtocolType.tcp);
+        /*5*/  selectAndSend(ProtocolType.mqtt);
+        /*6*/  selectAndSend(ProtocolType.coap);
+        /*7*/  selectAndSend(ProtocolType.ws);
+        /*8*/  Thread.sleep(5000);
+        /*9*/  System.exit(0);
+          }catch(Exception e){
+              CommUtils.outred("ERROR " + e.getMessage() );
+          }      
+         }
+
+        /*10*/protected void selectAndSend(
+            ProtocolType protocol) throws Exception{
+            ...
+        }
+        ...    
+         public static void main( String[] args) {
+              new ServiceCallerInteraction().doJob();
+         }
+        }
+
+++++++++++++++++++++++++++++++++++++++++++++
+ServiceCallerInteraction: invio richiesta
+++++++++++++++++++++++++++++++++++++++++++++
+
+.. list-table:: 
+  :widths: 50,50
+  :width: 100%
+  
+  * - **Invio della richiesta**
+  
+      #. Impostazione parametri per TCP
+      #. Impostazione parametri per CoAP
+      #. Impostazione parametri per MQTT
+      #. Impostazione parametri per WS
+      #. Creazione supporto
+      #. Possibile settaggio per tracing
+      #. Invio richiesta in modo **sincrono**
+      #. Invio richiesta in modo **asincrono**
+      #. Chiusura della connessione  
+       
+    -
+      .. code::
+
+             
+        protected void selectAndSend(
+                ProtocolType protocol) throws Exception{
+            String hostAddr="";
+            String entry   ="";
+            switch( protocol ) {
+        /*1*/ case tcp : {
+                hostAddr = "localhost";
+                entry    = "8011";
+                break;
+              }
+        /*2*/  case coap : {
+                Connection.trace = true;
+                hostAddr = "localhost:8011";
+                entry    = "ctxservice/servicemath";
+                break;
+              }
+        /*3*/ case mqtt : {
+                hostAddr = "tcp://broker.hivemq.com";
+                entry    = "unibo/qak/servicemath";
+                 break;
+              }
+        /*4*/ case ws : {
+                hostAddr = "localhost:8088/accessgui";
+                entry    = "request";  
+                break;
+      	      }
+              default:{               
+              }
+            }//switch
+        /*5*/ conn = ConnectionFactory.createClientSupport(
+                                 protocol, hostAddr, entry);
+        /*6*/  //((Connection)conn).trace = false;                   
+        /*7*/  sendRequestSynch( req, conn, protocol );
+        /*8*/  sendRequestAsynch( req, conn, protocol );	
+        /*9*/ conn.close();
+        }
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ServiceCallerInteraction: richiesta sincrona
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. list-table:: 
+  :widths: 50,50
+  :width: 100%
+  
+  * - **Richiesta sincrona**
+  
+      #. La richiesta in caso di WS è il numero
+      #. In ogni altro caso è un IApplMessage
+      
+    -
+      .. code::
+
+        protected  void sendRequestSynch( 
+           IApplMessage m,
+           Interaction conn,ProtocolType protocol) throws Exception{
+          String answer = "todo";
+        /*1*/if(protocol==ProtocolType.ws) 
+                  answer = conn.request(nfibo); 
+             else  
+        /*2*/answer = conn.request(req.toString()); 
+             CommUtils.outmagenta(
+                protocol+" | sendRequestSynch answer="+answer);   	
+        }  
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ServiceCallerInteraction: richiesta asincrona
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. list-table:: 
+  :widths: 55,45
+  :width: 100%
+  
+  * - **Richiesta asincrona**
+  
+      #. Nel caso di MQTT, preparo un oggetto che riceve la risposta
+      #. La richiesta in caso di WS è il numero 
+      #. In ogni altro caso, la richiesta è un IApplMessage
+      #. Attesa della risposta
+
+      Tra le due chiamate, il client può eseguire altre azioni.
+
+       
+    -
+      .. code::
+
+          protected  void sendRequestAsynch( 
+            IApplMessage m,
+            Interaction conn,ProtocolType protocol) 
+                                        throws Exception{
+          if(protocol==ProtocolType.mqtt) 
+          /*1*/ ((MqttConnection) conn).
+                 setupConnectionForAnswer(mqttAnswerTopic);    
+          if(protocol==ProtocolType.ws) 
+          /*2*/  conn.forward( nfibo );
+          else 
+          /*3*/  conn.forward(req.toString()); 
+          /*4*/String answer = conn.receiveMsg();
+          CommUtils.outmagenta( 
+            protocol + " | sendRequestAsynch answer=" + answer);   	
+          }  
+
+:slidekp:`NOTA`: Va notato (e approfondito) come, nel caso ``MQTT`` e ``WS``, l'oggetto che realizza la connessione 
+sia capace anche di predisporre un :remark:`oggetto per gestire le risposte` inviate dal servizio.
+
+
+
+---------------------------------
+Il caso HTTP
+---------------------------------
+
+La richiesta viene inviata via POST e viene gestita lato service da un ``M2MController``,
+appositamente introdotto nel service allo scopo di fare un esempio di interazione ``M2M`` con ``HTTP``.
+
+
+
+.. list-table:: 
+  :widths: 60,40
+  :width: 100%
+  
+  * - **Richiesta M2M HTTP**
+  
+  
+      #. URI della risorsa gestito da ``M2MController``
+      #. Payload da inviare via POST
+      #. Oggetto per la connessione
+      #. Invio della richiesta via POST e attesa della risposta da parte di ``M2MController``
+         (che riceve la risposta stessa dal service applicativo)
+
+    -
+      .. code::
+
+          protected void m2mHTTP() {
+           try {
+           /*1*/ String hostAddr="localhost:8088/RestApi/testHTTP";
+           /*2*/ String entry   = req.toString();
+           /*3*/ conn = ConnectionFactory.createClientSupport(
+                                  ProtocolType.http, hostAddr, "");
+           /*4*/ String answer = conn.request(entry); 
+            CommUtils.outmagenta( 
+               "ServiceCallerInteraction | useHTTP answer=" + answer); 
+          }catch(Exception e){
+             CommUtils.outred("ERROR " + e.getMessage() );
+          }     	
+         }
+
+  * - **Richiesta HMI HTTP**
+  
+  
+      #. URI della risorsa gestito da ``M2MController``
+      #. Payload da inviare via POST
+      #. Oggetto per la connessione
+      #. Invio della richiesta via POST e attesa della risposta da parte di ``M2MController``
+         (che riceve la risposta stessa dal service applicativo)
+
+    -
+      .. code::
+
+          protected void hmiHTTP() {
+           try {
+           /*1*/ String hostAddr="localhost:8088";
+           /*2*/ String entry   = "/";
+           /*3*/ conn = ConnectionFactory.createClientSupport(
+                                  ProtocolType.http, hostAddr, "");
+           /*4*/ String answer = conn.callHttp(entry); 
+            CommUtils.outmagenta( 
+               "ServiceCallerInteraction | useHTTP answer=" + answer); 
+          }catch(Exception e){
+             CommUtils.outred("ERROR " + e.getMessage() );
+          }     	
+         }
+
+
+:slide2:`NEXT-->` :
+a questo punto è utile mettere alla prova quanto affermato in :ref:`Vantaggi con l'uso di astrazioni`
+affrontando il progetto e la realizzazione di un :ref:`Sistema Produttore-Consumantore<ProdConsSystem>`.
+
+
+
+
+
+

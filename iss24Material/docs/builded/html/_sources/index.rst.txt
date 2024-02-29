@@ -1,0 +1,29 @@
+.. iss22working documentation master file, created by
+   sphinx-quickstart on Wed Nov  3 11:11:44 2021.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+iss24
+==========================================
+
+.. toctree::
+   :maxdepth: 5 
+   
+   Intro2024
+   ISS2024
+   QakService24Usage
+   Primipassioperativi24
+   unibo.basicomm23
+   Annotazioni
+   QakService24WithInteraction
+   ProdConsSystem 
+   QakActors24
+   Studenti2024
+   UsiamoChatGPT
+
+Indices and tables
+-------------------
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

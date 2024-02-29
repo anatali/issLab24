@@ -1,0 +1,343 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Annotazioni &#8212; iss24 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="QakService24WithInteraction" href="QakService24WithInteraction.html" />
+    <link rel="prev" title="unibo.basicomm23" href="unibo.basicomm23.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="QakService24WithInteraction.html" title="QakService24WithInteraction"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="unibo.basicomm23.html" title="unibo.basicomm23"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Annotazioni</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="annotazioni">
+<h1>Annotazioni<a class="headerlink" href="#annotazioni" title="Permalink to this heading">¶</a></h1>
+<p><span class="remark">Le annotazioni sono una forma di metadati</span></p>
+<p>in quanto forniscono informazioni su un programma.</p>
+<p><span class="remark">Le annotazioni non influiscono direttamente sulla semantica del programma</span></p>
+<p>ma influiscono sul modo in cui i programmi vengono
+trattati da <strong>strumenti</strong> e <strong>librerie</strong>, che a loro volta possono influenzare la semantica del programma in esecuzione.</p>
+<p>Le <a class="reference external" href="https://en.wikipedia.org/wiki/Java_annotation">Java annotation</a> sono state introdotte nella  release 5 (Tiger).
+A partire dalla versione Java SE 8, le annotazioni possono essere applicate non solo alle dichiarazioni
+(come accadeva prima) ma in ogni situazione in cui sia un tipo
+(si veda <a class="reference external" href="https://docs.oracle.com/javase/tutorial/java/annotations/type_annotations.html">Java Type Annotations</a>)
+allo scopo di realizzare uno più forte controllo di tipo (si pensi ad esempio a <span class="blue">&#64;NonNull</span> ).</p>
+<p><span class="slide1">Scopo delle annotazioni</span></p>
+<p>Oggi le annotazioni si trovano quasi ovunque nei programmi e sono introdotte per diversi scopi:</p>
+<ul class="simple">
+<li><p>per aiutare a meglio comprenderne l’intento a vari elementi di una classe;</p></li>
+<li><p>per permettere ulteriori controlli in fase di compilazione che garantiscono il rispetto di vari vincoli;</p></li>
+<li><p>per dare supporto ad analisi aggiuntiva del codice  tramite strumenti sensibili alle annotazioni;</p></li>
+<li><p>per arricchire lo spazio concettuale del linguaggio (in ottica Declarative Programming)</p></li>
+</ul>
+<p>Le annotazioni possono essere elaborate  in fase di compilazione e/o in fase di esecuzione,
+sfruttando in questo caso le API di <a class="reference external" href="https://www.oracle.com/technical-resources/articles/java/javareflection.html">Java Reflection</a>, con possibile impatto sulle prestazioni, se non usate con attenzione.</p>
+<p>Forse il più grande vantaggio delle annotazioni è
+dare supporto a un <strong>paradigma di progettazione basato su configurazione esplicita</strong>, il che
+permette di semplificare diversi aspetti della configurazione, con
+grande impatto sul processo di sviluppo.</p>
+<p>Framework molto diffusi che sfruttano questo aspetto sono <a class="reference external" href="https://www.baeldung.com/spring-vs-spring-boot">Spring and Spring Boot</a> che useremo più avanti.</p>
+<p>Per il momento ci limitiamo a illustrare i meccanismi Java che permettono di sfruttare le annotazioni nelle nostre applicazioni.</p>
+<section id="meta-annotation-in-java">
+<h2>Meta-Annotation in Java<a class="headerlink" href="#meta-annotation-in-java" title="Permalink to this heading">¶</a></h2>
+<p>Per specificare il comportamento delle Annotation, Java introduce altre Annotation, che
+vengono definite <strong>Meta-Annotation</strong>.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 80%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>&#64;Target</p></td>
+<td><p>permette di definire a quale parte del codice può essere collegata l’Annotation.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 77%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>ElementType.PACKAGE</p></td>
+<td><p>Si applica alla definizione del package</p></td>
+</tr>
+<tr class="row-even"><td><p>ElementType.TYPE</p></td>
+<td><p>Si applica alla definizione di classi, interfacce ed enumeration</p></td>
+</tr>
+<tr class="row-odd"><td><p>ElementType.FIELD</p></td>
+<td><p>Si applica agli attributi</p></td>
+</tr>
+<tr class="row-even"><td><p>ElementType.METHOD</p></td>
+<td><p>Si applica ai metodi</p></td>
+</tr>
+<tr class="row-odd"><td><p>ElementType.PARAMETER</p></td>
+<td><p>Si applica ai parametri dei metodi</p></td>
+</tr>
+<tr class="row-even"><td><p>ElementType.CONSTRUCTOR</p></td>
+<td><p>Si applica al costruttore</p></td>
+</tr>
+<tr class="row-odd"><td><p>ElementType.LOCAL_VARIABLE</p></td>
+<td><p>Si applica ad una variabile locale</p></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr class="row-even"><td><p>&#64;Retention</p></td>
+<td><p>specifica come saranno visibili le informazioni collegate all’Annotation.</p></td>
+</tr>
+<tr class="row-odd"><td><p>&#64;Documented</p></td>
+<td><p>serve per includere l’Annotation nel javadoc, visto che per default sono escluse.</p></td>
+</tr>
+<tr class="row-even"><td><p>&#64;Inherited</p></td>
+<td><p>una classe che utilizza l’Annotation, la fa ereditare anche alle classi figlie.</p></td>
+</tr>
+</tbody>
+</table>
+<section id="retention">
+<h3>Retention<a class="headerlink" href="#retention" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><span class="slide2">&#64;Retention(RetentionPolicy.SOURCE)</span> : Annotation non viene letta dal compilatore e
+non memorizzata nel bytecode (.class file). Sarà quindi  ignorata dalla JVM</p></li>
+<li><p><span class="slide2">&#64;Retention(RetentionPolicy.CLASS)</span>: è il default.  Annotation viene registrata nel bytecode dal compilatore,
+ma verrà ignorata dalla JVM quando la classe verrà caricata (a runtime)</p></li>
+<li><p><span class="slide2">&#64;Retention(RetentionPolicy.RUNTIME)</span>:  Annotation viene registrata nel bytecode e potrà esser letta a
+runtime (mediante reflection) quando la JVM caricherà la classe.</p></li>
+</ul>
+</section>
+</section>
+<section id="annotazioni-esempio">
+<h2>Annotazioni: esempio<a class="headerlink" href="#annotazioni-esempio" title="Permalink to this heading">¶</a></h2>
+<p><span class="slide1">Definizione di annotazioni custom</span></p>
+<section id="annotation-definizione">
+<h3>Annotation: definizione<a class="headerlink" href="#annotation-definizione" title="Permalink to this heading">¶</a></h3>
+<p>È possibile utilizzare l’annotazione <span class="blue">&#64;Interface</span> per descrivere la propria definizione di annotazione.</p>
+<p>Le annotazioni prendono la forma di una dichiarazione di interfaccia con un <span class="remark">&#64;</span> che le precede e
+opzionalmente marcate con una meta-annotazione.</p>
+<ul class="simple">
+<li><p>Ogni nuovo tipo estende automaticamente l’interfaccia <span class="blue">java.lang.annotation.Annotation</span>.</p></li>
+<li><p>La dichiarazione di un metodo corrisponde a un elemento dell’annotazione.</p></li>
+<li><p>I tipi di ritorno dei metodi devono essere: tipi primitivi oppure
+<code class="docutils literal notranslate"><span class="pre">String,</span> <span class="pre">Class,</span> <span class="pre">enum</span></code>, tipi di annotation o array dei tipi elencati.</p></li>
+</ul>
+</section>
+<section id="annotation-esempio-di-definizione">
+<h3>Annotation: esempio di definizione<a class="headerlink" href="#annotation-esempio-di-definizione" title="Permalink to this heading">¶</a></h3>
+<p><span class="slide1">Uso di annotazioni custom</span></p>
+<p>Una annotazione precede la classe, il metodo o l’attributo che si vuole annotare ed
+strutturata come un insieme di coppie <em>nome=valore</em>.</p>
+<p>Come esempio, definiamo una annotazione per descrivere il modo di accedere ad una applicazione
+(il codice si trova in <code class="docutils literal notranslate"><span class="pre">unibo.actors23.annotations.example</span></code> del progetto <code class="docutils literal notranslate"><span class="pre">unibo.actors23</span></code>):</p>
+<div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="nd">@Retention</span><span class="p">(</span><span class="n">RetentionPolicy</span><span class="p">.</span><span class="na">RUNTIME</span><span class="p">)</span>
+<span class="nd">@Inherited</span>
+<span class="kd">public</span><span class="w"> </span><span class="nd">@interface</span><span class="w"> </span><span class="n">AccessSpec</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">enum</span><span class="w"> </span><span class="n">issProtocol</span><span class="w"> </span><span class="p">{</span><span class="n">UDP</span><span class="p">,</span><span class="n">TCP</span><span class="p">,</span><span class="n">HTTP</span><span class="p">,</span><span class="n">MQTT</span><span class="p">,</span><span class="n">COAP</span><span class="p">,</span><span class="n">WS</span><span class="p">}</span><span class="w"> </span><span class="p">;</span>
+<span class="w">    </span><span class="n">issProtocol</span><span class="w"> </span><span class="nf">protocol</span><span class="p">()</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="n">issProtocol</span><span class="p">.</span><span class="na">TCP</span><span class="p">;</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="nf">url</span><span class="p">()</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="s">&quot;unknown&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>La meta-annotation <code class="docutils literal notranslate"><span class="pre">&#64;Retention</span></code> dice che l’annotazione <code class="docutils literal notranslate"><span class="pre">&#64;AccessSpec</span></code> è visibile a runtime.</p>
+<p>L’annotazione permette di specificare due attributi:</p>
+<ul class="simple">
+<li><p>il tipo di protocollo ( metodo <code class="docutils literal notranslate"><span class="pre">protocol()</span></code> ), con default TCP</p></li>
+<li><p>un URL, come ad esempio <code class="docutils literal notranslate"><span class="pre">&quot;http://localHost:8090/api/move&quot;</span></code></p></li>
+</ul>
+</section>
+<section id="annotation-esempio-di-uso">
+<h3>Annotation: esempio di uso<a class="headerlink" href="#annotation-esempio-di-uso" title="Permalink to this heading">¶</a></h3>
+<p>Introduciamo una classe che introduce l’annotazione <code class="docutils literal notranslate"><span class="pre">&#64;AccessSpec</span></code>.</p>
+<div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="nd">@AccessSpec</span><span class="p">(</span>
+<span class="w">    </span><span class="n">protocol</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">AccessSpec</span><span class="p">.</span><span class="na">issProtocol</span><span class="p">.</span><span class="na">HTTP</span><span class="p">,</span>
+<span class="w">    </span><span class="n">url</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;http://localHost:8090/api/move&quot;</span>
+<span class="w">    </span><span class="c1">//, configFile =&quot;myfile.txt&quot;</span>
+<span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">AnnotationUsageDemo</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="p">...</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="w"> </span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="k">new</span><span class="w"> </span><span class="n">AnnotationUsageDemo</span><span class="p">();}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><span class="slide1">Elaborazione di annotazioni custom</span></p>
+<p>Le API di <a class="reference external" href="https://www.oracle.com/technical-resources/articles/java/javareflection.html">Java Reflection</a> permettono di recuperare a le informazioni che abbiamo inserito tramite
+l’annotazione meta-annotata con <span class="remark">&#64;Retention(RetentionPolicy.RUNTIME)</span>.</p>
+<div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">AnnotationUsageDemo</span><span class="w"> </span><span class="p">{</span>
+
+<span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">readProtocolAnnotation</span><span class="p">(</span><span class="n">Object</span><span class="w"> </span><span class="n">element</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...}</span>
+
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="nf">AnnotationUsageDemo</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">readProtocolAnnotation</span><span class="p">(</span><span class="w"> </span><span class="k">this</span><span class="w"> </span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="readprotocolannotation">
+<h4>readProtocolAnnotation<a class="headerlink" href="#readprotocolannotation" title="Permalink to this heading">¶</a></h4>
+<p>Il metodo <code class="docutils literal notranslate"><span class="pre">readProtocolAnnotation</span></code> viene definito in modo da
+accedere dinamicamente (usando le API di <a class="reference external" href="https://www.oracle.com/technical-resources/articles/java/javareflection.html">Java Reflection</a>) alle informazioni introdotte nell’annotazione
+per visualizzarle.</p>
+<div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">readProtocolAnnotation</span><span class="p">(</span><span class="n">Object</span><span class="w"> </span><span class="n">element</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">Class</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">clazz</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="n">element</span><span class="p">.</span><span class="na">getClass</span><span class="p">();</span>
+<span class="w">  </span><span class="n">Annotation</span><span class="o">[]</span><span class="w"> </span><span class="n">annotations</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">clazz</span><span class="p">.</span><span class="na">getAnnotations</span><span class="p">();</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Annotation</span><span class="w"> </span><span class="n">annot</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">annotations</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">annot</span><span class="w"> </span><span class="k">instanceof</span><span class="w"> </span><span class="n">AccessSpec</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">AccessSpec</span><span class="w"> </span><span class="n">p</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">AccessSpec</span><span class="p">)</span><span class="w"> </span><span class="n">annot</span><span class="p">;</span>
+<span class="w">      </span><span class="n">CommUtils</span><span class="p">.</span><span class="na">outblue</span><span class="p">(</span><span class="s">&quot;Tipo del protocollo: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="na">protocol</span><span class="p">());</span>
+<span class="w">      </span><span class="n">CommUtils</span><span class="p">.</span><span class="na">outblue</span><span class="p">(</span><span class="s">&quot;Url del protocollo:  &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="na">url</span><span class="p">());</span>
+<span class="w">      </span><span class="n">CommUtils</span><span class="p">.</span><span class="na">outblue</span><span class="p">(</span><span class="s">&quot;Configuration file: &quot;</span><span class="w">  </span><span class="o">+</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="na">configFile</span><span class="p">());</span>
+<span class="w">      </span><span class="n">String</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getHostAddr</span><span class="p">(</span><span class="w"> </span><span class="s">&quot;(\\w*)://([a-zA-Z]*):(\\d*)/(\\w*)/(\\w*)&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="na">url</span><span class="p">());</span>
+<span class="w">      </span><span class="n">CommUtils</span><span class="p">.</span><span class="na">outblue</span><span class="p">(</span><span class="s">&quot;hostAddr=&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">v</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{...</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Il metodo  <code class="docutils literal notranslate"><span class="pre">getHostAddr</span></code>  estrae la parte <em>host:port</em> dall’URL, usando <a class="reference external" href="https://www.w3schools.com/java/java_regex.asp">Pattern matching</a> su espressioni regolari:</p>
+<div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">getHostAddr</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">functor</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">line</span><span class="p">){</span>
+<span class="w">    </span><span class="n">Pattern</span><span class="w"> </span><span class="n">pattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Pattern</span><span class="p">.</span><span class="na">compile</span><span class="p">(</span><span class="n">functor</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Matcher</span><span class="w"> </span><span class="n">matcher</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pattern</span><span class="p">.</span><span class="na">matcher</span><span class="p">(</span><span class="n">line</span><span class="p">);</span>
+<span class="w">    </span><span class="n">CommUtils</span><span class="p">.</span><span class="na">outblue</span><span class="p">(</span><span class="s">&quot;line: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">line</span><span class="p">);</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="w"> </span><span class="n">matcher</span><span class="p">.</span><span class="na">find</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;=</span><span class="mi">5</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">CommUtils</span><span class="p">.</span><span class="na">outblue</span><span class="p">(</span><span class="s">&quot;group &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;:&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">matcher</span><span class="p">.</span><span class="na">group</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">matcher</span><span class="p">.</span><span class="na">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;:&quot;</span><span class="o">+</span><span class="n">matcher</span><span class="p">.</span><span class="na">group</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<span class="w">     </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">content</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>L’output del programma è il seguente:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Tipo</span> <span class="k">del</span> <span class="n">protocollo</span><span class="p">:</span> <span class="n">HTTP</span>
+<span class="n">Url</span> <span class="k">del</span> <span class="n">protocollo</span><span class="p">:</span>  <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localHost</span><span class="p">:</span><span class="mi">8090</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">move</span>
+<span class="n">Configuration</span> <span class="n">file</span><span class="p">:</span> <span class="n">ProtocolConfig</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">getHostAddr</span> <span class="o">|</span> <span class="n">line</span><span class="p">:</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localHost</span><span class="p">:</span><span class="mi">8090</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">move</span>
+<span class="n">getHostAddr</span> <span class="o">|</span> <span class="n">group</span> <span class="mi">1</span><span class="p">:</span><span class="n">http</span>
+<span class="n">getHostAddr</span> <span class="o">|</span> <span class="n">group</span> <span class="mi">2</span><span class="p">:</span><span class="n">localHost</span>
+<span class="n">getHostAddr</span> <span class="o">|</span> <span class="n">group</span> <span class="mi">3</span><span class="p">:</span><span class="mi">8090</span>
+<span class="n">getHostAddr</span> <span class="o">|</span> <span class="n">group</span> <span class="mi">4</span><span class="p">:</span><span class="n">api</span>
+<span class="n">getHostAddr</span> <span class="o">|</span> <span class="n">group</span> <span class="mi">5</span><span class="p">:</span><span class="n">move</span>
+<span class="n">hostAddr</span><span class="o">=</span> <span class="n">localHost</span><span class="p">:</span><span class="mi">8090</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Annotazioni</a><ul>
+<li><a class="reference internal" href="#meta-annotation-in-java">Meta-Annotation in Java</a><ul>
+<li><a class="reference internal" href="#retention">Retention</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#annotazioni-esempio">Annotazioni: esempio</a><ul>
+<li><a class="reference internal" href="#annotation-definizione">Annotation: definizione</a></li>
+<li><a class="reference internal" href="#annotation-esempio-di-definizione">Annotation: esempio di definizione</a></li>
+<li><a class="reference internal" href="#annotation-esempio-di-uso">Annotation: esempio di uso</a><ul>
+<li><a class="reference internal" href="#readprotocolannotation">readProtocolAnnotation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="unibo.basicomm23.html"
+                          title="previous chapter">unibo.basicomm23</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="QakService24WithInteraction.html"
+                          title="next chapter">QakService24WithInteraction</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Annotazioni.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="QakService24WithInteraction.html" title="QakService24WithInteraction"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="unibo.basicomm23.html" title="unibo.basicomm23"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Annotazioni</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>

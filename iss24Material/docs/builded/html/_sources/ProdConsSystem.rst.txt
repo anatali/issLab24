@@ -1,0 +1,164 @@
+.. role:: red 
+.. role:: blue 
+.. role:: brown 
+.. role:: magenta    
+.. role:: remark
+.. role:: worktodo
+.. role:: slide
+.. role:: slide1
+.. role:: slide2
+.. role:: slide3     
+.. role:: slidekp 
+
+.. _microservizi: https://microservices.io/
+
+==============================================
+ProdConsSystem
+==============================================
+
+
+:slide3:`Progetto ProdCons`
+
+Un caso di studio con cui iniziare ad affrontatre l'analisi e la progettazione di sistemi distribuiti  
+è un sistema formato da a ``N`` *Produttori* che inviano informazione a ``1`` *Consumatore*.
+
+----------------------------------------
+ProdsCons: requisiti
+----------------------------------------
+
+Costruire un sistema software distribuito costituio da ``N`` (``N>=1``) Produttori che 
+inviano informazione a  ``1`` Consumatore, il quale deve elaborare tale informazione.
+
+La dislocazione dei componenti sui nodi di elaborazione può essere:
+
+- :brown:`OneNode`: tutti i componenti operano nello stesso nodo;
+- :brown:`TwoNodes`: gli ``N`` *Produttori* operano in uno stesso nodo, mentre il *Consumatore* opera in un diverso nodo;
+- :brown:`ManyNodes`: il *Consumatore* opera in suo proprio nodo, mentre i *Produttori* operano su ``K``  nodi diversi (``1<K<=N``).
+
+----------------------------------------
+ProdsCons: analisi dei requisiti
+----------------------------------------
+
+- I Produttori e il Consumatore sono enti computazionali attivi e autonomi.
+- I requisiti non stabiliscono come l'informazione debba essere trasmessa e ricevuta.
+- I Produttori e il Consumatore potrebbero essere realizzati con linguaggi di programmazione diversi.
+ 
+----------------------------------------
+ProdsCons: analisi del problema
+----------------------------------------
+
+:slide2:`Interazione logica`
+
+-  I *Producer* possonon inviare informazione in forma **fire-and-forget**. Va però osservato che 
+   l'uso del protocollo ``HTTP`` o ``CoAP`` implica sempre l'invio di informazione di 
+   **risposta** dal *Consumer* al *Producer*.
+-  i requisiti non precisano questo aspetto e l'analisi non ha detto nulla in merito: è opportuno  
+   :slidekp:`sottoporre la questione in modo esplicito al comittente`.
+
+:slide2:`Architettura logica`
+
+L'architettura logica del prodotto da realizzare può essere impostata come un sistema in cui:
+
+#.  
+   il *Consumer* opera come un server. e i *Producer* operano come client: :slide3:`Produttori connessi al Consumatore`
+  
+   Sembra infatti **inopportuno** pensare che il *Consumer* ottenga informazione 'chidendola' ai *Producer*.
+   In quati caso, i *Producer* dovrebbero operare come server e il *Consumer* come client.
+
+   Una architettura client-server induce a introdurre una conessione in cui i *Producer* devono conoscere
+   i valori ``hostAddr:entry`` del (server del) *Consumer* e il *Consumer* non deve conoscere nulla dei *Producer*.
+
+   *Esempio nel mondo reale*: una persona suona il campanello di una abitazione.
+
+#. un *Producer* depone l'informazione su un 'oggetto intermediario' 
+   da cui il *Consumer* può prelevarla: :slide3:`Schema publish-subscribe`.
+
+   In un sistema concentrato, questo intermediario sarebbe un Buffer, mentre in un sistema distribuito 
+   potrebbe essere un Broker MQTT.
+
+   Usando MQTT, i *Producer* possono depositare (**publish**) le loro informazioni sulla **topic** su cui 'sanno' che il *Consumer*
+   fa una **subscribe**.
+
+   *Esempio nel mondo reale*: un componente pone una lettera in una cassetta postale da cui un altro componente 
+   può prelevarla.
+
+#. il *Consumer* opera come **observer** dei *Producer*: dopo avere prodotto 
+   informazione, un *Producer* fa in modo che essa risulti percepibile dal *Consumer*: 
+   :slide3:`Produttori come emettitori di eventi`.
+
+   *Esempio nel mondo reale*:  una ambulanza accende la sirena.
+
++++++++++++++++++++++++++++++++++++++++++
+Scenari
++++++++++++++++++++++++++++++++++++++++++
+
+
+Come analsti, :slidekp:`discutiamo con il committente e con il responsabile aziendale` queste alternative.
+
+
+Un possibile risulatoi della riunione è che:
+
+- tutti gli scenari sono possibili e andrebbero realizzati/sperimentati
+- si ritiene opportuno (inziare con lo) sviluppare il primo scenario usando lo schema 1 (*Produttori connessi al Consumatore*)
+  e il protocollo ``TCP``.
+
+
+
+----------------------------------------
+ProdsCons: progettazione
+----------------------------------------
+
+Dopo l'analisi dei requisiti e del problema, si tratta di realizzare un **sistema client-server**
+in cui il *Consumer* funge da server-TCP e ogni *Producer* opera come un client-TCP.
+
+Come progettisti osserviamo che:
+
+#. possiamo usare Java come linguaggio di programmazione, insieme a una libreria di supporto   
+   relativa al protocollo.
+
+#. possiamo usare Java come linguaggio di programmazione e la libreria :ref:`unibo.basicomm23`
+   che permette di velocizzare la progettazione e la realizzazione del prodotto.
+
+   L'uso di questa libreria promuove condice basato sul concetto di 
+   :ref:`Interaction` che facilita la possibilità di modifica del protocollo. 
+   
+   
+   :slide2:`Architettura di progetto`
+
+   L'architettura logica di progetto può essere schematizzata come in figura:
+
+   .. image:: ./_static/img/Architectures/ProdCons.png
+        :align: center
+        :width: 100%
+
+   .. Osserviao che l’astrazione :ref:`Interaction` non aiuta nel caso **ManyNodes**, che deve essere affrontato ad-hoc.
+
+#. dopo la produzione in 'tempi brevi' del primo prototipo, potrebbe essere utile un refactoring del codice
+   usando gli :ref:`Abilitatori di comunicazione` di :ref:`unibo.basicomm23`.
+
+   Il vantaggio consiste nella definizione di un prodotto che potrebbe costitire la base con cui affrontare in tempi 
+   brevi lo sviluppo di prodotti secondo gli altri :ref:`Scenari`.
+   
+   
+
+     .. image:: ./_static/img/Architectures/ProdConsEspansa.png
+        :align: center
+        :width: 100%
+
+
++++++++++++++++++++++++++++++++++++++++++++
+ProdsConsNaive
++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+ 
+
+
+
+
+
+ 
+
+
+ 
