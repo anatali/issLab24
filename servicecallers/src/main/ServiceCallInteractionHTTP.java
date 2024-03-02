@@ -34,8 +34,8 @@ public class ServiceCallInteractionHTTP {
         String entry   = "";
         Interaction conn = ConnectionFactory.createClientSupport(
         		ProtocolType.http, hostAddr, entry);				
-		String answer = ((HttpConnection) conn).getHTTP(entry); 
-		CommUtils.outmagenta( "ServiceCallInteractionHTTP | mhiHttp answer=\n" + answer  ); 		
+//		String answer = ((HttpConnection) conn).gP(entry); 
+//		CommUtils.outmagenta( "ServiceCallInteractionHTTP | mhiHttp answer=\n" + answer  ); 		
 	}
 	
     public static void main( String[] args)     {

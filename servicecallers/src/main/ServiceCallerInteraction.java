@@ -18,9 +18,9 @@ public class ServiceCallerInteraction {
 	 try {
 		//http, ws, tcp, udp, coap, mqtt, bluetooth, serial
 		 /*3*/  selectAndSend(ProtocolType.tcp);
-		 /*4*/  selectAndSend(ProtocolType.mqtt);
-		 /*5*/  selectAndSend(ProtocolType.coap);
-		 /*5*/  selectAndSend(ProtocolType.ws);
+//		 /*4*/  selectAndSend(ProtocolType.mqtt);
+//		 /*5*/  selectAndSend(ProtocolType.coap);
+//		 /*5*/  selectAndSend(ProtocolType.ws);
 		 /*6*/  Thread.sleep(5000);
 		 /*7*/  System.exit(0);
 	 }catch(Exception e){
