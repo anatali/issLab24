@@ -306,6 +306,12 @@ si può usare una Factory.
 unibo.basicomm23.utils.ConnectionFactory
 ---------------------------------------------
 
+Un Factory che restituisce un supporto per realizzare connessioni punto-a-punto secondo diversi protocolli.
+
++++++++++++++++++++++++++++++++++++++++++++++
+ConnectionFactory.createClientSupport
++++++++++++++++++++++++++++++++++++++++++++++
+
 .. list-table:: 
   :widths: 50,50
   :width: 100%
@@ -366,7 +372,7 @@ unibo.basicomm23.utils.Connection
 -------------------------------------------
 
 .. list-table:: 
-  :widths: 50,50
+  :widths: 60,40
   :width: 100%
 
   * -  
@@ -380,12 +386,14 @@ unibo.basicomm23.utils.Connection
       Se la variabile :blue:`boolean trace` è posta ``true``, i metodi visualizzano informazioni 
       utili a meglio comprendere il funzionamento run-time del sistema.
 
-      I metodi abstract sono realizzati da classi che specializzano *Connection* per un determinato protocollo:
+      I metodi **abstract** sono realizzati da classi che specializzano *Connection* per un determinato protocollo:
 
+      :ref:`TcpConnection<unibo.basicomm23.tcp.TcpConnection>`, 
+      :ref:`UdpConnection<unibo.basicomm23.udp.UdpConnection>`, 
       :ref:`HttpConnection<unibo.basicomm23.http.HttpConnection>`, 
       :ref:`WsConnection<unibo.basicomm23.ws.WsConnection>`,
       :ref:`CoapConnection<unibo.basicomm23.coap.CoapConnection>`,
-
+      :ref:`MqttConnection<unibo.basicomm23.mqtt.MqttConnection>`
     
     - 
       .. code:: java
@@ -393,18 +401,21 @@ unibo.basicomm23.utils.Connection
         public abstract class Connection implements Interaction{
         public  boolean trace = false;
           @Override
-            public void forward(IApplMessage msg) throws Exception{
+            public void forward(IApplMessage msg) 
+                                                 throws Exception{
               forward( msg.toString() );
             }
 
             @Override
-            public IApplMessage request(IApplMessage msg) throws Exception{
+            public IApplMessage request(IApplMessage msg) 
+                                                  throws Exception{
                 String answer = request(msg.toString());
                 return new ApplMessage(answer);
             }
 
             @Override
-            public IApplMessage request(IApplMessage msg, int tout) throws Exception{
+            public IApplMessage request(IApplMessage msg, int tout) 
+                                                    throws Exception{
             //Requst che genera una eccezione 
             //se la risposta non giunge entro il timeout specificato
             }
@@ -1365,7 +1376,8 @@ unibo.basicomm23.interfaces.IApplMsgHandler
     }
 
 Un oggetto che implementa l'interfaccia *IApplMsgHandler* deve essere definito dall'application designer per 
-specificare, data una :ref:`Interaction`  ``conn``, il modo di gestire un messaggio ricevuto (metodo ``elaborate``) 
+specificare, data una :ref:`Interaction<unibo.basicomm23.interfaces.Interaction>`  ``conn``, 
+il modo di gestire un messaggio ricevuto (metodo ``elaborate``) 
 e come inviare repliche o risposte al chiamante su ``conn``.
 
 Oggetti di questo tipo sono usati dai server forniti da 

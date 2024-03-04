@@ -1,0 +1,106 @@
+.. role:: red 
+.. role:: blue 
+.. role:: brown 
+.. role:: remark
+.. role:: worktodo
+.. role:: slide
+.. role:: slide1
+.. role:: slide2
+.. role:: slidekp
+.. role:: worktodo 
+
+==================================
+StudWorks2024
+==================================
+
++++++++++++++++++++++++++++++++++++
+ProdCons
++++++++++++++++++++++++++++++++++++
+
+.. list-table::
+  :widths: 30,70
+  :width: 100%
+  
+  * - ``Arasi Stefano``
+    - non fa analisi del problema
+  * - ``Armillotta Michele`` 
+    -  michele.armillotta2@studio.unibo.it  
+  * - ``Benenati Alessio``
+    -  nomina i requisiti. Discute il problema delle risposte. Propone test. 
+         
+       **Code**:Usa Interaction bloccante. Poi Proxy?
+  * - ``Bertoni Brian``  
+    -  request-response bloccante?
+  * - ``Bostrenghi Matteo``  
+    - solo requisiti (come Severini)   
+  * - ``Bovinelli Riccardo``  
+    - produttori fire-and.forget asincrono ? Pensa ai test   
+  * - ``Carrozzini Pierantonio``
+    - https://github.com/PierCarrozzini/IssProject
+  * - ``Cavallini Danilo``   
+    - danilo.cavallini@studio.unibo.it
+  * - ``Cimino Luca``
+    -  luca.cimino5@studio.unibo.it
+  * - ``Ciociola Giuseppe``   
+    -  publish-subscribe ? Pensa ai test
+  * - ``Coloretti Pietro``
+    -  solo requisiti (come Messori)
+  * - ``Corsetti Luca``
+    -  componenti agnostici analisi scarsa (MQTT) propone test
+  * - ``Daga Gabriele``
+    -  Analisi e arch logica client-server. Pensa ai test
+  * - ``D'Arsiè Emanuele``
+    -  emanule.darsie@studio.unibo.it
+  * - ``De Divitiis Edoardo``
+    -  edoardo.dedivitiis@studio.unibo.it
+  * - ``De Respinis Valentina``
+    - valentina.derespinis@studio.unibo.it
+  * - ``Dublini Sara``
+    -   ok, ma sembra avere letto il file
+  * - ``Fattori Giulia``  
+    -  analisi: più dei requsiti che del problema. Propone test.
+  * - ``Giulianelli Nicole``
+    -  solo requsiti ?. Comunicaz asincrona!? Comsumatore ed errori nei msg
+  * - ``Govoni Dario``
+    -  ok. Parla di gerarchia. Asincrono=>intermediario?
+  * - ``Mazziotti Samuele``
+    - samuele.mazziotti@studio.unibo.it
+  * - ``Messori Noemi``
+    -  solo requisiti  (cme Coloretti)
+  * - ``Mingarelli Federico``
+    - analisi interessante
+  * - ``Piombini Alessandro``  
+    -  alessandro.piombini@studio.unibo.it
+  * - ``P'yeshchyk  Marko``  
+    -  Consumer comunicazione deve essere sincrona?
+  * - ``Raffaelli Andrea``
+    -  Non fa analisi
+  * - ``Riccardi Lorenzo``
+    -  Produttore può essere replicata ? Analisi problema come proseguimento dei requisiti
+  * - ``Rinaldi Michele``
+    -  Analisi: consumatore come demone (progetto?)
+  * - ``Salvemini Vincenzo``
+    -  analisi condotta a seconda della dislocazione 
+  * - ``Severini Lorenzo Lorenzo`` 
+    - solo requisiti (come Bostrenghi)
+  * - ``Sgalla Simone``
+    -  analisi: consumatore non invia risposta ? Sceglie TwoNodes. Propone test. 
+  * - ``Sgreccia Tommaso``
+    -  Archi logica: client-server o poublish subscribe (progetto?) Pensa ai test.
+  * - ``Sindaco Daniele`` 
+    - analisi: dice cosa non è chiaro ma non discute alternative
+  * - ``TaglianiMichele`` 
+    -  Analisi: parla di agenti. Non è possibile scegliere? Test con verifica della locazione?
+  * - ``delinsq`` 
+    - 
+ 
+
+
+ 
+
+
+
+
+.. WebAssembly e WASI
+.. https://github.com/ilcors-dev
+.. https://thenewstack.io/webassembly/webassembly-what-beginners-need-to-know/

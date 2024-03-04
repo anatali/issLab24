@@ -346,7 +346,7 @@ Attori qak
 
  
 
-Un sistema basato su attori :slide2:`esclude la presenza di memoria conune`  tra componenti,
+Un sistema basato su attori :slide2:`esclude la presenza di memoria comune`  tra componenti,
 prefigurando la possibilità che i componenti di uno stesso sistema  possano eseere distribuiti
 su nodi di elaborazione diversi.
 

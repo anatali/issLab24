@@ -11,6 +11,9 @@ iss24
    
    Intro2024
    ISS2024
+   Principi
+   Books
+   Architetture
    QakService24Usage
    Primipassioperativi24
    unibo.basicomm23
@@ -19,6 +22,7 @@ iss24
    ProdConsSystem 
    QakActors24
    Studenti2024
+   StudWorks2024
    UsiamoChatGPT
 
 Indices and tables

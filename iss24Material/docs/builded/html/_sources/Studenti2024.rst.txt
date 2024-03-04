@@ -18,43 +18,82 @@ Studenti2024
   :width: 100%
   
   * - ``Arasi Stefano``
-    - stefano.arasi@studio.unibo.it
-  * - ``Bertoni Brian``
-    - bryan.bertoni@studio.unibo.it
-  * - ``Carrozzini Pierantonio``
-    - https://github.com/PierCarrozzini/IssProject
-  * - ``Cavallini Danilo``
-    - danilo.cavallini@studio.unibo.it
-  * - ``Govoni Dario``
-    - dario.govoni3@studio.unibo.it
-  * - ``de Respinis Valentina``
-    - valentina.derespinis@studio.unibo.it
-  * - ``P'yeshchyk  Marko``
-    - marko.pyeshchyk@studio.unibo.it
-  * - ``Mazziotti Samuele``
-    - Samuele.mazziotti@studio.unibo.it
-  * - ``Riccardi Lorenzo``
-    - lorenzo.riccardi@studio.unibo.it
-  * - ``Sindaco Daniele`` 
-    - daniele.sindaco@studio.unibo.it
-  * - ``Armilotta Michele`` (WheelyMcBones)
-    -  michele.armillotta2@studio.unibo.it 
-  * - ``Sgreggia Tommaso``
-    -  tommaso.sgreccia@studio.unibo.it
+    - *stefano.arasi@studio.unibo.it* https://github.com/ArasiStefanoISS/ISS
+  * - ``Armillotta Michele`` 
+    -  *michele.armillotta2@studio.unibo.it* https://github.com/MicheleArmillotta :slidekp:`ISS?`
+  * - ``Benenati Alessio``
+    -  *alessio.benenati2@studio.unibo.it* https://github.com/alessioBenenatiUnibo/IngegneriaSistemiSW/
+  * - ``Bertoni Brian``  
+    - *bryan.bertoni@studio.unibo.it*   https://github.com/bryanber102/issLab24
+  * - ``Bostrenghi Matteo``  
+    - *matteo.bostrenghi@studio.unibo.it*    https://github.com/Bostre17/issLabBostrenghi2024
+  * - ``Bovinelli Riccardo``  
+    - *riccardo.bovinelli@studio.unibo.it*   https://github.com/riccardobovinelli/iss2024
+  * - ``Carrozzini Pierantonio`` 
+    - *pieranton.carrozzini@studio.unibo.it* https://github.com/PierCarrozzini/IssProject
+  * - ``Cavallini Danilo``   
+    - *danilo.cavallini@studio.unibo.it* https://github.com/danilocavallini01/IngegneriaSistemiSoftware
+  * - ``Cimino Luca``
+    -  *luca.cimino5@studio.unibo.it*  https://github.com/LucaCimino/issLab24
   * - ``Ciociola Giuseppe``
-    -  giuseppe.ciociola2@studio.unibo.it
-  * - ``Raffaelli Andrea``
-    -  andrea.raffaelli2@studio.unibo.it
-  * - ``jjulespop``
-    -  
+    -  *giuseppe.ciociola2@studio.unibo.it* https://github.com/GCiociola/issLab24
+  * - ``Coloretti Pietro``
+    -  *pietro.coloretti@studio.unibo.it* https://github.com/ogrish15/issLab2024_ColorettiPietro.git
+  * - ``Corsetti Luca``
+    -  *luca.corsetti3@studio.unibo.it* https://github.com/ilcors-dev/ISS_CORSETTI
+  * - ``Daga Gabriele``
+    -  *gabriele.daga@studio.unibo.it*  https://github.com/dagus01-lab/issLab2024   
+  * - ``D'Arsiè Emanuele``
+    -  *emanuele.darsie@studio.unibo.it*  https://github.com/Emanuele8/IDSS-2024  
+  * - ``De Divitiis Edoardo``
+    -  *edoardo.dedivitiis@studio.unibo.it* https://github.com/EdoardoDd/IssLab24
+  * - ``De Respinis Valentina``
+    - *valentina.derespinis@studio.unibo.it* https://github.com/vale-dere/iss2024.git  
+  * - ``Dublini Sara``
+    -  *sara.dublini@studio.unibo.it*  https://github.com/Dublinisara/issLab24.git  
+  * - ``Fattori Giulia`` 
+    -  *giulia.fattori7@studio.unibo.it*  https://github.com/jjulespop/issLab24_GF  :slidekp:`**`
   * - ``Giulianelli Nicole``
-    - 
-  * - ``delinsq`` 
-    - 
-  * - ``Piombo4`` 
-    - 
+    -  *nicole.giulianelli@studio.unibo.it* https://github.com/NicoleGiulianelli2/Ingegneria-Dei-Sistemi-Software :slidekp:`setup`
+  * - ``Govoni Dario``
+    - *dario.govoni3@studio.unibo.it* https://github.com/Dario-Govoni/DG_ISS24
+  * - ``Mazziotti Samuele``
+    - *Samuele.mazziotti@studio.unibo.it*  https://github.com/S6a8mMaz/ISS_Mazziotti
+  * - ``Messori Noemi``
+    - *noemi.messori@studio.unibo.it* https://github.com/noemimessori/issLab2024NoemiMessori.git
+  * - ``Mingarelli Federico``
+    - *federico.mingarelli@studio.unibo.it* https://github.com/fmunibo/iss2024
+  * - ``Piombini Alessandro`` 
+    -  *alessandro.piombini@studio.unibo.it* : https://github.com/Piombo4/ISS2024
+  * - ``P'yeshchyk  Marko``  
+    - *marko.pyeshchyk@studio.unibo.it*  https://github.com/Marko-Pyeshchyk/ISS_24.git
+  * - ``Raffaelli Andrea``
+    -  *andrea.raffaelli2@studio.unibo.it* https://github.com/AndreaRaffaelli :slidekp:`ISS?`
+  * - ``Riccardi Lorenzo``
+    - *lorenzo.riccardi@studio.unibo.it* https://github.com/riccardilorenzo/iss-2024
+  * - ``Rinaldi Michele``
+    - *michele.rinaldi14@studio.unibo.it* https://github.com/MicheleManfrediRinaldi/issLab24.git
+  * - ``Salvemini Vincenzo``
+    - *vincenzo.salvemini@studio.unibo.it* https://github.com/vincenzo426/issLab24
+  * - ``Severini Lorenzo`` 
+    - *lorenzo.severini5@studio.unibo.it* https://github.com/lorenzoseverini1/issLab24Severini
+  * - ``Sgalla Simone``
+    -  *simone.sgalla@studio.unibo.it* https://github.com/SimoneSgalla/ISS-SimoneSgalla.git :slidekp:`empty`
+  * - ``Sgreccia Tommaso``
+    -  *tommaso.sgreccia@studio.unibo.it* https://github.com/WheelyMcBones/ISS2024
+  * - ``Sindaco Daniele`` 
+    - *daniele.sindaco@studio.unibo.it* https://github.com/Zumpa21/ISS.git   :slidekp:`**`
+  * - ``Spadari Stefano`` 
+    - *stefano.spadari@studio.unibo.it* https://github.com/stefanospadari/issLab.git    
+  * - ``Squarcella Delin`` 
+    - *stefano.spadari@studio.unibo.it* https://github.com/delinsq/Ingegneria-dei-Sistemi-Software    
+  * - ``TaglianiMichele`` 
+    - *michele.tagliani2@studio.unibo.it*   https://github.com/taglioIsCoding/IngegneriaSistemiSoftware.git
+ 
+ 
+ 
 
-
+ 
  
 
 

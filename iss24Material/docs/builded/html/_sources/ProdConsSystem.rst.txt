@@ -11,6 +11,9 @@
 .. role:: slidekp 
 
 .. _microservizi: https://microservices.io/
+.. _JUnit: http://www.junit.org/index.html
+.. _User story: https://en.wikipedia.org/wiki/User_story
+
 
 ==============================================
 ProdConsSystem
@@ -42,6 +45,13 @@ ProdsCons: analisi dei requisiti
 - I Produttori e il Consumatore sono enti computazionali attivi e autonomi.
 - I requisiti non stabiliscono come l'informazione debba essere trasmessa e ricevuta.
 - I Produttori e il Consumatore potrebbero essere realizzati con linguaggi di programmazione diversi.
+- Nel caso di sistema distribuito, qualche conponente potrebbe essere dislocato sula sonda su un pianeta diverso
+  dalla Terra (ad esempio Marte). In questo caso le comunicazioni avvengono in tempi lunghi; ad esempio 
+  per giungere su Marte dalla Terra (o viceversa) un messggio impiega da 4 a 24 minuti, a seconda delle posizioni relative
+  dei due corpi celesti. Il committente però dice che 
+  :slidekp:`le comunicazioni avvengono tutte nel Lab2`.
+   
+  
  
 ----------------------------------------
 ProdsCons: analisi del problema
@@ -120,7 +130,7 @@ Come progettisti osserviamo che:
    che permette di velocizzare la progettazione e la realizzazione del prodotto.
 
    L'uso di questa libreria promuove condice basato sul concetto di 
-   :ref:`Interaction` che facilita la possibilità di modifica del protocollo. 
+   :ref:`Interaction<unibo.basicomm23.interfaces.Interaction>` che facilita la possibilità di modifica del protocollo. 
    
    
    :slide2:`Architettura di progetto`
@@ -145,20 +155,376 @@ Come progettisti osserviamo che:
         :align: center
         :width: 100%
 
+----------------------------------------
+ProdsCons: progetti
+----------------------------------------
+
+.. _ProdCons0:     ../../../../ProdCons0 
+
+
+.. _main.naive.ConsumerNaiveTcp:     ../../../../ProdCons0/src/main/naive/ConsumerNaiveTcp.java
+.. _main.naive.TcpConnectionHandler: ../../../../ProdCons0/src/main/naive/TcpConnectionHandler.java  
+.. _main.naive.ProducerNaiveTcp:     ../../../../ProdCons0/src/main/naive/ProducerNaiveTcp.java
+.. _main.naive.MainOneNodeTcp: ../../../../ProdCons0/src/main/naive/MainOneNodeTcp.java  
+
+.. _main.interaction.ConsumerUsingEnablers:  ../../../../ProdCons0/src/main/interaction/ConsumerUsingEnablers.java
+.. _main.interaction.ProducerUsingConnection:  ../../../../ProdCons0/src/main/interaction/ProducerUsingConnection.java
+.. _main.interaction.ProducerAsActiveCaller:  ../../../../ProdCons0/src/main/interaction/ProducerAsActiveCaller.java
+
+.. _main.interaction.MainProdConsEnablersOneNode:   ../../../../ProdCons0/src/main/interaction/MainProdConsEnablersOneNode.java  
+.. _main.interaction.MainEmablersConsumerOnly:   ../../../../ProdCons0/src/main/interaction/MainEmablersConsumerOnly.java  
+.. _main.interaction.MainEnablersProducersOnly:   ../../../../ProdCons0/src/main/interaction/MainEnablersProducersOnly.java  
+ 
+.. _main.towardsactors24.ConsumerAsActors24:  ../../../../ProdCons0/src/main/towardsactors24/ConsumerAsActors24.java
+.. _main.towardsactors24.ProducerAsActors24:  ../../../../ProdCons0/src/main/towardsactors24/ProducerAsActors24.java
+.. _main.towardsactors24.MainOneNodeWithActors24:  ../../../../ProdCons0/src/main/towardsactors24/MainOneNodeWithActors24.java
+.. _main.towardsactors24.ProduceAsActor24External:  ../../../../ProdCons0/src/main/towardsactors24/ProduceAsActor24External.java
+.. _main.towardsactors24.ProducerExternalPython:    ../../../../ProdCons0/src/main/towardsactors24/ProducerExternaPython.py
+
+.. _unibo.naiveactors24:  ../../../../ProdCons0/src/unibo/naiveactors24 
+.. _unibo.naiveactors24.ActorBasic24:  ../../../../ProdCons0/src/unibo/naiveactors24/ActorBasic24.java
+.. _unibo.naiveactors24.ActorContext24:  ../../../../ProdCons0/src/unibo/naiveactors24/ActorContext24.java
+.. _unibo.naiveactors24.ContextMsgHandler:  ../../../../ProdCons0/src/unibo/naiveactors24/ContextMsgHandler.java
+.. _unibo.naiveactors24.ActorNaiveCaller:  ../../../../ProdCons0/src/unibo/naiveactors24/ActorNaiveCaller.java
+
+.. _unibo.naiveactors24.example:  ../../../../ProdCons0/src/unibo/naiveactors24/example
+.. _main.towardsactors24.TestProdCons: ../../../../ProdCons0/src/main/towardsactors24/TestProdCons.java
+
+
+.. main.naive.ConsumerNaiveTcp: ../../../../unibo/basicomm23/src/unibo/basicomm23/TcpConnectionHandler
+
+.. list-table:: 
+  :widths: 50,50
+  :width: 100%
+ 
+  * - Struttura del progetto :slide3:`ProdCons0`
+
+      Si noti la directory :slidekp:`UserDocs` che contiene il diario del progetto con link al codice. 
+
+      Al monento non vi è una directory riservata ai test, che vengono inseriti come codice 'normale'.
+      Discuremeo più avanti sulla opportunità di inserire una directory di questo tipo.
+    -  
+      .. image:: ./_static/img/Actors24/ProdCons0.png
+        :align: center
+        :width: 65%
+ 
+
+
+  
+
 
 +++++++++++++++++++++++++++++++++++++++++++
 ProdsConsNaive
 +++++++++++++++++++++++++++++++++++++++++++
 
+Relizza il sistema usando Java e le socket.
 
+.. list-table:: 
+  :widths: 35,65
+  :width: 100%
+ 
+  * - `main.naive.ConsumerNaiveTcp`_
+    - Un Thread che realizza un ServerTcp sulla porta ``8888`` che crea un Thread   `main.naive.TcpConnectionHandler`_
+      per la gestione dei messaggi per ogni connessione, avendo sè stesso come handler applicativo
+  * - `main.naive.ProducerNaiveTcp`_
+    - Un Thread che usa una socket per connettersi  alla porta ``8888`` del Consumer.
+      Invia **prima una request** (senza bloccarsi) **e poi** un dispatch. 
+      Attende sulla socket il messaggio di risposta alle sua request.
+  * - `main.naive.MainOneNodeTcp`_
+    - Main program di configurazione di 2 Producer e 1 Consumer nella stessa JVM.
 
  
 
++++++++++++++++++++++++++++++++++++++++++++
+ProdsConsEnablers
++++++++++++++++++++++++++++++++++++++++++++
+
+Usa Java e classi di supporto che realizzano il concetto di :ref:`Connessione<unibo.basicomm23.utils.Connection>`.
+
+.. list-table:: 
+  :widths: 35,65
+  :width: 100%
+
+  * - `main.interaction.ConsumerUsingEnablers`_
+    - Un componente che realizza un ServerTcp sulla porta ``8888`` usando :ref:`ServerFactory.create<ServerFactory>`
+  * - `main.interaction.ProducerUsingConnection`_
+    - Un componente che usa :ref:`ConnectionFactory.createClientSupport` per connettersi  alla porta ``8888`` del Consumer
+      e per inviare messaggi  in modo fire-and-forget . 
+      Opzionalmente, può attendere messaggi di risposta sulla socket.
+  * - `main.interaction.MainProdConsEnablersOneNode`_
+    - Main program di configurazione di 2 Producer e 1 Consumer nella stessa JVM.
+  * - `main.interaction.MainEmablersConsumerOnly`_
+    - Main program che lancia il Consumer.
+  * - `main.interaction.MainEnablersProducersOnly`_
+    - Main program che lancia 2 Producer sulla stessa JVM.
+
+.. * - `main.interaction.ProducerAsActiveCaller`_
+..  - Un componente che specializza `unibo.naiveactors24.ActorNaiveCaller`_ , inviando al Consumer 
+..    una request e un dispatch in modo **asincrono**.
+
+
+:slide1:`In sintesi`: 
+
+- il concetto :ref:`Connessione<unibo.basicomm23.utils.Connection>` permette di 
+  nascondere a livello applicativo i dettagli del protocollo, ma si muove nello **spazio concettuale**
+  dei sistemi **client-server** (il Produce è un client, il Consumer è il server);
+- il client può eseguire in modo esplicito un metodo :slide3:`receive` (bloccante) per acquisire 
+  informazione dal server;
+- il *Consumer*  può interagire con un Producer solo dopo che questi lo ha chiamato. Il *Consumer* 
+   non conosce quanti *Producer* ci sono o ci possono essere nel sistema.
+
+
+:slide:`Un primo passo verso gli attori`
+
+E' il momento di introdurre un :slide1:`nuovo spazio concettuale`, in cui *Consumer* e *Producer* sono 
+componenti di una stessa categoria (gli :ref:`Actor<Attori qak>`), in cui non occorre più parlare  di clent e server, ma solo 
+di informazioni trasmesse, informazioni  ricevute e capacità di elaborare le informazioni ricevute.
+
+----------------------------------------
+Naive Actors 2024 
+----------------------------------------
+
+Le classi inserite nel package `unibo.naiveactors24`_  sono 
+un esempio di una possibile implementazione del concetto di  :ref:`Actor<Attori qak>` limitato ad un
+ambiente locale.
+
+       .. image:: ./_static/img/Actors24/context.PNG
+          :align: center
+          :width: 30% 
+
+Un attore che specilizza la classe `unibo.naiveactors24.ActorBasic24`_ e che appartiene 
+a un :ref:`contesto<Contesti qak>` realizzato dalla classe `unibo.naiveactors24.ActorContext24`_, può:
+
+- inviare messaggi di tipo :ref:`IApplMessage<unibo.basicomm23.interfaces.IApplMessage>` ad altri Attori 
+  locali al suo Contesto; 
+- elaborare i messaggi ricevuti, prelevandoli da una **coda di ingresso**; 
+- i messaggi possono provenire da attori locali e/o da componenti remoti, detti :slide2:`Alien`.
+- un *Alien* conosce solo il nodme del compoente--Actor cui vuole inviare infromazione 
+  (strutturata come un :ref:`IApplMessage<unibo.basicomm23.interfaces.IApplMessage>`) e l'indirizzo 
+  della sua 'porta'   di ingresso.
+
+.. list-table:: 
+  :widths: 35,65
+  :width: 100%
+
+  * - `unibo.naiveactors24.ActorBasic24`_
+    - Classe astratta che realizza il concetto di actor in Java, come componentoi attivo dotato di 
+      una coda di messaggi di tipo :ref:`IApplMessage<unibo.basicomm23.interfaces.IApplMessage>` che gestisce 
+      in modo FIFO invocando il metodo abstract  ``elabMsg( IApplMessage msg )``.
+      La classe fornisce anche metodi per l'invio di messaggi  (``forward, request, reply``)  
+      ad altri attori locali al contesto. 
+      :slide2:`dello stesso Contesto`.
+  * - `unibo.naiveactors24.ActorContext24`_
+    - Classe  che realizza il concetto di Contesto in Java, attivando un server TCP che gestisce 
+      i messaggi usando un `unibo.naiveactors24.ContextMsgHandler`_
+  * - :slide2:`Come inviare la risposta a un Alien?`
+    - Il Contesto permette a un componente renoto (Alien) di inviare messaggi agli actor del Contesto.
+      Nel caso di una **request**, occorre che la risposta sia inviata sulla connessione TCP stabilita
+      dal componente renoto.
+  * - `unibo.naiveactors24.ContextMsgHandler`_
+    - Classe che estende :ref:`ApplMsgHandler<unibo.interaction.msg.ApplMsgHandler>`.  Gestisce i messaggi compatibili
+      con :ref:`IApplMessage<unibo.basicomm23.interfaces.IApplMessage>`
+      in arrivo sulla connesisone TCP, inserendoli nella coda dei messaggi dell'attore destinatario locale (se esiste).
+      Nel caso di **request** da componente :slide2:`Alien` remoto, inserisce nel messaggio  
+      :slide2:`un rifermento alla connessione`, per rendere possibile il corretto
+      invio della risposta.
+
+
+--------------------------------------------
+ProdsConsTowardsActors24
+--------------------------------------------
+
+- I componenti-attori sono specializzazioni della classe `unibo.naiveactors24.ActorBasic24`_.
+  La loro logica applicativa è nel metodo 
+
+  ``protected void elabMsg(IApplMessage msg)``
+
+  che viene invocato dalla classe-base quando c'è un (nuovo) messaggio in coda.
+- Il **Contesto**, istanza di `unibo.naiveactors24.ActorContext24`_, in cui vivono 
+  i componenti-attori è creato dal Main program `main.towardsactors24.MainOneNodeWithActors24`_.
 
 
 
+.. list-table:: 
+  :widths: 35,65
+  :width: 100%
+
+  * - `main.towardsactors24.ConsumerAsActors24`_
+    - Un attore che opera nel Contesto di nome *ctxprodcons*: riceve ed elabora messaggi *dispatch* e *request*
+  * - `main.towardsactors24.ProducerAsActors24`_
+    - Un attore che opera nel Contesto di nome *ctxprodcons*: invia messaggi *dispatch* e *request* al Consumer
+  * - `main.towardsactors24.MainOneNodeWithActors24`_
+    - Main program che crea il Contesto *ctxprodcons* e gli attori *Producer* e *Consumer*.
+
+++++++++++++++++++++++++++++++++
+Un Producer Alieno
+++++++++++++++++++++++++++++++++
+
+Un Produce Alieno è rappresentato da un programma che non conosce cosa siano gli Actor,
+ma che è capace di inviare messaggi su una connessione con il server TCP dell'actor.
+
+
+.. list-table:: 
+  :widths: 50,50
+  :width: 100%
+
+  * - `main.towardsactors24.ProduceAsActor24External`_
+    -  Usa `unibo.naiveactors24.ActorNaiveCaller`_ per stabilire la connessione. 
+       Può essere visto come un actor che opera fuori dal Contesto del Consumer.
+        
+  * - `main.towardsactors24.ProducerExternalPython`_
+    -  Non essendo disponibile in Python un supporto simile a *ActorNaiveCaller*,
+       invia messaggi usando una socket.
+        
+
+
+
+
+
+--------------------------------------------
+TestPlans per ProdCons
+--------------------------------------------
+
+Il :ref:`Testing` è una delle attività principali nello sviluppo del software. 
+
+Ricordiamo che, nella fase di analisi, l’obiettivo **non è** quello di *eseguire dei test*, 
+ma quello di **definire i test** in modo che possano individuare in modo automatico 
+le falle del software rispetto ai requisiti.
+
+L’obiettivo di definire un **Piano di Testing** (:slidekp:`TestPlan`) automatizzabile, introduce di fatto 
+un **nuovo requisito**: *rendere l’applicazione osservabile*, o meglio:
+
+:slide2:`renderne verificabili, da parte di una macchina, gli effetti dell’applicazione`.
+
+Introduciamo due possibili TestPlan per il sistema ProdCons usando il linguaggio naturale, attrverso la
+introduzione di  una o più `User story`_ ->:
+
+- :slide3:`TestWithRequest`:  come *Producer*, mi aspetto: 
+   
+  - di inviare una *request* in modo **sincrono** cone payload ``distance(22)`` e di  
+    verificare che il *Consumer* mi invii la risposta  ``ack(distance(22))``;
+  - che altri *Producer* possano agire allo stesso modo, e che il *Consumer* non mi invii la risposta 
+    destinata a un altro;
+  - di inviare una *request* R1 in modo **asincrono**, di eseguire altre azioni e di poter ricevere  
+    la risposta in un secondo momento. Se le mie altre azioni includono una nuova richiesta R2 sincrona,
+    la risposta non dovrebbe essere quella relativa a R1.
+
+   L'osservabilità deriva qui dalla possibilità di ricevere risposta dal *Consumer*.
+
+- :slide3:`TestWithDispatch`:  come *Producer*, mi aspetto:
+   
+  - di inviare un *dispatch* cone payload ``distance(22)`` e che il *Consumer*  la elabori.
+  
+  L'osservabilità in questo caso
+  non esiste: occorre trovare un modo per verificare che il *Consumer* riceva il *dispatch*.
+   
+  - Al momento faremo uso di un file di Log: quando il *Consumer* `main.towardsactors24.ConsumerAsActors24`_
+    gestisce un dispacth, inserisce il  messaggio in un file di nome ``textLog.txt``.
+  - In seguito, introdurremo  il concetto di :remark:`componente osservabile`, di cui abbiamo un primo esempio
+    in :ref:`Il servizio come sistema osservabile`. 
+
+Osserviamo che:
+
+- Enunciare i TestPlans a parole è un primo passo, utile ma :slidekp:`non sufficiente`. 
+- Ciò che occorre è esprimere un TestPlan in modo che sia :remark:`comprensibile`  ed **eseguibile
+  in modo automatizzato** da un computer.
+  Per raggiungere questo obiettivo sono stati sviluppati strumenti appositi.
+- Uno strumento molto diffuso è `JUnit`_ ->, ideato da *Beck* e *Gamma* come supporto al concetto di **collaudo continuo** 
+  nell'ambito di processi di sviluppo agili e incrementali.
 
  
 
++++++++++++++++++++++++++++++++++++++
+ProdCons Testing
++++++++++++++++++++++++++++++++++++++
 
- 
+Si veda `main.towardsactors24.TestProdCons`_.
+
+.. list-table:: 
+  :widths: 30,70
+  :width: 100%
+
+  * - ``Impostazione``
+    -  
+       .. code::
+    
+        public class TestProdCons {
+
+        @BeforeClass
+        public static void activateConsumer() {
+            CommUtils.outmagenta("activateConsumer");
+            new MainAsActorsConsumerOnly().configureTheSystem();
+            connSupport = ConnectionFactory.createClientSupport(
+                            ProtocolType.tcp, "localhost", "8223");
+        }
+        @After
+        public void down() {
+            CommUtils.outmagenta("end of  a test "); 
+        }
+
+  * - ``testRequest``
+    -  
+       .. code::
+
+            @Test
+            public void testRequest() {
+            CommUtils.outmagenta("testRequest ===================  ");
+            //Funge da Producer come ProducerUsingConnection
+            IApplMessage req  = CommUtils.buildRequest( 
+                "tester", "distance", "distance(20)", "consumer");
+            IApplMessage req1 = CommUtils.buildRequest( 
+                "tester", "distance", "distance(30)", "consumer");
+            try {
+                IApplMessage reply = connSupport.request(req);
+                CommUtils.outblue("reply="+reply);
+                String answer = reply.msgContent();
+                assertEquals(answer, "ack(distance(20))");
+
+                IApplMessage reply1 = connSupport.request(req1);
+                CommUtils.outblue("reply1="+reply1);
+                String answer1 = reply1.msgContent();
+                assertEquals(answer1, "ack(distance(30))");               
+            } catch (Exception e) {
+                fail("testRequest " + e.getMessage());
+            }
+        }
+
+  * - ``testDispatch``
+    -  
+       .. code::
+
+        @Test
+        public void testDispatch() {
+            CommUtils.outmagenta("testDispatch =======================  ");
+            //Funge da Producer come ProducerUsingConnection
+            IApplMessage msg  = CommUtils.buildDispatch( 
+                "tester", "distance", "distance(20)", "consumer");
+            IApplMessage msg1 = CommUtils.buildDispatch( 
+                "tester", "distance", "distance(30)", "consumer");
+            try {
+                connSupport.forward(msg);
+                connSupport.forward(msg1);
+                CommUtils.delay(500);
+                readLogFile();
+            } catch (Exception e) {
+                fail("testRequest " + e.getMessage());
+            }
+        }
+
+        protected void readLogFile() throws IOException {	
+            String line;
+            IApplMessage m;
+            File myObj = new File("Testlog.txt");
+            Scanner myReader = new Scanner(myObj);
+            line = myReader.nextLine();
+            m = new ApplMessage(line);
+            CommUtils.outblue( ""+m  );
+            assertEquals(m.msgContent(), "distance(20)");
+            line = myReader.nextLine();
+            m = new ApplMessage(line);
+            CommUtils.outblue( ""+m  );
+            assertEquals(m.msgContent(), "distance(30)");	      
+            myReader.close();
+         
+        }
+

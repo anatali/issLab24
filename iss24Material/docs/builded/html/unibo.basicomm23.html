@@ -18,7 +18,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Annotazioni" href="Annotazioni.html" />
-    <link rel="prev" title="Interaction" href="Interaction.html" /> 
+    <link rel="prev" title="Primi passi operativi 24" href="Primipassioperativi24.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -30,7 +30,7 @@
           <a href="Annotazioni.html" title="Annotazioni"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="Interaction.html" title="Interaction"
+          <a href="Primipassioperativi24.html" title="Primi passi operativi 24"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">unibo.basicomm23</a></li> 
@@ -304,6 +304,9 @@ si può usare una Factory.</p>
 </section>
 <section id="unibo-basicomm23-utils-connectionfactory">
 <h2>unibo.basicomm23.utils.ConnectionFactory<a class="headerlink" href="#unibo-basicomm23-utils-connectionfactory" title="Permalink to this heading">¶</a></h2>
+<p>Un Factory che restituisce un supporto per realizzare connessioni punto-a-punto secondo diversi protocolli.</p>
+<section id="connectionfactory-createclientsupport">
+<h3>ConnectionFactory.createClientSupport<a class="headerlink" href="#connectionfactory-createclientsupport" title="Permalink to this heading">¶</a></h3>
 <table class="docutils align-default" style="width: 100%">
 <colgroup>
 <col style="width: 50%" />
@@ -362,12 +365,13 @@ che gestisce messaggi di tipo <a class="reference internal" href="#unibo-basicom
 realizzando i metodi che trattano messaggi di tipo <code class="docutils literal notranslate"><span class="pre">String</span></code>.</p>
 <p><span class="slide1">Connection</span></p>
 </section>
+</section>
 <section id="unibo-basicomm23-utils-connection">
 <h2>unibo.basicomm23.utils.Connection<a class="headerlink" href="#unibo-basicomm23-utils-connection" title="Permalink to this heading">¶</a></h2>
 <table class="docutils align-default" style="width: 100%">
 <colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
+<col style="width: 60%" />
+<col style="width: 40%" />
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p>E’ una classe astratta che rappresenta
@@ -378,26 +382,32 @@ invocando le omonime operazioni con argomenti <code class="docutils literal notr
 specializzate.</p>
 <p>Se la variabile <span class="blue">boolean trace</span> è posta <code class="docutils literal notranslate"><span class="pre">true</span></code>, i metodi visualizzano informazioni
 utili a meglio comprendere il funzionamento run-time del sistema.</p>
-<p>I metodi abstract sono realizzati da classi che specializzano <em>Connection</em> per un determinato protocollo:</p>
-<p><a class="reference internal" href="#unibo-basicomm23-http-httpconnection"><span class="std std-ref">HttpConnection</span></a>,
+<p>I metodi <strong>abstract</strong> sono realizzati da classi che specializzano <em>Connection</em> per un determinato protocollo:</p>
+<p><a class="reference internal" href="#unibo-basicomm23-tcp-tcpconnection"><span class="std std-ref">TcpConnection</span></a>,
+<a class="reference internal" href="#unibo-basicomm23-udp-udpconnection"><span class="std std-ref">UdpConnection</span></a>,
+<a class="reference internal" href="#unibo-basicomm23-http-httpconnection"><span class="std std-ref">HttpConnection</span></a>,
 <a class="reference internal" href="#unibo-basicomm23-ws-wsconnection"><span class="std std-ref">WsConnection</span></a>,
-<a class="reference internal" href="#unibo-basicomm23-coap-coapconnection"><span class="std std-ref">CoapConnection</span></a>,</p>
+<a class="reference internal" href="#unibo-basicomm23-coap-coapconnection"><span class="std std-ref">CoapConnection</span></a>,
+<a class="reference internal" href="#unibo-basicomm23-mqtt-mqttconnection"><span class="std std-ref">MqttConnection</span></a></p>
 </td>
 <td><div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span><span class="w"> </span><span class="kd">abstract</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Connection</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">Interaction</span><span class="p">{</span>
 <span class="kd">public</span><span class="w">  </span><span class="kt">boolean</span><span class="w"> </span><span class="n">trace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
 <span class="w">  </span><span class="nd">@Override</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="n">IApplMessage</span><span class="w"> </span><span class="n">msg</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="n">IApplMessage</span><span class="w"> </span><span class="n">msg</span><span class="p">)</span>
+<span class="w">                                         </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="p">{</span>
 <span class="w">      </span><span class="n">forward</span><span class="p">(</span><span class="w"> </span><span class="n">msg</span><span class="p">.</span><span class="na">toString</span><span class="p">()</span><span class="w"> </span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="nd">@Override</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">IApplMessage</span><span class="w"> </span><span class="nf">request</span><span class="p">(</span><span class="n">IApplMessage</span><span class="w"> </span><span class="n">msg</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">IApplMessage</span><span class="w"> </span><span class="nf">request</span><span class="p">(</span><span class="n">IApplMessage</span><span class="w"> </span><span class="n">msg</span><span class="p">)</span>
+<span class="w">                                          </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="p">{</span>
 <span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">answer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">request</span><span class="p">(</span><span class="n">msg</span><span class="p">.</span><span class="na">toString</span><span class="p">());</span>
 <span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ApplMessage</span><span class="p">(</span><span class="n">answer</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="nd">@Override</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">IApplMessage</span><span class="w"> </span><span class="nf">request</span><span class="p">(</span><span class="n">IApplMessage</span><span class="w"> </span><span class="n">msg</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">tout</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">IApplMessage</span><span class="w"> </span><span class="nf">request</span><span class="p">(</span><span class="n">IApplMessage</span><span class="w"> </span><span class="n">msg</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">tout</span><span class="p">)</span>
+<span class="w">                                            </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="p">{</span>
 <span class="w">    </span><span class="c1">//Requst che genera una eccezione</span>
 <span class="w">    </span><span class="c1">//se la risposta non giunge entro il timeout specificato</span>
 <span class="w">    </span><span class="p">}</span>
@@ -1361,7 +1371,8 @@ secondo il seguente schema architetturale:</p>
 </pre></div>
 </div>
 <p>Un oggetto che implementa l’interfaccia <em>IApplMsgHandler</em> deve essere definito dall’application designer per
-specificare, data una <a class="reference internal" href="Interaction.html#interaction"><span class="std std-ref">Interaction</span></a>  <code class="docutils literal notranslate"><span class="pre">conn</span></code>, il modo di gestire un messaggio ricevuto (metodo <code class="docutils literal notranslate"><span class="pre">elaborate</span></code>)
+specificare, data una <a class="reference internal" href="#unibo-basicomm23-interfaces-interaction"><span class="std std-ref">Interaction</span></a>  <code class="docutils literal notranslate"><span class="pre">conn</span></code>,
+il modo di gestire un messaggio ricevuto (metodo <code class="docutils literal notranslate"><span class="pre">elaborate</span></code>)
 e come inviare repliche o risposte al chiamante su <code class="docutils literal notranslate"><span class="pre">conn</span></code>.</p>
 <p>Oggetti di questo tipo sono usati dai server forniti da
 <a class="reference internal" href="#unibo-basicomm23-enablers-serverfactory"><span class="std std-ref">ServerFactory</span></a>.</p>
@@ -1566,7 +1577,10 @@ Conviene dunque sostituire il carattere in trasmissione, per poi ripristinarlo i
 </ul>
 </li>
 <li><a class="reference internal" href="#unibo-basicomm23-msg-protocoltype">unibo.basicomm23.msg.ProtocolType</a></li>
-<li><a class="reference internal" href="#unibo-basicomm23-utils-connectionfactory">unibo.basicomm23.utils.ConnectionFactory</a></li>
+<li><a class="reference internal" href="#unibo-basicomm23-utils-connectionfactory">unibo.basicomm23.utils.ConnectionFactory</a><ul>
+<li><a class="reference internal" href="#connectionfactory-createclientsupport">ConnectionFactory.createClientSupport</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#unibo-basicomm23-utils-connection">unibo.basicomm23.utils.Connection</a><ul>
 <li><a class="reference internal" href="#unibo-basicomm23-tcp-tcpconnection">unibo.basicomm23.tcp.TcpConnection</a></li>
 <li><a class="reference internal" href="#unibo-basicomm23-udp-udpconnection">unibo.basicomm23.udp.UdpConnection</a></li>
@@ -1619,8 +1633,8 @@ Conviene dunque sostituire il carattere in trasmissione, per poi ripristinarlo i
   </div>
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="Interaction.html"
-                          title="previous chapter">Interaction</a></p>
+    <p class="topless"><a href="Primipassioperativi24.html"
+                          title="previous chapter">Primi passi operativi 24</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
@@ -1658,7 +1672,7 @@ Conviene dunque sostituire il carattere in trasmissione, per poi ripristinarlo i
           <a href="Annotazioni.html" title="Annotazioni"
              >next</a> |</li>
         <li class="right" >
-          <a href="Interaction.html" title="Interaction"
+          <a href="Primipassioperativi24.html" title="Primi passi operativi 24"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">unibo.basicomm23</a></li> 
