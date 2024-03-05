@@ -68,7 +68,7 @@ inviano informazione a  <code class="docutils literal notranslate"><span class="
 dalla Terra (ad esempio Marte). In questo caso le comunicazioni avvengono in tempi lunghi; ad esempio
 per giungere su Marte dalla Terra (o viceversa) un messggio impiega da 4 a 24 minuti, a seconda delle posizioni relative
 dei due corpi celesti. Il committente però dice che
-<span class="slidekp">le comunicazioni avvengono tutte nel Lab2</span>.</p></li>
+<span class="slidekp">le comunicazioni avvengono tutte sul pianeta Terra</span>.</p></li>
 </ul>
 </section>
 <section id="prodscons-analisi-del-problema">
@@ -127,7 +127,7 @@ in cui il <em>Consumer</em> funge da server-TCP e ogni <em>Producer</em> opera c
 relativa al protocollo.</p></li>
 <li><p>possiamo usare Java come linguaggio di programmazione e la libreria <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23"><span class="std std-ref">unibo.basicomm23</span></a>
 che permette di velocizzare la progettazione e la realizzazione del prodotto.</p>
-<p>L’uso di questa libreria promuove condice basato sul concetto di
+<p>L’uso di questa libreria promuove codice basato sul concetto di
 <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-interfaces-interaction"><span class="std std-ref">Interaction</span></a> che facilita la possibilità di modifica del protocollo.</p>
 <p><span class="slide2">Architettura di progetto</span></p>
 <p>L’architettura logica di progetto può essere schematizzata come in figura:</p>
@@ -153,8 +153,8 @@ brevi lo sviluppo di prodotti secondo gli altri <a class="reference internal" hr
 <tbody>
 <tr class="row-odd"><td><p>Struttura del progetto <span class="slide3">ProdCons0</span></p>
 <p>Si noti la directory <span class="slidekp">UserDocs</span> che contiene il diario del progetto con link al codice.</p>
-<p>Al monento non vi è una directory riservata ai test, che vengono inseriti come codice ‘normale’.
-Discuremeo più avanti sulla opportunità di inserire una directory di questo tipo.</p>
+<p>Al momento, non vi è una directory riservata ai test, che vengono inseriti come codice ‘normale’.
+Discuteremeo più avanti sulla opportunità di inserire una directory di questo tipo.</p>
 </td>
 <td><a class="reference internal image-reference" href="_images/ProdCons0.png"><img alt="_images/ProdCons0.png" class="align-center" src="_images/ProdCons0.png" style="width: 65%;" /></a>
 </td>
@@ -195,21 +195,23 @@ Attende sulla socket il messaggio di risposta alle sua request.</p></td>
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference external" href="../../../../ProdCons0/src/main/interaction/ConsumerUsingEnablers.java">main.interaction.ConsumerUsingEnablers</a></p></td>
-<td><p>Un componente che realizza un ServerTcp sulla porta <code class="docutils literal notranslate"><span class="pre">8888</span></code> usando <a class="reference internal" href="unibo.basicomm23.html#serverfactory"><span class="std std-ref">ServerFactory.create</span></a></p></td>
+<td><p>Un componente che realizza un ServerTcp sulla porta <code class="docutils literal notranslate"><span class="pre">8888</span></code> usando <a class="reference internal" href="unibo.basicomm23.html#serverfactory"><span class="std std-ref">ServerFactory.create</span></a>
+e implementando <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-interfaces-iapplmsghandler"><span class="std std-ref">IApplMsgHandler</span></a></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="../../../../ProdCons0/src/main/interaction/ProducerUsingConnection.java">main.interaction.ProducerUsingConnection</a></p></td>
 <td><p>Un componente che usa <a class="reference internal" href="unibo.basicomm23.html#connectionfactory-createclientsupport"><span class="std std-ref">ConnectionFactory.createClientSupport</span></a> per connettersi  alla porta <code class="docutils literal notranslate"><span class="pre">8888</span></code> del Consumer
-e per inviare messaggi  in modo fire-and-forget .
+con un supporto di tipo <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-interfaces-interaction"><span class="std std-ref">Interaction</span></a> e per inviare messaggi
+in modo fire-and-forget.
 Opzionalmente, può attendere messaggi di risposta sulla socket.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="../../../../ProdCons0/src/main/interaction/MainProdConsEnablersOneNode.java">main.interaction.MainProdConsEnablersOneNode</a></p></td>
-<td><p>Main program di configurazione di 2 Producer e 1 Consumer nella stessa JVM.</p></td>
+<td><p>Main program di configurazione di 2 Producer e 1 Consumer nella stessa JVM</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="../../../../ProdCons0/src/main/interaction/MainEmablersConsumerOnly.java">main.interaction.MainEmablersConsumerOnly</a></p></td>
-<td><p>Main program che lancia il Consumer.</p></td>
+<td><p>Main program che lancia il Consumer</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="../../../../ProdCons0/src/main/interaction/MainEnablersProducersOnly.java">main.interaction.MainEnablersProducersOnly</a></p></td>
-<td><p>Main program che lancia 2 Producer sulla stessa JVM.</p></td>
+<td><p>Main program che lancia 2 Producer sulla stessa JVM</p></td>
 </tr>
 </tbody>
 </table>
@@ -218,13 +220,10 @@ Opzionalmente, può attendere messaggi di risposta sulla socket.</p></td>
 <li><p>il concetto <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-utils-connection"><span class="std std-ref">Connessione</span></a> permette di
 nascondere a livello applicativo i dettagli del protocollo, ma si muove nello <strong>spazio concettuale</strong>
 dei sistemi <strong>client-server</strong> (il Produce è un client, il Consumer è il server);</p></li>
-<li><p>il client può eseguire in modo esplicito un metodo <span class="slide3">receive</span> (bloccante) per acquisire
+<li><p>il client può eseguire in modo esplicito un metodo <span class="slide3">receive / receiveMsg</span> (bloccante) per acquisire
 informazione dal server;</p></li>
-<li><dl class="simple">
-<dt>il <em>Consumer</em>  può interagire con un Producer solo dopo che questi lo ha chiamato. Il <em>Consumer</em></dt><dd><p>non conosce quanti <em>Producer</em> ci sono o ci possono essere nel sistema.</p>
-</dd>
-</dl>
-</li>
+<li><p>il <em>Consumer</em>  può interagire con un Producer solo dopo che questi lo ha chiamato. Il <em>Consumer</em>
+non conosce quanti <em>Producer</em> ci sono o ci possono essere nel sistema.</p></li>
 </ul>
 <p><span class="slide">Un primo passo verso gli attori</span></p>
 <p>E’ il momento di introdurre un <span class="slide1">nuovo spazio concettuale</span>, in cui <em>Consumer</em> e <em>Producer</em> sono
@@ -247,7 +246,7 @@ a un <a class="reference internal" href="Intro2024.html#contesti-qak"><span clas
 locali al suo Contesto;</p></li>
 <li><p>elaborare i messaggi ricevuti, prelevandoli da una <strong>coda di ingresso</strong>;</p></li>
 <li><p>i messaggi possono provenire da attori locali e/o da componenti remoti, detti <span class="slide2">Alien</span>.</p></li>
-<li><p>un <em>Alien</em> conosce solo il nodme del compoente–Actor cui vuole inviare infromazione
+<li><p>un <em>Alien</em> conosce solo il nome del compoente–Actor cui vuole inviare infromazione
 (strutturata come un <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-interfaces-iapplmessage"><span class="std std-ref">IApplMessage</span></a>) e l’indirizzo
 della sua ‘porta’   di ingresso.</p></li>
 </ul>
@@ -262,8 +261,7 @@ della sua ‘porta’   di ingresso.</p></li>
 una coda di messaggi di tipo <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-interfaces-iapplmessage"><span class="std std-ref">IApplMessage</span></a> che gestisce
 in modo FIFO invocando il metodo abstract  <code class="docutils literal notranslate"><span class="pre">elabMsg(</span> <span class="pre">IApplMessage</span> <span class="pre">msg</span> <span class="pre">)</span></code>.
 La classe fornisce anche metodi per l’invio di messaggi  (<code class="docutils literal notranslate"><span class="pre">forward,</span> <span class="pre">request,</span> <span class="pre">reply</span></code>)
-ad altri attori locali al contesto.
-<span class="slide2">dello stesso Contesto</span>.</p></td>
+ad altri attori <span class="slide2">dello stesso Contesto</span>.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="../../../../ProdCons0/src/unibo/naiveactors24/ActorContext24.java">unibo.naiveactors24.ActorContext24</a></p></td>
 <td><p>Classe  che realizza il concetto di Contesto in Java, attivando un server TCP che gestisce
@@ -272,7 +270,7 @@ i messaggi usando un <a class="reference external" href="../../../../ProdCons0/s
 <tr class="row-odd"><td><p><span class="slide2">Come inviare la risposta a un Alien?</span></p></td>
 <td><p>Il Contesto permette a un componente renoto (Alien) di inviare messaggi agli actor del Contesto.
 Nel caso di una <strong>request</strong>, occorre che la risposta sia inviata sulla connessione TCP stabilita
-dal componente renoto.</p></td>
+dal componente remoto.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="../../../../ProdCons0/src/unibo/naiveactors24/ContextMsgHandler.java">unibo.naiveactors24.ContextMsgHandler</a></p></td>
 <td><p>Classe che estende <a class="reference internal" href="unibo.basicomm23.html#unibo-interaction-msg-applmsghandler"><span class="std std-ref">ApplMsgHandler</span></a>.  Gestisce i messaggi compatibili
@@ -284,6 +282,12 @@ invio della risposta.</p></td>
 </tr>
 </tbody>
 </table>
+<p><span class="slide1">In sintesi</span>:</p>
+<ul class="simple">
+<li><p>abbiamo definito un layer che realizza, in modo parziale, il concetto di <a class="reference internal" href="Intro2024.html#attori-qak"><span class="std std-ref">Actor</span></a></p></li>
+<li><p>un Actor può inviare messaggi ad un altro Actor dello stesso contesto, ma non ad Actor di un altro Contesto (remoto)</p></li>
+<li><p>un Actor può ricevere ed elaborare messaggi da programmi ‘Alieni’</p></li>
+</ul>
 </section>
 <section id="prodsconstowardsactors24">
 <h2>ProdsConsTowardsActors24<a class="headerlink" href="#prodsconstowardsactors24" title="Permalink to this heading">¶</a></h2>
@@ -315,8 +319,8 @@ i componenti-attori è creato dal Main program <a class="reference external" hre
 </table>
 <section id="un-producer-alieno">
 <h3>Un Producer Alieno<a class="headerlink" href="#un-producer-alieno" title="Permalink to this heading">¶</a></h3>
-<p>Un Produce Alieno è rappresentato da un programma che non conosce cosa siano gli Actor,
-ma che è capace di inviare messaggi su una connessione con il server TCP dell’actor.</p>
+<p>Un <em>Producer</em> Alieno è rappresentato da un programma che non conosce cosa siano gli Actor,
+ma che è capace di inviare messaggi su una connessione con il server TCP inglobato nel <em>Contesto</em> del <em>Consumer</em>.</p>
 <table class="docutils align-default" style="width: 100%">
 <colgroup>
 <col style="width: 50%" />
@@ -324,8 +328,7 @@ ma che è capace di inviare messaggi su una connessione con il server TCP dell�
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference external" href="../../../../ProdCons0/src/main/towardsactors24/ProduceAsActor24External.java">main.towardsactors24.ProduceAsActor24External</a></p></td>
-<td><p>Usa <a class="reference external" href="../../../../ProdCons0/src/unibo/naiveactors24/ActorNaiveCaller.java">unibo.naiveactors24.ActorNaiveCaller</a> per stabilire la connessione.
-Può essere visto come un actor che opera fuori dal Contesto del Consumer.</p></td>
+<td><p>Usa <a class="reference external" href="../../../../ProdCons0/src/unibo/naiveactors24/ActorNaiveCaller.java">unibo.naiveactors24.ActorNaiveCaller</a> per stabilire la connessione con il <em>Consumer</em>.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="../../../../ProdCons0/src/main/towardsactors24/ProducerExternaPython.py">main.towardsactors24.ProducerExternalPython</a></p></td>
 <td><p>Non essendo disponibile in Python un supporto simile a <em>ActorNaiveCaller</em>,
@@ -338,12 +341,14 @@ invia messaggi usando una socket.</p></td>
 <section id="testplans-per-prodcons">
 <h2>TestPlans per ProdCons<a class="headerlink" href="#testplans-per-prodcons" title="Permalink to this heading">¶</a></h2>
 <p>Il <a class="reference internal" href="Principi.html#testing"><span class="std std-ref">Testing</span></a> è una delle attività principali nello sviluppo del software.</p>
-<p>Ricordiamo che, nella fase di analisi, l’obiettivo <strong>non è</strong> quello di <em>eseguire dei test</em>,
+<p>Ricordiamo che, <span class="slide2">nella fase di analisi</span>, l’obiettivo <strong>non è</strong> quello di <em>eseguire dei test</em>,
 ma quello di <strong>definire i test</strong> in modo che possano individuare in modo automatico
 le falle del software rispetto ai requisiti.</p>
 <p>L’obiettivo di definire un <strong>Piano di Testing</strong> (<span class="slidekp">TestPlan</span>) automatizzabile, introduce di fatto
 un <strong>nuovo requisito</strong>: <em>rendere l’applicazione osservabile</em>, o meglio:</p>
 <p><span class="slide2">renderne verificabili, da parte di una macchina, gli effetti dell’applicazione</span>.</p>
+<section id="prodcons-user-stories">
+<h3>ProdCons User Stories<a class="headerlink" href="#prodcons-user-stories" title="Permalink to this heading">¶</a></h3>
 <p>Introduciamo due possibili TestPlan per il sistema ProdCons usando il linguaggio naturale, attrverso la
 introduzione di  una o più <a class="reference external" href="https://en.wikipedia.org/wiki/User_story">User story</a> -&gt;:</p>
 <ul>
@@ -369,7 +374,7 @@ la risposta non dovrebbe essere quella relativa a R1.</p></li>
 non esiste: occorre trovare un modo per verificare che il <em>Consumer</em> riceva il <em>dispatch</em>.</p>
 <ul class="simple">
 <li><p>Al momento faremo uso di un file di Log: quando il <em>Consumer</em> <a class="reference external" href="../../../../ProdCons0/src/main/towardsactors24/ConsumerAsActors24.java">main.towardsactors24.ConsumerAsActors24</a>
-gestisce un dispacth, inserisce il  messaggio in un file di nome <code class="docutils literal notranslate"><span class="pre">textLog.txt</span></code>.</p></li>
+gestisce un dispacth, inserisce il  messaggio in un file di nome <code class="docutils literal notranslate"><span class="pre">TestLog.txt</span></code>.</p></li>
 <li><p>In seguito, introdurremo  il concetto di <span class="remark">componente osservabile</span>, di cui abbiamo un primo esempio
 in <a class="reference internal" href="QakService24Usage.html#il-servizio-come-sistema-osservabile"><span class="std std-ref">Il servizio come sistema osservabile</span></a>.</p></li>
 </ul>
@@ -378,15 +383,16 @@ in <a class="reference internal" href="QakService24Usage.html#il-servizio-come-s
 <p>Osserviamo che:</p>
 <ul class="simple">
 <li><p>Enunciare i TestPlans a parole è un primo passo, utile ma <span class="slidekp">non sufficiente</span>.</p></li>
-<li><p>Ciò che occorre è esprimere un TestPlan in modo che sia <span class="remark">comprensibile</span>  ed <strong>eseguibile
+<li><p>Ciò che occorre è esprimere un TestPlan in modo che sia interpretabile  ed <strong>eseguibile
 in modo automatizzato</strong> da un computer.
 Per raggiungere questo obiettivo sono stati sviluppati strumenti appositi.</p></li>
 <li><p>Uno strumento molto diffuso è <a class="reference external" href="http://www.junit.org/index.html">JUnit</a> -&gt;, ideato da <em>Beck</em> e <em>Gamma</em> come supporto al concetto di <strong>collaudo continuo</strong>
 nell’ambito di processi di sviluppo agili e incrementali.</p></li>
 </ul>
+</section>
 <section id="prodcons-testing">
 <h3>ProdCons Testing<a class="headerlink" href="#prodcons-testing" title="Permalink to this heading">¶</a></h3>
-<p>Si veda <a class="reference external" href="../../../../ProdCons0/src/main/towardsactors24/TestProdCons.java">main.towardsactors24.TestProdCons</a>.</p>
+<p>Si veda <a class="reference external" href="../../../../ProdCons0/src/main/interaction/TestProdConsInteraction.java">main.interaction.TestProdConsInteraction</a>.</p>
 <table class="docutils align-default" style="width: 100%">
 <colgroup>
 <col style="width: 30%" />
@@ -394,15 +400,17 @@ nell’ambito di processi di sviluppo agili e incrementali.</p></li>
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Impostazione</span></code></p></td>
-<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="k">class</span> <span class="nc">TestProdCons</span> <span class="p">{</span>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="k">class</span> <span class="nc">TestProdConsInteraction</span> <span class="p">{</span>
+
+<span class="n">private</span> <span class="n">static</span> <span class="n">Interaction</span> <span class="n">connSupport</span><span class="p">;</span>
 
 <span class="nd">@BeforeClass</span>
 <span class="n">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">activateConsumer</span><span class="p">()</span> <span class="p">{</span>
     <span class="n">CommUtils</span><span class="o">.</span><span class="n">outmagenta</span><span class="p">(</span><span class="s2">&quot;activateConsumer&quot;</span><span class="p">);</span>
-    <span class="n">new</span> <span class="n">MainAsActorsConsumerOnly</span><span class="p">()</span><span class="o">.</span><span class="n">configureTheSystem</span><span class="p">();</span>
+    <span class="n">new</span> <span class="n">MainEmablersConsumerOnly</span><span class="p">()</span><span class="o">.</span><span class="n">configureTheSystem</span><span class="p">();</span>
     <span class="n">connSupport</span> <span class="o">=</span> <span class="n">ConnectionFactory</span><span class="o">.</span><span class="n">createClientSupport</span><span class="p">(</span>
-                    <span class="n">ProtocolType</span><span class="o">.</span><span class="n">tcp</span><span class="p">,</span> <span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="s2">&quot;8223&quot;</span><span class="p">);</span>
-<span class="p">}</span>
+                    <span class="n">ProtocolType</span><span class="o">.</span><span class="n">tcp</span><span class="p">,</span> <span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="s2">&quot;8888&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
 <span class="nd">@After</span>
 <span class="n">public</span> <span class="n">void</span> <span class="n">down</span><span class="p">()</span> <span class="p">{</span>
     <span class="n">CommUtils</span><span class="o">.</span><span class="n">outmagenta</span><span class="p">(</span><span class="s2">&quot;end of  a test &quot;</span><span class="p">);</span>
@@ -512,6 +520,7 @@ nell’ambito di processi di sviluppo agili e incrementali.</p></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#testplans-per-prodcons">TestPlans per ProdCons</a><ul>
+<li><a class="reference internal" href="#prodcons-user-stories">ProdCons User Stories</a></li>
 <li><a class="reference internal" href="#prodcons-testing">ProdCons Testing</a></li>
 </ul>
 </li>
