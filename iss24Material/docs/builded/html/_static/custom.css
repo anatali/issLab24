@@ -104,10 +104,11 @@ h3{
   }  
 
   .worktodo{
-    background-color: #66ff66;
+    background-color: #a8ff66b7;
     padding: 3px;
-    margin: 10px;
-    font-size: 30px; 
+    margin: 3px;
+    font-size: 15px; 
+    font-weight: bold;
     line-height: 1.4;
     border-radius: 20px;
   }

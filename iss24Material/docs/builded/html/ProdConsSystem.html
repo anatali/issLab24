@@ -17,7 +17,7 @@
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="QakActors24" href="QakActors24.html" />
+    <link rel="next" title="Naive Actors 2024" href="VersoGliAttori.html" />
     <link rel="prev" title="QakService24WithInteraction" href="QakService24WithInteraction.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -27,7 +27,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="QakActors24.html" title="QakActors24"
+          <a href="VersoGliAttori.html" title="Naive Actors 2024"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="QakService24WithInteraction.html" title="QakService24WithInteraction"
@@ -225,117 +225,6 @@ informazione dal server;</p></li>
 <li><p>il <em>Consumer</em>  può interagire con un Producer solo dopo che questi lo ha chiamato. Il <em>Consumer</em>
 non conosce quanti <em>Producer</em> ci sono o ci possono essere nel sistema.</p></li>
 </ul>
-<p><span class="slide">Un primo passo verso gli attori</span></p>
-<p>E’ il momento di introdurre un <span class="slide1">nuovo spazio concettuale</span>, in cui <em>Consumer</em> e <em>Producer</em> sono
-componenti di una stessa categoria (gli <a class="reference internal" href="Intro2024.html#attori-qak"><span class="std std-ref">Actor</span></a>), in cui non occorre più parlare  di clent e server, ma solo
-di informazioni trasmesse, informazioni  ricevute e capacità di elaborare le informazioni ricevute.</p>
-</section>
-</section>
-<section id="naive-actors-2024">
-<h2>Naive Actors 2024<a class="headerlink" href="#naive-actors-2024" title="Permalink to this heading">¶</a></h2>
-<p>Le classi inserite nel package <a class="reference external" href="../../../../ProdCons0/src/unibo/naiveactors24">unibo.naiveactors24</a>  sono
-un esempio di una possibile implementazione del concetto di  <a class="reference internal" href="Intro2024.html#attori-qak"><span class="std std-ref">Actor</span></a> limitato ad un
-ambiente locale.</p>
-<blockquote>
-<div><a class="reference internal image-reference" href="_images/context.PNG"><img alt="_images/context.PNG" class="align-center" src="_images/context.PNG" style="width: 30%;" /></a>
-</div></blockquote>
-<p>Un attore che specilizza la classe <a class="reference external" href="../../../../ProdCons0/src/unibo/naiveactors24/ActorBasic24.java">unibo.naiveactors24.ActorBasic24</a> e che appartiene
-a un <a class="reference internal" href="Intro2024.html#contesti-qak"><span class="std std-ref">contesto</span></a> realizzato dalla classe <a class="reference external" href="../../../../ProdCons0/src/unibo/naiveactors24/ActorContext24.java">unibo.naiveactors24.ActorContext24</a>, può:</p>
-<ul class="simple">
-<li><p>inviare messaggi di tipo <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-interfaces-iapplmessage"><span class="std std-ref">IApplMessage</span></a> ad altri Attori
-locali al suo Contesto;</p></li>
-<li><p>elaborare i messaggi ricevuti, prelevandoli da una <strong>coda di ingresso</strong>;</p></li>
-<li><p>i messaggi possono provenire da attori locali e/o da componenti remoti, detti <span class="slide2">Alien</span>.</p></li>
-<li><p>un <em>Alien</em> conosce solo il nome del compoente–Actor cui vuole inviare infromazione
-(strutturata come un <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-interfaces-iapplmessage"><span class="std std-ref">IApplMessage</span></a>) e l’indirizzo
-della sua ‘porta’   di ingresso.</p></li>
-</ul>
-<table class="docutils align-default" style="width: 100%">
-<colgroup>
-<col style="width: 35%" />
-<col style="width: 65%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference external" href="../../../../ProdCons0/src/unibo/naiveactors24/ActorBasic24.java">unibo.naiveactors24.ActorBasic24</a></p></td>
-<td><p>Classe astratta che realizza il concetto di actor in Java, come componentoi attivo dotato di
-una coda di messaggi di tipo <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-interfaces-iapplmessage"><span class="std std-ref">IApplMessage</span></a> che gestisce
-in modo FIFO invocando il metodo abstract  <code class="docutils literal notranslate"><span class="pre">elabMsg(</span> <span class="pre">IApplMessage</span> <span class="pre">msg</span> <span class="pre">)</span></code>.
-La classe fornisce anche metodi per l’invio di messaggi  (<code class="docutils literal notranslate"><span class="pre">forward,</span> <span class="pre">request,</span> <span class="pre">reply</span></code>)
-ad altri attori <span class="slide2">dello stesso Contesto</span>.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference external" href="../../../../ProdCons0/src/unibo/naiveactors24/ActorContext24.java">unibo.naiveactors24.ActorContext24</a></p></td>
-<td><p>Classe  che realizza il concetto di Contesto in Java, attivando un server TCP che gestisce
-i messaggi usando un <a class="reference external" href="../../../../ProdCons0/src/unibo/naiveactors24/ContextMsgHandler.java">unibo.naiveactors24.ContextMsgHandler</a></p></td>
-</tr>
-<tr class="row-odd"><td><p><span class="slide2">Come inviare la risposta a un Alien?</span></p></td>
-<td><p>Il Contesto permette a un componente renoto (Alien) di inviare messaggi agli actor del Contesto.
-Nel caso di una <strong>request</strong>, occorre che la risposta sia inviata sulla connessione TCP stabilita
-dal componente remoto.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference external" href="../../../../ProdCons0/src/unibo/naiveactors24/ContextMsgHandler.java">unibo.naiveactors24.ContextMsgHandler</a></p></td>
-<td><p>Classe che estende <a class="reference internal" href="unibo.basicomm23.html#unibo-interaction-msg-applmsghandler"><span class="std std-ref">ApplMsgHandler</span></a>.  Gestisce i messaggi compatibili
-con <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-interfaces-iapplmessage"><span class="std std-ref">IApplMessage</span></a>
-in arrivo sulla connesisone TCP, inserendoli nella coda dei messaggi dell’attore destinatario locale (se esiste).
-Nel caso di <strong>request</strong> da componente <span class="slide2">Alien</span> remoto, inserisce nel messaggio
-<span class="slide2">un rifermento alla connessione</span>, per rendere possibile il corretto
-invio della risposta.</p></td>
-</tr>
-</tbody>
-</table>
-<p><span class="slide1">In sintesi</span>:</p>
-<ul class="simple">
-<li><p>abbiamo definito un layer che realizza, in modo parziale, il concetto di <a class="reference internal" href="Intro2024.html#attori-qak"><span class="std std-ref">Actor</span></a></p></li>
-<li><p>un Actor può inviare messaggi ad un altro Actor dello stesso contesto, ma non ad Actor di un altro Contesto (remoto)</p></li>
-<li><p>un Actor può ricevere ed elaborare messaggi da programmi ‘Alieni’</p></li>
-</ul>
-</section>
-<section id="prodsconstowardsactors24">
-<h2>ProdsConsTowardsActors24<a class="headerlink" href="#prodsconstowardsactors24" title="Permalink to this heading">¶</a></h2>
-<ul>
-<li><p>I componenti-attori sono specializzazioni della classe <a class="reference external" href="../../../../ProdCons0/src/unibo/naiveactors24/ActorBasic24.java">unibo.naiveactors24.ActorBasic24</a>.
-La loro logica applicativa è nel metodo</p>
-<p><code class="docutils literal notranslate"><span class="pre">protected</span> <span class="pre">void</span> <span class="pre">elabMsg(IApplMessage</span> <span class="pre">msg)</span></code></p>
-<p>che viene invocato dalla classe-base quando c’è un (nuovo) messaggio in coda.</p>
-</li>
-<li><p>Il <strong>Contesto</strong>, istanza di <a class="reference external" href="../../../../ProdCons0/src/unibo/naiveactors24/ActorContext24.java">unibo.naiveactors24.ActorContext24</a>, in cui vivono
-i componenti-attori è creato dal Main program <a class="reference external" href="../../../../ProdCons0/src/main/towardsactors24/MainOneNodeWithActors24.java">main.towardsactors24.MainOneNodeWithActors24</a>.</p></li>
-</ul>
-<table class="docutils align-default" style="width: 100%">
-<colgroup>
-<col style="width: 35%" />
-<col style="width: 65%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference external" href="../../../../ProdCons0/src/main/towardsactors24/ConsumerAsActors24.java">main.towardsactors24.ConsumerAsActors24</a></p></td>
-<td><p>Un attore che opera nel Contesto di nome <em>ctxprodcons</em>: riceve ed elabora messaggi <em>dispatch</em> e <em>request</em></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference external" href="../../../../ProdCons0/src/main/towardsactors24/ProducerAsActors24.java">main.towardsactors24.ProducerAsActors24</a></p></td>
-<td><p>Un attore che opera nel Contesto di nome <em>ctxprodcons</em>: invia messaggi <em>dispatch</em> e <em>request</em> al Consumer</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference external" href="../../../../ProdCons0/src/main/towardsactors24/MainOneNodeWithActors24.java">main.towardsactors24.MainOneNodeWithActors24</a></p></td>
-<td><p>Main program che crea il Contesto <em>ctxprodcons</em> e gli attori <em>Producer</em> e <em>Consumer</em>.</p></td>
-</tr>
-</tbody>
-</table>
-<section id="un-producer-alieno">
-<h3>Un Producer Alieno<a class="headerlink" href="#un-producer-alieno" title="Permalink to this heading">¶</a></h3>
-<p>Un <em>Producer</em> Alieno è rappresentato da un programma che non conosce cosa siano gli Actor,
-ma che è capace di inviare messaggi su una connessione con il server TCP inglobato nel <em>Contesto</em> del <em>Consumer</em>.</p>
-<table class="docutils align-default" style="width: 100%">
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference external" href="../../../../ProdCons0/src/main/towardsactors24/ProduceAsActor24External.java">main.towardsactors24.ProduceAsActor24External</a></p></td>
-<td><p>Usa <a class="reference external" href="../../../../ProdCons0/src/unibo/naiveactors24/ActorNaiveCaller.java">unibo.naiveactors24.ActorNaiveCaller</a> per stabilire la connessione con il <em>Consumer</em>.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference external" href="../../../../ProdCons0/src/main/towardsactors24/ProducerExternaPython.py">main.towardsactors24.ProducerExternalPython</a></p></td>
-<td><p>Non essendo disponibile in Python un supporto simile a <em>ActorNaiveCaller</em>,
-invia messaggi usando una socket.</p></td>
-</tr>
-</tbody>
-</table>
 </section>
 </section>
 <section id="testplans-per-prodcons">
@@ -352,7 +241,7 @@ un <strong>nuovo requisito</strong>: <em>rendere l’applicazione osservabile</e
 <p>Introduciamo due possibili TestPlan per il sistema ProdCons usando il linguaggio naturale, attrverso la
 introduzione di  una o più <a class="reference external" href="https://en.wikipedia.org/wiki/User_story">User story</a> -&gt;:</p>
 <ul>
-<li><p><span class="slide3">TestWithRequest</span>:  come <em>Producer</em>, mi aspetto:</p>
+<li><p><span class="slide3">TestRequest</span>:  come <em>Producer</em>, mi aspetto:</p>
 <ul class="simple">
 <li><p>di inviare una <em>request</em> in modo <strong>sincrono</strong> cone payload <code class="docutils literal notranslate"><span class="pre">distance(22)</span></code> e di
 verificare che il <em>Consumer</em> mi invii la risposta  <code class="docutils literal notranslate"><span class="pre">ack(distance(22))</span></code>;</p></li>
@@ -366,7 +255,7 @@ la risposta non dovrebbe essere quella relativa a R1.</p></li>
 <div><p>L’osservabilità deriva qui dalla possibilità di ricevere risposta dal <em>Consumer</em>.</p>
 </div></blockquote>
 </li>
-<li><p><span class="slide3">TestWithDispatch</span>:  come <em>Producer</em>, mi aspetto:</p>
+<li><p><span class="slide3">TestDispatch</span>:  come <em>Producer</em>, mi aspetto:</p>
 <ul class="simple">
 <li><p>di inviare un <em>dispatch</em> cone payload <code class="docutils literal notranslate"><span class="pre">distance(22)</span></code> e che il <em>Consumer</em>  la elabori.</p></li>
 </ul>
@@ -487,6 +376,16 @@ nell’ambito di processi di sviluppo agili e incrementali.</p></li>
 </tr>
 </tbody>
 </table>
+<p><span class="slidekp">Osservazione</span> il codice che scrive in un Log-file all’intero di un compoennte
+<a class="reference external" href="../../../../ProdCons0/src/main/interaction/ConsumerUsingEnablers.java">main.interaction.ConsumerUsingEnablers</a> appensantisce il componente stesso.
+Per evitralo, si potrebbe introdurre un opportuno supporto, oppure,
+ancora meglio, fare ricorso al <a class="reference external" href="https://en.wikipedia.org/wiki/Observer_pattern">Observer pattern</a>.</p>
+<p>Esamineremo meglio l’idea di introdurre gli observers affrontando i problemi proposti in <span class="xref std std-ref">Da fare Lez6</span>.</p>
+<p><span class="slide">Un primo passo verso gli attori</span></p>
+<p>E’ il momento di introdurre un <span class="slide1">nuovo spazio concettuale</span>, in cui <em>Consumer</em> e <em>Producer</em> sono
+componenti di una stessa categoria (gli <a class="reference internal" href="Intro2024.html#attori-qak"><span class="std std-ref">Actor</span></a>), in cui non occorre più parlare  di clent e server, ma solo
+di informazioni trasmesse, informazioni  ricevute e capacità di elaborare le informazioni ricevute.</p>
+<p><span class="slide2">NEXT–&gt;</span> : <a class="reference internal" href="VersoGliAttori.html#naive-actors-2024"><span class="std std-ref">Naive Actors 2024</span></a></p>
 </section>
 </section>
 </section>
@@ -514,11 +413,6 @@ nell’ambito di processi di sviluppo agili e incrementali.</p></li>
 <li><a class="reference internal" href="#prodsconsenablers">ProdsConsEnablers</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#naive-actors-2024">Naive Actors 2024</a></li>
-<li><a class="reference internal" href="#prodsconstowardsactors24">ProdsConsTowardsActors24</a><ul>
-<li><a class="reference internal" href="#un-producer-alieno">Un Producer Alieno</a></li>
-</ul>
-</li>
 <li><a class="reference internal" href="#testplans-per-prodcons">TestPlans per ProdCons</a><ul>
 <li><a class="reference internal" href="#prodcons-user-stories">ProdCons User Stories</a></li>
 <li><a class="reference internal" href="#prodcons-testing">ProdCons Testing</a></li>
@@ -536,8 +430,8 @@ nell’ambito di processi di sviluppo agili e incrementali.</p></li>
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="QakActors24.html"
-                          title="next chapter">QakActors24</a></p>
+    <p class="topless"><a href="VersoGliAttori.html"
+                          title="next chapter">Naive Actors 2024</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -567,7 +461,7 @@ nell’ambito di processi di sviluppo agili e incrementali.</p></li>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="QakActors24.html" title="QakActors24"
+          <a href="VersoGliAttori.html" title="Naive Actors 2024"
              >next</a> |</li>
         <li class="right" >
           <a href="QakService24WithInteraction.html" title="QakService24WithInteraction"

@@ -100,7 +100,7 @@ la acquisizione di  conoscenza e pratiche è rivolta principalmente alla</p>
 <ol class="arabic simple">
 <li><p><a class="reference internal" href="#sistema-cosa-intendiamo"><span class="std std-ref">Sistema: cosa intendiamo?</span></a></p></li>
 <li><p><a class="reference internal" href="#sistema-software"><span class="std std-ref">Sistema software</span></a></p></li>
-<li><p><a class="reference internal" href="#componenti-software"><span class="std std-ref">Componenti software</span></a></p></li>
+<li><p><a class="reference internal" href="Principi.html#componenti-software"><span class="std std-ref">Componenti software</span></a></p></li>
 <li><p><a class="reference internal" href="#archittettura-software"><span class="std std-ref">Archittettura software</span></a></p></li>
 <li><p><a class="reference internal" href="#metodologie-per-lo-sviluppo-del-software"><span class="std std-ref">Metodologie per lo sviluppo del software</span></a></p></li>
 <li><p><a class="reference internal" href="#modelli-e-metamodelli"><span class="std std-ref">Modelli e metamodelli</span></a></p></li>
@@ -128,13 +128,14 @@ la acquisizione di  conoscenza e pratiche è rivolta principalmente alla</p>
 <li><p>Sistemi statici o dinamici</p></li>
 <li><p>Sistemi riduzionistici o sistemi olistici</p></li>
 <li><p>Sistemi deterministici o non</p></li>
+<li><p>Sistemi complessi e sistemi complicati</p></li>
 <li><p>Sistemi osservabili e/o interagibili</p></li>
 <li><p>Sistemi concentrati e sistemi distribuiti</p></li>
 <li><p>Sistemi autoorganizzanti</p></li>
 <li><p>…</p></li>
 </ul>
 <p>Un sistema  è tale perchè possiamo <strong>distinguere</strong> in esso più <span class="remark">componenti</span>,
-che occorre introdurre e definire in modo opportuno (come vedremo per i <a class="reference internal" href="#componenti-software"><span class="std std-ref">Componenti software</span></a>).</p>
+che occorre introdurre e definire in modo opportuno (come vedremo per i <a class="reference internal" href="Principi.html#componenti-software"><span class="std std-ref">Componenti software</span></a>).</p>
 <p><span class="slide1">1) SISTEMA SOFTWARE</span></p>
 </section>
 <section id="sistema-software">
@@ -149,7 +150,7 @@ esguito da un computer su un insieme di <strong>dati</strong> per realizzare un 
 <p>L’evoluzione di linguaggi ad alto livello ha quasi subito visto la introduzione di
 costrutti capaci di esprimere semplici forme di aggregazioni di istruzioni e dati
 (si veda <a class="reference internal" href="#componenti-software-di-base"><span class="std std-ref">Componenti software di base</span></a>) che sono poi prpgressivamente evolute in veri e propri
-<a class="reference internal" href="#componenti-software"><span class="std std-ref">Componenti software</span></a>.</p>
+<a class="reference internal" href="Principi.html#componenti-software"><span class="std std-ref">Componenti software</span></a>.</p>
 <p>L’uso del termine <span class="blue">sistema software</span> enfatizza,
 in genere, prodotti  complessi, costruiti o studiati in termini
 della  organizzazione e della interazione tra i componenti che formano il prodotto.</p>
@@ -287,7 +288,7 @@ di <strong>librerie</strong>, come ad esempio la libreria <a class="reference ex
 <li><p>Un modo alternativo, rispetto all’uso di una libreira, per introdurre componenti che operano come attori,
 è quello di definire un linguaggio di programmazione custom,
 con un adeguato livello di astrazione, avvalendosi di tecniche sviluppate
-nel campo dei  <span class="xref std std-ref">Domain Specific Languages</span>.</p></li>
+nel campo dei  <a class="reference internal" href="Principi.html#domain-specific-languages"><span class="std std-ref">Domain Specific Languages</span></a>.</p></li>
 </ul>
 <p>Questo approccio è stato adottatto per definire il
 linguaggio denominato <a class="reference internal" href="QakActors24.html#qakactors24"><span class="std std-ref">qak</span></a>, con lo scopo di esprimere concetti di alto livello
@@ -303,7 +304,7 @@ In molti casi, può anche essere usato  per costruire il prodotto finale;</p></l
 la definizione e costruzione di architetture software distribuite;</p></li>
 <li><p>introduce componenti software che portano in primo piano
 l’idea di <a class="reference internal" href="QakActors24.html#qakactors24"><span class="std std-ref">attore</span></a> e di <span class="xref std std-ref">interazione</span> tra attori,
-lasciando sullo sfondo (nella <a class="reference internal" href="#vista-sommersa"><span class="std std-ref">parte sommersa</span></a>) i dettagli implementativi,
+lasciando sullo sfondo (nella <a class="reference internal" href="Principi.html#vista-sommersa"><span class="std std-ref">parte sommersa</span></a>) i dettagli implementativi,
 grazie alla <a class="reference internal" href="QakActors24.html#qak-factory"><span class="std std-ref">Qak factory</span></a>.</p></li>
 </ul>
 <section id="attori-qak">
@@ -356,7 +357,7 @@ di messaggi <span class="slide2">via rete</span>  attraverso l’introduzione di
 <section id="archittettura-software">
 <h2>Archittettura software<a class="headerlink" href="#archittettura-software" title="Permalink to this heading">¶</a></h2>
 <p>Una volta accettato che un sistema software sia composto da un insieme di componenti di una qualche
-natura, il concetto di <span class="xref std std-ref">architettura</span> assume, dagli anni <code class="docutils literal notranslate"><span class="pre">90</span></code> del secolo scorso
+natura, il concetto di <a class="reference internal" href="Architetture.html#architetture"><span class="std std-ref">architettura</span></a> assume, dagli anni <code class="docutils literal notranslate"><span class="pre">90</span></code> del secolo scorso
 in avanti, un ruolo progressivamente più importante.</p>
 <section id="evoluzione-delle-architetture">
 <h3>Evoluzione delle architetture<a class="headerlink" href="#evoluzione-delle-architetture" title="Permalink to this heading">¶</a></h3>
@@ -486,7 +487,7 @@ cioè dotato di sintassi e semantica comprensibile sia all’uomo sia alla macch
 </tr>
 </tbody>
 </table>
-<p>Si veda: <span class="xref std std-ref">Modelli</span> nella sezione <span class="xref std std-ref">Principi</span>.</p>
+<p>Si veda: <a class="reference internal" href="Principi.html#modelli"><span class="std std-ref">Modelli</span></a> nella sezione <a class="reference internal" href="Principi.html#principi"><span class="std std-ref">Principi</span></a>.</p>
 </section>
 <section id="processi-bottomup-e-topdown">
 <h3>Processi BottomUp e TopDown<a class="headerlink" href="#processi-bottomup-e-topdown" title="Permalink to this heading">¶</a></h3>
@@ -537,13 +538,13 @@ le tecnologie disponibili più opportune, che non sono più un assunto a-priori.
 <section id="principi-ispiratori">
 <h3>Principi ispiratori<a class="headerlink" href="#principi-ispiratori" title="Permalink to this heading">¶</a></h3>
 <p>Dovendo far precedere la codifica a un progetto,
-si può fare ricorso a un insieme di consolidati <span class="xref std std-ref">Principi</span>,
+si può fare ricorso a un insieme di consolidati <a class="reference internal" href="Principi.html#principi"><span class="std std-ref">Principi</span></a>,
 tra cui in particolare:</p>
 <ul class="simple">
-<li><p><span class="xref std std-ref">Design patterns</span></p></li>
-<li><p><span class="xref std std-ref">SOLID</span></p></li>
-<li><p><span class="xref std std-ref">12 Factor App</span></p></li>
-<li><p><span class="xref std std-ref">Architettura esagonale</span></p></li>
+<li><p><a class="reference internal" href="Principi.html#design-patterns"><span class="std std-ref">Design patterns</span></a></p></li>
+<li><p><a class="reference internal" href="Principi.html#id1"><span class="std std-ref">SOLID</span></a></p></li>
+<li><p><a class="reference internal" href="Principi.html#factor-app"><span class="std std-ref">12 Factor App</span></a></p></li>
+<li><p><a class="reference internal" href="Principi.html#architettura-esagonale"><span class="std std-ref">Architettura esagonale</span></a></p></li>
 </ul>
 <p>Un punto-chiave del ribaltamento del bottum-up a favore del top-down è che il progettista software:</p>
 <ul class="simple">
