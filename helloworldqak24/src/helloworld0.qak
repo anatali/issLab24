@@ -1,0 +1,10 @@
+System helloworld0
+
+Context ctxhello ip [host="localhost" port=8000] 
+
+QActor worker context ctxhello{
+	State s0 initial{
+		println("Hello world") color magenta
+		[# CommUtils.outblue("Hello world again") #]
+	}
+}    
