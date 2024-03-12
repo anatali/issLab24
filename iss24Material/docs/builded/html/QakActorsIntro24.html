@@ -1,0 +1,874 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>QakActorsIntro24 &#8212; iss24 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="QakService24Init" href="QakService24Init.html" />
+    <link rel="prev" title="QakActors24" href="QakActors24.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="QakService24Init.html" title="QakService24Init"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="QakActors24.html" title="QakActors24"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">QakActorsIntro24</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="qakactorsintro24">
+<h1>QakActorsIntro24<a class="headerlink" href="#qakactorsintro24" title="Permalink to this heading">¶</a></h1>
+<p><span class="slide3">Progetto helloworldqak24</span></p>
+<section id="creazione-di-un-nuovo-progetto">
+<h2>Creazione di un nuovo progetto<a class="headerlink" href="#creazione-di-un-nuovo-progetto" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>1) Creazione del progetto con git</strong></p>
+<ol class="arabic">
+<li><p>imposto una directory di lavoro per il corso (ad esempio <strong>issLab24</strong>) e mi posiziono in essa</p></li>
+<li><p>Creo la directory <code class="docutils literal notranslate"><span class="pre">unibolibs</span></code>, che conterrà le librerie (file <code class="docutils literal notranslate"><span class="pre">.jar</span></code>) da noi sviluppate.
+Per il momento, inserisco le seguenti librerie:</p>
+<blockquote>
+<div><p><span class="blue">unibo.basicomm23-1.0.jar,  uniboInterfaces.jar, 2p301.jar,  unibo.qakactor23-5.0.jar</span></p>
+</div></blockquote>
+</li>
+<li><p>creo la directory <code class="docutils literal notranslate"><span class="pre">helloworldqak24</span></code> e mi posiziono in essa</p></li>
+<li><p>eseguo <code class="docutils literal notranslate"><span class="pre">gradle</span> <span class="pre">init</span></code> e rispondo: <span class="remark">1 2 default default</span></p></li>
+<li><p>importo in Eclipse il progetto gradle</p></li>
+<li><p>aggiungo la <strong>natura Java</strong> al progetto</p></li>
+<li><p>eseguo <code class="docutils literal notranslate"><span class="pre">gradlew</span> <span class="pre">eclipse</span></code> per fissare le librerie</p></li>
+<li><p>aggiungo  <strong>source folder</strong>: di nome <span class="blue">src</span></p></li>
+<li><p>creo in <strong>src</strong> un file <span class="blue">qak</span> (di nome, ad esempio <code class="docutils literal notranslate"><span class="pre">helloworld0.qak</span></code>)</p></li>
+</ol>
+</td>
+<td><blockquote>
+<div><p>A questo punto Eclipse dovrebbe presentare la finestra:</p>
+</div></blockquote>
+<a class="reference internal image-reference" href="_images/qakStarting.png"><img alt="_images/qakStarting.png" class="align-center" src="_images/qakStarting.png" style="width: 100%;" /></a>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong>2) Definizione del modello</strong> <a class="reference external" href="../../../../helloworldqak24/src/helloworld0.qak">helloworld0.qak</a></p>
+<ol class="arabic simple">
+<li><p>scrivo il contenuto del file <strong>qak</strong>  (ad esempio <a class="reference external" href="../../../../helloworldqak24/src/helloworld0.qak">helloworld0.qak</a>) e salvo.
+Tra le <a class="reference internal" href="QakActors24.html#qak-codice-e-risorse-generate"><span class="std std-ref">risorse generate</span></a>
+vi sono:</p>
+<ul class="simple">
+<li><p>il file  <span class="blue">build2024.gradle</span></p></li>
+<li><p>i files <span class="blue">sysRules.pl</span> e <span class="blue">helloworld0.pl</span> essendo <code class="docutils literal notranslate"><span class="pre">helloworld0</span></code> il nome del <strong>System</strong> nel modello.</p></li>
+</ul>
+</li>
+<li><p>copio il contenuto del  file <a class="reference external" href="../../../../helloworldqak24/build2024.gradle">build2024.gradle</a> nel file <span class="blue">build.gradle</span>
+( o eliminare questo e ridenominare il precedente. Il file <code class="docutils literal notranslate"><span class="pre">build2024.gradle</span></code> verrà rigenerato al prossimo
+salvataggio del modello).</p></li>
+<li><p>eseguo :</p></li>
+</ol>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gradlew</span> <span class="n">build</span> <span class="o">-</span><span class="n">x</span> <span class="n">test</span> <span class="p">(</span><span class="n">per</span> <span class="n">escludere</span> <span class="n">i</span> <span class="n">test</span><span class="p">,</span> <span class="n">se</span> <span class="n">ci</span> <span class="n">sono</span><span class="p">)</span>
+<span class="n">gradlew</span> <span class="n">run</span>
+</pre></div>
+</div>
+</div></blockquote>
+</td>
+<td><a class="reference internal image-reference" href="_images/helloworld0.PNG"><img alt="_images/helloworld0.PNG" class="align-center" src="_images/helloworld0.PNG" style="width: 80%;" /></a>
+</td>
+</tr>
+<tr class="row-odd"><td><p><em>3) Creazione della immagine*</em> <a class="reference external" href="../../../../helloworldqak24/src/helloworld0.qak">helloworld0.qak</a></p>
+<ol class="arabic simple">
+<li><p>copio le icone <a class="reference external" href="../../../../helloworldqak24/qakicons">qakicons</a> per la creazione della immagine della architettura del sistema</p></li>
+<li><p>eseguo (usando Python 3.11.3):<code class="docutils literal notranslate"><span class="pre">Python</span></code> <a class="reference external" href="../../../../helloworldqak24/Arch_helloworld0.py">Arch_helloworld0.py</a>  per ottenere
+l’immagine della architettura del sistema</p></li>
+</ol>
+</td>
+<td><p>Immagine <a class="reference external" href="../../../../helloworldqak24/helloworld0arch.png">helloworld0arch.png</a>  della architettura del sistema</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="helloworld0">
+<h2>helloworld0<a class="headerlink" href="#helloworld0" title="Permalink to this heading">¶</a></h2>
+<p><span class="slide1">QActor come componente autonomo</span></p>
+<p>Definiamo il  <cite>modello</cite> di un sistema composto da un solo componente (actor) che opera in modo autonomo scrivendo
+<em>Hello world</em> sul dispositivo standard di output. Ricodiamo che:</p>
+<p><span class="slide2">Modello</span></p>
+<ul class="simple">
+<li><p>Descrizione di un sistema che pone in primo piano (foreground) aspetti ritenuti rilevanti
+lasciando sullo sfondo (background) aspetti ritenuti trascurabili (anche se essenziali per il funzionamento).</p></li>
+<li><p>Ovviamente la definizione di un insieme di aspetti ritenuti essenziali dipende dal punto di vista.</p></li>
+<li><p>Per questo un sistema può essere associato a più di un modello.</p></li>
+</ul>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>helloworld0.qak</strong></p>
+<ol class="arabic simple">
+<li><p>definizione del <a class="reference internal" href="QakActors24.html#qakactors24-il-contesto"><span class="std std-ref">Contesto</span></a> in cui opera l’actor</p></li>
+<li><p>definizione dell’actor, che opera cone un <a class="reference internal" href="QakActors24.html#it-unibo-kactor-actorbasicfsm-kt"><span class="std std-ref">FSM</span></a></p></li>
+<li><p>stato iniziale dell’actor, che viene eseguito appena
+l’actor è creato della <a class="reference internal" href="QakActors24.html#qak-infrastructure"><span class="std std-ref">Qak infrastructure</span></a></p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">System</span> <span class="n">helloworld0</span>
+
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span><span class="n">Context</span> <span class="n">ctxhello</span> <span class="n">ip</span> <span class="p">[</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span> <span class="n">port</span><span class="o">=</span><span class="mi">8000</span><span class="p">]</span>
+
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span><span class="n">QActor</span> <span class="n">worker</span> <span class="n">context</span> <span class="n">ctxhello</span><span class="p">{</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span><span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span><span class="p">{</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;Hello world&quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">magenta</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="slide2">Commento finale</span></p>
+<ul class="simple">
+<li><p>Questo primo esempio mostra come si possa scrivere il comportamento di un attore qak
+usando anche solo codice kotlin all’interno di un unico stato</p></li>
+<li><p>Come detto in <a class="reference internal" href="QakActors24.html#quadro-generale"><span class="std std-ref">Quadro generale</span></a>, questo modo di procedere non frutta le capacità
+espressive sintetiche del <a class="reference internal" href="QakActors24.html#linguaggio-qak"><span class="std std-ref">Linguaggio qak</span></a>.</p></li>
+</ul>
+</section>
+<section id="helloworld1">
+<h2>helloworld1<a class="headerlink" href="#helloworld1" title="Permalink to this heading">¶</a></h2>
+<p><span class="slide1">QActor che usa un device custom</span></p>
+<p>Definiamo il modello di un sistema composto da un solo componente (actor) che opera come
+<a class="reference internal" href="#helloworld0"><span class="std std-ref">helloworld0</span></a> scrivendo anche su un dispostivo custom introdotto dall’application designer come POJO-JFX.</p>
+<p>Il dispositivo custom:</p>
+<ul class="simple">
+<li><p>è definito in Kotlin nella directory <a class="reference external" href="../../../../helloworldqak24/src/main/resources/utils">utils</a> entro <a class="reference external" href="../../../../helloworldqak24/src/main/resources">main.resources</a>.</p></li>
+<li><p>si basa su librerie <a class="reference external" href="https://twiki.di.uniroma1.it/pub/Metod_prog/RS_L17/lezione17.html">JFX</a>, di cui si tiene già conto nel file <a class="reference external" href="../../../../helloworldqak24/build2024.gradle">build2024.gradle</a> generato dalla <a class="reference internal" href="QakActors24.html#qak-software-factory"><span class="std std-ref">Qak software factory</span></a>.</p></li>
+</ul>
+<section id="perche-il-display">
+<h3>Perchè il display<a class="headerlink" href="#perche-il-display" title="Permalink to this heading">¶</a></h3>
+<p>Al momento, i dettagli costruttivi del dispositivo (descritti più avanti, nella sezione <a class="reference internal" href="#displayobj"><span class="std std-ref">DisplayObj</span></a>)
+possono essere ignorati; basta sapere che questo dispositivo è
+implementato in Java o in Kotlin e che:</p>
+<ul>
+<li><p>espone un <span class="slide2">Factory method</span> <code class="docutils literal notranslate"><span class="pre">create</span></code> che costruisce un oggetto <span class="slide2">Singleton</span>
+(si veda <a class="reference internal" href="Principi.html#design-patterns"><span class="std std-ref">Design patterns</span></a>)</p></li>
+<li><p>implementa il metodo:</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>public void write( String s ) //In kotlin: fun write(s: String?)
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>opera in modo che la <span class="slide2">chiusura della finestra</span>  <span class="slide2">termina l’applicazione</span>.</p></li>
+</ul>
+<p>In questa fase, il <a class="reference internal" href="#displayobj"><span class="std std-ref">DisplayObj</span></a> ci serve per enfatizzare la differenza tra i concetti di <strong>actor</strong> e <strong>object</strong> e per
+fare esempi sulle loro possibili relazioni.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 65%" />
+<col style="width: 35%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>helloworld1.qak</strong></p>
+<ol class="arabic simple">
+<li><p>Invocazione di codice Kotlin per creare una istanza (<em>singleton</em>) del Display</p></li>
+<li><p>Invocazione del metodo di scrittura su Display</p></li>
+</ol>
+<a class="reference internal image-reference" href="_images/displayhello1.PNG"><img alt="_images/displayhello1.PNG" class="align-center" src="_images/displayhello1.PNG" style="width: 80%;" /></a>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">System</span> <span class="n">helloworld1</span>
+
+<span class="n">Context</span> <span class="n">ctxhello</span>
+        <span class="n">ip</span> <span class="p">[</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span> <span class="n">port</span><span class="o">=</span><span class="mi">8001</span><span class="p">]</span>
+
+<span class="n">QActor</span> <span class="n">worker</span> <span class="n">context</span> <span class="n">ctxhello</span><span class="p">{</span>
+  <span class="p">[</span><span class="c1">#</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span> <span class="n">val</span> <span class="n">d</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">DisplayObj</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
+  <span class="c1">#]</span>
+  <span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span><span class="p">{</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;Hello world&quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">magenta</span>
+    <span class="p">[</span><span class="c1">#</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span>  <span class="n">d</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Hello world again!&quot;</span><span class="p">)</span>
+    <span class="c1">#]</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="slide2">Commento finale</span></p>
+<ul class="simple">
+<li><p>Questo  esempio mostra come si possano (ri)usare all’interno di un attore qak oggetti convenzionali
+che sfruttano apposite librerie che</p></li>
+</ul>
+</section>
+</section>
+<section id="helloworld2">
+<h2>helloworld2<a class="headerlink" href="#helloworld2" title="Permalink to this heading">¶</a></h2>
+<p><span class="slide1">Interazione a messaggi con CodedQActor</span></p>
+<p>Introduciamo nel sistema un <a class="reference internal" href="QakActors24.html#attori-coded"><span class="std std-ref">CodedQActor</span></a> che incapsula il Display e
+che gestisce un  <cite>dispatch</cite> della forma:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">Dispatch</span> <span class="pre">out:out(S)</span></code></p>
+</div></blockquote>
+<p>interpretandolo come comando per scrivere  sul Display.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>helloworld2.qak</strong></p>
+<ol class="arabic simple">
+<li><p>Dichiarazione del dispatch di comando</p></li>
+<li><p>Dichiarazione che nel contesto esiste l’actor di nome <code class="docutils literal notranslate"><span class="pre">display</span></code>, codificato in Koltin</p></li>
+<li><p>Nome della classe (user-defined)  <a class="reference external" href="../../../../helloworldqak24/src/main/resources/DisplayCodedQak.kt">DisplayCodedQak.kt</a> che realizza il <a class="reference internal" href="QakActors24.html#attori-coded"><span class="std std-ref">CodedQActor</span></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">delay</span></code> per dare il tempo al dispositivo JFX di formarsi</p></li>
+<li><p>Invio di un  <cite>dispatch</cite> di comando a <code class="docutils literal notranslate"><span class="pre">display</span></code></p></li>
+<li><p>Invio di un altro  <cite>dispatch</cite> di comando a <code class="docutils literal notranslate"><span class="pre">display</span></code></p></li>
+</ol>
+<a class="reference internal image-reference" href="_images/displayhello2.PNG"><img alt="_images/displayhello2.PNG" class="align-center" src="_images/displayhello2.PNG" style="width: 80%;" /></a>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>System helloworld2
+/*1*/Dispatch out : out(TERM)
+
+Context ctxhello
+         ip [host=&quot;localhost&quot; port=8002]
+
+/*2*/CodedQActor display context ctxhello
+/*3*/     className &quot;DisplayCodedQak&quot;
+
+QActor worker context ctxhello{
+  State s0 initial{
+/*4*/ delay 1500
+    println(&quot;Hello world&quot;) color magenta
+
+/*5*/forward display -m out:out(hello_again)
+
+    [# val OutMsg = &quot;hello hello again&quot; #]
+/*6*/forward display -m out:out($OutMsg)
+  }
+}
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong>Immagine generata</strong></p>
+<p>La <a class="reference internal" href="QakActors24.html#qak-software-factory"><span class="std std-ref">Qak software factory</span></a> genera codice Python che costruisce in modo automatico una immagine
+grafica dell’architettura del sistema.</p>
+</td>
+<td><a class="reference internal image-reference" href="_images/displayhello2Arch.PNG"><img alt="_images/displayhello2Arch.PNG" class="align-center" src="_images/displayhello2Arch.PNG" style="width: 80%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+<section id="id1">
+<h3>DisplayCodedQak.kt<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+<p>Il <a class="reference internal" href="QakActors24.html#attori-coded"><span class="std std-ref">CodedQActor</span></a> <code class="docutils literal notranslate"><span class="pre">display</span></code> istanza di questa classe, specializza la classe <a class="reference internal" href="QakActors24.html#it-unibo-kactor-actorbasic-kt"><span class="std std-ref">it.unibo.kactor.ActorBasic.kt</span></a>,
+che agisce in modo <a class="reference internal" href="QakActors24.html#comportamento-di-un-attore"><span class="std std-ref">message driven</span></a>,
+cioè elabora in modo <code class="docutils literal notranslate"><span class="pre">FIFO</span></code> i messaggi che la <a class="reference internal" href="QakActors24.html#qak-infrastructure"><span class="std std-ref">Qak infrastructure</span></a> inserisce sulla sua coda di input.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>DisplayCodedQak.kt</strong> (in <em>resources</em>)</p>
+<ol class="arabic simple">
+<li><p>Il <a class="reference internal" href="QakActors24.html#attori-coded"><span class="std std-ref">CodedQActor</span></a> è una specializzazione della classe <a class="reference internal" href="QakActors24.html#it-unibo-kactor-actorbasic-kt"><span class="std std-ref">ActorBasic</span></a>
+(definita nella <a class="reference internal" href="QakActors24.html#qak-infrastructure"><span class="std std-ref">Qak infrastructure</span></a>).</p></li>
+<li><p>Creazione di una istanza (<em>singleton</em>) del Display che viene ora incapsulata nel <a class="reference internal" href="QakActors24.html#attori-coded"><span class="std std-ref">CodedQActor</span></a></p></li>
+<li><p>Metodo invocato per ogni nuovo messaggio
+<a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-interfaces-iapplmessage"><span class="std std-ref">IApplMessage</span></a> inserito nella coda dell’actor.</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">it.unibo.kactor.ActorBasic</span>
+<span class="kn">import</span> <span class="nn">unibo.basicomm23.interfaces.IApplMessage</span>
+<span class="kn">import</span> <span class="nn">unibo.basicomm23.utils.CommUtils</span>
+<span class="kn">import</span> <span class="nn">kotlinx.coroutines.runBlocking</span>
+<span class="kn">import</span> <span class="nn">kotlinx.coroutines.GlobalScope</span>
+<span class="kn">import</span> <span class="nn">kotlinx.coroutines.CoroutineScope</span>
+
+<span class="k">class</span> <span class="nc">DisplayCodedQak</span><span class="p">(</span> <span class="n">name</span><span class="p">:</span><span class="n">String</span> <span class="p">):</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span>              <span class="n">ActorBasic</span><span class="p">(</span> <span class="n">name</span> <span class="p">){</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span><span class="n">val</span> <span class="n">display</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">DisplayObj</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
+
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span><span class="n">override</span> <span class="n">suspend</span> <span class="n">fun</span> <span class="n">actorBody</span><span class="p">(</span><span class="n">msg</span><span class="p">:</span><span class="n">IApplMessage</span><span class="p">){</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">msgId</span><span class="p">()</span><span class="o">==</span><span class="s2">&quot;out&quot;</span><span class="p">)</span>
+          <span class="n">display</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">msgContent</span><span class="p">())</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="slide2">Commento finale</span></p>
+<p>Questo  esempio mostra:</p>
+<ul class="simple">
+<li><p>come definire ed usare un attore scritto in kotlin a partire dalle classi definite nella <a class="reference internal" href="QakActors24.html#qak-infrastructure"><span class="std std-ref">Qak infrastructure</span></a></p></li>
+<li><p>come un attore possa tradurre messaggi (di comando) in chiamate a metodi di oggetti convenzionali</p></li>
+</ul>
+</section>
+</section>
+<section id="helloworld3">
+<h2>helloworld3<a class="headerlink" href="#helloworld3" title="Permalink to this heading">¶</a></h2>
+<p><span class="slide1">display come QActor applicativo</span></p>
+<p>Facciamo ‘emergere’ il comportamento del Display a livello di modello, rendendo esplicita
+la gestione del <code class="docutils literal notranslate"><span class="pre">Dispatch</span> <span class="pre">out:out(TERM)</span></code> che prima risultava <em>sommersa</em> in
+<a class="reference internal" href="#id1"><span class="std std-ref">DisplayCodedQak.kt</span></a>.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Immagine generata</strong></p>
+<p>L’immagine grafica dell’architettura del sistema ottenuta dal modello è ora quella di figura.</p>
+<p>Si noti il cambio della icona rispetto al caso <a class="reference internal" href="#helloworld2"><span class="std std-ref">helloworld2</span></a></p>
+</td>
+<td><a class="reference internal image-reference" href="_images/displayhello3Arch.PNG"><img alt="_images/displayhello3Arch.PNG" class="align-center" src="_images/displayhello3Arch.PNG" style="width: 80%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>helloworld3.qak: display</strong></p>
+<ol class="arabic simple">
+<li><p>Invocazione di codice Kotlin per creare una istanza (singleton) del Display</p></li>
+<li><p>Transizione allo stato <code class="docutils literal notranslate"><span class="pre">handleout</span></code> per gestire il dispatch <code class="docutils literal notranslate"><span class="pre">out</span></code></p></li>
+<li><p>Accesso al messaggio di ingresso mediante unificazione Prolog</p></li>
+<li><p>Valore di ingresso come argomento <code class="docutils literal notranslate"><span class="pre">0</span></code> del payload del messaggio (<code class="docutils literal notranslate"><span class="pre">payloadArg(0)</span></code>)</p></li>
+<li><p>Invocazione del metodo di scrittura su Display</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">System</span> <span class="n">helloworld3</span>
+<span class="n">Dispatch</span> <span class="n">out</span>  <span class="p">:</span> <span class="n">out</span><span class="p">(</span><span class="n">TERM</span><span class="p">)</span>
+
+<span class="n">Context</span> <span class="n">ctxhello</span> <span class="n">ip</span> <span class="p">[</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span> <span class="n">port</span><span class="o">=</span><span class="mi">8003</span><span class="p">]</span>
+
+<span class="n">QActor</span> <span class="n">display</span> <span class="n">context</span> <span class="n">ctxhello</span><span class="p">{</span>
+  <span class="p">[</span><span class="c1">#</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span><span class="n">val</span> <span class="n">d</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">DisplayObj</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
+  <span class="c1">#]</span>
+  <span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span><span class="p">{</span>
+  <span class="p">}</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span><span class="n">Transition</span> <span class="n">t0</span> <span class="n">whenMsg</span> <span class="n">out</span> <span class="o">-&gt;</span> <span class="n">handleout</span>
+
+  <span class="n">State</span> <span class="n">handleout</span><span class="p">{</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span><span class="n">onMsg</span><span class="p">(</span> <span class="n">out</span><span class="p">:</span><span class="n">out</span><span class="p">(</span><span class="n">TERM</span><span class="p">)){</span>
+      <span class="p">[</span><span class="c1">#</span>
+<span class="o">/*</span><span class="mi">4</span><span class="o">*/</span>   <span class="n">val</span> <span class="n">OutMsg</span> <span class="o">=</span> <span class="n">payloadArg</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#]</span>
+<span class="o">/*</span><span class="mi">5</span><span class="o">*/</span>   <span class="n">d</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;$OutMsg&quot;</span><span class="p">)</span>
+      <span class="c1">#]</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong>helloworld3.qak: worker</strong></p>
+<ol class="arabic simple">
+<li><p>delay per dare il tempo al <code class="docutils literal notranslate"><span class="pre">display</span></code> di formarsi</p></li>
+<li><p>comando di scrittura sullo standard output</p></li>
+<li><p>comando di scrittura al <code class="docutils literal notranslate"><span class="pre">display</span></code></p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="n">QActor</span> <span class="n">worker</span> <span class="n">context</span> <span class="n">ctxhello</span><span class="p">{</span>
+   <span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span><span class="p">{</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span><span class="n">delay</span> <span class="mi">1500</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span><span class="n">println</span><span class="p">(</span><span class="s2">&quot;Hello world&quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">magenta</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span><span class="n">forward</span> <span class="n">display</span> <span class="o">-</span><span class="n">m</span> <span class="n">out</span><span class="p">:</span><span class="n">out</span><span class="p">(</span><span class="n">hello_again</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="slide2">Commento finale</span></p>
+<p>Questo  esempio mostra come un attore qak espresso in <a class="reference internal" href="QakActors24.html#linguaggio-qak"><span class="std std-ref">Linguaggio qak</span></a> possa rendere esplicito un comportamento in precedenza
+realizzato da una parte ‘sommersa’ del sistema.</p>
+</section>
+<section id="helloworld3-withobj">
+<h2>helloworld3 withobj<a class="headerlink" href="#helloworld3-withobj" title="Permalink to this heading">¶</a></h2>
+<p><span class="slide1">display come QActor withobj</span></p>
+<p>In molte situazioni può essere conveniente <span class="slide2">rendere esplicito il fatto che un actor incapsula un oggetto</span>,
+in modo che non sia più necessario scrivere codice Kotlin e che la presenza di un oggetto incapsulato
+risulti visibile nella icona dell’actor.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Questo obiettivo viene raggiunto usando la clausola <code class="docutils literal notranslate"><span class="pre">withobj</span></code> nella dichiarazione dell’actor.</p>
+<p><strong>Immagine generata</strong></p>
+<p>L’immagine grafica dell’architettura del sistema ottenuta dal modello è ora quella di figura.</p>
+</td>
+<td><a class="reference internal image-reference" href="_images/displayhello3withobjArch.PNG"><img alt="_images/displayhello3withobjArch.PNG" class="align-center" src="_images/displayhello3withobjArch.PNG" style="width: 80%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>helloworld3.qak withobj</strong></p>
+<ol class="arabic simple">
+<li><p>Dichiarazione dell’actor <code class="docutils literal notranslate"><span class="pre">display</span></code></p></li>
+<li><p>con clausola <code class="docutils literal notranslate"><span class="pre">withobj</span></code> che specifica il nome dell’oggetto e il <a class="reference internal" href="#perche-il-display"><span class="std std-ref">metodo per crearlo</span></a></p></li>
+<li><p>eliminazione del codice Kotlin, che viene ora generato dalla <a class="reference internal" href="QakActors24.html#qak-software-factory"><span class="std std-ref">Qak software factory</span></a>.</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">System</span> <span class="n">helloworld3</span>
+<span class="n">Dispatch</span> <span class="n">out</span>  <span class="p">:</span> <span class="n">out</span><span class="p">(</span><span class="n">TERM</span><span class="p">)</span>
+
+<span class="n">Context</span> <span class="n">ctxhello</span> <span class="n">ip</span> <span class="p">[</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span> <span class="n">port</span><span class="o">=</span><span class="mi">8003</span><span class="p">]</span>
+
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span><span class="n">QActor</span> <span class="n">display</span> <span class="n">context</span> <span class="n">ctxhello</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span>    <span class="n">withobj</span> <span class="n">d</span> <span class="n">using</span> <span class="s2">&quot;utils.DisplayObj.create()&quot;</span><span class="p">{</span>
+
+<span class="o">/*</span><span class="mi">3</span><span class="o">*///</span><span class="p">[</span><span class="c1"># val d = utils.DisplayObj.create() #]</span>
+  <span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span><span class="p">{</span>
+    <span class="o">...</span>
+ <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="slide2">Commento finale</span></p>
+<p>Questo  esempio mostra l’idea che gli attori possano incapsulare oggetti convenzionali
+possa semplificare il codice (la creazione degli oggetti) ed evidenziare l’incapsulamento
+nella immagine della architettura.</p>
+</section>
+<section id="helloworld4">
+<h2>helloworld4<a class="headerlink" href="#helloworld4" title="Permalink to this heading">¶</a></h2>
+<p><span class="slide1">display come QActor observable</span></p>
+<p>Un QActor ha la proprietà di essere <strong>observable</strong> da un altro actor o da un componente esterno al sistema
+(<span class="slide2">alieno</span>).</p>
+<p>In questa versione del sistema,
+l’attore <code class="docutils literal notranslate"><span class="pre">display</span></code> opera come <strong>observer</strong> dell’actor <code class="docutils literal notranslate"><span class="pre">worker</span></code> e visualizza sul Display embedded
+gli aggiornamenti che <code class="docutils literal notranslate"><span class="pre">worker</span></code> invia  tramite un dispatch che l’<em>observer</em> dichiara di voler
+gestire col nome <code class="docutils literal notranslate"><span class="pre">info</span></code>.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>helloworld4.qak: display come osbserver</strong></p>
+<ol class="arabic">
+<li><p><span class="blue">observeResource worker msgid info</span> (si veda <a class="reference internal" href="QakActors24.html#operazioni-relative-alla-osservabilita"><span class="std std-ref">Operazioni relative alla osservabilità</span></a>):</p>
+<p>l’attore <em>display</em> opera come observer dell’actor <em>worker</em> che riceve aggiornamenti
+tramite il dispatch <code class="docutils literal notranslate"><span class="pre">info:info(SOURCE,TERM)</span></code></p>
+</li>
+<li><p><em>display</em>  può visualizzare un aggiormaneto usando la variabile ereditata <span class="slide2">currentMsg</span>
+(si veda <a class="reference internal" href="QakActors24.html#parti-ereditate"><span class="std std-ref">Parti ereditate</span></a>)
+che referenzia il messaggio gestito nello stato corrente</p></li>
+<li><p><em>display</em>  può selezionare il contenuto del messaggio corrente usando la unificazione Prolog
+e il metodo ereditato <a class="reference internal" href="QakActors24.html#payloadarg"><span class="std std-ref">payloadArg(N)</span></a></p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">System</span> <span class="n">helloworld4</span>
+<span class="n">Dispatch</span> <span class="n">info</span> <span class="p">:</span> <span class="n">info</span><span class="p">(</span><span class="n">SOURCE</span><span class="p">,</span><span class="n">TERM</span><span class="p">)</span>
+
+<span class="n">Context</span> <span class="n">ctxhello</span> <span class="n">ip</span> <span class="p">[</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span> <span class="n">port</span><span class="o">=</span><span class="mi">8004</span><span class="p">]</span>
+
+<span class="n">QActor</span> <span class="n">display</span> <span class="n">context</span> <span class="n">ctxhello</span>
+      <span class="n">withobj</span> <span class="n">d</span> <span class="n">using</span> <span class="s2">&quot;utils.DisplayObj.create()&quot;</span><span class="p">{</span>
+  <span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span><span class="p">{</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span><span class="n">observeResource</span> <span class="n">worker</span> <span class="n">msgid</span> <span class="n">info</span>
+  <span class="p">}</span>
+  <span class="n">Transition</span> <span class="n">t0</span> <span class="n">whenMsg</span> <span class="n">info</span> <span class="o">-&gt;</span> <span class="n">handleinfo</span>
+
+  <span class="n">State</span> <span class="n">handleinfo</span><span class="p">{</span>
+    <span class="n">printCurrentMessage</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$currentMsg&quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">blue</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span><span class="p">[</span><span class="c1">#</span>
+    <span class="n">d</span><span class="o">.</span><span class="n">print</span><span class="p">(</span> <span class="n">currentMsg</span><span class="o">.</span><span class="n">toString</span><span class="p">()</span> <span class="p">)</span>
+    <span class="n">d</span><span class="o">.</span><span class="n">print</span><span class="p">(</span> <span class="s2">&quot;$currentMsg&quot;</span> <span class="p">)</span>
+    <span class="n">d</span><span class="o">.</span><span class="n">print</span><span class="p">(</span> <span class="n">currentMsg</span><span class="o">.</span><span class="n">msgContent</span><span class="p">()</span><span class="o">.</span><span class="n">toString</span><span class="p">()</span> <span class="p">)</span>
+    <span class="n">d</span><span class="o">.</span><span class="n">print</span><span class="p">(</span> <span class="s2">&quot;${currentMsg.msgContent()}&quot;</span> <span class="p">)</span>
+    <span class="c1">#]</span>
+    <span class="n">onMsg</span><span class="p">(</span> <span class="n">info</span><span class="p">:</span><span class="n">info</span><span class="p">(</span><span class="n">SOURCE</span><span class="p">,</span><span class="n">TERM</span><span class="p">)){</span>
+      <span class="p">[</span><span class="c1"># val Source = payloadArg(0)</span>
+        <span class="n">val</span> <span class="n">infoMsg</span> <span class="o">=</span> <span class="n">payloadArg</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">val</span> <span class="n">M</span>      <span class="o">=</span> <span class="s2">&quot;$infoMsg from $Source&quot;</span>
+      <span class="c1">#]</span>
+      <span class="p">[</span><span class="c1"># d.write( M ) #]</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">Transition</span> <span class="n">t0</span> <span class="n">whenMsg</span> <span class="n">info</span> <span class="o">-&gt;</span> <span class="n">handleinfo</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong>helloworld4.qak: worker come observable</strong></p>
+<ol class="arabic simple">
+<li><p>delay per dare il tempo al <code class="docutils literal notranslate"><span class="pre">display</span></code> di formarsi</p></li>
+<li><p>emissione di informazione osservabile</p></li>
+<li><p>emissione di informazione osservabile</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span> <span class="n">worker</span> <span class="n">context</span> <span class="n">ctxhello</span><span class="p">{</span>
+  <span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span><span class="p">{</span>
+    <span class="p">[</span><span class="c1"># var n = 0 #]</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span><span class="n">delay</span> <span class="mi">1500</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span><span class="n">updateResource</span> <span class="p">[</span><span class="c1"># &quot;hello_${n++}&quot; #]</span>
+    <span class="n">delay</span> <span class="mi">2000</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span><span class="n">updateResource</span> <span class="p">[</span><span class="c1"># &quot;hello_${n++}&quot; #]</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Immagine generata</strong></p>
+<p>L’immagine grafica dell’architettura del sistema ottenuta dal modello è ora quella di figura.</p>
+<p><code class="docutils literal notranslate"><span class="pre">info</span></code> è il nome del dispatch con cui  <code class="docutils literal notranslate"><span class="pre">display</span></code>
+dichiara di voler gestire le informazioni emesse da  <code class="docutils literal notranslate"><span class="pre">worker</span></code>.</p>
+</td>
+<td><a class="reference internal image-reference" href="_images/displayhello4.PNG"><img alt="_images/displayhello4.PNG" class="align-center" src="_images/displayhello4.PNG" style="width: 80%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="displayobj">
+<h2>DisplayObj<a class="headerlink" href="#displayobj" title="Permalink to this heading">¶</a></h2>
+<p><span class="slide1">Output device custom in JFX</span></p>
+<p>Il dispositivo custom è definito in Kotlin nella directory <a class="reference external" href="../../../../helloworldqak24/src/main/resources/utils">utils</a> entro <a class="reference external" href="../../../../helloworldqak24/src/main/resources">main.resources</a>.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Parte statica della classe</strong></p>
+<ol class="arabic simple">
+<li><p>Definizioni dei componenti</p></li>
+<li><p>Factory method che crea una istanza del dispositivo come singleton</p></li>
+<li><p>Invocazione del metodo <code class="docutils literal notranslate"><span class="pre">initialize</span></code> del dispositov all’interno di un nuovo Thread
+per evitare il blocco del chiamante la <em>create</em></p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>package utils
+
+import javafx.application.Application
+import javafx.event.ActionEvent
+import javafx.event.EventHandler
+import javafx.stage.Stage
+import javafx.scene.layout.GridPane
+import javafx.scene.Scene
+import javafx.scene.control.Button
+import javafx.scene.control.TextArea
+import javafx.scene.text.Text
+import unibo.basicomm23.utils.CommUtils
+
+class DisplayObj : Application() {
+    protected var stage: Stage? = null
+
+companion object {
+/*1*/   protected var launched = false
+        protected var outarea: TextArea? = null
+        protected var outtext: Text? = null
+        protected var myButton: Button? = null
+        protected var created = false
+        protected var display: DisplayObj? = null
+
+/*2*/public fun create() : DisplayObj{
+      if( ! created ) {
+            val d   = DisplayObj()
+            display = d
+            created = true;
+/*3*/  kotlin.concurrent.thread(start = true) {
+          d.initialize( )
+        }
+      }else CommUtils.outred(
+           &quot;WARNING: display already created&quot;)
+          return display!!
+      }
+    }
+  ...
+}
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong>Inizializzazione del device JFX</strong></p>
+<ol class="arabic simple">
+<li><p>Inizializzazione alla costruzione, che invoca il metodo statico <code class="docutils literal notranslate"><span class="pre">launch</span></code> che attiva
+l’applicazione JavaFX, che crea un JavaFX Application Thread,
+in cui è invocato il metodo <code class="docutils literal notranslate"><span class="pre">start</span></code></p></li>
+<li><p>Definizione del metodo <em>start</em> che crea la scena</p></li>
+<li><p>Definizione del metodo <code class="docutils literal notranslate"><span class="pre">stop</span></code>, invocato alla chiusra della finestra</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>/*1*/fun initialize() {
+        if (!launched) {
+            launch(*arrayOf())
+            launched = true
+        }
+     }
+
+/*2*/ override fun start(primaryStage: Stage) {
+        stage = primaryStage
+        setOutArea()
+        createScene(stage)
+    }
+
+ /*3*/override fun stop() {
+        System.exit(0)
+    }
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong>Creazione della scena</strong></p>
+<ol class="arabic simple">
+<li><p>Definizione dei componenti</p></li>
+<li><p>Creazione della scena</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>/*1*/protected fun setOutArea() {
+        outarea = TextArea()
+        outarea!!.prefColumnCount = 15
+        outarea!!.prefHeight = 280.0
+        outarea!!.prefWidth = 600.0
+        outarea!!.setWrapText(true)
+        myButton = Button(&quot;Clear&quot;)
+        myButton!!.onAction=EventHandler {
+          _: ActionEvent? -&gt; outarea!!.text=&quot;&quot;
+        }
+    }
+
+/*2*/protected fun createScene(stage: Stage?) {
+        val root = GridPane()
+        root.add(outarea, 0, 0)
+        root.add(myButton, 0, 1)
+        val scene = Scene(root, 600.0, 300.0)
+        stage!!.title = &quot;actorgui&quot;
+        stage.scene = scene
+        stage.show()
+        stage.isAlwaysOnTop = true
+    }
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<section id="metodo-print">
+<h3>Metodo print<a class="headerlink" href="#metodo-print" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>print</strong></p>
+<ol class="arabic simple">
+<li><p>Il metodo <code class="docutils literal notranslate"><span class="pre">print</span></code> visualizza su <em>outarea</em> la stringa data come argomento</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>/*1*/fun print(s: String?) {
+        if (s == null) return    //defensive
+        while (outarea == null){ //defensive
+            Thread.sleep(500L)
+            CommUtils.outred(&quot;WARNING: display non yet started&quot;)
+        }
+        outarea!!.appendText(&quot;&quot;&quot;$s&quot;&quot;&quot;.trimIndent())
+        outarea!!.appendText(&quot;\n&quot;)
+    }
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="metodo-write">
+<h3>Metodo write<a class="headerlink" href="#metodo-write" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>write</strong></p>
+<ol class="arabic">
+<li><p>Il metodo <code class="docutils literal notranslate"><span class="pre">write</span></code> visualizza su <em>outarea</em> una stringa data della forma</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">show</span><span class="p">(</span> <span class="n">CONTENT</span> <span class="p">)</span>
+<span class="n">out</span><span class="p">(</span> <span class="n">CONTENT</span> <span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<blockquote>
+<div><p>mostrando solo il valore di <span class="blue">CONTENT</span></p>
+</div></blockquote>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>  /*2*/fun write(s: String?) {
+        if (s == null) return    //defensive
+        while (outarea == null){ //defensive
+            Thread.sleep(500L)
+        }
+        var outs = s.replace(&quot;show(&quot;, &quot;&quot;).replace(&quot;out(&quot;, &quot;&quot;)
+        val i = outs.lastIndexOf(&quot;)&quot;)
+        if (i &gt;= 0) outs = outs.substring(0, i)
+        outarea!!.appendText(&quot;&quot;&quot;$outs&quot;&quot;&quot;.trimIndent())
+        outarea!!.appendText(&quot;\n&quot;)
+    }
+}
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">QakActorsIntro24</a><ul>
+<li><a class="reference internal" href="#creazione-di-un-nuovo-progetto">Creazione di un nuovo progetto</a></li>
+<li><a class="reference internal" href="#helloworld0">helloworld0</a></li>
+<li><a class="reference internal" href="#helloworld1">helloworld1</a><ul>
+<li><a class="reference internal" href="#perche-il-display">Perchè il display</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#helloworld2">helloworld2</a><ul>
+<li><a class="reference internal" href="#id1">DisplayCodedQak.kt</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#helloworld3">helloworld3</a></li>
+<li><a class="reference internal" href="#helloworld3-withobj">helloworld3 withobj</a></li>
+<li><a class="reference internal" href="#helloworld4">helloworld4</a></li>
+<li><a class="reference internal" href="#displayobj">DisplayObj</a><ul>
+<li><a class="reference internal" href="#metodo-print">Metodo print</a></li>
+<li><a class="reference internal" href="#metodo-write">Metodo write</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="QakActors24.html"
+                          title="previous chapter">QakActors24</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="QakService24Init.html"
+                          title="next chapter">QakService24Init</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/QakActorsIntro24.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="QakService24Init.html" title="QakService24Init"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="QakActors24.html" title="QakActors24"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">QakActorsIntro24</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,1557 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>QakActors24 &#8212; iss24 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="QakActorsIntro24" href="QakActorsIntro24.html" />
+    <link rel="prev" title="Naive Actors 2024" href="VersoGliAttori.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="QakActorsIntro24.html" title="QakActorsIntro24"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="VersoGliAttori.html" title="Naive Actors 2024"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">QakActors24</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="qakactors24">
+<h1>QakActors24<a class="headerlink" href="#qakactors24" title="Permalink to this heading">¶</a></h1>
+<p>Secondo Carl <a class="reference external" href="https://en.wikipedia.org/wiki/Carl_Hewitt">Hewitt</a> -&gt; (uno dei padri fondatori) il modello computazionale ad attori è stato ispirato,
+a differenza dei precedenti modelli di calcolo,
+dalla fisica, inclusa la relatività generale e la meccanica quantistica.</p>
+<p>Proviamo a <a class="reference internal" href="UsiamoChatGPT.html#oop-vs-messages"><span class="std std-ref">chiedere a ChatGpt</span></a></p>
+<p>Vi è oggi una ampia gamma di proposte di linguaggi / librerie ad attori, tra cui:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://akka.io/">Akka</a> -&gt;: ispirato a <a class="reference external" href="https://en.wikipedia.org/wiki/Actor_model">Modello computazionale ad attori</a> -&gt; di  Hewitt. Per le motivazioni si veda <a class="reference external" href="https://doc.akka.io//docs/akka/current/typed/guide/actors-motivation.html">Akka actors</a> -&gt;.</p></li>
+<li><p><a class="reference external" href="https://go.dev/">GO</a> -&gt;: ispirato a <a class="reference external" href="https://en.wikipedia.org/wiki/Communicating_sequential_processes">CSP</a>-&gt;, propone <em>goroutine</em> e <em>CanaliGO</em>. Per la documentazione si veda <a class="reference external" href="https://go.dev/doc/">GO doc</a>-&gt;.</p></li>
+<li><p><a class="reference external" href="https://kotlinlang.org/docs/shared-mutable-state-and-concurrency.html#actors">Kotlin Actors</a> -&gt; : propone <em>croutines</em> e <em>channels</em> (si veda <a class="reference external" href="https://play.kotlinlang.org/hands-on/Introduction%20to%20Coroutines%20and%20Channels/08_Channels">Kotlin channel</a>-&gt;)</p></li>
+</ul>
+<p>Un motto di riferimento alquanto significativo per questo modello è il seguente:</p>
+<ul class="simple">
+<li><p><span class="slide3">Do not communicate by sharing memory …</span></p></li>
+<li><p><span class="slide3">…  instead, share memory by communicating.</span></p></li>
+</ul>
+<section id="qakactors24-introduzione">
+<h2>QakActors24: Introduzione<a class="headerlink" href="#qakactors24-introduzione" title="Permalink to this heading">¶</a></h2>
+<p>La <span class="blue">Q/q</span>  nella parola <em>QActor</em>, significa “quasi” poiché il linguaggio non è inteso come un linguaggio
+di programmazione generico, ma piuttosto un <span class="remark">linguaggio di modellazione eseguibile</span>,
+da utilizzare durante l’analisi del problema e il progetto di protitpi di sistemi distribuiti,
+i cui componenti sono  attori  che si comportano come un <a class="reference external" href="https://it.wikipedia.org/wiki/Automa_a_stati_finiti">Automa a stati finiti</a>, in stretta relazione
+con l’idea di sistemi basati su <a class="reference external" href="https://microservices.io/">Microservizi</a>.</p>
+<p>L’aggiunta di <span class="blue">k</span> al prefisso (es <code class="docutils literal notranslate"><span class="pre">qak</span></code>, <code class="docutils literal notranslate"><span class="pre">Qak</span></code>) significa che stiamo facendo riferimento alla versione
+implementata in <a class="reference external" href="https://kotlinlang.org/">Kotlin</a> -&gt;, senza utilizzare i supporti Akka (come fatto nella prima versione del linguaggio).</p>
+<p>Per una <span class="slide2">Introduzione all’uso di Kotlin</span> si veda: si veda: <a class="reference internal" href="KotlinNotes.html#kotlinnotes"><span class="std std-ref">KotlinNotes</span></a>.</p>
+<section id="quadro-generale">
+<h3>Quadro generale<a class="headerlink" href="#quadro-generale" title="Permalink to this heading">¶</a></h3>
+<p>Un attore qak specializza la classe astratta  <a class="reference internal" href="#it-unibo-kactor-actorbasicfsm-kt"><span class="std std-ref">it.unibo.kactor.ActorBasicFsm.kt</span></a>
+che a sua volta specializza la classe astratta  <a class="reference internal" href="#it-unibo-kactor-actorbasic-kt"><span class="std std-ref">it.unibo.kactor.ActorBasic.kt</span></a>,
+entrambe definite nella <a class="reference internal" href="#qak-infrastructure"><span class="std std-ref">Qak infrastructure</span></a>.</p>
+<p>E’  possibile costruire un sistena software basato su attori qak semplicemente usando queste
+librerie; per un esempio, si veda <span class="slidekp">TODO</span>.</p>
+<p>Tuttavia, l’uso della <a class="reference internal" href="#qak-software-factory"><span class="std std-ref">Qak software factory</span></a> e del connesso <a class="reference internal" href="#linguaggio-qak"><span class="std std-ref">Linguaggio qak</span></a>
+rende lo sviluppo dei sistemi molto più rapido, comprensibile e gestibile.</p>
+</section>
+<section id="qak-software-factory">
+<h3>Qak software factory<a class="headerlink" href="#qak-software-factory" title="Permalink to this heading">¶</a></h3>
+<p>Il <a class="reference internal" href="#linguaggio-qak"><span class="std std-ref">Linguaggio qak</span></a> è definito utilizzando il framework <a class="reference external" href="https://www.eclipse.org/Xtext/:https://www.eclipse.org/Xtext/">Xtext</a> -&gt;, che permette di costruire un insieme di
+<span class="remark">plugin</span> per l’ecosistema Eclipse che, una volta installati, permettono ad un application designer
+de realizzare in tempi rapidi un <span class="remark">modello eseguibile del sistema</span>.</p>
+<section id="i-plugin-della-qak-factory">
+<h4>I plugin della Qak factory<a class="headerlink" href="#i-plugin-della-qak-factory" title="Permalink to this heading">¶</a></h4>
+<p>I plugin che,  installati in Eclipse, realizzano la <a class="reference internal" href="#qak-software-factory"><span class="std std-ref">Qak software factory</span></a> sono:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">it.unibo.Qactork.ide_1.5.2.jar</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">it.unibo.Qactork.ui_1.5.2.jar</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">it.unibo.Qactork_1.5.2.jar</span></code></p></li>
+</ul>
+<p>Essi sono disponibili in: <code class="docutils literal notranslate"><span class="pre">issLab24/iss24Material/plugins</span></code>.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><a class="reference internal image-reference" href="_images/qakSoftwareFactory.png"><img alt="_images/qakSoftwareFactory.png" class="align-center" src="_images/qakSoftwareFactory.png" style="width: 100%;" /></a>
+</td>
+<td><p>L’application designer usa l’editor guidato dalla sintassi per scrivere un <a class="reference internal" href="Principi.html#modelli"><span class="std std-ref">modello</span></a> del sistema
+che definisce <span class="slide2">struttura, interazione e comportamento</span> di un sistema distribuito.</p>
+<p>Il <a class="reference internal" href="Principi.html#modelli"><span class="std std-ref">modello</span></a> è una istanza de <a class="reference internal" href="#il-metamodello-qak"><span class="std std-ref">Il metamodello Qak</span></a>, sulla base del quale è costruita la Factory.</p>
+<p>Una volta salvato il modello, la factory produce
+<a class="reference internal" href="#qak-codice-e-risorse-generate"><span class="std std-ref">codice e risorse</span></a>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="qak-codice-e-risorse-generate">
+<h3>Qak codice e risorse generate<a class="headerlink" href="#qak-codice-e-risorse-generate" title="Permalink to this heading">¶</a></h3>
+<p>La <a class="reference internal" href="#qak-software-factory"><span class="std std-ref">Qak software factory</span></a> costruisce vari prodotti indispensabili o utili, tra cui:</p>
+<ul class="simple">
+<li><p>un file che contiene la descrizione del sistema, in sintassi Prolog</p></li>
+<li><p>il file <code class="docutils literal notranslate"><span class="pre">build2024.gradle</span></code> e  altre risorse</p></li>
+<li><p>il codice di raccordo con la <a class="reference internal" href="#qak-infrastructure"><span class="std std-ref">Qak infrastructure</span></a>
+(la <a class="reference internal" href="Principi.html#vista-sommersa"><span class="std std-ref">parte sommersa</span></a> di ogni sistema Qak)</p></li>
+<li><p>il codice Python per la produzione di una rappresentazione grafica del sistema</p></li>
+</ul>
+</section>
+<section id="qak-infrastructure">
+<h3>Qak infrastructure<a class="headerlink" href="#qak-infrastructure" title="Permalink to this heading">¶</a></h3>
+<p>La libreria <span class="slide3">unibo.qakactor23-5.0.jar</span> è prodotta nel progetto  <span class="blue">unibo.qakactor23</span> e costituisce
+la <span class="blue">qak-infrastructure</span>, che si appoggia
+al supporto <span class="slide3">unibo.basicomm23-1.0.jar</span> introdotto nel progetto <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23"><span class="std std-ref">unibo.basicomm23</span></a>,
+che implementa il concetto astratto di <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-interfaces-interaction"><span class="std std-ref">Interaction</span></a> per diversi protocolli (TCP, UDP, CoAP, etc.).</p>
+</section>
+</section>
+</section>
+<section id="il-metamodello-qak">
+<h1>Il metamodello Qak<a class="headerlink" href="#il-metamodello-qak" title="Permalink to this heading">¶</a></h1>
+<p>Il <a class="reference internal" href="#linguaggio-qak"><span class="std std-ref">Linguaggio qak</span></a> reso disponibile dalla <a class="reference internal" href="#qak-software-factory"><span class="std std-ref">Qak software factory</span></a> intende fornire un linguaggio
+per la definizione di <span class="slide2">modelli eseguibili</span> di un sistema, basati su un insieme
+di concetti volti a cattuare l’idea che un sistema software (distribuito):</p>
+<ul class="simple">
+<li><p>è formato da una insieme di attori che si comportano come <a class="reference internal" href="Principi.html#automi-a-stati-finiti"><span class="std std-ref">Automi a stati finiti</span></a></p></li>
+<li><p>che interagiscono scambiandosi messaggi</p></li>
+<li><p>raggruppati in contesti che li abilitano a interazioni via rete</p></li>
+<li><p>contesti che possono essere allocati (deployed) su uno o più  nodi computazionali</p></li>
+</ul>
+<section id="qakactors24-il-sistema">
+<h2>QakActors24: il sistema<a class="headerlink" href="#qakactors24-il-sistema" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 70%" />
+<col style="width: 30%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Un sistema ad attori qak è composto da una collezioni di attori, attivati in uno o più contesti,
+allocati in uno o piò nodi di elaborazione.</p></td>
+<td><a class="reference internal image-reference" href="_images/Actor24sysqak.PNG"><img alt="_images/Actor24sysqak.PNG" class="align-center" src="_images/Actor24sysqak.PNG" style="width: 100%;" /></a>
+</td>
+</tr>
+<tr class="row-even"><td><p>Un sistema ad attori qak è configurato in modo automatico a partire da una descrizione espressa in forma
+di <span class="blue">base di conoscenza</span>, in sintassi Prolog.</p>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">context</span><span class="p">(</span><span class="n">ctx1</span><span class="p">,</span> <span class="s2">&quot;localhost&quot;</span><span class="p">,</span>  <span class="s2">&quot;TCP&quot;</span><span class="p">,</span> <span class="s2">&quot;8923&quot;</span><span class="p">)</span><span class="o">.</span>
+<span class="n">context</span><span class="p">(</span><span class="n">ctx2</span><span class="p">,</span> <span class="s2">&quot;localhost&quot;</span><span class="p">,</span>  <span class="s2">&quot;TCP&quot;</span><span class="p">,</span> <span class="s2">&quot;8925&quot;</span><span class="p">)</span><span class="o">.</span>
+<span class="n">qactor</span><span class="p">(</span> <span class="n">producer1</span><span class="p">,</span> <span class="n">ctx1</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">className</span><span class="o">&gt;</span><span class="p">)</span><span class="o">.</span>
+<span class="n">qactor</span><span class="p">(</span> <span class="n">consumer</span><span class="p">,</span>  <span class="n">ctx2</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">className</span><span class="o">&gt;</span><span class="p">)</span><span class="o">.</span>
+<span class="n">qactor</span><span class="p">(</span> <span class="n">producer2</span><span class="p">,</span> <span class="n">ctx3</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">className</span><span class="o">&gt;</span><span class="p">)</span><span class="o">.</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="qakactors24-lattore">
+<h2>QakActors24: l’attore<a class="headerlink" href="#qakactors24-lattore" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 70%" />
+<col style="width: 30%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Un attore qak è un componente attivo che:</p>
+<ul class="simple">
+<li><p>nasce, vive e muore in un <a class="reference internal" href="#qakactors24-il-contesto"><span class="std std-ref">contesto</span></a> che può essere comune a (molti) altri attori;</p></li>
+<li><p>ha un <strong>nome univoco</strong> nell’ambito di tutto il sistema;</p></li>
+<li><p>è logicamente attivo, cioè dotato di flusso di controllo autonomo;</p></li>
+<li><p>è capace di inviare messaggi ad un altro attore, di cui conosce il <strong>nome</strong>, incluso sè stesso;</p></li>
+<li><p>è capace di eseguire elaborazioni autonome e/o elaborazioni di messaggi;</p></li>
+<li><p>è dotato di una sua <span class="remark">coda locale</span> (<strong>msgQueue</strong>) in cui sono depositati i messaggi
+a lui inviati</p></li>
+</ul>
+</td>
+<td><a class="reference internal image-reference" href="_images/actor24.png"><img alt="_images/actor24.png" class="align-center" src="_images/actor24.png" style="width: 100%;" /></a>
+<ul class="simple">
+<li><p>Elabora i messaggi secondo quanto riportato in <a class="reference internal" href="#la-gestione-dei-messaggi"><span class="std std-ref">La gestione dei messaggi</span></a>.</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="qakactors24-il-contesto">
+<h2>QakActors24: il contesto<a class="headerlink" href="#qakactors24-il-contesto" title="Permalink to this heading">¶</a></h2>
+<p>Un contesto è un componente software che gestisce <code class="docutils literal notranslate"><span class="pre">N&gt;0</span></code> actor qak, <strong>abilitandoli</strong>
+alla ricezione e trasmissione di messaggi via rete.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 70%" />
+<col style="width: 30%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Un contesto rappresenta un nodo logico di elaborazione dotato di un server e di un porta di ingresso,
+su cui altri contesti possono stabilire una <a class="reference internal" href="unibo.basicomm23.html#interconnessione"><span class="std std-ref">Interconnessione</span></a>, di solito basata su <code class="docutils literal notranslate"><span class="pre">TCP</span></code>,
+<code class="docutils literal notranslate"><span class="pre">CoAP</span></code> e <code class="docutils literal notranslate"><span class="pre">MQTT</span></code>.</p>
+<p>Un contesto deve essere allocato su un computer fisico o su un  virtual macìhine / container.</p>
+</td>
+<td><a class="reference internal image-reference" href="_images/actor24Ctx.png"><img alt="_images/actor24Ctx.png" class="align-center" src="_images/actor24Ctx.png" style="width: 100%;" /></a>
+</td>
+</tr>
+<tr class="row-even"><td><p>Un contesto mantiene una tabella  (<span class="blue">actorMap</span>)  con i riferimento agli attori locali e una tabella
+(<span class="blue">proxyMap</span>) con i riferimenti ai Proxy che mantengono una <a class="reference internal" href="unibo.basicomm23.html#interconnessione"><span class="std std-ref">Interconnessione</span></a> con gli altri contesti
+del sistema.</p>
+</td>
+<td><a class="reference internal image-reference" href="_images/actor24CtxMaps.png"><img alt="_images/actor24CtxMaps.png" class="align-center" src="_images/actor24CtxMaps.png" style="width: 100%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Il Server di contesto depone i messaggi <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-interfaces-iapplmessage"><span class="std std-ref">IApplMessage</span></a>
+ricevuti su una <a class="reference internal" href="unibo.basicomm23.html#interconnessione"><span class="std std-ref">Interconnessione</span></a> sulla  <code class="docutils literal notranslate"><span class="pre">msgQueue</span></code>
+dell’attore destinatario.</p>
+<p>Per questo scopo, il Sever si avvale di un unico <span class="blue">gestore di messaggi di sistema</span>:
+il <code class="docutils literal notranslate"><span class="pre">ContextMsgHandler</span></code>.</p>
+</td>
+<td><a class="reference internal image-reference" href="_images/Actors24SingleNodeAndCtx.png"><img alt="_images/Actors24SingleNodeAndCtx.png" class="align-center" src="_images/Actors24SingleNodeAndCtx.png" style="width: 100%;" /></a>
+<p>La figura mostra il caso di attori locali ad un nodo di elaborazione che possono
+inviare/ricevere messaggi tra loro oppure elaborare messaggi inviati
+da componenti remoti.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="linguaggio-qak">
+<h2>Linguaggio qak<a class="headerlink" href="#linguaggio-qak" title="Permalink to this heading">¶</a></h2>
+<p>Il linguaggio si pone nel solco dei <a class="reference internal" href="Principi.html#domain-specific-languages"><span class="std std-ref">Domain Specific Languages</span></a> e permette di esprimere
+un insieme dei concetti che forma  <a class="reference internal" href="#il-metamodello-qak"><span class="std std-ref">Il metamodello Qak</span></a>.</p>
+<p>Il ruolo ‘strategico’ dei linguaggi in informatica si comprende subito considerando
+che <strong>ogni computazione</strong> (ogni sistema software) può essere espressa usando un insieme molto limitato
+di ‘mosse’ (istruzioni) studiate dalla teoria
+come <a class="reference internal" href="Principi.html#macchine-di-turing-di-minky-e-pda"><span class="std std-ref">macchine astratte elementari</span></a>.</p>
+<p>In sintesi, possiamo dire che l’uso du un linguaggio comporta descrizioni di un
+sistema software:</p>
+<p><span class="remark">più compatte, più esplicie e semanticamente più ricche</span></p>
+<p>Il linguaggio qak intende promuovere
+la definizione in tempi brevi di <span class="blue">prototipi di sistemi distribuiti</span>, utilizzabili nelle fasi preliminari
+di un progetto di sviluppo software, al fine di <strong>interagire con il committente</strong>, per chiarire e stabilizzare
+i requisiti.</p>
+<p>In molti casi, la formalizzazione dei requsiti e della analisi del problema
+in ternini di modelli eseguibili qak costituisce anche un passo pragmaticamente utile
+per la costruzione effettiva del prodotto finale.</p>
+<section id="id2">
+<h3>Qak syntax<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
+<p>La sintassi del linguaggio è riportata in  <a class="reference external" href="./_static/Qactork.xtext">Qak syntax</a>.</p>
+<section id="scopo-della-grammatica">
+<h4>Scopo della grammatica<a class="headerlink" href="#scopo-della-grammatica" title="Permalink to this heading">¶</a></h4>
+<p>Lo ‘scopo’ della grammatica è la produzione relativa alla specifica del sistema.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>QActorSystemSpec:
+  name=ID                             //(1)
+  ( mqttBroker = BrokerSpec)?         //(2)
+  ( libs       = UserLibs  )?         //(3)
+  ( message   += Message   )*         //(4)
+  ( context   += Context   )*         //(5)
+  ( actor     += QActorDeclaration )* //(6)
+  (display    = DisplayDecl)?         //(7)
+  (facade     = FacadeDecl)?          //(8)
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">...</span> <span class="pre">)</span></code><span class="slidekp">?</span> signitifca <strong>opzionale</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">...</span> <span class="pre">)</span></code><span class="slidekp">*</span> signitifca <strong>zero o più volte</strong></p>
+</td>
+<td><p><strong>Specifica del sistema</strong></p>
+<ol class="arabic simple">
+<li><p>nome del sistema</p></li>
+<li><p>indirizzo di un broker MQTT</p></li>
+<li><p>dichiarazione di una o più <span class="slide2">librerie applicative</span></p></li>
+<li><p><a class="reference internal" href="#dichiarazione-dei-messaggi"><span class="std std-ref">Dichiarazione dei messaggi</span></a></p></li>
+<li><p><a class="reference internal" href="#dichiarazione-dei-contesti"><span class="std std-ref">Dichiarazione dei contesti</span></a></p></li>
+<li><p><a class="reference internal" href="#dichiarazione-degli-attori"><span class="std std-ref">Dichiarazione degli attori</span></a></p></li>
+<li><p>Dichiarazione di un Display di sistema</p></li>
+<li><p>Dichiarazione di una Facade di sistema</p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Le regole sintattche del linguaggio impongono che un
+modello Qak venga definito organizzando la sua descrizione
+in una <strong>sequenza di dichiarazioni</strong>.</p>
+</section>
+</section>
+<section id="dichiarazione-dei-messaggi">
+<h3>Dichiarazione dei messaggi<a class="headerlink" href="#dichiarazione-dei-messaggi" title="Permalink to this heading">¶</a></h3>
+<p>I diversi <a class="reference internal" href="unibo.basicomm23.html#tipi-di-messaggi"><span class="std std-ref">Tipi di messaggi</span></a> sono dichiarati usando una <em>sintassi</em> Prolog-like (si veda <a class="reference external" href="http://amsacta.unibo.it/5450/7/tuprolog-guide.pdf">tuProlog</a> -&gt;):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Message      :  BasicMessage | Event | OtherMsg;
+BasicMessage :  Dispatch | Request;
+OtherMsg     :  Reply;
+
+Event:    &quot;Event&quot;     name=ID  &quot;:&quot; msg = PHead  (cmt=STRING)?;
+Dispatch: &quot;Dispatch&quot;  name=ID  &quot;:&quot; msg = PHead  (cmt=STRING)?;
+Request:  &quot;Request&quot;   name=ID  &quot;:&quot; msg = PHead  (cmt=STRING)?;
+Reply:    &quot;Reply&quot;     name=ID  &quot;:&quot; msg = PHead  ( &quot;for&quot; reqqq = [Request] )? (cmt=STRING)?;
+
+PHead :       PAtom | PStruct | PStructRef ;  //sintassi Prolog
+...
+</pre></div>
+</div>
+</section>
+<section id="dichiarazione-dei-contesti">
+<h3>Dichiarazione dei contesti<a class="headerlink" href="#dichiarazione-dei-contesti" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Context : &quot;Context&quot;  name=ID &quot;ip&quot;  ip = ComponentIP   ( &quot;commonObj&quot; commonObj = STRING)?  ;
+ComponentIP : {ComponentIP} &quot;[&quot; &quot;host=&quot; host=STRING &quot;port=&quot; port=INT &quot;]&quot; ;
+</pre></div>
+</div>
+<p>Un contesto può introdurre un <span class="slide2">oggetto accessibile a tutti gli attori</span>.</p>
+</section>
+<section id="dichiarazione-degli-attori">
+<h3>Dichiarazione degli attori<a class="headerlink" href="#dichiarazione-degli-attori" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActorDeclaration</span><span class="p">:</span> <span class="n">QActorInternal</span> <span class="o">|</span>
+                   <span class="n">QActorExternal</span><span class="p">;</span>
+
+<span class="n">QActorInternal</span><span class="p">:</span>  <span class="n">QActor</span> <span class="o">|</span>
+                 <span class="n">QActorCoded</span><span class="p">;</span>
+</pre></div>
+</div>
+</td>
+<td><p>La sintassi indica che vi sono tre tipi di attori.</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="#attori-normali"><span class="std std-ref">Attori normali</span></a></p></li>
+<li><p><a class="reference internal" href="#attori-coded"><span class="std std-ref">Attori coded</span></a></p></li>
+<li><p><a class="reference internal" href="#attori-external"><span class="std std-ref">Attori external</span></a></p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+<section id="attori-normali">
+<h4>Attori normali<a class="headerlink" href="#attori-normali" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Gli attori ‘normali’ sono descritti come <a class="reference internal" href="Principi.html#automi-a-stati-finiti"><span class="std std-ref">Automi a stati finiti</span></a>.</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Nome dell’attore</p></li>
+<li><p>Riferimento al Contesto</p></li>
+<li><p>Oggetto locale usato dall’attore</p></li>
+<li><p>Attore creato solo dinamicamente</p></li>
+<li><p>Libreirie importate</p></li>
+<li><p>Azioni iniziali dell’attore</p></li>
+<li><p>Stati dell’attore</p></li>
+<li><p>Dichiarazione dell’oggetto locale</p></li>
+<li><p>Dichiarazione delle librerie importate</p></li>
+</ol>
+</div></blockquote>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>QActor: &quot;QActor&quot;
+/*1*/ name=ID
+/*2*/&quot;context&quot; context = [ Context ]
+/*3*/(&quot;withobj&quot; withobj = WithObject)?
+/*4*/( dynamic ?= &quot;dynamicOnly&quot;)?
+  &quot;{&quot;
+/*5*/( imports += UserImport )*
+/*6*/( start   = AnyAction )?
+/*7*/( states += State )*
+  &quot;}&quot;;
+
+/*8*/WithObject: name=ID
+       &quot;using&quot; method=STRING;
+
+/*9*/UserImport:
+    &quot;import&quot; file=STRING ;
+</pre></div>
+</div>
+<p>Si veda <a class="reference internal" href="#anyaction"><span class="std std-ref">AnyAction</span></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="stati-di-un-attore-normale">
+<h4>Stati di un attore normale<a class="headerlink" href="#stati-di-un-attore-normale" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 70%" />
+<col style="width: 30%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><ol class="arabic simple">
+<li><p>Nome dello stato</p></li>
+<li><p>Stato iniziale. Il tag <code class="docutils literal notranslate"><span class="pre">initial</span></code> deve essere presente in un <strong>unico stato</strong>.</p></li>
+<li><p>Azioni locali allo stato</p></li>
+<li><p>Transizioni verso lo stato futuro</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>/*1*/State: &quot;State&quot; name=ID
+/*2*/( normal?=&quot;initial&quot;)?
+  &quot;{&quot;
+/*3*/( actions += StateAction )*
+  &quot;}&quot;
+/*4*/( transition = Transition )?
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="attori-coded">
+<h4>Attori coded<a class="headerlink" href="#attori-coded" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Attori coded</p></td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>/*1*/QActorCoded : &quot;CodedQActor&quot;    name=ID
+    &quot;context&quot; context = [ Context ]
+    &quot;className&quot; className = STRING
+    ( dynamic ?= &quot;dynamicOnly&quot;)?;
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="attori-external">
+<h4>Attori external<a class="headerlink" href="#attori-external" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Attori external</p></td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/*</span><span class="mi">1</span><span class="o">*/</span><span class="n">QActorExternal</span><span class="p">:</span> <span class="s2">&quot;ExternalQActor&quot;</span> <span class="n">name</span><span class="o">=</span><span class="n">ID</span>
+    <span class="s2">&quot;context&quot;</span> <span class="n">context</span> <span class="o">=</span> <span class="p">[</span> <span class="n">Context</span> <span class="p">]</span> <span class="p">;</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+<section id="transizioni-di-stato">
+<h2>Transizioni di stato<a class="headerlink" href="#transizioni-di-stato" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Transition</span>         <span class="p">:</span>  <span class="n">EmptyTransition</span> <span class="o">|</span> <span class="n">NonEmptyTransition</span>  <span class="p">;</span>
+</pre></div>
+</div>
+<p>La transizone da uno stato a uno stato successivo può avvenire senza attesa di alcun messaggio (<span class="blue">EmptyTransition</span>)
+oppure (<span class="blue">NonEmptyTransition</span>) in relazione alla disponibilità di un messaggio tra quelli definiti in <a class="reference internal" href="#dichiarazione-dei-messaggi"><span class="std std-ref">Dichiarazione dei messaggi</span></a>.</p>
+<section id="emptytransition">
+<h3>EmptyTransition<a class="headerlink" href="#emptytransition" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>EmptyTransition:
+/*1*/    &quot;Goto&quot; targetState=[State]
+/*2*/    (&quot;if&quot; eguard=AnyAction
+/*3*/    &quot;else&quot; othertargetState=[State] )?  ;
+</pre></div>
+</div>
+</td>
+<td><ol class="arabic simple">
+<li><p>Riferimento allo stato futuro (nel caso di guardia <code class="docutils literal notranslate"><span class="pre">true</span></code>)</p></li>
+<li><p>Specifica (opzionale) di una <a class="reference internal" href="#guardia"><span class="std std-ref">Guardia</span></a></p></li>
+<li><p>Stato futuro nel caso di <a class="reference internal" href="#guardia"><span class="std std-ref">Guardia</span></a> <code class="docutils literal notranslate"><span class="pre">false</span></code></p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+<section id="guardia">
+<h4>Guardia<a class="headerlink" href="#guardia" title="Permalink to this heading">¶</a></h4>
+<p>Una transizione associata a una guardia, viene attivata solo se la valutazione della condizione espressa dalla
+guardia produce il valore <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</section>
+</section>
+<section id="nonemptytransition">
+<h3>NonEmptyTransition<a class="headerlink" href="#nonemptytransition" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>NonEmptyTransition:
+/*1*/  &quot;Transition&quot; name=ID
+/*2*/  (duration=Timeout)?
+/*3*/  (trans+=InputTransition)*
+/*4*/  (&quot;else&quot; elseempty=EmptyTransition)?;
+</pre></div>
+</div>
+</td>
+<td><ol class="arabic simple">
+<li><p>Nome della transizione</p></li>
+<li><p>Specifica di un tempo massimo di attesa: si veda <a class="reference internal" href="#timeout-per-transizioni"><span class="std std-ref">Timeout per transizioni</span></a></p></li>
+<li><p>Transizione relativa a un messaggio</p></li>
+<li><p>else</p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Una <span class="blue">NonEmptyTransition</span> associata alla disponibilità di un messaggio
+distingue tra i diversi
+<a class="reference internal" href="#dichiarazione-dei-messaggi"><span class="std std-ref">tipi di messaggio</span></a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>InputTransition    : MsgTransSwitch | RequestTransSwitch |  ReplyTransSwitch |
+                     EventTransSwitch | InterruptTranSwitch ;
+
+MsgTransSwitch     : &quot;whenMsg&quot;     message=[Dispatch]
+                      (&quot;and&quot;  guard=AnyAction  )?  &quot;-&gt;&quot;  targetState=[State]  ;
+RequestTransSwitch : &quot;whenRequest&quot; message=[Request]
+                      (&quot;and&quot;  guard=AnyAction  )?  &quot;-&gt;&quot;  targetState=[State]  ;
+ReplyTransSwitch   : &quot;whenReply&quot;   message=[Reply]
+                      (&quot;and&quot;  guard=AnyAction  )?  &quot;-&gt;&quot;  targetState=[State]  ;
+EventTransSwitch   : &quot;whenEvent&quot;   message=[Event]
+                      (&quot;and&quot;  guard=AnyAction  )?  &quot;-&gt;&quot;  targetState=[State]  ;
+InterruptTranSwitch: &quot;whenInterrupt&quot;   message=[Dispatch]
+                      (&quot;and&quot;  guard=AnyAction  )?  &quot;-&gt;&quot;  targetState=[State]  ;
+</pre></div>
+</div>
+<section id="wheninterrupt">
+<h4>whenInterrupt<a class="headerlink" href="#wheninterrupt" title="Permalink to this heading">¶</a></h4>
+<p>Esegue la transzione da uno stato <code class="docutils literal notranslate"><span class="pre">SA</span></code> a uno stato <code class="docutils literal notranslate"><span class="pre">SB</span></code>, con ritorno allo stato <code class="docutils literal notranslate"><span class="pre">SA</span></code>,
+quando <code class="docutils literal notranslate"><span class="pre">SB</span></code> esegue l’istruzione qak
+<a class="reference internal" href="#operazioni-di-ritorno-da-interruzione"><span class="std std-ref">returnFromInterrupt</span></a>.</p>
+</section>
+<section id="timeout-per-transizioni">
+<h4>Timeout per transizioni<a class="headerlink" href="#timeout-per-transizioni" title="Permalink to this heading">¶</a></h4>
+<p>Per evitare una attesa indefinita di messaggi in uno stato, è poosibile associare alla transizione un <span class="blue">timeout</span>
+(come un numero naturale in <em>msec</em>)
+scaduto il quale l’automa transita nello stato specificato.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Timeout</span>            <span class="p">:</span> <span class="n">TimeoutInt</span> <span class="o">|</span> <span class="n">TimeoutVar</span> <span class="o">|</span> <span class="n">TimeoutSol</span> <span class="o">|</span> <span class="n">TimeoutVarRef</span><span class="p">;</span>
+<span class="n">TimeoutInt</span>         <span class="p">:</span> <span class="s2">&quot;whenTime&quot;</span>    <span class="n">msec</span><span class="o">=</span><span class="n">INT</span>  <span class="s2">&quot;-&gt;&quot;</span> <span class="n">targetState</span> <span class="o">=</span> <span class="p">[</span><span class="n">State</span><span class="p">]</span>  <span class="p">;</span>
+<span class="n">TimeoutVar</span>         <span class="p">:</span> <span class="s2">&quot;whenTimeVar&quot;</span>    <span class="n">variable</span>   <span class="o">=</span> <span class="n">Variable</span>    <span class="s2">&quot;-&gt;&quot;</span> <span class="n">targetState</span> <span class="o">=</span> <span class="p">[</span><span class="n">State</span><span class="p">]</span>  <span class="p">;</span>
+<span class="n">TimeoutVarRef</span>      <span class="p">:</span> <span class="s2">&quot;whenTimeVarRef&quot;</span> <span class="n">refvar</span>     <span class="o">=</span> <span class="n">VarRef</span>      <span class="s2">&quot;-&gt;&quot;</span> <span class="n">targetState</span> <span class="o">=</span> <span class="p">[</span><span class="n">State</span><span class="p">]</span>  <span class="p">;</span>
+<span class="n">TimeoutSol</span>         <span class="p">:</span> <span class="s2">&quot;whenTimeSol&quot;</span>    <span class="n">refsoltime</span> <span class="o">=</span> <span class="n">VarSolRef</span>   <span class="s2">&quot;-&gt;&quot;</span> <span class="n">targetState</span> <span class="o">=</span> <span class="p">[</span><span class="n">State</span><span class="p">]</span>  <span class="p">;</span>
+</pre></div>
+</div>
+<p>Lo scadere del tempo indicato in <span class="blue">whenTime</span> (regola <code class="docutils literal notranslate"><span class="pre">TimeoutInt</span></code>) provoca l’emissione di un <strong>evento</strong>,
+con indentificatore
+<code class="docutils literal notranslate"><span class="pre">local_tout_actorname_state</span></code> ove <code class="docutils literal notranslate"><span class="pre">actorname</span></code> è il nome dell’attore e <code class="docutils literal notranslate"><span class="pre">state</span></code> è  il nome dello stato corrente</p>
+<p>Le forme che si aggiungono a <code class="docutils literal notranslate"><span class="pre">TimeoutInt</span></code> sono utili in situazioni in cui il tempo non sia noto a priori,
+ma derivi da elaborazioni.</p>
+</section>
+</section>
+</section>
+<section id="comportamento-di-un-attore">
+<h2>Comportamento di un attore<a class="headerlink" href="#comportamento-di-un-attore" title="Permalink to this heading">¶</a></h2>
+<p>Prima di illustrare cosa un attore qak può fare, è importante sottolienare che:</p>
+<ul class="simple">
+<li><p>un attore qak <span class="slide2">non dispone di una operazione receive bloccante</span></p></li>
+</ul>
+<p>La ragione è dovuta al comportamento <em>message-driven</em> dell’attore.</p>
+<p>Infatti, il <strong>comportamento di base</strong> di un attore qak è definito dalla classe  <a class="reference internal" href="#it-unibo-kactor-actorbasic-kt"><span class="std std-ref">it.unibo.kactor.ActorBasic.kt</span></a>
+che gestisce i messaggi disponibili sulla <a class="reference internal" href="#qakactors24-lattore"><span class="std std-ref">msgQueue dell’attore</span></a> in modo FIFO;
+l’attore qak di base opera quindi in modo <span class="slidekp">message-driven</span> utilizzando un <a class="reference internal" href="#actor-channel"><span class="std std-ref">canale Kotlin</span></a>.</p>
+<blockquote>
+<div><a class="reference internal image-reference" href="_images/ActorBasic.png"><img alt="_images/ActorBasic.png" class="align-center" src="_images/ActorBasic.png" style="width: 50%;" /></a>
+</div></blockquote>
+<p>L’attore che  specializza <a class="reference internal" href="#it-unibo-kactor-actorbasicfsm-kt"><span class="std std-ref">it.unibo.kactor.ActorBasicFsm.kt</span></a>
+opera invece come un <span class="slidekp">automa di Moore</span> <a class="reference internal" href="Principi.html#automi-a-stati-finiti"><span class="std std-ref">a stati finiti</span></a> ,
+gestendo i messaggi ricevuti sul <a class="reference internal" href="KotlinNotes.html#i-canali"><span class="std std-ref">canale Kotlin</span></a>
+ereditato da <a class="reference internal" href="#it-unibo-kactor-actorbasic-kt"><span class="std std-ref">ActorBasic</span></a> non in modo FIFO,
+ma <span class="remark">in funzione dello suo stato corrente</span>.</p>
+<p>Un attore qak ha un comportamento autonomo e quindi, una volta attivato
+dalla <a class="reference internal" href="#qak-infrastructure"><span class="std std-ref">Qak infrastructure</span></a> con un messaggio iniziale di ‘start’,
+può eseguire azioni anche ignorando eventuali altri messaggi sulla sua coda di input.</p>
+<p>Normalmente però, un attore qak può entrare in specifici stati elaborativi se sulla sua
+coda di input sono presenti messaggi di un certo tipo. Vediamo come.</p>
+<section id="la-gestione-dei-messaggi">
+<h3>La gestione dei messaggi<a class="headerlink" href="#la-gestione-dei-messaggi" title="Permalink to this heading">¶</a></h3>
+<ol class="arabic">
+<li><p>ogni attore possiede, oltre alla coda dei messaggi principale <a class="reference internal" href="#qakactors24-lattore"><span class="std std-ref">msgQueue</span></a> , una seconda coda <code class="docutils literal notranslate"><span class="pre">msgQueueStore</span></code>
+in cui memorizza messaggi (di tipo <strong>request</strong> e <strong>dispatch</strong>) non elaborati;</p></li>
+<li><p>uno stato è di norma associato a un insieme di transizioni <span class="slide3">TSET</span>, ciascuna delle quali speciifca  lo stato futuro,
+in corrispondenza a un messaggio con uno specifico identificatore <code class="docutils literal notranslate"><span class="pre">msgId</span></code>;</p></li>
+<li><p>al termine delle sue azioni, lo stato corrente dell’attore qak consulta, <span class="slidekp">nell’ordine</span>, le sue code
+<code class="docutils literal notranslate"><span class="pre">msgQueueStore</span></code> e <code class="docutils literal notranslate"><span class="pre">msgQueue</span></code>, ciascuna in modo FIFO;</p></li>
+<li><p>se l’identificatore del messaggio prelevato da una coda è uguale al <code class="docutils literal notranslate"><span class="pre">msgId</span></code> di una qualche transizione in <span class="slide3">TSET</span>,
+quella transizione è attivabile; in caso contrario, il messaggio ‘esaminato’ viene lasciato dove è se era nella coda
+<code class="docutils literal notranslate"><span class="pre">msgQueueStore</span></code>, oppure, se è un messaggio di tipo  <strong>request</strong> o <strong>dispatch</strong> prelevato dalla coda principale
+<code class="docutils literal notranslate"><span class="pre">msgQueue</span></code>,  viene  depositato in fondo alla coda <code class="docutils literal notranslate"><span class="pre">msgQueueStore</span></code>.</p>
+<p>Un messaggio di tipo <span class="remark">event</span> il cui
+identificatore non compare in <span class="slide3">TSET</span>, viene <span class="slidekp">scartato</span> (e quindi ignorato e dimenticato);</p>
+</li>
+<li><p>appena lo stato corrente trova una transizione attivabile,; passa  il controllo allo stato futuro
+specificato da questa transizione;</p></li>
+<li><p>se nessuna transizione è attivabile, l’attore qak rimane nello stato corrente; all’arrivo di un nuovo
+messaggio, si riprende ad eseguire il punto <span class="slide3">3</span>.</p></li>
+</ol>
+</section>
+<section id="variabili-e-riferimenti">
+<h3>Variabili e riferimenti<a class="headerlink" href="#variabili-e-riferimenti" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Variable</span><span class="p">:</span>  <span class="n">varName</span><span class="o">=</span> <span class="n">VARID</span> <span class="p">;</span>
+
+<span class="o">//</span><span class="n">USING</span> <span class="nb">vars</span> <span class="p">(</span><span class="kn">from</span> <span class="nn">solve</span> <span class="ow">or</span> <span class="kn">from</span> <span class="nn">code</span><span class="p">)</span>
+<span class="n">VarRef</span>      <span class="p">:</span> <span class="s2">&quot;$&quot;</span> <span class="n">varName</span><span class="o">=</span> <span class="n">VARID</span> <span class="p">;</span>
+<span class="n">VarRefInStr</span> <span class="p">:</span> <span class="s2">&quot;#&quot;</span> <span class="n">varName</span><span class="o">=</span> <span class="n">VARID</span> <span class="p">;</span>
+<span class="n">VarSolRef</span>   <span class="p">:</span> <span class="s2">&quot;@&quot;</span> <span class="n">varName</span><span class="o">=</span> <span class="n">VARID</span> <span class="p">;</span>
+</pre></div>
+</div>
+</td>
+<td><p>I simboli <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">#</span> <span class="pre">&#64;</span></code> sono <a class="reference internal" href="#notazioni-shortcut"><span class="std std-ref">Notazioni Shortcut</span></a> per l’accesso al valore di
+variabili i cui nomi iniziano con una <span class="slidekp">lettera MAIUSCOLA</span></p></td>
+</tr>
+</tbody>
+</table>
+<section id="notazioni-shortcut">
+<h4>Notazioni Shortcut<a class="headerlink" href="#notazioni-shortcut" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Notazione <span class="slide3">$</span> Kotlin-like per accesso al valore di una variabile entro una String</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">VarRef</span> <span class="p">:</span> <span class="s2">&quot;$&quot;</span> <span class="n">varName</span><span class="o">=</span> <span class="n">VARID</span> <span class="p">;</span>
+</pre></div>
+</div>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">Esempio</span><span class="p">:</span>
+<span class="p">[</span><span class="c1"># var N = 0 #]            //Instruzione Kotlin</span>
+<span class="n">println</span><span class="p">(</span><span class="s2">&quot;Valore di N=$N&quot;</span><span class="p">)</span>  <span class="o">//</span><span class="n">Frase</span> <span class="n">qak</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>Notazione <span class="slide3">#</span> per accesso al valore in forma di String
+al vslore di una variabile della soluzione di una dimostrazione logica</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">VarRefInStr</span> <span class="p">:</span> <span class="s2">&quot;#&quot;</span> <span class="n">varName</span><span class="o">=</span> <span class="n">VARID</span> <span class="p">;</span>
+</pre></div>
+</div>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>//Equivale a:
+${ getCurSol(&quot;&lt;VARID&gt;&quot;).toString() }
+
+// Esempio:
+solve(move(M));println( #M )
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Notazione <span class="slide3">&#64;</span> per accesso al vslore
+di una variabile della soluzione di una dimostrazione logica</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">VarSolRef</span>   <span class="p">:</span> <span class="s2">&quot;@&quot;</span> <span class="n">varName</span><span class="o">=</span> <span class="n">VARID</span> <span class="p">;</span>
+</pre></div>
+</div>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span><span class="n">Equivale</span> <span class="n">a</span><span class="p">:</span>
+<span class="n">getCurSol</span><span class="p">(</span><span class="s2">&quot;&lt;VARID&gt;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">toString</span><span class="p">()</span>
+
+<span class="o">//</span> <span class="n">Esempio</span><span class="p">:</span>
+<span class="n">solve</span><span class="p">(</span><span class="n">move</span><span class="p">(</span><span class="n">M</span><span class="p">));</span> <span class="n">doMove</span><span class="p">(</span> <span class="nd">@M</span> <span class="p">)</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="azioni-di-un-attore">
+<h3>Azioni di un attore<a class="headerlink" href="#azioni-di-un-attore" title="Permalink to this heading">¶</a></h3>
+<p>Una volta entrato in un particolare stato computazionale, un attore qak può eseguire una sequenza di azioni
+di ‘alto livello’ espresse in linguaggio qak oppure di ‘basso livello’ espresse direttemante in Kotlin.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">StateAction</span><span class="p">:</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span> <span class="n">AnyAction</span> <span class="o">|</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span> <span class="n">Forward</span><span class="o">|</span><span class="n">Demand</span><span class="o">|</span><span class="n">Answer</span><span class="o">|</span><span class="n">ReplyReq</span><span class="o">|</span><span class="n">AutoMsg</span><span class="o">|</span><span class="n">AutoRequest</span><span class="o">|</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span> <span class="n">MsgCond</span> <span class="o">|</span> <span class="n">GuardedStateAction</span> <span class="o">|</span>    <span class="n">IfSolvedAction</span> <span class="o">|</span>
+<span class="o">/*</span><span class="mi">4</span><span class="o">*/</span> <span class="n">MqttConnect</span> <span class="o">|</span> <span class="n">Publish</span> <span class="o">|</span> <span class="n">Subscribe</span> <span class="o">|</span> <span class="n">SubscribeTopic</span><span class="o">|</span>
+<span class="o">/*</span><span class="mi">5</span><span class="o">*/</span> <span class="n">Emit</span> <span class="o">|</span>  <span class="n">EmitLocal</span> <span class="o">|</span>  <span class="n">EmitLocalStream</span> <span class="o">|</span>
+<span class="o">/*</span><span class="mi">6</span><span class="o">*/</span> <span class="n">UpdateResource</span> <span class="o">|</span>  <span class="n">ObserveResource</span>  <span class="o">|</span>
+<span class="o">/*</span><span class="mi">7</span><span class="o">*/</span> <span class="n">Delegate</span> <span class="o">|</span>  <span class="n">DelegateCurrent</span>       <span class="o">|</span>
+<span class="o">/*</span><span class="mi">8</span><span class="o">*/</span> <span class="n">SolveGoal</span> <span class="o">|</span>
+<span class="o">/*</span><span class="mi">9</span><span class="o">*/</span> <span class="n">CreateQActor</span> <span class="o">|</span> <span class="n">ExecResult</span> <span class="o">|</span>
+<span class="o">/*</span><span class="mi">10</span><span class="o">*/</span> <span class="n">ReturnFromInterrupt</span> <span class="o">|</span>
+<span class="o">/*</span><span class="mi">11</span><span class="o">*/</span> <span class="n">CodeRunSimple</span> <span class="o">|</span> <span class="n">CodeRunActor</span> <span class="o">|</span> <span class="n">MachineExec</span>       <span class="o">|</span>
+<span class="o">/*</span><span class="mi">12</span><span class="o">*/</span> <span class="n">Print</span> <span class="o">|</span> <span class="n">PrintCurMsg</span> <span class="o">|</span> <span class="n">DiscardMsg</span> <span class="o">|</span>
+<span class="o">/*</span><span class="mi">13</span><span class="o">*/</span>  <span class="n">DelayInt</span>  <span class="o">|</span> <span class="n">MemoTime</span> <span class="o">|</span> <span class="n">Duration</span> <span class="o">|</span>
+<span class="o">/*</span><span class="mi">14</span><span class="o">*/</span> <span class="n">EndActor</span> <span class="o">|</span>
+</pre></div>
+</div>
+</td>
+<td><ol class="arabic simple">
+<li><p><a class="reference internal" href="#anyaction"><span class="std std-ref">Azioni kotlin</span></a></p></li>
+<li><p><a class="reference internal" href="#operazioni-di-messaggista-punto-a-punto"><span class="std std-ref">Operazioni di messaggista punto a punto</span></a></p></li>
+<li><p><a class="reference internal" href="#azioni-condizionali"><span class="std std-ref">Azioni condizionali</span></a></p></li>
+<li><p><a class="reference internal" href="#operazioni-di-messaggista-publisch-subscribe"><span class="std std-ref">Operazioni di messaggista publisch-subscribe</span></a></p></li>
+<li><p><a class="reference internal" href="#operazioni-relative-agli-eventi"><span class="std std-ref">Operazioni relative agli eventi</span></a></p></li>
+<li><p><a class="reference internal" href="#operazioni-relative-alla-osservabilita"><span class="std std-ref">Operazioni relative alla osservabilità</span></a></p></li>
+<li><p><a class="reference internal" href="#operazioni-di-delegazione"><span class="std std-ref">Operazioni di delegazione</span></a></p></li>
+<li><p><a class="reference internal" href="#operazioni-per-le-basi-di-conoscenza"><span class="std std-ref">Operazioni per le basi di conoscenza</span></a></p></li>
+<li><p><a class="reference internal" href="#operazioni-di-creazione-di-attori"><span class="std std-ref">Operazioni di creazione di attori</span></a></p></li>
+<li><p><a class="reference internal" href="#operazioni-di-ritorno-da-interruzione"><span class="std std-ref">Operazioni di ritorno da interruzione</span></a></p></li>
+<li><p><a class="reference internal" href="#operazioni-per-esecuzione-di-codice"><span class="std std-ref">Operazioni per esecuzione di codice</span></a></p></li>
+<li><p><a class="reference internal" href="#operazioni-di-utilita"><span class="std std-ref">Operazioni di utilità</span></a></p></li>
+<li><p><a class="reference internal" href="#operazioni-con-il-tempo"><span class="std std-ref">Operazioni con il tempo</span></a></p></li>
+<li><p><a class="reference internal" href="#operazioni-di-terminazione"><span class="std std-ref">Operazioni di terminazione</span></a></p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+<section id="anyaction">
+<h4>AnyAction<a class="headerlink" href="#anyaction" title="Permalink to this heading">¶</a></h4>
+<p>Le azioni esprimibili nel linguaggio qak
+non danno un linguaggio computazionalemte completo.</p>
+<p>Pertanto, volendo rendere eseguibile un modello qak, si introduce la possibilità
+che un attore qak possa esprimere una qualunque sequenza di azioni scritte in Kotlin.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">AnyAction</span> <span class="p">:</span> <span class="s2">&quot;[&quot;</span> <span class="n">body</span><span class="o">=</span><span class="n">KCODE</span> <span class="s2">&quot;]&quot;</span>  <span class="p">;</span>
+
+<span class="n">terminal</span> <span class="n">KCODE</span>  <span class="p">:</span> <span class="s1">&#39;#&#39;</span> <span class="p">(</span> <span class="o">.</span> <span class="p">)</span><span class="o">*</span> <span class="s1">&#39;#&#39;</span>  <span class="p">;</span>
+</pre></div>
+</div>
+</td>
+<td><p><span class="slide3">[# … #]</span>: Specifica di codice Kotlin.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="operazioni-di-messaggista-punto-a-punto">
+<h4>Operazioni di messaggista punto a punto<a class="headerlink" href="#operazioni-di-messaggista-punto-a-punto" title="Permalink to this heading">¶</a></h4>
+<p>Le operazioni di invio messaggio sono le seguenti:</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Forward</span><span class="p">:</span> <span class="s2">&quot;forward&quot;</span> <span class="n">dest</span><span class="o">=</span><span class="p">[</span><span class="n">QActorDeclaration</span><span class="p">]</span>
+          <span class="s2">&quot;-m&quot;</span> <span class="n">msgref</span><span class="o">=</span><span class="p">[</span><span class="n">Dispatch</span><span class="p">]</span> <span class="s2">&quot;:&quot;</span> <span class="n">val</span><span class="o">=</span><span class="n">PHead</span><span class="p">;</span>
+</pre></div>
+</div>
+</td>
+<td><p><span class="slide3">forward</span>: Invio di Dispatch.</p></td>
+</tr>
+<tr class="row-even"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Demand</span><span class="p">:</span> <span class="s2">&quot;request&quot;</span> <span class="n">dest</span><span class="o">=</span><span class="p">[</span><span class="n">QActorDeclaration</span><span class="p">]</span>
+          <span class="s2">&quot;-m&quot;</span> <span class="n">msgref</span><span class="o">=</span><span class="p">[</span><span class="n">Request</span><span class="p">]</span> <span class="s2">&quot;:&quot;</span> <span class="n">val</span><span class="o">=</span><span class="n">PHead</span><span class="p">;</span>
+</pre></div>
+</div>
+</td>
+<td><p><span class="slide3">request</span>. Invio di Request.</p></td>
+</tr>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Answer: &quot;replyTo&quot; reqref=[Request]
+       (&quot;ofsender&quot; sender=VarRef)?
+       &quot;with&quot;  msgref=[Reply]
+       &quot;:&quot; val=PHead
+       (&quot;caller==&quot; dest=[QActorDeclaration])?;
+</pre></div>
+</div>
+</td>
+<td><p><span class="slide3">replyTo</span>. Invio di Reply a una Request.</p></td>
+</tr>
+<tr class="row-even"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ReplyReq  : &quot;ask&quot;  reqref=[Request]
+  &quot;:&quot; val = PHead
+  &quot;forrequest&quot; msgref=[Request]
+  ( &quot;caller==&quot; dest=[QActorDeclaration])?;
+</pre></div>
+</div>
+</td>
+<td><p><span class="slide3">ask</span>. Invio di Request a un attore che ha fatto una Request.</p></td>
+</tr>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">AutoMsg</span><span class="p">:</span> <span class="s2">&quot;autodispatch&quot;</span> <span class="n">msgref</span><span class="o">=</span><span class="p">[</span><span class="n">Dispatch</span><span class="p">]</span>
+  <span class="s2">&quot;:&quot;</span> <span class="n">val</span> <span class="o">=</span> <span class="n">PHead</span> <span class="p">;</span>
+
+<span class="n">AutoRequest</span><span class="p">:</span> <span class="s2">&quot;autorequest&quot;</span>  <span class="n">msgref</span><span class="o">=</span><span class="p">[</span><span class="n">Request</span><span class="p">]</span>
+  <span class="s2">&quot;:&quot;</span> <span class="n">val</span> <span class="o">=</span> <span class="n">PHead</span> <span class="p">;</span>
+</pre></div>
+</div>
+</td>
+<td><p><span class="slide3">autodispatch</span>. Invio di Dispatch di un attore a sè stesso.</p>
+<p><span class="slide3">autorequest</span>. Invio di Request di un attore a sè stesso.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="azioni-condizionali">
+<h4>Azioni condizionali<a class="headerlink" href="#azioni-condizionali" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>MsgCond: &quot;onMsg&quot; &quot;(&quot; message=[Message]
+     &quot;:&quot; msg = PHead &quot;)&quot;
+     &quot;{&quot; ( condactions += StateAction )*  &quot;}&quot;
+     (&quot;else&quot; ifnot = NoMsgCond )? ;
+
+NoMsgCond:
+&quot;{&quot; (  notcondactions += StateAction )*  &quot;}&quot;;
+</pre></div>
+</div>
+</td>
+<td><p><span class="slide3">onMsg</span>. Utilizza  unificazione  Prolog.</p></td>
+</tr>
+<tr class="row-even"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>GuardedStateAction :
+  &quot;if&quot; guard = AnyAction &quot;{&quot;
+   ( okactions += StateAction )*
+  &quot;}&quot;
+                                (&quot;else&quot; &quot;{&quot;
+   ( koactions += StateAction )*
+   &quot;}&quot; )?;
+</pre></div>
+</div>
+</td>
+<td><p><span class="slide3">if else</span></p></td>
+</tr>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>IfSolvedAction: &quot;ifSolved&quot; &quot;{&quot;
+ ( solvedactions += StateAction )*  &quot;}&quot;
+                               (&quot;else&quot;  &quot;{&quot;
+  ( notsolvedactions += StateAction )*
+  &quot;}&quot;)?;
+</pre></div>
+</div>
+</td>
+<td><p><span class="slide3">ifSolved</span></p></td>
+</tr>
+</tbody>
+</table>
+<p>Supponiamo di avere un messaggio dichiarato come segue:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Dispatch</span> <span class="n">m</span> <span class="p">:</span> <span class="n">m</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">Z</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="payloadarg">
+<h4>payloadArg<a class="headerlink" href="#payloadarg" title="Permalink to this heading">¶</a></h4>
+<p>Lo stato relativo alla elaborazione di tale messaggio potrebbe voler accedere a un argomento
+specifico del suo payload.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>In tal caso si può usare la primitiva <span class="blue">onMsg</span> e la
+funzione  <code class="docutils literal notranslate"><span class="pre">payloadArg(N)</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">onMsg</span><span class="p">(</span> <span class="n">m</span> <span class="p">:</span> <span class="n">m</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">Z</span><span class="p">)</span> <span class="p">){</span>
+  <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$payloadArg(1)&quot;</span><span class="p">)</span>  <span class="o">//</span><span class="n">stampa</span> <span class="n">Y</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><p><span class="blue">payloadArg(N)</span></p>
+<p>Restituisce l’argomento di ordine N (convertito in  String) del payload di un messaggio.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="operazioni-di-messaggista-publisch-subscribe">
+<h4>Operazioni di messaggista publisch-subscribe<a class="headerlink" href="#operazioni-di-messaggista-publisch-subscribe" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MqttConnect</span><span class="p">:</span> <span class="s2">&quot;connectToMqttBroker&quot;</span> <span class="n">brokerAddr</span><span class="o">=</span><span class="n">STRING</span><span class="p">;</span>
+</pre></div>
+</div>
+</td>
+<td><p><span class="slide3">connectToMqttBroker</span>. Connessione a Broker MQTT.</p></td>
+</tr>
+<tr class="row-even"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Publish</span><span class="p">:</span> <span class="s2">&quot;publish&quot;</span>  <span class="n">topic</span><span class="o">=</span><span class="n">STRING</span>
+           <span class="s2">&quot;-m&quot;</span> <span class="n">msgref</span><span class="o">=</span><span class="p">[</span><span class="n">Event</span><span class="p">]</span> <span class="s2">&quot;:&quot;</span> <span class="n">val</span><span class="o">=</span><span class="n">PHead</span><span class="p">;</span>
+</pre></div>
+</div>
+</td>
+<td><p><span class="slide3">publish</span>. Pubblicazione  su topic MQTT.</p></td>
+</tr>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SubscribeTopic</span><span class="p">:</span> <span class="s2">&quot;subscribe&quot;</span> <span class="n">topic</span><span class="o">=</span><span class="n">STRING</span><span class="p">;</span>
+</pre></div>
+</div>
+</td>
+<td><p><span class="slide3">subscribe</span>. Sottoscrizione  a topic MQTT.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="operazioni-relative-agli-eventi">
+<h4>Operazioni relative agli eventi<a class="headerlink" href="#operazioni-relative-agli-eventi" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Emit</span><span class="p">:</span> <span class="s2">&quot;emit&quot;</span> <span class="n">msgref</span><span class="o">=</span><span class="p">[</span><span class="n">Event</span><span class="p">]</span> <span class="s2">&quot;:&quot;</span> <span class="n">val</span><span class="o">=</span><span class="n">PHead</span><span class="p">;</span>
+</pre></div>
+</div>
+</td>
+<td><p><span class="slide3">emit</span>. Emissione di un evento globale.</p></td>
+</tr>
+<tr class="row-even"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">EmitDelayed</span><span class="p">:</span> <span class="s2">&quot;emitdelayed&quot;</span> <span class="n">msgref</span><span class="o">=</span><span class="p">[</span><span class="n">Event</span><span class="p">]</span>
+             <span class="s2">&quot;:&quot;</span> <span class="n">val</span><span class="o">=</span><span class="n">PHead</span>
+             <span class="n">delay</span><span class="o">=</span><span class="n">Delay</span><span class="p">;</span>
+</pre></div>
+</div>
+</td>
+<td><p><span class="slide3">emitdelayed</span>. Emissione di un evento dopo un dato tempo. <span class="slidekp">TODO</span></p></td>
+</tr>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">EmitLocal</span><span class="p">:</span> <span class="s2">&quot;emitlocal&quot;</span>
+               <span class="n">msgref</span><span class="o">=</span><span class="p">[</span><span class="n">Event</span><span class="p">]</span> <span class="s2">&quot;:&quot;</span> <span class="n">val</span><span class="o">=</span><span class="n">PHead</span><span class="p">;</span>
+</pre></div>
+</div>
+</td>
+<td><p><span class="slide3">emit</span>. Emissione di un evento locale .</p></td>
+</tr>
+<tr class="row-even"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">EmitLocalStream</span><span class="p">:</span> <span class="s2">&quot;emitlocalstream&quot;</span>
+        <span class="n">msgref</span><span class="o">=</span><span class="p">[</span><span class="n">Event</span><span class="p">]</span> <span class="s2">&quot;:&quot;</span> <span class="n">val</span> <span class="o">=</span> <span class="n">PHead</span><span class="p">;</span>
+</pre></div>
+</div>
+</td>
+<td><p><span class="slide3">emit</span>. Emissione di un evento stream.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="operazioni-relative-alla-osservabilita">
+<h4>Operazioni relative alla osservabilità<a class="headerlink" href="#operazioni-relative-alla-osservabilita" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">UpdateResource</span><span class="p">:</span> <span class="s2">&quot;updateResource&quot;</span>  <span class="n">val</span><span class="o">=</span><span class="n">AnyAction</span><span class="p">;</span>
+</pre></div>
+</div>
+</td>
+<td><p><span class="slide3">updateResource</span>.</p></td>
+</tr>
+<tr class="row-even"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ObserveResource: &quot;observeResource&quot;
+        resource=[QActorDeclaration]
+        (&quot;_&quot; suffix=STRING)?
+        (&quot;msgid&quot; msgid=[Dispatch] )?;
+</pre></div>
+</div>
+</td>
+<td><p><span class="slide3">observeResource</span>.</p></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><p>L’informazione emessa un <em>observable</em> mediante  <code class="docutils literal notranslate"><span class="pre">updateResource</span></code> sono gestite
+dalla <a class="reference internal" href="#qak-infrastructure"><span class="std std-ref">Qak infrastructure</span></a> inviando a ciascun <em>observer</em> il dispatch che l’<em>observer</em> stesso ha dichiarato
+(campo opzionale <code class="docutils literal notranslate"><span class="pre">msgid</span></code>) di voler usare per ricevere l’informazione.</p></li>
+<li><p>Se l’<em>observer</em> non dichiara <strong>alcun dispatch</strong>,** il nome usato dalla <a class="reference internal" href="#qak-infrastructure"><span class="std std-ref">Qak infrastructure</span></a> è <code class="docutils literal notranslate"><span class="pre">coapinfo</span></code>.</p></li>
+</ul>
+</section>
+<section id="operazioni-di-delegazione">
+<h4>Operazioni di delegazione<a class="headerlink" href="#operazioni-di-delegazione" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Delegate</span> <span class="p">:</span> <span class="s2">&quot;delegate&quot;</span>
+    <span class="n">msg</span><span class="o">=</span><span class="p">[</span><span class="n">BasicMessage</span><span class="p">]</span> <span class="s2">&quot;to&quot;</span> <span class="n">localactor</span><span class="o">=</span><span class="p">[</span><span class="n">QActor</span><span class="p">];</span>
+</pre></div>
+</div>
+</td>
+<td><p><span class="slide3">delegate</span>.</p></td>
+</tr>
+<tr class="row-even"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DelegateCurrent</span><span class="p">:</span> <span class="s2">&quot;delegateCurrentMsgTo&quot;</span> <span class="n">localactor</span><span class="o">=</span><span class="p">[</span><span class="n">QActor</span><span class="p">];</span>
+</pre></div>
+</div>
+</td>
+<td><p><span class="slide3">delegateCurrentMsgTo</span>.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="operazioni-per-le-basi-di-conoscenza">
+<h4>Operazioni per le basi di conoscenza<a class="headerlink" href="#operazioni-per-le-basi-di-conoscenza" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 38%" />
+<col style="width: 62%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Dimostrazione goal Prolog</p></td>
+<td><ul>
+<li><p><span class="slide3">solve</span>.</p>
+<p>Si veda <a class="reference external" href="./_static/LabQakPrologUsage2021.htmlLabQakPrologUsage2021.html#builinops">PrologOps</a> (html)</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="operazioni-di-creazione-di-attori">
+<h4>Operazioni di creazione di attori<a class="headerlink" href="#operazioni-di-creazione-di-attori" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 55%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>CreateQActor: &quot;create&quot;
+  executor=[QActorDeclaration]
+  (&quot;_&quot; suffix=STRING)?
+  (confined=&quot;confined&quot;)?
+  (outinforeply=OutInforReply)?
+  (outinfoevent=OutInfoevent)? ;
+
+OutInforReply: &quot;requestbycreator&quot;
+  msgref=[Request]  &quot;:&quot; val = PHead ;
+OutInfoevent: &quot;emitforcreator&quot;
+  msgref=[Event] ;//&quot;:&quot; val = PHead   ;
+ExecResult: &quot;execresultReplyTo&quot;
+  reqref=[Request]
+  &quot;with&quot;  msgref=[Reply]
+  &quot;:&quot; val = PHead ;
+</pre></div>
+</div>
+</td>
+<td><ul class="simple">
+<li><p><span class="slide3">create</span>:  todo</p></li>
+<li><p><span class="slide3">requestbycreator</span>:     todo</p></li>
+<li><p><span class="slide3">emitforcreator</span>:    todo</p></li>
+<li><p><span class="slide3">execresultReplyTo</span>:    todo</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="operazioni-di-ritorno-da-interruzione">
+<h4>Operazioni di ritorno da interruzione<a class="headerlink" href="#operazioni-di-ritorno-da-interruzione" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 55%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ReturnFromInterrupt:
+    &quot;returnFromInterrupt&quot; memo=STRING?;
+</pre></div>
+</div>
+</td>
+<td><p><span class="slidekp">memo TODO</span></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="operazioni-per-esecuzione-di-codice">
+<h4>Operazioni per esecuzione di codice<a class="headerlink" href="#operazioni-per-esecuzione-di-codice" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 55%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>CodeRunSimple : &quot;run&quot; bitem=QualifiedName
+   &quot;(&quot;
+      (args+=PHead (&quot;,&quot; args+=PHead)* )?
+   &quot;)&quot;;
+</pre></div>
+</div>
+</td>
+<td><p><span class="slide3">run</span>: <code class="docutils literal notranslate"><span class="pre">run</span> <span class="pre">ccc.xxx()</span></code></p>
+<p>invoca  il metodo <em>static</em> <code class="docutils literal notranslate"><span class="pre">xxx</span></code> della classe <code class="docutils literal notranslate"><span class="pre">ccc</span></code>.
+Esecuzione codice esterno</p>
+</td>
+</tr>
+<tr class="row-even"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MachineExec</span><span class="p">:</span> <span class="s2">&quot;machineExec&quot;</span> <span class="n">action</span><span class="o">=</span><span class="n">STRING</span> <span class="p">;</span>
+</pre></div>
+</div>
+</td>
+<td><p><span class="slide3">machineExec</span>:  <code class="docutils literal notranslate"><span class="pre">machineExec(cmd:string)</span></code></p>
+<p>Esecuzione codice di sistema locale</p>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>CodeRunActor: &quot;qrun&quot;
+  aitem=QualifiedName
+  &quot;(&quot;
+      &quot;myself&quot; ( &quot;,&quot; args+=PHead (&quot;,&quot; args+=PHead)* )?
+  &quot;)&quot;;
+</pre></div>
+</div>
+</td>
+<td><p><span class="slide3">qrun</span> : <code class="docutils literal notranslate"><span class="pre">qrun</span> <span class="pre">ccc.xxx()</span></code></p>
+<p>invoca  il metodo <em>static</em>  <code class="docutils literal notranslate"><span class="pre">xxx</span></code> della classe <code class="docutils literal notranslate"><span class="pre">ccc</span></code>. Il
+metodo deve avere come primo argomento un riferimento all’attore corrente (<strong>myself</strong>).</p>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="operazioni-con-il-tempo">
+<h4>Operazioni con il tempo<a class="headerlink" href="#operazioni-con-il-tempo" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 55%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Delay</span><span class="p">:</span> <span class="n">DelayInt</span> <span class="o">|</span> <span class="n">DelayVar</span> <span class="o">|</span> <span class="n">DelayVref</span> <span class="o">|</span> <span class="n">DelaySol</span> <span class="p">;</span>
+
+<span class="n">DelayInt</span> <span class="p">:</span> <span class="s2">&quot;delay&quot;</span> <span class="n">time</span><span class="o">=</span><span class="n">INT</span> <span class="p">;</span>
+</pre></div>
+</div>
+</td>
+<td><p><span class="slide3">delay</span></p></td>
+</tr>
+<tr class="row-even"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MemoTime</span><span class="p">:</span> <span class="s2">&quot;memoCurrentTime&quot;</span> <span class="n">store</span><span class="o">=</span><span class="n">VARID</span> <span class="p">;</span>
+</pre></div>
+</div>
+</td>
+<td><p><span class="slide3">memoCurrentTime</span></p></td>
+</tr>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Duration</span><span class="p">:</span> <span class="s2">&quot;setDuration&quot;</span>
+     <span class="n">store</span><span class="o">=</span><span class="n">VARID</span> <span class="s2">&quot;from&quot;</span> <span class="n">start</span><span class="o">=</span><span class="n">VARID</span><span class="p">;</span>
+</pre></div>
+</div>
+</td>
+<td><p><span class="slide3">setDuration</span></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="operazioni-di-terminazione">
+<h4>Operazioni di terminazione<a class="headerlink" href="#operazioni-di-terminazione" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 55%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">EndActor</span><span class="p">:</span> <span class="s2">&quot;terminate&quot;</span> <span class="n">arg</span><span class="o">=</span><span class="n">INT</span><span class="p">;</span>
+</pre></div>
+</div>
+</td>
+<td><p><span class="slide3">terminate</span></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="operazioni-di-utilita">
+<h4>Operazioni di utilità<a class="headerlink" href="#operazioni-di-utilita" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 55%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>PrintCurMsg: &quot;printCurrentMessage&quot;
+          (&quot;color&quot; color=PCOLOR )? ;
+</pre></div>
+</div>
+</td>
+<td><p><span class="slide3">printCurrentMessage</span></p></td>
+</tr>
+<tr class="row-even"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Print:&quot;println&quot;
+  &quot;(&quot; args=PHead &quot;)&quot;
+   (&quot;color&quot; color=PCOLOR )?;
+</pre></div>
+</div>
+</td>
+<td><p><span class="slide3">println</span></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="parti-ereditate">
+<h3>Parti ereditate<a class="headerlink" href="#parti-ereditate" title="Permalink to this heading">¶</a></h3>
+<p>Ogni attore è una specializzazione della classe  <code class="docutils literal notranslate"><span class="pre">it.unibo.kactor.ActorBasicFsm</span></code>
+(che specializza <code class="docutils literal notranslate"><span class="pre">it.unibo.kactor.ActorBasic</span></code> del progetto <em>unibo.qakactor23</em>) da cui eredita
+un insieme di variabili e operazioni, tra cui quelle qui di seguito riportate.</p>
+<section id="variabili-interne-importanti">
+<h4>Variabili interne importanti<a class="headerlink" href="#variabili-interne-importanti" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 38%" />
+<col style="width: 62%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Sostituto di <span class="blue">this</span></p></td>
+<td><ul class="simple">
+<li><p><span class="slide3">myself</span>.</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>Riferimento allo stato corrente</p></td>
+<td><ul class="simple">
+<li><p><span class="slide3">currentState</span>.</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Riferimento al messaggio corrente</p></td>
+<td><ul class="simple">
+<li><p><span class="slide3">currentMsg</span>.</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>Memorizzazione messaggi non attesi</p></td>
+<td><ul class="simple">
+<li><p><span class="slide3">discardMsg On/Off</span>.</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Stati interrotti</p></td>
+<td><ul class="simple">
+<li><p><span class="slide3">interruptStateTransitions</span>  : List&lt;Transition&gt;? = null.</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>Stato interrotto</p></td>
+<td><ul class="simple">
+<li><p><span class="slide3">interruptedState</span>.   : State? = null</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+<section id="note-sulla-implementazione">
+<h2>Note sulla implementazione<a class="headerlink" href="#note-sulla-implementazione" title="Permalink to this heading">¶</a></h2>
+<section id="it-unibo-kactor-actorbasic-kt">
+<h3>it.unibo.kactor.ActorBasic.kt<a class="headerlink" href="#it-unibo-kactor-actorbasic-kt" title="Permalink to this heading">¶</a></h3>
+<p>Realizza  il concetto di un ente computazionale dotato di flusso di controllo autonomo, capace di recevere e gestire
+messaggi in modo FIFO, sfruttando un  <a class="reference internal" href="KotlinNotes.html#kotlin-actor"><span class="std std-ref">Kotlin actor</span></a> incapsulato:</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/*</span><span class="mi">1</span><span class="o">*/</span> <span class="n">abstract</span> <span class="k">class</span>  <span class="nc">ActorBasic</span><span class="p">(</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span>   <span class="n">name</span><span class="p">:</span> <span class="n">String</span><span class="p">,</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span>   <span class="n">val</span> <span class="n">scope</span><span class="p">:</span><span class="n">CoroutineScope</span><span class="o">=</span><span class="n">GlobalScope</span><span class="p">,</span>
+<span class="o">/*</span><span class="mi">4</span><span class="o">*/</span>   <span class="n">var</span> <span class="n">discardMessages</span> <span class="n">Boolean</span><span class="o">=</span><span class="n">false</span><span class="p">,</span>
+<span class="o">/*</span><span class="mi">5</span><span class="o">*/</span>   <span class="n">val</span> <span class="n">confined</span> <span class="p">:</span>    <span class="n">Boolean</span> <span class="o">=</span> <span class="n">false</span><span class="p">,</span>
+<span class="o">/*</span><span class="mi">6</span><span class="o">*/</span>   <span class="n">val</span> <span class="n">ioBound</span> <span class="p">:</span>     <span class="n">Boolean</span> <span class="o">=</span> <span class="n">false</span><span class="p">,</span>
+<span class="o">/*</span><span class="mi">7</span><span class="o">*/</span>   <span class="n">val</span> <span class="n">channelSize</span> <span class="p">:</span> <span class="n">Int</span> <span class="o">=</span> <span class="mi">50</span>
+        <span class="p">)</span> <span class="p">:</span>
+<span class="o">/*</span><span class="mi">8</span><span class="o">*/</span>     <span class="n">CoapResource</span><span class="p">(</span><span class="n">name</span><span class="p">),</span>
+<span class="o">/*</span><span class="mi">9</span><span class="o">*/</span>      <span class="n">MqttCallback</span> <span class="p">{</span>
+      <span class="o">...</span>
+    <span class="o">//</span><span class="n">To</span> <span class="n">be</span> <span class="n">overridden</span> <span class="n">by</span> <span class="n">the</span> <span class="n">application</span>
+<span class="o">/*</span><span class="mi">10</span><span class="o">*/</span> <span class="n">abstract</span> <span class="n">suspend</span> <span class="n">fun</span> <span class="n">actorBody</span><span class="p">(</span>
+          <span class="n">msg</span><span class="p">:</span><span class="n">IApplMessage</span><span class="p">)</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/ActorBasic.png"><img alt="_images/ActorBasic.png" class="align-center" src="_images/ActorBasic.png" style="width: 100%;" /></a>
+<p>Si veda: <a class="reference internal" href="#actor-channel"><span class="std std-ref">actor channel</span></a></p>
+</td>
+<td><ol class="arabic simple">
+<li><p><span class="slide3">class ActorBasic</span> Si veda <a class="reference internal" href="KotlinNotes.html#oggetti-e-classi"><span class="std std-ref">Oggetti e classi</span></a> in <a class="reference internal" href="KotlinNotes.html#kotlinnotes"><span class="std std-ref">KotlinNotes</span></a>.</p></li>
+<li><p><span class="slide3">name</span> Nome (<strong>univoco</strong> nel sistema) dell’attore</p></li>
+<li><p><span class="slide3">scope</span> Si veda <a class="reference internal" href="KotlinNotes.html#le-coroutines"><span class="std std-ref">Le coroutines</span></a> in <a class="reference internal" href="KotlinNotes.html#kotlinnotes"><span class="std std-ref">KotlinNotes</span></a> e  <a class="reference external" href="../../it.unibo.kotlinIntro/userDocs/LabIntroductionToKotlin.html#coroutinesIntro">kotlinUniboCoroutinesIntro</a> in <a class="reference external" href="../../../../../it.unibo.kotlinIntro/userDocs/LabIntroductionToKotlin.html">kotlinUnibo</a>.</p></li>
+<li><p><span class="slide3">discardMessages</span> scarta o meno i messaggi non attesi. Usato principalmente in
+<a class="reference internal" href="#it-unibo-kactor-actorbasicfsm-kt"><span class="std std-ref">ActorBasicFsm</span></a></p></li>
+<li><p><span class="slide3">confined</span> Si veda <a class="reference internal" href="KotlinNotes.html#confinamento"><span class="std std-ref">Confinamento</span></a> in <a class="reference internal" href="KotlinNotes.html#kotlinnotes"><span class="std std-ref">KotlinNotes</span></a>.</p></li>
+<li><p><span class="slide3">ioBound</span> Si veda <a class="reference internal" href="KotlinNotes.html#confinamento"><span class="std std-ref">Confinamento</span></a> in <a class="reference internal" href="KotlinNotes.html#kotlinnotes"><span class="std std-ref">KotlinNotes</span></a>.</p></li>
+<li><p><span class="slide3">channelSize</span>  Si veda <a class="reference internal" href="KotlinNotes.html#i-canali"><span class="std std-ref">I canali</span></a> in <a class="reference internal" href="KotlinNotes.html#kotlinnotes"><span class="std std-ref">KotlinNotes</span></a>.</p></li>
+<li><p><span class="slide3">CoapResource</span>  Si veda <a class="reference internal" href="#estende-coapresource"><span class="std std-ref">Estende CoapResource</span></a></p></li>
+<li><p><span class="slide3">MqttCallback</span> Si veda <a class="reference internal" href="#implementa-mqttcallback"><span class="std std-ref">Implementa MqttCallback</span></a></p></li>
+<li><p><span class="slide3">actorBody</span>  codice per la gestione dei messaggi <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-interfaces-iapplmessage"><span class="std std-ref">IApplMessage</span></a>
+ricevuti dall’attore.
+Si veda <a class="reference internal" href="KotlinNotes.html#suspending-functions"><span class="std std-ref">Suspending functions</span></a> in <a class="reference internal" href="KotlinNotes.html#kotlinnotes"><span class="std std-ref">KotlinNotes</span></a> e  <span class="xref std std-ref">Come definire CodedQactor</span>.</p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+<p>La notazione:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span>  <span class="nc">ActorBasic</span><span class="p">(</span> <span class="o">...</span> <span class="p">)</span> <span class="p">:</span> <span class="n">CoapResource</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">MqttCallback</span>
+</pre></div>
+</div>
+<p>esprime in forma compatta che <em>ActorBasic</em> <span class="remark">eredita</span> dalla classe <a class="reference external" href="https://github.com/eclipse-californium/californium/blob/main/californium-core/src/main/java/org/eclipse/californium/core/CoapResource.java">CoapResource</a> e
+<span class="remark">implementa</span> l’interfaccia <a class="reference external" href="https://eclipse.dev/paho/files/javadoc/org/eclipse/paho/client/mqttv3/MqttCallback.html">MqttCallback</a> (si veda <a class="reference external" href="../../../../../it.unibo.kotlinIntro/userDocs/LabIntroductionToKotlin.html#inheritance">kotlinInheritance</a>).</p>
+<section id="estende-coapresource">
+<h4>Estende CoapResource<a class="headerlink" href="#estende-coapresource" title="Permalink to this heading">¶</a></h4>
+<p>Ogni attore è anche una risorsa CoAP, specializzazione della classe definita nella libreria
+<a class="reference external" href="https://www.eclipse.org/californium/">https://www.eclipse.org/californium/</a>.</p>
+</section>
+<section id="implementa-mqttcallback">
+<h4>Implementa MqttCallback<a class="headerlink" href="#implementa-mqttcallback" title="Permalink to this heading">¶</a></h4>
+<p>Ogni attore implementa anche l’interfaccia
+<code class="docutils literal notranslate"><span class="pre">org.eclipse.paho.client.mqttv3.MqttCallback</span></code>. Pertanto
+ogni attore può gestire notifiche emesse da un MQTT client, attraverso il metodo <code class="docutils literal notranslate"><span class="pre">messageArrived</span></code>. (TODO REF)</p>
+</section>
+<section id="actor-channel">
+<h4>actor channel<a class="headerlink" href="#actor-channel" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">val</span> <span class="n">actor</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">actor</span><span class="o">&lt;</span><span class="n">IApplMessage</span><span class="o">&gt;</span><span class="p">(</span> <span class="n">dispatcher</span><span class="p">,</span> <span class="n">capacity</span><span class="o">=</span><span class="n">channelSize</span> <span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span><span class="p">(</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">channel</span> <span class="p">)</span> <span class="p">{</span>
+                      <span class="k">if</span><span class="p">(</span> <span class="n">msg</span><span class="o">.</span><span class="n">msgContent</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;stopTheActor&quot;</span><span class="p">)</span> <span class="p">{</span>  <span class="n">channel</span><span class="o">.</span><span class="n">close</span><span class="p">()</span> <span class="p">}</span>
+    <span class="k">else</span> <span class="n">actorBody</span><span class="p">(</span> <span class="n">msg</span> <span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Si veda: <a class="reference internal" href="KotlinNotes.html#kotlin-actor"><span class="std std-ref">Kotlin actor</span></a> in <a class="reference internal" href="KotlinNotes.html#kotlinnotes"><span class="std std-ref">KotlinNotes</span></a>.</p>
+</section>
+<section id="sendmessagetoactor">
+<h4>sendMessageToActor<a class="headerlink" href="#sendmessagetoactor" title="Permalink to this heading">¶</a></h4>
+<p>Il metodo <code class="docutils literal notranslate"><span class="pre">sendMessageToActor</span></code> realizza l’invio di un messaggio ad un attore
+di cui è noto il nome o la connessione.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>suspend fun sendMessageToActor(msg : IApplMessage,
+       destName: String, conn : Interaction? = null ) {
+  //realizza l&#39;invio di msg all&#39;attore di nome destName
+  //usando conn se conn!=null (destname è un &#39;alieno&#39;)
+  val destactor = context!!.hasActor(destName)
+  /*
+    se destactor  è locale: destactor.kactor.send( msg )
+    altrimenti usa il proxy verso il contesto di destactor
+}
+</pre></div>
+</div>
+</section>
+</section>
+<section id="it-unibo-kactor-actorbasicfsm-kt">
+<h3>it.unibo.kactor.ActorBasicFsm.kt<a class="headerlink" href="#it-unibo-kactor-actorbasicfsm-kt" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">abstract</span> <span class="k">class</span> <span class="nc">ActorBasicFsm</span><span class="p">(</span>  <span class="n">qafsmname</span><span class="p">:</span>  <span class="n">String</span><span class="p">,</span>
+                      <span class="n">fsmscope</span><span class="p">:</span> <span class="n">CoroutineScope</span> <span class="o">=</span> <span class="n">GlobalScope</span><span class="p">,</span>
+            <span class="n">discardMessages</span> <span class="p">:</span> <span class="n">Boolean</span> <span class="o">=</span> <span class="n">false</span><span class="p">,</span>
+                      <span class="n">confined</span> <span class="p">:</span>    <span class="n">Boolean</span> <span class="o">=</span> <span class="n">false</span><span class="p">,</span>
+                      <span class="n">ioBound</span> <span class="p">:</span>     <span class="n">Boolean</span> <span class="o">=</span> <span class="n">false</span><span class="p">,</span>
+                      <span class="n">channelSize</span> <span class="p">:</span> <span class="n">Int</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="p">):</span> <span class="n">ActorBasic</span><span class="p">(</span><span class="n">qafsmname</span><span class="p">,</span><span class="n">fsmscope</span><span class="p">,</span><span class="n">discardMessages</span><span class="p">,</span><span class="n">confined</span><span class="p">,</span><span class="n">ioBound</span><span class="p">,</span><span class="n">channelSize</span><span class="p">)</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Un attore che specializza questa classe opera come un automa a stati finiti.</p></li>
+<li><p>Il codice Kotlin viene generato dalla <a class="reference internal" href="#qak-software-factory"><span class="std std-ref">Qak software factory</span></a></p></li>
+<li><p>I messaggi ricevuti sul canale Kotlin
+(ereditato da <a class="reference internal" href="#it-unibo-kactor-actorbasic-kt"><span class="std std-ref">ActorBasic</span></a>) sono gestiti in relazione
+alle specifiche sulle transizioni associate allo stato corrrente dell’automa.</p></li>
+</ul>
+<p>NEXT: <a class="reference internal" href="QakActorsIntro24.html#qakactorsintro24"><span class="std std-ref">QakActorsIntro24</span></a></p>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">QakActors24</a><ul>
+<li><a class="reference internal" href="#qakactors24-introduzione">QakActors24: Introduzione</a><ul>
+<li><a class="reference internal" href="#quadro-generale">Quadro generale</a></li>
+<li><a class="reference internal" href="#qak-software-factory">Qak software factory</a><ul>
+<li><a class="reference internal" href="#i-plugin-della-qak-factory">I plugin della Qak factory</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#qak-codice-e-risorse-generate">Qak codice e risorse generate</a></li>
+<li><a class="reference internal" href="#qak-infrastructure">Qak infrastructure</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#il-metamodello-qak">Il metamodello Qak</a><ul>
+<li><a class="reference internal" href="#qakactors24-il-sistema">QakActors24: il sistema</a></li>
+<li><a class="reference internal" href="#qakactors24-lattore">QakActors24: l’attore</a></li>
+<li><a class="reference internal" href="#qakactors24-il-contesto">QakActors24: il contesto</a></li>
+<li><a class="reference internal" href="#linguaggio-qak">Linguaggio qak</a><ul>
+<li><a class="reference internal" href="#id2">Qak syntax</a><ul>
+<li><a class="reference internal" href="#scopo-della-grammatica">Scopo della grammatica</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#dichiarazione-dei-messaggi">Dichiarazione dei messaggi</a></li>
+<li><a class="reference internal" href="#dichiarazione-dei-contesti">Dichiarazione dei contesti</a></li>
+<li><a class="reference internal" href="#dichiarazione-degli-attori">Dichiarazione degli attori</a><ul>
+<li><a class="reference internal" href="#attori-normali">Attori normali</a></li>
+<li><a class="reference internal" href="#stati-di-un-attore-normale">Stati di un attore normale</a></li>
+<li><a class="reference internal" href="#attori-coded">Attori coded</a></li>
+<li><a class="reference internal" href="#attori-external">Attori external</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#transizioni-di-stato">Transizioni di stato</a><ul>
+<li><a class="reference internal" href="#emptytransition">EmptyTransition</a><ul>
+<li><a class="reference internal" href="#guardia">Guardia</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#nonemptytransition">NonEmptyTransition</a><ul>
+<li><a class="reference internal" href="#wheninterrupt">whenInterrupt</a></li>
+<li><a class="reference internal" href="#timeout-per-transizioni">Timeout per transizioni</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#comportamento-di-un-attore">Comportamento di un attore</a><ul>
+<li><a class="reference internal" href="#la-gestione-dei-messaggi">La gestione dei messaggi</a></li>
+<li><a class="reference internal" href="#variabili-e-riferimenti">Variabili e riferimenti</a><ul>
+<li><a class="reference internal" href="#notazioni-shortcut">Notazioni Shortcut</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#azioni-di-un-attore">Azioni di un attore</a><ul>
+<li><a class="reference internal" href="#anyaction">AnyAction</a></li>
+<li><a class="reference internal" href="#operazioni-di-messaggista-punto-a-punto">Operazioni di messaggista punto a punto</a></li>
+<li><a class="reference internal" href="#azioni-condizionali">Azioni condizionali</a></li>
+<li><a class="reference internal" href="#payloadarg">payloadArg</a></li>
+<li><a class="reference internal" href="#operazioni-di-messaggista-publisch-subscribe">Operazioni di messaggista publisch-subscribe</a></li>
+<li><a class="reference internal" href="#operazioni-relative-agli-eventi">Operazioni relative agli eventi</a></li>
+<li><a class="reference internal" href="#operazioni-relative-alla-osservabilita">Operazioni relative alla osservabilità</a></li>
+<li><a class="reference internal" href="#operazioni-di-delegazione">Operazioni di delegazione</a></li>
+<li><a class="reference internal" href="#operazioni-per-le-basi-di-conoscenza">Operazioni per le basi di conoscenza</a></li>
+<li><a class="reference internal" href="#operazioni-di-creazione-di-attori">Operazioni di creazione di attori</a></li>
+<li><a class="reference internal" href="#operazioni-di-ritorno-da-interruzione">Operazioni di ritorno da interruzione</a></li>
+<li><a class="reference internal" href="#operazioni-per-esecuzione-di-codice">Operazioni per esecuzione di codice</a></li>
+<li><a class="reference internal" href="#operazioni-con-il-tempo">Operazioni con il tempo</a></li>
+<li><a class="reference internal" href="#operazioni-di-terminazione">Operazioni di terminazione</a></li>
+<li><a class="reference internal" href="#operazioni-di-utilita">Operazioni di utilità</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#parti-ereditate">Parti ereditate</a><ul>
+<li><a class="reference internal" href="#variabili-interne-importanti">Variabili interne importanti</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#note-sulla-implementazione">Note sulla implementazione</a><ul>
+<li><a class="reference internal" href="#it-unibo-kactor-actorbasic-kt">it.unibo.kactor.ActorBasic.kt</a><ul>
+<li><a class="reference internal" href="#estende-coapresource">Estende CoapResource</a></li>
+<li><a class="reference internal" href="#implementa-mqttcallback">Implementa MqttCallback</a></li>
+<li><a class="reference internal" href="#actor-channel">actor channel</a></li>
+<li><a class="reference internal" href="#sendmessagetoactor">sendMessageToActor</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#it-unibo-kactor-actorbasicfsm-kt">it.unibo.kactor.ActorBasicFsm.kt</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="VersoGliAttori.html"
+                          title="previous chapter">Naive Actors 2024</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="QakActorsIntro24.html"
+                          title="next chapter">QakActorsIntro24</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/QakActors24.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="QakActorsIntro24.html" title="QakActorsIntro24"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="VersoGliAttori.html" title="Naive Actors 2024"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">QakActors24</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>
