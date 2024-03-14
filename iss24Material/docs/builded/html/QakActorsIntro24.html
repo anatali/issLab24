@@ -66,7 +66,6 @@ Per il momento, inserisco le seguenti librerie:</p>
 <li><p>eseguo <code class="docutils literal notranslate"><span class="pre">gradle</span> <span class="pre">init</span></code> e rispondo: <span class="remark">1 2 default default</span></p></li>
 <li><p>importo in Eclipse il progetto gradle</p></li>
 <li><p>aggiungo la <strong>natura Java</strong> al progetto</p></li>
-<li><p>eseguo <code class="docutils literal notranslate"><span class="pre">gradlew</span> <span class="pre">eclipse</span></code> per fissare le librerie</p></li>
 <li><p>aggiungo  <strong>source folder</strong>: di nome <span class="blue">src</span></p></li>
 <li><p>creo in <strong>src</strong> un file <span class="blue">qak</span> (di nome, ad esempio <code class="docutils literal notranslate"><span class="pre">helloworld0.qak</span></code>)</p></li>
 </ol>
@@ -90,6 +89,7 @@ vi sono:</p>
 <li><p>copio il contenuto del  file <a class="reference external" href="../../../../helloworldqak24/build2024.gradle">build2024.gradle</a> nel file <span class="blue">build.gradle</span>
 ( o eliminare questo e ridenominare il precedente. Il file <code class="docutils literal notranslate"><span class="pre">build2024.gradle</span></code> verrà rigenerato al prossimo
 salvataggio del modello).</p></li>
+<li><p>eseguo <code class="docutils literal notranslate"><span class="pre">gradlew</span> <span class="pre">eclipse</span></code> per fissare le librerie</p></li>
 <li><p>eseguo :</p></li>
 </ol>
 <blockquote>
@@ -230,7 +230,7 @@ fare esempi sulle loro possibili relazioni.</p>
 <p><span class="slide2">Commento finale</span></p>
 <ul class="simple">
 <li><p>Questo  esempio mostra come si possano (ri)usare all’interno di un attore qak oggetti convenzionali
-che sfruttano apposite librerie che</p></li>
+costruiti grazia ad opportune  librerie.</p></li>
 </ul>
 </section>
 </section>
@@ -508,7 +508,7 @@ gestire col nome <code class="docutils literal notranslate"><span class="pre">in
 <p>l’attore <em>display</em> opera come observer dell’actor <em>worker</em> che riceve aggiornamenti
 tramite il dispatch <code class="docutils literal notranslate"><span class="pre">info:info(SOURCE,TERM)</span></code></p>
 </li>
-<li><p><em>display</em>  può visualizzare un aggiormaneto usando la variabile ereditata <span class="slide2">currentMsg</span>
+<li><p><em>display</em>  può visualizzare un aggiornamento usando la variabile ereditata <span class="slide2">currentMsg</span>
 (si veda <a class="reference internal" href="QakActors24.html#parti-ereditate"><span class="std std-ref">Parti ereditate</span></a>)
 che referenzia il messaggio gestito nello stato corrente</p></li>
 <li><p><em>display</em>  può selezionare il contenuto del messaggio corrente usando la unificazione Prolog
@@ -536,7 +536,7 @@ e il metodo ereditato <a class="reference internal" href="QakActors24.html#paylo
     <span class="n">d</span><span class="o">.</span><span class="n">print</span><span class="p">(</span> <span class="n">currentMsg</span><span class="o">.</span><span class="n">msgContent</span><span class="p">()</span><span class="o">.</span><span class="n">toString</span><span class="p">()</span> <span class="p">)</span>
     <span class="n">d</span><span class="o">.</span><span class="n">print</span><span class="p">(</span> <span class="s2">&quot;${currentMsg.msgContent()}&quot;</span> <span class="p">)</span>
     <span class="c1">#]</span>
-    <span class="n">onMsg</span><span class="p">(</span> <span class="n">info</span><span class="p">:</span><span class="n">info</span><span class="p">(</span><span class="n">SOURCE</span><span class="p">,</span><span class="n">TERM</span><span class="p">)){</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span><span class="n">onMsg</span><span class="p">(</span> <span class="n">info</span><span class="p">:</span><span class="n">info</span><span class="p">(</span><span class="n">SOURCE</span><span class="p">,</span><span class="n">TERM</span><span class="p">)){</span>
       <span class="p">[</span><span class="c1"># val Source = payloadArg(0)</span>
         <span class="n">val</span> <span class="n">infoMsg</span> <span class="o">=</span> <span class="n">payloadArg</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">val</span> <span class="n">M</span>      <span class="o">=</span> <span class="s2">&quot;$infoMsg from $Source&quot;</span>
@@ -554,16 +554,16 @@ e il metodo ereditato <a class="reference internal" href="QakActors24.html#paylo
 <ol class="arabic simple">
 <li><p>delay per dare il tempo al <code class="docutils literal notranslate"><span class="pre">display</span></code> di formarsi</p></li>
 <li><p>emissione di informazione osservabile</p></li>
-<li><p>emissione di informazione osservabile</p></li>
+<li><p>emissione di informazione osservabile che non unifica</p></li>
 </ol>
 </td>
 <td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span> <span class="n">worker</span> <span class="n">context</span> <span class="n">ctxhello</span><span class="p">{</span>
   <span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span><span class="p">{</span>
     <span class="p">[</span><span class="c1"># var n = 0 #]</span>
 <span class="o">/*</span><span class="mi">1</span><span class="o">*/</span><span class="n">delay</span> <span class="mi">1500</span>
-<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span><span class="n">updateResource</span> <span class="p">[</span><span class="c1"># &quot;hello_${n++}&quot; #]</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span><span class="n">updateResource</span> <span class="p">[</span><span class="c1"># &quot;info($name,hello_${n++})&quot; #]</span>
     <span class="n">delay</span> <span class="mi">2000</span>
-<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span><span class="n">updateResource</span> <span class="p">[</span><span class="c1"># &quot;hello_${n++}&quot; #]</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span><span class="n">updateResource</span> <span class="p">[</span><span class="c1"># &quot;m($name,hello_${n++})&quot; #]</span>
   <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
