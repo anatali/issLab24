@@ -1,0 +1,55 @@
+System prodcons24
+
+Dispatch distance : distance(D) "dispatch di nome uguale a request"
+Request  distance : distance(D) "request di nome uguale a dispatch"
+Reply distanceack : ack(D) for distance 
+
+Context ctxprodcons   ip [host="localhost" port=8014] 
+ 
+QActor producer1 context ctxprodcons {
+	State s0 initial{
+		println("$name STARTS") color blue
+		delay 500  //Il consumer potrebbe essere in fase di creazione
+		forward consumer -m distance : distance(20)
+	} 
+}
+
+QActor producer2 context ctxprodcons {
+	State s0 initial{
+		println("$name STARTS") color blue
+		delay 500  //Il consumer potrebbe essere in fase di creazione
+		request consumer -m distance : distance(50)
+	}
+	Transition t0 whenReply distanceack -> handleAnswer
+	
+	State handleAnswer{
+		printCurrentMessage color blue
+		delay 1000
+		[# System.exit(0) #]
+	}
+}
+
+QActor consumer context ctxprodcons {
+	State s0 initial{
+		println("$name STARTS") color green
+	}
+	Transition t0 whenMsg distance -> handleDispatch
+	              whenRequest distance -> handleRequest
+	
+	State handleDispatch{
+		printCurrentMessage color green
+	}
+	Transition t0 whenMsg     distance -> handleDispatch
+	              whenRequest distance -> handleRequest
+	
+	State handleRequest{
+		printCurrentMessage color green
+		onMsg( distance : distance(D)){
+			[# var D = payloadArg(0) #]
+			replyTo distance with distanceack : ack( $payloadArg(0) )
+		}		
+	}
+	Transition t0 whenMsg distance -> handleDispatch
+	              whenRequest distance -> handleRequest
+}
+

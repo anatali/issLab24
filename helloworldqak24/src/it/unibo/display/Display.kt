@@ -24,31 +24,28 @@ class Display ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						connectToMqttBroker( "tcp://broker.hivemq.com" )
-						subscribe(  "xxx" ) //mqtt.subscribe(this,topic)
+						CommUtils.outblue("$name START")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t00",targetState="handleout",cond=whenDispatch("write"))
-					transition(edgeName="t01",targetState="handleout",cond=whenEvent("write"))
+					 transition(edgeName="t00",targetState="handleInfo",cond=whenDispatch("info"))
 				}	 
-				state("handleout") { //this:State
+				state("handleInfo") { //this:State
 					action { //it:State
-						CommUtils.outgreen("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outcyan("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
-						if( checkMsgContent( Term.createTerm("write(TERM)"), Term.createTerm("write(T)"), 
+						if( checkMsgContent( Term.createTerm("info(N)"), Term.createTerm("info(N)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
-								CommUtils.outblue("$name | ${payloadArg(0)}")
+								CommUtils.outblue("$name ${payloadArg(0)}")
 						}
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t02",targetState="handleout",cond=whenDispatch("write"))
-					transition(edgeName="t03",targetState="handleout",cond=whenEvent("write"))
+					 transition(edgeName="t01",targetState="handleInfo",cond=whenDispatch("info"))
 				}	 
 			}
 		}

@@ -1,0 +1,108 @@
+System  qakdemo24
+    
+Request r1 : r1(X)
+Reply rr1 : rr1(X) for r1
+ 
+Request r2 : r2(X)
+Reply rr2 : rr2(X) for r2 
+
+Dispatch cmd : cmd(X)
+ 
+Context ctxdelegate ip [host="localhost" port=8045]
+
+/*
+ * Un server che delega comandi cmd e richieste r2
+ * a serverworker
+ */
+QActor server context ctxdelegate{
+	State s0 initial{
+		delay 200 
+		delegate r2 to serverworker   
+		delegate cmd to serverworker
+	} 
+	Goto work	
+	
+	State work{
+		println("$name working ...") color blue
+	}
+	Transition t0 whenRequest r1 -> handle_r1
+	
+	State handle_r1{
+		printCurrentMessage color blue
+		replyTo r1 with rr1 : rr1(answer)
+	} 
+	Goto work
+}
+
+/*
+ * Lavora per gestire comandi cmd e richieste r2
+ * inviati al server e da questi delegati
+ */
+QActor serverworker context ctxdelegate{
+	State s0 initial{
+		//delay 1000
+	}
+	Goto work
+	
+	State work{
+		
+	}
+	Transition t0 
+		whenRequest r2 -> handle_r2
+		whenMsg cmd -> handlecmd
+	
+	
+	State handle_r2{
+		printCurrentMessage color blue
+		replyTo r2 with rr2 : rr2(answer)
+	}
+	Goto work
+	
+	
+	State handlecmd{
+		printCurrentMessage color blue
+		//[# System.exit(0) #]
+	}
+	Goto work
+} 
+
+/*
+ * Invia al server la rcihietsa r1
+ * gestita direttemente dal server
+ */
+QActor caller1 context ctxdelegate{
+	State s0 initial{
+		delay 500
+		println("$name request r1") color green
+		 request server -m r1 : r1(10)  
+	} 
+	Transition t0 
+		whenReply rr1 -> handleReply
+	
+	State handleReply{
+		printCurrentMessage color green
+	}
+}
+
+/*
+ * Invia al server la rcihietsa r2 e il comando cmd
+ * che server il server delega a serverworker
+ * Il sednere della reply rr2 e appunto serverworker
+ */
+QActor caller2 context ctxdelegate{
+	State s0 initial{
+		println("$name request r2")    color magenta
+		request server -m r2 : r2(a)  
+	}
+	Transition t0 
+		whenReply rr2 -> handleReply
+	
+	State handleReply{
+		printCurrentMessage color magenta
+		delay 1000
+		println("$name dispatch cmd")    color magenta
+		forward server -m cmd : cmd(stop)
+        delay 1500
+        [# System.exit(0) #]
+	}
+}

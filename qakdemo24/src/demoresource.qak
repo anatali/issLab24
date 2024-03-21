@@ -1,0 +1,91 @@
+System  qakdemo24
+/*
+ *     
+ */
+Request cmd 		: cmd(X)         "X =  w | s | a | d | h"
+Reply   replytocmd  : replytocmd(X)  for cmd
+Event   alarm      : alarm(V)
+        
+Context ctxresourcecore ip [host="localhost" port=8045]
+    
+  QActor resourcecore context ctxresourcecore{
+  [# var ready = true #]
+    State s0 initial { 	   
+    	println("resourcecore READY")     
+    }   
+	Transition t0  
+		whenRequest cmd  and [# ready #]  -> handleRequestCmd
+		whenEvent   alarm -> handleAlarm
+	
+	State handleAlarm{
+	    onMsg( alarm : alarm(on) ){
+	      println("$name alarm on") color red
+	      [# ready = false #]
+	    }
+	    onMsg( alarm : alarm(off) ){
+	      println("$name alarm off") color red
+	      [# ready = true #]
+	    }		
+	    //updateResource [# resourceInfo() #]
+	 	}
+	 	Goto s0
+	//	Transition t0  
+	// 		whenRequest cmd and [# ready #] -> handleRequestCmd
+	//		whenEvent   alarm -> handleAlarm
+		   
+	
+	State handleRequestCmd{
+		printCurrentMessage
+		//updateResource [# resourceInfo() #]
+		onMsg( cmd : cmd(X) ){
+			[# val ANSW = "answerFor_${payloadArg(0)}" #]
+			replyTo cmd with replytocmd : replytocmd( $ANSW ) 
+		}		 		
+	}
+	Goto s0	
+
+  }   
+  
+ /*
+  QActor corecaller1 context ctxresourcecore{
+      [# var StartTime = 0L
+         var Elapsed   = 0L
+      #]
+   State s0 initial {
+      printCurrentMessage  color blue
+      request resourcecore -m cmd : cmd(1)
+      memoCurrentTime StartTime
+  }
+  Transition t0 whenReply replytocmd -> handleReply
+
+  State handleReply{
+    printCurrentMessage color blue
+    setDuration Elapsed from StartTime
+    println("$name handleReply Elapsed = $Elapsed ")  color blue
+    //println("$name handleReply: emit alarm(on)")  color red
+    //emit alarm : alarm(on)
+    request resourcecore -m cmd : cmd(2)
+    request resourcecore -m cmd : cmd(3)
+    memoCurrentTime StartTime
+  }
+  Transition t0 whenReply replytocmd -> handleReplyAgain
+
+  State handleReplyAgain{
+    printCurrentMessage color blue
+    setDuration Elapsed from StartTime
+    println("$name handleReplyAgain Elapsed = $Elapsed ")  color blue
+    memoCurrentTime StartTime
+  }
+  Transition t0 whenReply replytocmd -> handleReplyAgain
+} //QActor corecaller1 
+
+QActor alarmoffemitter context ctxresourcecore {
+       State s0 initial {
+          printCurrentMessage  color blue
+                delay 2000
+                //println("$name alarmoffemitter: emit alarm(off)")  color red
+                //emit alarm : alarm(off)
+       }
+}//QActor alarmoffemitter 
+* 
+*/

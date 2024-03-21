@@ -1,5 +1,9 @@
 System helloworld3 
- 
+/*
+ *  Il QActor attore display rende esplicito un comportamento 
+ *  realizzato in helloworld2 da una parte ‘sommersa’ del sistema
+ *  (un CodedQactor di calsse DisplayCodedQak)
+ */ 
 Dispatch out  : out(TERM) 
 
 Context ctxhello ip [host="localhost" port=8003] 

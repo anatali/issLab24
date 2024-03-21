@@ -1,0 +1,72 @@
+System helloworld4_2ctx 
+/*
+ * Il QActor display opera come observer del QActor worker 
+ * e visualizza sul Display embedded gli aggiornamenti 
+ * che worker invia tramite un dispatch 
+ * che l’observer dichiara di voler gestire col nome info.
+ */ 
+Dispatch info : info(SOURCE,TERM) 
+Dispatch news : news(SOURCE,TERM)  
+//Dispatch update : update(SOURCE,TERM)  
+
+Context ctxdisplay ip [host="localhost" port=8005] 
+Context ctxhello   ip [host="localhost" port=8004] 
+
+
+QActor display context ctxdisplay withobj d using "main.resources.utils.DisplayObj.create()"{
+	State s0 initial{
+		observeResource worker msgid info 
+		//[# observeResource("worker", "info") #]
+	}    
+	Transition t0 whenMsg info -> handleinfo
+	
+	State handleinfo{
+		printCurrentMessage
+		//println("$currentMsg") color blue
+//		[#  
+//		 d.print( currentMsg.toString() )  
+//		 d.print( "$currentMsg" )  
+//		 d.print( currentMsg.msgContent().toString() )  
+//		 d.print( "${currentMsg.msgContent()}" )  		 
+//		#]
+		onMsg( info:info(SOURCE,TERM)){
+			//println("display handleinfo ")
+			[# val Source  = payloadArg(0) 
+			   val infoMsg = payloadArg(1)	
+			   val M      = "$infoMsg from $Source"			
+			#]
+			println("display handleinfo: $M") color blue
+			[# d.write( M ) #]
+		}		
+	}
+	Transition t0 whenMsg info -> handleinfo
+}
+    
+QActor worker context ctxhello  { //withobj qubit using "main.resources.QubitHadamardSimulator"
+    [# var n = 0 #]
+ 	State s0 initial{
+		println("$name updates") color blue
+		updateResource [#  "${name}_hello_${n++}" #] 
+		delay 5000
+	}	    
+	Goto s0
+}       
+
+QActor workerobs context ctxhello  {
+ 	State s0 initial{
+		observeResource worker msgid news
+		//[# observeResource("worker", "news") #]
+		println("$name NEW STARTS") color blue
+	}	 
+	Transition t0 whenMsg news -> handleinfo
+
+    State handleinfo{
+	   printCurrentMessage	
+	}
+	Transition t0 whenMsg news -> handleinfo
+	
+}
+
+ 
+
+ 

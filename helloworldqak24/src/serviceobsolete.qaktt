@@ -1,0 +1,271 @@
+System /*-msglog  -trace */ servicemath 
+//mqttBroker "broker.hivemq.com" : 1883
+
+//Massaggi relativi agli Actor-dinamici
+Request doaction   : doaction(REQID,RARG,RCALLER,SERVICE)
+Reply   actiondone : actiondone( RCALLER,REQID,N,R ) for doaction
+
+Request dofibo   : dofibo(N)
+Reply   fibodone : fibodone( CALLER,N,R ) for dofibo
+  
+ 
+//Request r1   : r1(X)
+//Reply   rr1 : rr1(X) for r1
+//
+//Dispatch finish : finish(X)
+//Dispatch coapUpdate : coapUpdate(RESOURCE, VALUE)
+ 
+Dispatch show : show(S)
+Dispatch out  : out(S) 
+
+Context ctxservice ip [host="localhost" port=8011]  
+
+/*
+ * caller1, che chiede fibo(6) perte dopo caller2 che chiede fibo(40)
+ * Il service esegue le richieste fibo attivando un  actionexecutor 
+ * che poi termina dopo avere eseguito 
+ * execresultReplyTo doaction with actiondone : actiondone( $Caller,$ReqId, $F )
+ * 
+ * Il service invia la risposta ricevuta da actionexecutor eseguendo
+ * replyTo dofibo ofsender $Caller with fibodone : fibodone(N,$Result)
+ * In questo modo risponde a ciascun caller in modo corretto
+ */
+
+QActor caller1 context ctxservice {  
+	[# val N = 6 
+//	   val display = actorgui.ActorIO()
+	#]
+ 	State init initial { 
+		println("$name  STARTS ") color magenta
+//		[# 
+//		   kotlin.concurrent.thread(start = true) {
+//			     display.initialize(myself) } 
+//		#]
+//		[# display.write("$name  STARTS ") #]
+		delay 5000
+		//[# display.simulateButtonPress( ) #]
+		request servicemath -m dofibo : dofibo($N)
+	}	 
+	Transition t0 whenReply fibodone -> fiboanswer
+	
+	State fiboanswer{
+		printCurrentMessage color magenta
+		[# val M = currentMsg.msgContent() #]
+		//println("$currentMsg") color red
+		onMsg(fibodone : fibodone( CALLER,V,R) ){
+			//println("$name | fiboanswer for ${N}=${payloadArg(0)}") color magenta
+			//printCurrentMessage color magenta
+			[# val SOUT = "$name | fiboanswer for ${N}==${payloadArg(1)} => from ${payloadArg(0)}:${payloadArg(2)}" #]
+			//[# display.write("$name | fiboanswer for ${N}==${payloadArg(1)} => from ${payloadArg(0)}:${payloadArg(2)}") #]
+//			[# display.write(SOUT) #]
+		    //updateResource [#  "msg(test)" #]
+		    //delay 1000
+//		    updateResource [#  "$currentMsg" #]  //visualizzata da display, observer di caller1
+            //forward display -m out : out($M)
+            forward display -m out : out($SOUT)
+ 
+		}   
+		//delay 1000
+		//[# System.exit(0) #]
+	}
+}
+
+QActor caller2 context ctxservice {
+	[# var N = 40 
+//		val display = actorgui.ActorIO()
+		
+	#]
+	State init initial {  
+//		[# 
+//		   kotlin.concurrent.thread(start = true) {
+//		      display.initialize(myself) } 
+//		#]
+		delay 4000
+		//println("$name  STARTS ") color magenta
+//		[# display.write("$name  STARTS ") #]
+		request servicemath -m dofibo : dofibo($N)
+	}	
+	Transition t0 whenReply fibodone -> fiboanswer
+	
+	State fiboanswer{
+		onMsg(fibodone : fibodone( CALLER,V,R ) ){
+			[# val SOUT = "$name | fiboanswer for ${N}==${payloadArg(1)} => from ${payloadArg(0)}:${payloadArg(2)}" #]
+			//println("$name | fiboanswer for $N") color magenta
+//			[# display.write(SOUT) #]
+			forward display -m out : out($SOUT)
+		}
+	}
+}
+
+
+ 
+QActor display context ctxservice {
+[# var count = 0 #]
+	State s0 initial {
+		//updateResource [# "$name( init )" #]
+		//[# sample.HelloFX.main( arrayOf<String>() ) #] //Bloccante		
+		//observeResource caller1  
+	} 
+	Goto init
+	
+	State init   {
+		println("$name waiting for request  ") color yellow  
+		//updateResource [# "$name( init )" #]
+	}  
+	Transition t0 	    
+	    //whenTime 10000     -> emitinfo
+//	    whenRequest r1     -> handleRequestr1
+//	    whenMsg finish     -> handleFinish
+//	    whenMsg coapUpdate -> emitinfo
+	    whenMsg show       -> doout
+	    whenMsg out        -> doout
+	   
+	State emitinfo{
+		//printCurrentMessage
+//		onMsg( coapUpdate : coapUpdate(RESOURCE, VALUE) ){
+//			updateResource [# "$name( ${payloadArg(0)}, ${payloadArg(1)} )" #]
+//		}
+//		if [# currentMsg.msgId().contains("local_tout") #]{
+//			updateResource [# "$name( tick(${count++}) )" #] 		
+//		}
+	}
+	Goto init	 
+	
+	State doout{
+		[# val M = currentMsg.msgContent()#]
+		//printCurrentMessage color red
+		updateResource [# "$M" #]
+	}
+	Goto init
+	
+	
+//	State handleRequestr1{
+//		//printCurrentMessage 	color blue
+//			  
+//		onMsg( r1 : r1(X) ){
+//			[#  var ReqArg = payloadArg(0);
+//				//var ReqId   =  currentMsg.msgId(); 
+//				var Sender = currentMsg.msgSender() 
+//				val RetV   = ReqArg.toInt()*10
+//			#] 
+//			println("$name receives r1($ReqArg) from $Sender mapN=${requestMap.size} answer=$RetV") color blue 			
+//			replyTo r1 with rr1 : rr1($RetV)
+// 		}		    
+//	}    
+//	Goto init 
+//	
+//	State handleFinish{
+//		printCurrentMessage color red
+//		//updateResource [# "$name( $currentMsg )" #]  
+//		onMsg( finish : finish(X) ){
+//			[#  var CmdArg = payloadArg(0);
+//				//var ReqId  = currentMsg.msgId(); 
+//				var Sender = currentMsg.msgSender() 
+//				  
+//			#] 		
+//			println("$name receives finish($CmdArg) from $Sender mapN=${requestMap.size} ") color magenta
+//			updateResource [# "$name( finish($CmdArg) )" #]
+//			[# if( CmdArg == "0") System.exit(0) #] 
+//		}
+//	}
+//	Goto init 
+} 
+
+
+/*
+ * SERVICE 
+ */
+QActor servicemath context ctxservice {
+	[# var N = ""  
+	    
+	#]
+	
+	//Associo richietsa a N per fare reply giusta
+	State init initial { 
+		println("$name  STARTS ") color blue
+	}	
+	Transition t0 whenRequest dofibo -> work
+	
+	State work{
+		onMsg( dofibo : dofibo(N) ){
+			[# //N          = payloadArg(0) 
+			   var ReqId  = currentMsg.msgId()
+			   var ReqArg = payloadArg(0)
+			   var Sender = currentMsg.msgSender()
+			#]
+			[# val SOUT = "$name | $ReqId $ReqArg Sender=$Sender" #]
+			println("$SOUT") color blue
+			forward display -m show  : show(  $SOUT  )
+			delegateCurrentMsgTo actionexecutor
+			//create actionexecutor requestbycreator doaction : doaction ( $ReqId,$ReqArg,$Sender,name ) 
+		}
+	}  
+	Transition t0 whenReply actiondone  -> elabjobdone  
+	              whenRequest dofibo    -> work
+
+	State elabjobdone{
+		printCurrentMessage color cyan
+		[# val M = currentMsg.msgContent()  #]
+ 		onMsg( actiondone : actiondone( RCALLER,REQID,N,RESULT ) ){
+			[# val Caller = payloadArg(0) 
+			   val ReqId  = payloadArg(1)
+			   val N      = payloadArg(2) 
+			   val Result = payloadArg(3) 	
+			#]    
+		    println("$name | result for $Caller, N=$N=$Result ") color magenta		
+		    [# var SOUT = "$name | result for $Caller, N=$N=$Result " #]
+		    //forward display -m out  : out(  $SOUT  )
+		    forward display -m show : show($SOUT)
+		    replyTo dofibo ofsender $Caller with fibodone : fibodone($Caller, $N,$Result)
+		}
+ 	}
+	Transition t0 whenReply actiondone  -> elabjobdone  
+	              whenRequest dofibo    -> work
+}
+
+
+/*
+
+ */
+QActor actionexecutor  context ctxservice dynamicOnly{
+	State init initial {
+		//println("$name | STARTS ")  color cyan
+    }	 
+    Transition t0 whenRequest doaction -> work
+	
+	State work{
+		printCurrentMessage color green
+		onMsg( doaction : doaction( REQID,RARG,RCALLER,SERVICE ) ){
+			[#  var ReqId   = payloadArg(0)
+				var ReqArg  = payloadArg(1) 
+				var Caller  = payloadArg(2)
+				val Service = payloadArg(3)			
+				
+			#]  
+			//println("$name | work N=$N ${sysUtil.curThread()}") color blue
+			[# var D = ReqArg.toInt() * 20L #] 
+			delayVar D
+//	 		if [# ReqArg.toInt() > 30  #]{
+//	 			delay 500
+//	 		}
+			[#  var F = utils.Common.fibo( ReqArg.toInt() ) #]   //SIMULO AZIONE LUNGA SENZA FARE delay
+			[# val SOUT = "$name fibo($ReqArg)=$F}" #]
+			println("$SOUT") color cyan
+			forward display -m out : out($SOUT)
+			execresultReplyTo doaction with actiondone : actiondone( $Caller,$ReqId, $ReqArg, $F )
+			
+//			[# var anames = sysUtil.getAllActorNames(context!!.name) #]
+//			println("$name | BEFORE: $anames in ${context!!.name}")
+			    
+			terminate 0
+
+			[# var anames = sysUtil.getAllActorNames(context!!.name) #]
+			println("$name | AFTER: $anames")
+		}
+	
+	} 
+ 
+ }
+
+Facade f1 usingactor display inctx ctxservice //request r1 command finish  
+

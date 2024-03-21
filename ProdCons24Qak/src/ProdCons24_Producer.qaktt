@@ -1,0 +1,52 @@
+System prodcons24_producer
+ 
+Dispatch distance : distance(D)
+Request  distance : distance(D)
+Reply distanceack : ack(D) for distance
+
+Dispatch short : short(V)
+
+Context ctxproducer  ip [host="localhost" port=8014] 
+Context ctxconsumer  ip [host="127.0.0.1" port=8015]
+
+ExternalQActor consumer context ctxconsumer 
+
+QActor producer1 context ctxproducer {
+	State s0 initial{ 
+		println("$name STARTS") color blue
+		delay 500  //Il consumer potrebbe essere in fase di creazione
+		forward consumer -m distance : distance(20)
+	} 
+}
+
+  
+QActor producer2 context ctxproducer {
+	State s0 initial{
+		println("$name STARTS") color blue
+		delay 500  //Il consumer potrebbe essere in fase di creazione
+		request consumer -m distance : distance(50)
+	}
+	Transition t0 whenReply distanceack -> handleAnswer
+	
+	State handleAnswer{
+		printCurrentMessage color blue
+		delay 2000
+		[# System.exit(0) #]
+	}
+}
+
+QActor otherobserver context ctxproducer{
+	State s0 initial{
+		println("$name STARTS") color blue
+		observeResource consumer msgid short
+	}
+	Transition t0  whenMsg  short -> handleUpdate
+	 
+	State handleUpdate{
+		printCurrentMessage color black
+//		onMsg( short : short(V)){
+//			println("$name:${payloadArg(0)} ") color black
+//		}
+	}
+	Transition t0  whenMsg short -> handleUpdate
+}

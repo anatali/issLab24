@@ -1,0 +1,88 @@
+System /*-msglog  -trace */ qakdemo24
+//mqttBroker "broker.hivemq.com" : 1883
+
+Request r1 : r1(X) "da caller a called"
+Request r2 : r2(X) 	
+Reply   a1 : a1(X) for r1
+Reply   a2 : a2(X) for r2 
+
+Context ctxask ip [host="localhost" port=8014]    //for first run (debug)
+//Context ctxcaller ip [host="localhost" port=8076]  
+//Context ctxcalled ip [host="127.0.0.1" port=8078]  
+
+QActor caller context ctxask {
+	State init initial {
+		delay 500
+		println("	caller request r1(10)") color blue
+		request called -m r1 : r1(10)
+		delay 1000
+		println("	caller request r1(20)") color blue
+		request called -m r1 : r1(20)
+	}
+	Goto work 
+	
+	State work{
+		//println("	caller work")
+	}
+	Transition t0 
+		whenReply   a1 -> handleReply
+		whenReply   a2 -> handleReply
+		whenRequest r2 -> handleAskFromCalled
+	
+	State handleReply{
+		//printCurrentMessage
+		println("	$name handleReply $currentMsg") color blue
+	}
+	Goto work 
+	 
+	State handleAskFromCalled{
+//		printCurrentMessage
+		onMsg( r2 : r2(X) ) {
+			println("	$name receives ask from called r2(${payloadArg(0)})") color blue
+			println("	$name replies with a2(90)") color blue
+			replyTo r2 with a2: a2(90)
+		}
+	}
+	Goto work
+} 
+
+QActor called context ctxask {
+[# var RequestArg = "0" #]
+	State init initial {
+		//println("	$name init") color magenta
+	}
+	Transition t0 
+		whenRequest r1 -> handleRequest
+	 
+	 
+	State handleRequest{
+		//println("	$name handleRequest") color magenta 
+			
+		onMsg( r1 : r1(10) ){
+			[# RequestArg = payloadArg(0) #]
+			println("	$name receives request r1($RequestArg)") color magenta
+			println("	$name askfor r2(theta)") color magenta
+			ask  r2 : r2(theta)  forrequest r1 //request r1 : r2(theta)   //r2 is the new request
+ 		}	
+ 		onMsg( r1 : r1(20) ){	
+ 			[# RequestArg = payloadArg(0) #]
+ 			println("	$name receives the request r1(${payloadArg(0)})") color magenta
+ 			[# val R = "${RequestArg}_${payloadArg(0)}" #]
+ 			replyTo r1 with a1 : a1( $R )  
+ 		}
+	} 
+	Transition t0
+		 whenTime 1000 -> init
+		 whenReply a2 -> answerAfterAsk
+
+	State answerAfterAsk{  
+//		printCurrentMessage		 
+ 		onMsg( a2 : a2(X) ){ 
+ 			println("	$name receives answer to ask a1(${payloadArg(0)})") color magenta
+ 			[# val R = "${RequestArg}_${payloadArg(0)}" #]
+ 			println("	$name replies to orginal request with a1($R)") color magenta
+			replyTo r1 with a1 : a1( $R )  
+ 		}
+	} 
+	Goto init   
+}  

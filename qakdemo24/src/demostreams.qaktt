@@ -1,0 +1,96 @@
+System /*-msglog*/ qakdemo24
+ 
+Event  data  : value(V)     "emesso da datasource "
+     
+Context ctxstreamsdemo ip [host="localhost" port=8045]
+    
+
+
+/*
+ * Sorgente di eventi data
+ */
+QActor datasource context ctxstreamsdemo{
+	[# var N = 10 #]
+	State s0 initial{
+		delay 1000
+	}
+	Goto work
+	
+	State work{
+		println("$name emitlocalstream $N") color green
+		emitlocalstream  data : value($N)
+		[# N = N + 10 #]
+		delay 500
+	}
+	Goto work  if [# N < 80 #] else endOWork
+	
+	State endOWork{
+		println("$name ENDS") color green
+		delay 1000
+		[# System.exit(0) #]
+	}
+	 
+}
+
+/*
+ * Attore che propaga solo gli eventi data 
+ * con valori inferiori a 40  
+ */
+QActor filter context ctxstreamsdemo{
+[# var V = 0 #]
+	 
+	State s0 initial{
+		 subscribeTo datasource for data		  
+	} 
+	Transition t0 whenEvent data -> handleData
+	
+	State handleData{
+		//printCurrentMessage color magenta
+		onMsg( data : value(V)){
+			[#  V = payloadArg(0).toInt() #]
+			println("$name handles $V") color magenta
+			if [# V < 40  #] {
+				emitlocalstream  data : value($V)
+			}
+		} 
+	}    
+	Transition t0 whenEvent data -> handleData
+}
+
+/*
+ * Attore interessato a eventi data opportunamente filtrati
+ */    
+QActor qasink context ctxstreamsdemo{ 
+ 
+	State s0 initial{
+        //delay 500 //give time to setup
+        subscribeTo filter for data
+	}   
+	Transition t0 whenEvent data -> handleData
+	
+	State handleData{		
+		println("$name handles ${currentMsg.msgContent()}") color blue
+	}
+	Transition t0 whenEvent data -> handleData
+}
+/*
+ * Attore interessato agli eventi data
+ * che si sottoscrive dopo 3sec
+ */
+QActor busy context ctxstreamsdemo{
+	State s0 initial{
+		println("$name STARTS") color cyan
+		subscribeTo datasource for data		  
+	} 
+	Transition t0 whenTime 3000 -> work
+	
+	State work{
+		println("$name PAY ATTENTION") color cyan
+	}
+	Transition t0 whenEvent data -> handleData
+	
+	State handleData{
+		printCurrentMessage color cyan
+	}    
+	Transition t0 whenEvent data -> handleData
+}

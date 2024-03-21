@@ -1,0 +1,86 @@
+System prodcons24
+
+Dispatch distance : distance(D) "dispatch per consumer (di nome uguale a request)"
+Request  distance : distance(D) "request per consumer (di nome uguale a dispatch)"
+Reply distanceack : ack(D) for distance
+
+Dispatch info  : info(SOURCE,TERM) "atteso dall'observer"
+
+Context ctxprodcons   ip [host="localhost" port=8014] 
+ 
+QActor producer1 context ctxprodcons {
+	State s0 initial{
+		println("$name STARTS") color blue
+		delay 500  //Il consumer potrebbe essere in fase di creazione
+		forward consumer -m distance : distance(20)
+	} 
+}
+
+QActor producer2 context ctxprodcons {
+	State s0 initial{
+		println("$name STARTS") color blue
+		delay 500  //Il consumer potrebbe essere in fase di creazione
+		request consumer -m distance : distance(50)
+	}
+	Transition t0 whenReply distanceack -> handleAnswer
+	
+	State handleAnswer{
+		printCurrentMessage color blue
+	}
+}
+
+QActor consumer context ctxprodcons {
+	State s0 initial{
+		println("$name STARTS") color green
+		delay 1000 //give time the display to start
+	}
+	Transition t0 whenMsg distance -> handleDispatch
+	              whenRequest distance -> handleRequest
+	
+	State handleDispatch{
+		printCurrentMessage color green
+		updateResource [# "info(consumer,$currentMsg)" #]
+	}
+	Transition t0 whenMsg     distance -> handleDispatch
+	              whenRequest distance -> handleRequest
+	
+	State handleRequest{
+		printCurrentMessage color green
+		updateResource [# "info(consumer,$currentMsg)" #]
+		onMsg( distance : distance(D)){
+			[# var D = payloadArg(0) #]
+			replyTo distance with distanceack : ack( $payloadArg(0) )
+		}		
+	}
+	Transition t0 whenMsg distance -> handleDispatch
+	              whenRequest distance -> handleRequest
+}
+
+QActor consumerobserver context ctxprodcons withobj d using "DisplayObj.create()"{
+	State s0 initial{
+		println("$name STARTS") color magenta
+		observeResource consumer msgid info
+	}
+	Transition t0 whenMsg info -> handleUpdate
+	
+	State handleUpdate{
+		printCurrentMessage color magenta
+		[# d.write("${currentMsg.msgContent()}") #]
+//		onMsg( info : info(S,V)){
+//			println("$name from:${payloadArg(0)} info:${payloadArg(1)}") color magenta
+//		}
+	}
+	Transition t0 whenMsg info -> handleUpdate
+}
+
+/*
+ * private FileWriter myWriter  ; //Per il testing
+ * 	protected void writeLog(String s) {
+		try {
+			 myWriter.append(s+"\n");
+			 myWriter.flush();
+		} catch (IOException e) {
+ 			e.printStackTrace();
+		}
+	}
+ */

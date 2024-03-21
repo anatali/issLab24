@@ -1,0 +1,60 @@
+System  qakdemo24
+
+Dispatch cmd   : cmd(X)
+Event    alarm : alarm(X)
+
+Context ctxinterrupt ip [host="localhost" port=8045]
+
+QActor worker context ctxinterrupt{
+	State s0 initial{
+		println("$name STARTS") color blue
+	}	
+	Goto work 
+	 
+	State work{
+		println("$name WORKING ... ") color blue
+		delay 1000
+	}
+	Transition t0
+	    whenMsg cmd               -> handlecmd
+		whenInterruptEvent  alarm -> handlealarm
+	
+	State handlecmd{
+		printCurrentMessage color blue
+	}
+	Goto work 
+	
+	State handlealarm{
+		printCurrentMessage color black
+		if[# currentMsg.msgContent() == "alarm(tsunami)" #]{
+			println("$name WARNING tsunami ... ") color red
+			delay 1000
+			[# System.exit(0) #]
+		}
+		else{ returnFromInterrupt  }
+	}
+}
+
+QActor user context ctxinterrupt{
+	State s0 initial{
+		delay 500
+		println("$name forward  cmd(10) ") color cyan
+		forward worker -m cmd : cmd(10)
+		delay 500
+		println("$name forward  cmd(20) ") color cyan
+		forward worker -m cmd : cmd(20)
+		println("$name ENDS") color cyan
+	}		
+}
+
+
+QActor sentinel context ctxinterrupt{
+	State s0 initial{
+		delay 300
+		println("$name emits alarm(fire)") color magenta
+		emit alarm : alarm(fire)
+		delay 300
+		println("$name emits alarm(tsunami)") color magenta
+		emit alarm : alarm(tsunami)
+	}	
+}

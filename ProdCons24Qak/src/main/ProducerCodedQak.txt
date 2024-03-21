@@ -1,0 +1,25 @@
+package main;
+
+//import it.unibo.kactor.ActorBasic;
+//import kotlin.Unit;
+//import kotlin.coroutines.Continuation;
+//import unibo.basicomm23.interfaces.IApplMessage;
+//
+//public class ProducerCodedQak extends ActorBasic {
+//	 
+//	public ProducerCodedQak( String name ) {
+//		super( name );
+//	}
+//
+//	@Override
+//	public Object actorBody(IApplMessage arg0, Continuation<? super Unit> arg1) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+////	/*3*/override suspend fun actorBody(msg:IApplMessage){
+////	  if(msg.msgId()=="out")
+////	          display.write(msg.msgContent());
+////	  }
+////	}
+}

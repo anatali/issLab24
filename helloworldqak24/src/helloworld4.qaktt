@@ -1,5 +1,10 @@
 System helloworld4 
- 
+/*
+ * Il QActor display opera come observer del QActor worker 
+ * e visualizza sul Display embedded gli aggiornamenti 
+ * che worker invia tramite un dispatch 
+ * che l’observer dichiara di voler gestire col nome info.
+ */
 Dispatch info : info(SOURCE,TERM) 
 
 Context ctxhello ip [host="localhost" port=8004] 

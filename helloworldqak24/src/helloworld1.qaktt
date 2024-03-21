@@ -1,5 +1,8 @@
 System helloworld1
-
+/*
+ *  All’interno di un attore qak si possano (ri)usare  oggetti convenzionali 
+ *  costruiti grazia ad opportune  librerie.
+ */
 Context ctxhello ip [host="localhost" port=8001] 
 
 QActor worker context ctxhello{

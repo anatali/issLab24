@@ -1,0 +1,44 @@
+System helloworld7 
+/*
+ * Notazione $ 
+ * Invio  ripetuto di comandi al display
+ */ 
+Dispatch out  : out(TERM) 
+
+Context ctxhello ip [host="localhost" port=8003] 
+
+QActor display context ctxhello 
+    withobj d using "main.resources.utils.DisplayObj.create()"{
+	//[# val d = utils.DisplayObj.create() #]
+	State s0 initial{
+		
+	}
+	Transition t0 whenMsg out -> handleout
+	
+	State handleout{
+		onMsg( out:out(TERM)){
+			[# val OutMsg = payloadArg(0) #]
+			[# d.write("$OutMsg") #]
+			updateResource [# OutMsg #]
+		}
+		
+	}
+	Transition t0 whenMsg out -> handleout
+}
+
+QActor worker context ctxhello{
+	[# var n = 0 #]
+	State s0 initial{
+		[# 
+	       n     = n + 1 
+		   var M = "hello_again$n"			
+		#]
+		println("$M") color magenta 
+				 
+  		forward display -m out:out($M)
+  		delay 3000
+	}
+	Goto s0
+}  
+  
+//DisplayHTML d   

@@ -6,7 +6,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.CoroutineScope
 
 class DisplayCodedQak(name:String ): ActorBasic( name ){
-  val display = utils.DisplayObj.create()
+  val display = main.resources.utils.DisplayObj.create()
  
   override suspend fun actorBody(msg : IApplMessage){
 	CommUtils.outcyan("$name  $msg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")

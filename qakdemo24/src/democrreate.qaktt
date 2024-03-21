@@ -1,0 +1,89 @@
+System  qakdemo24
+
+Request  distance : distance(D)
+Reply distanceack : ack(D) for distance
+    
+Request r2 : r2(X)
+Reply rr2  : rr2(X) for r2
+   
+Context ctxcreate ip [host="localhost" port=8045]
+
+QActor creator context ctxcreate{
+	State s0 initial{ 
+		delay 500 
+		create producer _"p1" 
+		create producer _"p2"
+		delay 2000 //Avoid premature exit
+		[# System.exit(0) #]
+	}
+}   
+
+QActor producer context ctxcreate dynamicOnly {
+	State s0 initial{ 
+		println("$name request distance") color blue
+		request consumer -m distance : distance($MyName)
+		delay 500
+		println("$name request r2 ") color blue
+		request consumer -m r2:r2(10)
+		delay 500
+		println("$name request r2 ") color blue
+		request consumer -m r2:r2(20)
+	}
+	Transition t0 
+		whenReply distanceack -> handleAnswer
+		whenReply rr2         -> handleAnswer
+	
+	State handleAnswer{
+		printCurrentMessage color blue
+	}
+	Transition t0 
+		whenReply distanceack -> handleAnswer
+		whenReply rr2         -> handleAnswer
+} 
+
+QActor consumer context ctxcreate {
+	State s0 initial{
+		println("$name STARTS") color green
+	}
+	Transition t0  
+	        whenRequest distance -> handleRequest
+	        whenRequest r2       -> handleRequest
+	 
+	State handleRequest{
+		printCurrentMessage color green
+		if [# currentMsg.msgId() == "r2" #]{
+			 //create consumerhelper requestbycreator r2 : r2(a)
+			 delegateCurrentMsgTo consumerhelper 
+		}
+		onMsg( distance : distance(D)){
+			[# var D = payloadArg(0) #]
+			replyTo distance with distanceack : ack( $payloadArg(0) )
+		}		
+	}
+	Transition t0  
+	       whenRequest distance -> handleRequest
+	       whenRequest r2       -> handleRequest
+}
+
+QActor consumerhelper context ctxcreate dynamicOnly {
+	State s0 initial{
+		println("$name STARTS") color magenta
+	}
+	Transition t0 whenRequest r2 -> handle_r2
+	
+	State handle_r2{
+		printCurrentMessage color  magenta
+		onMsg( r2 : r2(X)){
+			[# val V = "answer"+payloadArg(0)  #]
+			replyTo r2 with rr2: rr2( $V )
+		}
+		//[# val V = "answer"+currentMsg.msgContent()  #]
+		
+		//delay 500
+		println("$name ENDS") color magenta
+		terminate 1	
+	}
+	//Transition t0 whenRequest r2 -> handle_r2
+	
+	
+}

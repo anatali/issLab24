@@ -1,0 +1,75 @@
+System prodcons24_consumer
+ 
+Dispatch distance : distance(D)
+Request  distance : distance(D)
+Reply distanceack : ack(D) for distance
+
+Dispatch info  : info(SOURCE,TERM)
+Dispatch short : short(V) 
+
+Context ctxconsumer  ip [host="localhost" port=8015]
+
+  
+QActor consumer context ctxconsumer {
+	State s0 initial{
+		println("$name STARTS") color blue
+	}
+	Transition t0 whenMsg distance     -> handleDispatch
+	              whenRequest distance -> handleRequest
+	
+	State handleDispatch{
+		printCurrentMessage color blue
+		updateResource [# "short(consumer_dispatch)" #]
+	}
+	Transition t0 whenMsg     distance -> handleDispatch
+	              whenRequest distance -> handleRequest
+	
+	State handleRequest{
+		printCurrentMessage color blue
+		updateResource [# "short(consumer_request)" #]
+		updateResource [# "info(consumer,$currentMsg)" #]
+		onMsg( distance : distance(D)){
+			//[# var D = payloadArg(0) #]
+			replyTo distance with distanceack : ack( $payloadArg(0) )
+		}		 
+	}
+	Transition t0 whenMsg     distance -> handleDispatch
+	              whenRequest distance -> handleRequest
+}
+
+
+QActor consumerobserver context ctxconsumer{
+	State s0 initial{
+		println("$name STARTS") color blue
+		observeResource consumer msgid info
+		observeResource consumer msgid short
+	}
+	Transition t0 whenMsg info -> handleUpdate
+	              whenMsg short -> handleUpdate
+	
+	State handleUpdate{
+		printCurrentMessage color magenta
+//		onMsg( info : info(S,V)){
+//			println("$name from:${payloadArg(0)} info:${payloadArg(1)}") color magenta
+//		}
+	}
+	Transition t0 whenMsg info -> handleUpdate
+	              whenMsg short -> handleUpdate
+}
+/*  
+QActor otherobserver context ctxconsumer{
+	State s0 initial{
+		println("$name STARTS") color blue
+		observeResource consumer msgid short
+	}
+	Transition t0  whenMsg short -> handleUpdate
+	
+	State handleUpdate{
+		printCurrentMessage color black
+//		onMsg( short : short(V)){
+//			println("$name:${payloadArg(0)} ") color black
+//		}
+	}
+	Transition t0  whenMsg short -> handleUpdate
+}
+*/

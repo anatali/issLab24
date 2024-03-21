@@ -1,0 +1,50 @@
+System helloworld5 
+/*
+ *  QActor worker dichiarato dynamicOnly
+ */
+Dispatch out  : out(TERM) 
+
+Context ctxhello ip [host="localhost" port=8005] 
+
+QActor display context ctxhello 
+			withobj d using "DisplayObj.create()"{
+	State s0 initial{		
+	}
+	Transition t0 whenMsg out -> handleout
+	
+	State handleout{
+		onMsg( out:out(TERM)){
+			[# val OutMsg = payloadArg(0) #]
+			[# d.write("$OutMsg") #]			 
+		}		
+	}
+	Transition t0 whenMsg out -> handleout
+}
+ 
+QActor worker context ctxhello dynamicOnly{
+	[# var n = 0 #]
+ 	State s0 initial{
+		delay 1000
+		[# var M = "${name}_hello_${n++}"#]
+		forward display -m out:out($M)
+	}	
+	Goto s0 if [#  n <= 3 #] else finish
+	
+	State finish{
+		[# var M = "${name}_terminates"#]
+		forward display -m out:out($M)
+		terminate 0 //remove the actor from the context
+		println("$name BYE") color magenta
+	}
+}  
+
+QActor creator context ctxhello{
+	State s0 initial{
+		create worker 
+		delay 1500
+		create worker _"twin"
+	}
+}  
+
+
+ 

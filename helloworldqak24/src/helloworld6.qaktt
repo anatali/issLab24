@@ -1,0 +1,61 @@
+System helloworld6 
+/*
+ *  connectToMqttBroker
+ */
+Dispatch write  : write(TERM) 
+Event write :  write(X)
+
+
+Context ctxhello ip [host="localhost" port=8006] 
+ 
+
+QActor display context ctxhello  {
+  	State s0 initial{ 
+  		connectToMqttBroker "tcp://broker.hivemq.com"
+  		subscribe "xxx"
+	}	
+	Transition t0 whenMsg write -> handleout
+	              whenEvent write -> handleout
+	
+	State handleout{
+		printCurrentMessage color green
+		onMsg( write:write(T) ){
+			println("$name | ${payloadArg(0)}") color blue
+//			updateResource [# "out(${currentMsg})" #]
+//			updateResource [# "show(${currentMsg})" #]
+//			updateResource [# payloadArg(0) #]
+		}     
+	}      
+	Transition t0 whenMsg write -> handleout
+	              whenEvent write -> handleout
+}   
+   
+  
+QActor worker context ctxhello  {
+	[# var n = 0 #]
+ 	State s0 initial{ 
+ 		delay 2000  
+ 		connectToMqttBroker "tcp://broker.hivemq.com"
+		
+		[# var M = "${name}_hello_${n++}"#]
+		println(M)
+		//forward display -m write:write($M)
+		publish "xxx" -m write : write($M) 
+		delay 1000
+		[# var M1 = "${name}_hello_${n++}"#]
+		publish "xxx" -m write : write($M1) 
+ 	}	 
+ 	Goto finish
+	//Goto s0 if [#  n <= 20 #] else finish
+	   
+	State finish{
+		terminate 0 //remove the actor from the context
+		println("$name BYE") color magenta
+		delay 3000
+		[# System.exit(0) #]
+	}
+}  
+  
+
+//DisplayHTML hellodev6 port 8085 usingactor display inctx ctxhello  
+  

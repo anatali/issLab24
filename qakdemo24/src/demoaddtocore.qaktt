@@ -1,0 +1,50 @@
+System  qakdemo24
+
+Request cmd        : cmd(X) //X=w|s|a|d|h
+Reply   replytocmd : replytocmd(X)
+Event    alarm     : alarm(V)
+
+Context ctxaddtocore      ip [host= "localhost"   port= 8038 ]
+Context ctxresourcecore  ip [host= "127.0.0.1"   port= 8045 ]
+
+ExternalQActor resourcecore context ctxresourcecore
+
+QActor corecaller context ctxaddtocore{
+      [# var StartTime = 0L
+         var Elapsed   = 0L
+      #]
+   State s0 initial {
+      printCurrentMessage  color blue
+      request resourcecore -m cmd : cmd(caller1)
+      memoCurrentTime StartTime
+  }
+  Transition t0 whenReply replytocmd -> handleReply
+
+  State handleReply{
+    printCurrentMessage color blue
+    setDuration Elapsed from StartTime
+    println("$name handleReply Elapsed = $Elapsed ")  color blue
+    println("$name handleReply: emit alarm(on)")  color red
+    emit alarm : alarm(on)
+    request resourcecore -m cmd : cmd(2)
+    request resourcecore -m cmd : cmd(3)
+    memoCurrentTime StartTime
+  }   
+  Transition t0 whenReply replytocmd -> handleReplyAgain
+
+  State handleReplyAgain{
+    printCurrentMessage color blue
+    setDuration Elapsed from StartTime
+    println("$name handleReplyAgain Elapsed = $Elapsed ")  color blue
+   }
+   Transition t0 whenReply replytocmd -> handleReplyAgain
+} //QActor corecaller
+
+QActor alarmoff context ctxaddtocore {
+       State s0 initial {
+          printCurrentMessage  color blue
+                delay 2000
+                println("$name alarmoffemitter: emit alarm(off)")  color red
+                emit alarm : alarm(off)
+       }
+}

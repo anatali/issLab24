@@ -1,0 +1,3 @@
+{"actor":"consumer", "msgType":"dispatch", "curstate":"s0", "nextstate":"handleDispatch", "msgId":"distance"}
+{"actor":"consumer", "msgType":"dispatch", "curstate":"handleDispatch", "nextstate":"handleDispatch", "msgId":"distance"}
+{"actor":"consumer", "msgType":"dispatch", "curstate":"handleRequest", "nextstate":"handleDispatch", "msgId":"distance"}

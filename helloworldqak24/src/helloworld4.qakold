@@ -1,0 +1,51 @@
+System helloworld4 
+/*
+ * Il QActor display opera come observer del QActor worker 
+ * e visualizza sul Display embedded gli aggiornamenti 
+ * che worker invia tramite un dispatch 
+ * che l’observer dichiara di voler gestire col nome info.
+ */
+Dispatch info : info(SOURCE,TERM) 
+
+Context ctxhello ip [host="localhost" port=8004] 
+ 
+QActor display context ctxhello withobj d using "DisplayObj.create()"{
+	State s0 initial{
+		delay 500
+		observeResource worker msgid info 
+	}   
+	Transition t0 whenMsg info -> handleinfo
+	
+	State handleinfo{
+		printCurrentMessage
+		println("$currentMsg") color blue
+		[#  
+		 d.print( currentMsg.toString() )  
+		 d.print( "$currentMsg" )  
+		 d.print( currentMsg.msgContent().toString() )  
+		 d.print( "${currentMsg.msgContent()}" )  		 
+		#]
+		onMsg( info:info(SOURCE,TERM)){
+			[# val Source = payloadArg(0) 
+			   val infoMsg = payloadArg(1)	
+			   val M      = "$infoMsg from $Source"			
+			#]
+			[# d.write( M ) #]
+		}		
+	}
+	Transition t0 whenMsg info -> handleinfo
+}
+    
+QActor worker context ctxhello  {
+ 	State s0 initial{
+		[# var n = 0 #]
+		delay 1500
+		updateResource [#  "info($name,hello_${n++})" #] 
+		delay 1000	 
+		updateResource [# "m($name,hello_${n++})" #]
+	}	 
+}  
+
+
+
+ 

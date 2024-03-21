@@ -1,5 +1,12 @@
 System helloworld2
-
+/*
+ * Come definire ed usare un attore qak scritto in kotlin 
+ * a partire dalle classi definite nella Qak infrastructure.
+ * 
+ * La classe DisplayCodedQak è definita in 
+ * Il CodedQActor display tradurre messaggi (di comando) in chiamate 
+ * a metodi di oggetti convenzionali
+ */
 Dispatch out  : out(TERM) 
 
 Context ctxhello ip [host="localhost" port=8001] 

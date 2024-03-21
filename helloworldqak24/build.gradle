@@ -177,6 +177,28 @@ distributions {
         }
     }
 } 
+
+task runMain(type: JavaExec) {
+    group = "Execution"
+    description = "Run the main class with JavaExecTask"
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'it.unibo.ctxhello.MainCtxhelloKt'
+}
+
+task runDisplay (type: JavaExec) {
+    group = "Execution"
+    description = "Run the main class with JavaExecTask"
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'it.unibo.ctxdisplay.MainCtxdisplayKt'
+}
+
+task runStream (type: JavaExec) {
+    group = "Execution"
+    description = "Run the main class with JavaExecTask"
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'it.unibo.ctxstreamsdemo.MainCtxstreamsdemoKt'
+}
+
 /*
 //TODO
 tasks.register('copyReport', Copy) {

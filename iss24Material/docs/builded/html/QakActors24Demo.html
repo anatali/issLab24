@@ -1,0 +1,2042 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>QakActors24Demo &#8212; iss24 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="QakService24Init" href="QakService24Init.html" />
+    <link rel="prev" title="QakActorsIntro24" href="QakActorsIntro24.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="QakService24Init.html" title="QakService24Init"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="QakActorsIntro24.html" title="QakActorsIntro24"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">QakActors24Demo</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="qakactors24demo">
+<h1>QakActors24Demo<a class="headerlink" href="#qakactors24demo" title="Permalink to this heading">¶</a></h1>
+<p>Primi esempi in <a class="reference internal" href="QakActorsIntro24.html#qakactorsintro24"><span class="std std-ref">QakActorsIntro24</span></a> (<span class="slide3">Progetto helloworldqak24</span>)</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="QakActorsIntro24.html#helloworld0"><span class="std std-ref">helloworld0</span></a></p></td>
+<td><p>Modello di un sistema composto da un solo actor che opera in modo autonomo scrivendo <em>Hello world</em>
+sul dispositivo standard di output</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="QakActorsIntro24.html#helloworld1"><span class="std std-ref">helloworld1</span></a></p></td>
+<td><p>Sistema che opera come <a class="reference internal" href="QakActorsIntro24.html#helloworld0"><span class="std std-ref">helloworld0</span></a> scrivendo su un dispositivo custom di output
+introdotto dall’application designer come <a class="reference internal" href="QakActorsIntro24.html#displayobj"><span class="std std-ref">POJO-JFX</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="QakActorsIntro24.html#helloworld2"><span class="std std-ref">helloworld2</span></a></p></td>
+<td><p>Introduciamo nel sistema un <a class="reference internal" href="QakActors24.html#attori-coded"><span class="std std-ref">CodedQActor</span></a> che incapsula il <a class="reference internal" href="QakActorsIntro24.html#displayobj"><span class="std std-ref">DisplayObj</span></a>
+realizzato con JavaFX</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="QakActorsIntro24.html#helloworld3"><span class="std std-ref">helloworld3</span></a></p></td>
+<td><p>Facciamo ‘emergere’ il comportamento del Display a livello di modello</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="QakActorsIntro24.html#helloworld3-withobj"><span class="std std-ref">helloworld3 withobj</span></a></p></td>
+<td><p>Renderiamo esplicito il fatto che un actor incapsula un oggetto</p></td>
+</tr>
+</tbody>
+</table>
+<p><span class="slide3">Progetto qakdemo24</span> : Esempi di uso di <a class="reference internal" href="QakActors24.html#qakactors24"><span class="std std-ref">QakActors24</span></a> (i primi esempi sono in <a class="reference internal" href="QakActorsIntro24.html#qakactorsintro24"><span class="std std-ref">QakActorsIntro24</span></a>)</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#democodedqactor-qak"><span class="std std-ref">democodedqactor.qak</span></a></p></td>
+<td><p>Sistema basato su istanze di un attore codificato in Kotlin, ciascuna delle quali emette un evento.
+Si evidenzia la opportunità di introdurre un linguaggio di modellazione.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#demo0-qak"><span class="std std-ref">demo0.qak</span></a></p></td>
+<td><p>Interzioni con messaggi <strong>dispatch, event</strong>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#demoguards-qak"><span class="std std-ref">demoguards.qak</span></a></p></td>
+<td><p>Uso di guardie sulle tranzioni.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#demorequest-qak"><span class="std std-ref">demorequest.qak</span></a></p></td>
+<td><p>Interazione <strong>request-reponse</strong>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#demoasktocaller-qak"><span class="std std-ref">demoasktocaller.qak</span></a></p></td>
+<td><p>Un attore chiamato ad eseguire una richiesta, chiede dati ulteriori al chiamante.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#demoresource-qak"><span class="std std-ref">demoresource.qak</span></a></p></td>
+<td><p>Creazione incrementale di un sistema, a partire da un core stand-alone.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#demodelegate-qak"><span class="std std-ref">demodelegate.qak</span></a></p></td>
+<td><p>Sistema con un <em>server</em> che delega la gestione di alcuni tipi di messaggio (tra cui richieste) a un altro attore.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#democreate-qak"><span class="std std-ref">democreate.qak</span></a></p></td>
+<td><p>Sistema in cui due produttori, reati dinamicamnete, inviano richieste a un consumatore che delega
+un tipo di richiesta a un altro attore, creato dinamicamente allo scopo.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#demostreams-qak"><span class="std std-ref">demostreams.qak</span></a></p></td>
+<td><p>Sistema con attori che reagiscono a dati inviati attraverso <strong>eventi-stream</strong>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#demointerrupt-qak"><span class="std std-ref">demointerrupt.qak</span></a></p></td>
+<td><p>Gestione di un evento con transizione a uno stato che opera come una interrupt-routine.</p></td>
+</tr>
+<tr class="row-odd"><td><p>TODO</p></td>
+<td><p>Sistema (ping-pong) formato da attori allocati su due contesti.</p></td>
+</tr>
+</tbody>
+</table>
+<p><span class="slide1">Esempio CodedQActor</span></p>
+<section id="democodedqactor-qak">
+<h2>democodedqactor.qak<a class="headerlink" href="#democodedqactor-qak" title="Permalink to this heading">¶</a></h2>
+<p>Questo esempio introduce tre istanze di un attore <a class="reference internal" href="#codedactor-workactor"><span class="std std-ref">workactor</span></a> codificato in Kotlin,
+ciascuna delle quali emette un evento.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><a class="reference internal image-reference" href="_images/Archworkactorcoded.png"><img alt="_images/Archworkactorcoded.png" class="align-center" src="_images/Archworkactorcoded.png" style="width: 100%;" /></a>
+</td>
+<td><p><strong>Modello del sistema</strong>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">System</span>  <span class="n">qakdemo24</span>
+<span class="n">Dispatch</span> <span class="n">start</span>   <span class="p">:</span> <span class="n">start</span><span class="p">(</span> <span class="n">ARG</span> <span class="p">)</span>
+<span class="n">Event</span> <span class="n">alarm</span>      <span class="p">:</span> <span class="n">alarm</span><span class="p">(</span> <span class="n">DATA</span> <span class="p">)</span>
+
+<span class="n">Context</span> <span class="n">ctxdemocodedqactor</span> <span class="n">ip</span> <span class="p">[</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span> <span class="n">port</span><span class="o">=</span><span class="mi">8065</span><span class="p">]</span>
+
+<span class="n">CodedQActor</span> <span class="n">w1</span> <span class="n">context</span> <span class="n">ctxdemocodedqactor</span> <span class="n">className</span> <span class="s2">&quot;codedActor.workactor&quot;</span>
+<span class="n">CodedQActor</span> <span class="n">w2</span> <span class="n">context</span> <span class="n">ctxdemocodedqactor</span> <span class="n">className</span> <span class="s2">&quot;codedActor.workactor&quot;</span>
+<span class="n">CodedQActor</span> <span class="n">w3</span> <span class="n">context</span> <span class="n">ctxdemocodedqactor</span> <span class="n">className</span> <span class="s2">&quot;codedActor.workactor&quot;</span>
+
+<span class="n">QActor</span> <span class="n">datahandler</span> <span class="n">context</span> <span class="n">ctxdemocodedqactor</span><span class="p">{</span><span class="o">...</span><span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<section id="datahandler">
+<h3>datahandler<a class="headerlink" href="#datahandler" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span> <span class="n">datahandler</span> <span class="n">context</span> <span class="n">ctxdemocodedqactor</span><span class="p">{</span>
+<span class="p">[</span><span class="c1"># var StartTime = 0L #]</span>
+  <span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span> <span class="p">{</span>
+    <span class="n">printCurrentMessage</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span><span class="p">[</span><span class="c1"># val cpus =</span>
+      <span class="n">Runtime</span><span class="o">.</span><span class="n">getRuntime</span><span class="p">()</span><span class="o">.</span><span class="n">availableProcessors</span><span class="p">()</span> <span class="c1">#]</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;cpus= $cpus&quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">red</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span><span class="n">forward</span> <span class="n">w1</span> <span class="o">-</span><span class="n">m</span> <span class="n">start</span> <span class="p">:</span> <span class="n">start</span><span class="p">(</span><span class="n">do</span><span class="p">)</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span><span class="n">forward</span> <span class="n">w2</span> <span class="o">-</span><span class="n">m</span> <span class="n">start</span> <span class="p">:</span> <span class="n">start</span><span class="p">(</span><span class="n">do</span><span class="p">)</span>
+<span class="o">/*</span><span class="mi">4</span><span class="o">*/</span><span class="n">forward</span> <span class="n">w3</span> <span class="o">-</span><span class="n">m</span> <span class="n">start</span> <span class="p">:</span> <span class="n">start</span><span class="p">(</span><span class="n">do</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="n">Transition</span> <span class="n">t0</span>
+    <span class="n">whenEvent</span> <span class="n">alarm</span> <span class="o">-&gt;</span> <span class="n">handleAlarm</span>
+
+  <span class="n">State</span> <span class="n">handleAlarm</span> <span class="p">{</span>
+    <span class="n">printCurrentMessage</span> <span class="n">color</span> <span class="n">blue</span>
+    <span class="p">[</span><span class="c1"># var Elapsed = 0L #]</span>
+<span class="o">/*</span><span class="mi">5</span><span class="o">*/</span><span class="n">setDuration</span> <span class="n">Elapsed</span> <span class="kn">from</span> <span class="nn">StartTime</span>
+<span class="o">/*</span><span class="mi">6</span><span class="o">*/</span><span class="n">memoCurrentTime</span> <span class="n">StartTime</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name alarm after $Elapsed&quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">cyan</span>
+  <span class="p">}</span>
+<span class="n">Transition</span> <span class="n">t0</span>
+<span class="o">/*</span><span class="mi">7</span><span class="o">*/</span><span class="n">whenTime</span> <span class="mi">2500</span> <span class="o">-&gt;</span> <span class="n">end</span>
+<span class="o">/*</span><span class="mi">8</span><span class="o">*/</span><span class="n">whenEvent</span> <span class="n">alarm</span> <span class="o">-&gt;</span> <span class="n">handleAlarm</span>
+
+  <span class="n">State</span> <span class="n">end</span><span class="p">{</span>
+    <span class="p">[</span><span class="c1"># var Elapsed = 0L #]</span>
+  <span class="o">/*</span><span class="mi">9</span><span class="o">*/</span><span class="n">setDuration</span> <span class="n">Elapsed</span> <span class="kn">from</span> <span class="nn">StartTime</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name ENDS duration=$Elapsed&quot;</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><ol class="arabic simple">
+<li><p>Acquisizione del numero di CPU disponibili</p></li>
+<li><p>Invio di richiesta <code class="docutils literal notranslate"><span class="pre">start</span></code> a <code class="docutils literal notranslate"><span class="pre">w1</span></code></p></li>
+<li><p>Invio di richiesta <code class="docutils literal notranslate"><span class="pre">start</span></code> a <code class="docutils literal notranslate"><span class="pre">w2</span></code></p></li>
+<li><p>Invio di richiesta <code class="docutils literal notranslate"><span class="pre">start</span></code> a <code class="docutils literal notranslate"><span class="pre">w3</span></code></p></li>
+<li><p>Caloclo, usando <a class="reference internal" href="QakActors24.html#operazioni-con-il-tempo"><span class="std std-ref">setDuration</span></a> del tempo trascorso prima della percezione
+dell’evento <code class="docutils literal notranslate"><span class="pre">alarm</span></code></p></li>
+<li><p>Memorizzazione del tempo corrente</p></li>
+<li><p>Attesa di <code class="docutils literal notranslate"><span class="pre">2500</span></code> msec. Se non arriva l’evento <code class="docutils literal notranslate"><span class="pre">alarm</span></code> si va allo stato end e si termina</p></li>
+<li><p>Attesa di un evento <code class="docutils literal notranslate"><span class="pre">alarm</span></code></p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="codedactor-workactor">
+<h3>codedActor.workactor<a class="headerlink" href="#codedactor-workactor" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 65%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Il codice di <code class="docutils literal notranslate"><span class="pre">workactor</span></code>, scritto in Koltin, è il seguente:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">workactor</span><span class="p">(</span><span class="n">name</span><span class="p">:</span><span class="n">String</span><span class="p">):</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span>      <span class="n">ActorBasic</span><span class="p">(</span><span class="n">name</span><span class="p">,</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span>                 <span class="n">confined</span><span class="o">=</span><span class="n">true</span><span class="p">){</span>
+<span class="n">var</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="n">override</span> <span class="n">suspend</span> <span class="n">fun</span> <span class="n">actorBody</span><span class="p">(</span><span class="n">msg</span><span class="p">:</span><span class="n">IApplMessage</span><span class="p">){</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span><span class="k">if</span><span class="p">(</span> <span class="n">msg</span><span class="o">.</span><span class="n">msgId</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;start&quot;</span><span class="p">){</span>
+      <span class="n">workStep</span><span class="p">(</span>   <span class="p">)</span>
+    <span class="p">}</span><span class="k">else</span>
+     <span class="n">CommUtils</span><span class="o">.</span><span class="n">outgreen</span><span class="p">(</span><span class="s2">&quot;$name|received  $msg &quot;</span><span class="p">)</span>
+  <span class="p">}</span>
+
+  <span class="n">suspend</span> <span class="n">fun</span> <span class="n">workStep</span><span class="p">(</span>    <span class="p">){</span>
+    <span class="n">i</span><span class="o">++</span>
+    <span class="n">val</span> <span class="n">alarm</span><span class="o">=</span><span class="n">CommUtils</span><span class="o">.</span><span class="n">buildEvent</span><span class="p">(</span>
+                   <span class="n">name</span><span class="p">,</span><span class="s2">&quot;alarm&quot;</span><span class="p">,</span><span class="s2">&quot;alarm$name-$i&quot;</span><span class="p">)</span>
+  <span class="o">/*</span><span class="mi">4</span><span class="o">*/</span><span class="n">emit</span><span class="p">(</span> <span class="n">alarm</span> <span class="p">)</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">3</span> <span class="p">)</span> <span class="n">terminate</span><span class="p">()</span>
+    <span class="k">else</span> <span class="p">{</span>
+      <span class="n">delay</span><span class="p">(</span> <span class="mi">2000</span><span class="n">L</span>   <span class="p">)</span>
+      <span class="n">forward</span><span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="s2">&quot;start(do)&quot;</span> <span class="p">,</span> <span class="n">name</span> <span class="p">)</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><ol class="arabic">
+<li><p>La classe <code class="docutils literal notranslate"><span class="pre">workactor</span></code> estende <a class="reference internal" href="QakActors24.html#it-unibo-kactor-actorbasic-kt"><span class="std std-ref">ActorBasic</span></a> e ridefinisce il metodo <code class="docutils literal notranslate"><span class="pre">actorBody</span></code>.</p></li>
+<li><p>Il valore  <code class="docutils literal notranslate"><span class="pre">confined=true</span></code> trasferito al costruttore  implica che le istanza di questa classe
+sono  attivate usando il dispatcher <a class="reference external" href="https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/new-single-thread-context.html">newSingleThreadContext</a> -&gt; che utilizza solo 1 Thread.
+(si veda <a class="reference external" href="https://kotlinlang.org/docs/coroutine-context-and-dispatchers.html">Coroutine context and dispatchers</a> -&gt;).</p>
+<p>Ponendo :<code class="docutils literal notranslate"><span class="pre">confined=false</span></code> (valore di default), viene usato il dispatcher
+<a class="reference external" href="https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/new-fixed-thread-pool-context.html">newFixedThreadPoolContext</a> -&gt;, che gestisce gli attori attivando  tanti thread quante
+le CPU disponibili.</p>
+</li>
+<li><p>Attivazione del metodo <code class="docutils literal notranslate"><span class="pre">workStep</span></code> in risposta a un messaggio <code class="docutils literal notranslate"><span class="pre">start</span></code>.</p></li>
+<li><p>Il metodo <code class="docutils literal notranslate"><span class="pre">workStep</span></code> emette un evento <code class="docutils literal notranslate"><span class="pre">alarm</span></code> e, dopo un certo numero di iterazioni, termina.</p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="remark">Codice vs. modelli</span></p>
+<ul>
+<li><p>notiamo che il <code class="docutils literal notranslate"><span class="pre">workactor</span></code> non esprime in modo evidente il tipo di informazione che emette come evento.
+Si tratta infatti di codice vero e proprio e <em>non di un modello</em> ;</p></li>
+<li><p>leggendo il codice, capiamo che l’evento emesso ha la forma <code class="docutils literal notranslate"><span class="pre">alarm:alarm(</span> <span class="pre">DATA</span> <span class="pre">)</span></code> e che corrisponde quindi
+a una dichiarazione Qak quale quella introdotta in <a class="reference internal" href="#democodedqactor-qak"><span class="std std-ref">Modello del sistema</span></a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Event</span> <span class="n">alarm</span> <span class="p">:</span> <span class="n">alarm</span><span class="p">(</span> <span class="n">DATA</span> <span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p><span class="slide1">Esempio demo0</span></p>
+</section>
+</section>
+<section id="demo0-qak">
+<h2>demo0.qak<a class="headerlink" href="#demo0-qak" title="Permalink to this heading">¶</a></h2>
+<p>Questo esempio descrive un sistema rappresentato nella figura che segue:</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><a class="reference internal image-reference" href="_images/Archdemo0.png"><img alt="_images/Archdemo0.png" class="align-center" src="_images/Archdemo0.png" style="width: 80%;" /></a>
+</td>
+<td><blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">System</span> <span class="n">qakdemo24</span>
+
+<span class="n">Dispatch</span> <span class="n">msg1</span> <span class="p">:</span> <span class="n">msg1</span><span class="p">(</span><span class="n">ARG</span><span class="p">)</span>       <span class="s2">&quot;da sender a demo0&quot;</span>
+<span class="n">Dispatch</span> <span class="n">msg2</span> <span class="p">:</span> <span class="n">msg2</span><span class="p">(</span><span class="n">ARG</span><span class="p">)</span>             <span class="s2">&quot;da sender a demo0&quot;</span>
+<span class="n">Event</span> <span class="n">alarm</span>   <span class="p">:</span> <span class="n">alarm</span><span class="p">(</span> <span class="n">KIND</span> <span class="p">)</span>
+
+<span class="n">Context</span> <span class="n">ctxdemo0</span> <span class="n">ip</span> <span class="p">[</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span> <span class="n">port</span><span class="o">=</span><span class="mi">8095</span><span class="p">]</span>
+
+<span class="n">QActor</span> <span class="n">demo0</span> <span class="n">context</span> <span class="n">ctxdemo0</span><span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+<span class="n">QActor</span> <span class="n">perceiver</span> <span class="n">context</span> <span class="n">ctxdemo0</span><span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+<span class="n">QActor</span> <span class="n">sender</span> <span class="n">context</span> <span class="n">ctxdemo0</span><span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<ul class="simple">
+<li><p><a class="reference internal" href="#qactor-demo0"><span class="std std-ref">demo0</span></a> : definisce il modello eseguibile della  figura a sinistra</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sender</span></code>: attore che invia i messaggi gestiti da <code class="docutils literal notranslate"><span class="pre">demo0</span></code> e genera (opzionalmente) un evento</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">perceiver</span></code>: attore che gestisce gli eventi emessi da <code class="docutils literal notranslate"><span class="pre">sender</span></code></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<section id="qactor-demo0">
+<h3>QActor demo0<a class="headerlink" href="#qactor-demo0" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span> <span class="n">demo0</span> <span class="n">context</span> <span class="n">ctxdemo0</span><span class="p">{</span>
+  <span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span> <span class="p">{</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span> <span class="n">discardMsg</span> <span class="n">Off</span>  <span class="o">//</span><span class="n">discardMsg</span> <span class="n">On</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*///</span><span class="p">[</span><span class="c1"># sysUtil.logMsgs=true #]</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;myself=$</span><span class="si">{myself.name}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;curState=$</span><span class="si">{currentState.stateName}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;currentMsg=$</span><span class="si">{currentMsg}</span><span class="s2">&quot;</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span><span class="n">Goto</span> <span class="n">s1</span>
+
+  <span class="n">State</span> <span class="n">s1</span><span class="p">{</span>
+    <span class="n">printCurrentMessage</span>
+  <span class="p">}</span>
+  <span class="n">Transition</span> <span class="n">t0</span> <span class="n">whenMsg</span> <span class="n">msg1</span> <span class="o">-&gt;</span> <span class="n">s2</span>
+                <span class="n">whenMsg</span> <span class="n">msg2</span> <span class="o">-&gt;</span> <span class="n">s3</span>
+
+  <span class="n">State</span> <span class="n">s2</span><span class="p">{</span>
+    <span class="n">printCurrentMessage</span>
+<span class="o">/*</span><span class="mi">4</span><span class="o">*/</span> <span class="n">onMsg</span><span class="p">(</span> <span class="n">msg1</span><span class="p">:</span><span class="n">msg1</span><span class="p">(</span><span class="n">V</span><span class="p">)){</span>
+<span class="o">/*</span><span class="mi">5</span><span class="o">*/</span> <span class="n">println</span><span class="p">(</span><span class="s2">&quot;s2: msg1(${payloadArg(0)})&quot;</span><span class="p">)</span>
+      <span class="n">delay</span> <span class="mi">1000</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="o">/*</span><span class="mi">6</span><span class="o">*/</span><span class="n">Transition</span> <span class="n">t0</span> <span class="n">whenMsg</span> <span class="n">msg2</span> <span class="o">-&gt;</span> <span class="n">s3</span>
+
+  <span class="n">State</span> <span class="n">s3</span><span class="p">{</span>
+    <span class="n">printCurrentMessage</span>
+<span class="o">/*</span><span class="mi">7</span><span class="o">*/</span><span class="n">onMsg</span><span class="p">(</span> <span class="n">msg2</span><span class="p">:</span><span class="n">msg2</span><span class="p">(</span><span class="mi">1</span><span class="p">)){</span>
+      <span class="n">println</span><span class="p">(</span><span class="s2">&quot;s3: msg2(${payloadArg(0)})&quot;</span><span class="p">)</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">Goto</span> <span class="n">s1</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>La fiura mostra  <span class="blue">demo0</span> come <a class="reference internal" href="Principi.html#automi-a-stati-finiti"><span class="std std-ref">FSM</span></a></p>
+</td>
+<td><ol class="arabic simple">
+<li><p><a class="reference internal" href="QakActors24.html#variabili-interne-importanti"><span class="std std-ref">discardMsg Off</span></a>: i messaggi che non sono di interesse
+nello stato vengono conservati, mentre con <code class="docutils literal notranslate"><span class="pre">discardMsg</span> <span class="pre">On</span></code>, essi vengono eliminati.</p></li>
+<li><p>crea dei file di log dei messaggi ricevuti</p></li>
+<li><p><a class="reference internal" href="QakActors24.html#emptytransition"><span class="std std-ref">EmptyTransition</span></a></p></li>
+<li><p><a class="reference internal" href="QakActors24.html#accesso-al-contenuto-dei-messaggi"><span class="std std-ref">Accesso al contenuto dei messaggi</span></a>: esegue il body solo se il <em>messaggio corrente</em>
+ha identificatore <code class="docutils literal notranslate"><span class="pre">msg1</span></code> e il suo payload <code class="docutils literal notranslate"><span class="pre">msg1(ARG)</span></code>
+può essere <strong>unificato</strong> con il template della dichiarazione <span class="slide3">e</span>
+con il template <code class="docutils literal notranslate"><span class="pre">msg1(V)</span></code>.</p></li>
+<li><p><a class="reference internal" href="QakActors24.html#payloadarg"><span class="std std-ref">payloadArg</span></a>: accesso al valore di <code class="docutils literal notranslate"><span class="pre">ARG</span></code></p></li>
+<li><p><a class="reference internal" href="QakActors24.html#nonemptytransition"><span class="std std-ref">NonEmptyTransition</span></a></p></li>
+<li><p>considera solo messaggi con <code class="docutils literal notranslate"><span class="pre">msgId==msg2</span></code> e payload <code class="docutils literal notranslate"><span class="pre">msg2(1)</span></code></p></li>
+</ol>
+<blockquote>
+<div><a class="reference internal image-reference" href="_images/demoDSL.png"><img alt="_images/demoDSL.png" class="align-center" src="_images/demoDSL.png" style="width: 100%;" /></a>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="demo0-sender">
+<h3>demo0 sender<a class="headerlink" href="#demo0-sender" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Il <code class="docutils literal notranslate"><span class="pre">sender</span></code></p>
+<ol class="arabic simple">
+<li><p>invia un primo dispatch <code class="docutils literal notranslate"><span class="pre">msg1</span></code> a <a class="reference internal" href="#qactor-demo0"><span class="std std-ref">QActor demo0</span></a></p></li>
+<li><p>invia un secondo dispatch <code class="docutils literal notranslate"><span class="pre">msg1</span></code> a <a class="reference internal" href="#qactor-demo0"><span class="std std-ref">QActor demo0</span></a></p></li>
+<li><p>dopo un tempo <code class="docutils literal notranslate"><span class="pre">DT</span></code> transita di stato</p></li>
+<li><p>invia un dispatch <code class="docutils literal notranslate"><span class="pre">msg2</span></code> a <a class="reference internal" href="#qactor-demo0"><span class="std std-ref">QActor demo0</span></a></p></li>
+<li><p>azione condizionale</p></li>
+<li><p>emette l’evento <code class="docutils literal notranslate"><span class="pre">alarm</span></code></p></li>
+</ol>
+<p>invia alcuni messaggi e genera un evento se <code class="docutils literal notranslate"><span class="pre">emitEvents</span> <span class="pre">=</span> <span class="pre">true</span></code>. Si noti l’uso di
+<a class="reference internal" href="QakActors24.html#timeout-per-transizioni"><span class="std std-ref">whenTimeVar</span></a>.</p>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span> <span class="n">sender</span> <span class="n">context</span> <span class="n">ctxdemo0</span><span class="p">{</span>
+  <span class="p">[</span><span class="c1"># var emitEvents = true</span>
+    <span class="n">var</span> <span class="n">DT</span>         <span class="o">=</span> <span class="mi">1000</span><span class="n">L</span><span class="p">;</span>
+  <span class="c1">#]</span>
+  <span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span> <span class="p">{</span>
+    <span class="n">printCurrentMessage</span> <span class="n">color</span> <span class="n">black</span>
+    <span class="n">println</span><span class="p">(</span> <span class="s2">&quot;sender sends ... &quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">green</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span><span class="n">forward</span> <span class="n">demo0</span> <span class="o">-</span><span class="n">m</span> <span class="n">msg1</span> <span class="p">:</span> <span class="n">msg1</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">delay</span> <span class="mi">300</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span><span class="n">forward</span> <span class="n">demo0</span> <span class="o">-</span><span class="n">m</span> <span class="n">msg1</span> <span class="p">:</span> <span class="n">msg1</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="n">Transition</span> <span class="n">t0</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span> <span class="n">whenTimeVar</span>  <span class="n">DT</span> <span class="o">-&gt;</span> <span class="n">sendothermsgs</span>
+
+  <span class="n">State</span> <span class="n">sendothermsgs</span><span class="p">{</span>
+    <span class="n">println</span><span class="p">(</span> <span class="s2">&quot;sender sends again ... &quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">green</span>
+<span class="o">/*</span><span class="mi">4</span><span class="o">*/</span><span class="n">forward</span> <span class="n">demo0</span> <span class="o">-</span><span class="n">m</span> <span class="n">msg2</span> <span class="p">:</span> <span class="n">msg2</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="o">/*</span><span class="mi">5</span><span class="o">*/</span><span class="k">if</span> <span class="p">[</span><span class="c1"># emitEvents #] {</span>
+<span class="o">/*</span><span class="mi">6</span><span class="o">*&amp;</span>  <span class="n">emit</span> <span class="n">alarm</span> <span class="p">:</span> <span class="n">alarm</span><span class="p">(</span> <span class="n">fire</span> <span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="demo0-perceiver">
+<h3>demo0 perceiver<a class="headerlink" href="#demo0-perceiver" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Il <code class="docutils literal notranslate"><span class="pre">perceiver</span></code></p>
+<ol class="arabic simple">
+<li><p>gestisce l’evento <code class="docutils literal notranslate"><span class="pre">alarm</span></code></p></li>
+<li><p><a class="reference internal" href="QakActors24.html#timeout-per-transizioni"><span class="std std-ref">whenTime</span></a> se scade un delay di <code class="docutils literal notranslate"><span class="pre">100</span></code> msec va a <code class="docutils literal notranslate"><span class="pre">s2</span></code></p></li>
+<li><p>se prima dei <code class="docutils literal notranslate"><span class="pre">100</span></code> msec è stato emesso l’evento <code class="docutils literal notranslate"><span class="pre">alarm</span></code> rimande in <code class="docutils literal notranslate"><span class="pre">s1</span></code></p></li>
+</ol>
+</td>
+<td><div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span><span class="w"> </span><span class="n">perceiver</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="n">ctxdemo0</span><span class="p">{</span>
+<span class="w">   </span><span class="n">State</span><span class="w"> </span><span class="n">s0</span><span class="w"> </span><span class="n">initial</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="n">printCurrentMessage</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="n">black</span>
+<span class="w">   </span><span class="p">}</span>
+<span class="cm">/*1*/</span><span class="w"> </span><span class="n">Transition</span><span class="w"> </span><span class="n">t0</span><span class="w"> </span><span class="n">whenEvent</span><span class="w"> </span><span class="n">alarm</span><span class="o">-&gt;</span><span class="n">s1</span>
+
+<span class="w">   </span><span class="n">State</span><span class="w"> </span><span class="n">s1</span><span class="p">{</span>
+<span class="w">     </span><span class="n">printCurrentMessage</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="n">magenta</span>
+<span class="w">   </span><span class="p">}</span>
+<span class="w">   </span><span class="n">Transition</span><span class="w"> </span><span class="n">t0</span>
+<span class="w"> </span><span class="cm">/*2*/</span><span class="w"> </span><span class="n">whenTime</span><span class="w"> </span><span class="mi">100</span><span class="w">    </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">s2</span>
+<span class="w"> </span><span class="cm">/*3*/</span><span class="w"> </span><span class="n">whenEvent</span><span class="w"> </span><span class="n">alarm</span><span class="o">-</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">s1</span>
+
+<span class="w">   </span><span class="n">State</span><span class="w"> </span><span class="n">s2</span><span class="p">{</span>
+<span class="w">     </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;perceiver BYE&quot;</span><span class="p">)</span>
+<span class="w">   </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="analisi-dei-risultati">
+<h3>Analisi dei risultati<a class="headerlink" href="#analisi-dei-risultati" title="Permalink to this heading">¶</a></h3>
+<p><span class="blue">Output con discardMsg On</span></p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Caso sender: <code class="docutils literal notranslate"><span class="pre">emitEvents</span> <span class="pre">=</span> <span class="pre">false</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sender</span> <span class="n">sends</span> <span class="o">...</span>
+<span class="n">demo0</span> <span class="ow">in</span> <span class="n">s1</span> <span class="o">|</span> <span class="n">msg</span><span class="p">(</span><span class="n">local_noMsg</span><span class="p">,</span><span class="n">event</span><span class="p">,</span><span class="n">demo0</span><span class="p">,</span><span class="n">none</span><span class="p">,</span><span class="n">noMsg</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">demo0</span> <span class="ow">in</span> <span class="n">s2</span> <span class="o">|</span> <span class="n">msg</span><span class="p">(</span><span class="n">msg1</span><span class="p">,</span><span class="n">dispatch</span><span class="p">,</span><span class="n">sender</span><span class="p">,</span><span class="n">demo0</span><span class="p">,</span><span class="n">msg1</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">demo0</span> <span class="ow">in</span> <span class="n">s2</span> <span class="o">|</span> <span class="n">msg1</span><span class="p">:</span><span class="n">msg1</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">sender</span> <span class="n">sends</span> <span class="n">again</span> <span class="o">...</span>
+<span class="n">demo0</span> <span class="ow">in</span> <span class="n">s3</span> <span class="o">|</span> <span class="n">msg</span><span class="p">(</span><span class="n">msg2</span><span class="p">,</span><span class="n">dispatch</span><span class="p">,</span><span class="n">sender</span><span class="p">,</span><span class="n">demo0</span><span class="p">,</span><span class="n">msg2</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="mi">13</span><span class="p">)</span>
+<span class="n">demo0</span> <span class="ow">in</span> <span class="n">s3</span> <span class="o">|</span> <span class="n">msg2</span><span class="p">:</span><span class="n">msg2</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">demo0</span> <span class="ow">in</span> <span class="n">s1</span> <span class="o">|</span> <span class="n">msg</span><span class="p">(</span><span class="n">local_noMsg</span><span class="p">,</span><span class="n">event</span><span class="p">,</span><span class="n">demo0</span><span class="p">,</span><span class="n">none</span><span class="p">,</span><span class="n">noMsg</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</td>
+<td><p>Questo caso evidenzia anche che:</p>
+<p>una <a class="reference internal" href="QakActors24.html#emptytransition"><span class="std std-ref">EmptyTransition</span></a> è realizzata con emissione di un evento <code class="docutils literal notranslate"><span class="pre">local_noMsg</span></code>;
+i messaggi in arrivo sono memorizzati in <a class="reference internal" href="QakActors24.html#la-gestione-dei-messaggi"><span class="std std-ref">msgQueueStore</span></a></p>
+</td>
+</tr>
+<tr class="row-even"><td><p>Caso sender:  <code class="docutils literal notranslate"><span class="pre">emitEvents</span> <span class="pre">=</span> <span class="pre">true</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sender</span> <span class="n">sends</span> <span class="o">...</span>
+<span class="n">demo0</span> <span class="ow">in</span> <span class="n">s1</span> <span class="o">|</span> <span class="n">msg</span><span class="p">(</span><span class="n">local_noMsg</span><span class="p">,</span><span class="n">event</span><span class="p">,</span><span class="n">demo0</span><span class="p">,</span><span class="n">none</span><span class="p">,</span><span class="n">noMsg</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">demo0</span> <span class="ow">in</span> <span class="n">s2</span> <span class="o">|</span> <span class="n">msg</span><span class="p">(</span><span class="n">msg1</span><span class="p">,</span><span class="n">dispatch</span><span class="p">,</span><span class="n">sender</span><span class="p">,</span><span class="n">demo0</span><span class="p">,</span><span class="n">msg1</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">demo0</span> <span class="ow">in</span> <span class="n">s2</span> <span class="o">|</span> <span class="n">msg1</span><span class="p">:</span><span class="n">msg1</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">sender</span> <span class="n">sends</span> <span class="n">again</span> <span class="o">...</span>
+<span class="n">demo0</span> <span class="ow">in</span> <span class="n">s3</span> <span class="o">|</span> <span class="n">msg</span><span class="p">(</span><span class="n">msg2</span><span class="p">,</span><span class="n">dispatch</span><span class="p">,</span><span class="n">sender</span><span class="p">,</span><span class="n">demo0</span><span class="p">,</span><span class="n">msg2</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="mi">13</span><span class="p">)</span>
+<span class="n">demo0</span> <span class="ow">in</span> <span class="n">s3</span> <span class="o">|</span> <span class="n">msg2</span><span class="p">:</span><span class="n">msg2</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">perceiver</span> <span class="ow">in</span> <span class="n">s1</span> <span class="o">|</span> <span class="n">msg</span><span class="p">(</span><span class="n">alarm</span><span class="p">,</span><span class="n">event</span><span class="p">,</span><span class="n">sender</span><span class="p">,</span><span class="n">none</span><span class="p">,</span><span class="n">alarm</span><span class="p">(</span><span class="n">fire</span><span class="p">),</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">demo0</span> <span class="ow">in</span> <span class="n">s1</span> <span class="o">|</span> <span class="n">msg</span><span class="p">(</span><span class="n">local_noMsg</span><span class="p">,</span><span class="n">event</span><span class="p">,</span><span class="n">demo0</span><span class="p">,</span><span class="n">none</span><span class="p">,</span><span class="n">noMsg</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">perceiver</span> <span class="ow">in</span> <span class="n">s2</span> <span class="o">|</span> <span class="n">msg</span><span class="p">(</span><span class="n">local_tout_perceiver_s1</span><span class="p">,</span>
+                <span class="n">event</span><span class="p">,</span><span class="n">timer</span><span class="p">,</span><span class="n">none</span><span class="p">,</span><span class="n">local_tout_perceiver_s1</span><span class="p">,</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">perceiver</span> <span class="n">BYE</span>
+</pre></div>
+</div>
+</td>
+<td><p>Questo caso evidenzia anche che:</p>
+<p>lo scadere del <a class="reference internal" href="QakActors24.html#timeout-per-transizioni"><span class="std std-ref">timeOut</span></a> provoca l’emissione di un evento con indentificatore  <code class="docutils literal notranslate"><span class="pre">local_tout_perceiver_s1</span></code>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="blue">Output con discardMsg Off</span></p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Caso sender: <code class="docutils literal notranslate"><span class="pre">emitEvents</span> <span class="pre">=</span> <span class="pre">false</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sender</span> <span class="n">sends</span> <span class="o">...</span>
+<span class="n">demo0</span> <span class="ow">in</span> <span class="n">s1</span> <span class="o">|</span> <span class="n">msg</span><span class="p">(</span><span class="n">local_noMsg</span><span class="p">,</span><span class="n">event</span><span class="p">,</span><span class="n">demo0</span><span class="p">,</span><span class="n">none</span><span class="p">,</span><span class="n">noMsg</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">demo0</span> <span class="ow">in</span> <span class="n">s2</span> <span class="o">|</span> <span class="n">msg</span><span class="p">(</span><span class="n">msg1</span><span class="p">,</span><span class="n">dispatch</span><span class="p">,</span><span class="n">sender</span><span class="p">,</span><span class="n">demo0</span><span class="p">,</span><span class="n">msg1</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">demo0</span> <span class="ow">in</span> <span class="n">s2</span> <span class="o">|</span> <span class="n">s2</span><span class="p">:</span><span class="n">msg1</span><span class="p">:</span><span class="n">msg1</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="o">%%%</span>  <span class="n">ActorBasicFsm</span> <span class="n">demo0</span> <span class="o">|</span> <span class="n">added</span>
+  <span class="n">msg</span><span class="p">(</span><span class="n">msg1</span><span class="p">,</span><span class="n">dispatch</span><span class="p">,</span><span class="n">sender</span><span class="p">,</span><span class="n">demo0</span><span class="p">,</span><span class="n">msg1</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="mi">11</span><span class="p">)</span> <span class="ow">in</span> <span class="n">msgQueueStore</span>
+<span class="n">demo0</span> <span class="ow">in</span> <span class="n">s3</span> <span class="o">|</span> <span class="n">msg</span><span class="p">(</span><span class="n">msg2</span><span class="p">,</span><span class="n">dispatch</span><span class="p">,</span><span class="n">sender</span><span class="p">,</span><span class="n">demo0</span><span class="p">,</span><span class="n">msg2</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">demo0</span> <span class="ow">in</span> <span class="n">s3</span> <span class="o">|</span> <span class="n">s3</span><span class="p">:</span><span class="n">msg2</span><span class="p">:</span><span class="n">msg2</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">demo0</span> <span class="ow">in</span> <span class="n">s1</span> <span class="o">|</span> <span class="n">msg</span><span class="p">(</span><span class="n">local_noMsg</span><span class="p">,</span><span class="n">event</span><span class="p">,</span><span class="n">demo0</span><span class="p">,</span><span class="n">none</span><span class="p">,</span><span class="n">noMsg</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">demo0</span> <span class="ow">in</span> <span class="n">s2</span> <span class="o">|</span> <span class="n">msg</span><span class="p">(</span><span class="n">msg1</span><span class="p">,</span><span class="n">dispatch</span><span class="p">,</span><span class="n">sender</span><span class="p">,</span><span class="n">demo0</span><span class="p">,</span><span class="n">msg1</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="mi">11</span><span class="p">)</span>
+<span class="n">demo0</span> <span class="ow">in</span> <span class="n">s2</span> <span class="o">|</span> <span class="n">s2</span><span class="p">:</span><span class="n">msg1</span><span class="p">:</span><span class="n">msg1</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</td>
+<td><p>Si nota la memorizzazione in <em>msgQueueStore</em></p></td>
+</tr>
+</tbody>
+</table>
+<p><span class="slide1">Esempio demoguards</span></p>
+</section>
+</section>
+<section id="demoguards-qak">
+<h2>demoguards.qak<a class="headerlink" href="#demoguards-qak" title="Permalink to this heading">¶</a></h2>
+<p>Questo esempio è relativo all’uso delle guardie.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><a class="reference internal image-reference" href="_images/Archdemoguards.png"><img alt="_images/Archdemoguards.png" class="align-center" src="_images/Archdemoguards.png" style="width: 70%;" /></a>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">System</span> <span class="n">qakdemo24</span>
+<span class="n">Dispatch</span> <span class="n">cmd</span>   <span class="p">:</span> <span class="n">cmd</span><span class="p">(</span> <span class="n">ARG</span> <span class="p">)</span>
+<span class="n">Event</span> <span class="n">alarm</span>    <span class="p">:</span> <span class="n">alarm</span><span class="p">(</span> <span class="n">DATA</span> <span class="p">)</span>
+
+<span class="n">Context</span> <span class="n">ctxdemoguards</span> <span class="n">ip</span> <span class="p">[</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span> <span class="n">port</span><span class="o">=</span><span class="mi">8065</span><span class="p">]</span>
+
+<span class="n">QActor</span> <span class="n">a1</span> <span class="n">context</span> <span class="n">ctxdemoguards</span><span class="p">{</span><span class="o">...</span><span class="p">}</span>
+<span class="n">QActor</span> <span class="n">a2</span> <span class="n">context</span> <span class="n">ctxdemoguards</span><span class="p">{</span><span class="o">...</span><span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<section id="guards-a1">
+<h3>guards a1<a class="headerlink" href="#guards-a1" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span> <span class="n">a1</span> <span class="n">context</span> <span class="n">ctxdemoguards</span><span class="p">{</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span><span class="p">[</span><span class="c1"># var ready     = true</span>
+   <span class="n">var</span> <span class="n">end</span>       <span class="o">=</span> <span class="n">false</span>
+   <span class="n">fun</span> <span class="n">check</span><span class="p">(</span> <span class="n">v</span> <span class="p">:</span> <span class="n">String</span> <span class="p">)</span> <span class="p">:</span> <span class="n">Boolean</span><span class="p">{</span>
+      <span class="k">return</span> <span class="n">v</span> <span class="o">==</span><span class="s2">&quot;cmd(continue)&quot;</span>
+  <span class="p">}</span>
+<span class="c1">#]</span>
+  <span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span> <span class="p">{</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name in s0 end=$end ready=$ready&quot;</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="o">/*</span><span class="mi">2</span><span class="o">*/</span><span class="n">Goto</span> <span class="n">end</span> <span class="k">if</span> <span class="p">[</span><span class="c1"># end #] else s1</span>
+
+  <span class="n">State</span> <span class="n">end</span><span class="p">{</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name BYE&quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">magenta</span>
+    <span class="p">[</span><span class="c1"># System.exit(0) #]</span>
+  <span class="p">}</span>
+
+  <span class="n">State</span> <span class="n">s1</span>  <span class="p">{</span>
+      <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name in s1 ready=$ready&quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">blue</span>
+  <span class="p">}</span>
+  <span class="n">Transition</span> <span class="n">t0</span>
+  <span class="o">/*</span><span class="mi">3</span><span class="o">*/</span><span class="n">whenEvent</span> <span class="n">alarm</span> <span class="ow">and</span> <span class="p">[</span><span class="c1"># ready #]   -&gt; handleAlarm</span>
+  <span class="o">/*</span><span class="mi">4</span><span class="o">*/</span><span class="n">whenMsg</span> <span class="n">cmd</span>     <span class="ow">and</span> <span class="p">[</span><span class="c1"># ready #]   -&gt; handleCmd</span>
+  <span class="o">/*</span><span class="mi">5</span><span class="o">*/</span><span class="n">whenMsg</span> <span class="n">cmd</span>     <span class="ow">and</span> <span class="p">[</span><span class="c1"># ! ready #] -&gt; checkCmd</span>
+
+  <span class="n">State</span> <span class="n">handleAlarm</span>  <span class="p">{</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name in handleAlarm ready=$ready&quot;</span><span class="p">)</span>
+  <span class="o">/*</span><span class="mi">6</span><span class="o">*/</span> <span class="p">[</span><span class="c1"># ready = false #]</span>
+  <span class="p">}</span>
+  <span class="n">Goto</span> <span class="n">s1</span>
+
+  <span class="n">State</span> <span class="n">handleCmd</span>  <span class="p">{</span>
+    <span class="n">printCurrentMessage</span>
+  <span class="o">/*</span><span class="mi">7</span><span class="o">*/</span><span class="n">onMsg</span><span class="p">(</span> <span class="n">cmd</span> <span class="p">:</span> <span class="n">cmd</span><span class="p">(</span><span class="n">end</span><span class="p">)</span> <span class="p">){</span>
+        <span class="p">[</span><span class="c1"># end = true #]</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="o">/*</span><span class="mi">8</span><span class="o">*/</span><span class="n">Goto</span> <span class="n">end</span> <span class="k">if</span> <span class="p">[</span><span class="c1"># end #] else s1</span>
+
+  <span class="n">State</span> <span class="n">checkCmd</span>  <span class="p">{</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name checks $currentMsg&quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">magenta</span>
+  <span class="o">/*</span><span class="mi">9</span><span class="o">*/</span><span class="p">[</span><span class="c1"># ready = check( currentMsg.msgContent() ) #]</span>
+  <span class="p">}</span>
+  <span class="n">Goto</span> <span class="n">s1</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><ol class="arabic simple">
+<li><p>Variabili e funzioni booleane</p></li>
+<li><p><a class="reference internal" href="QakActors24.html#emptytransition"><span class="std std-ref">EmptyTransition</span></a> con guardia iniziale <code class="docutils literal notranslate"><span class="pre">false</span></code></p></li>
+<li><p>Transizione allo stato di gestione dell’evento, con guardia <code class="docutils literal notranslate"><span class="pre">ready==true</span></code></p></li>
+<li><p>Transizione allo stato di gestione del dispatch, con guardia <code class="docutils literal notranslate"><span class="pre">ready==true</span></code></p></li>
+<li><p>Transizione allo stato di gestione del dispatch, con guardia <code class="docutils literal notranslate"><span class="pre">ready==false</span></code></p></li>
+<li><p>La gestione dell’evento <code class="docutils literal notranslate"><span class="pre">alarm</span></code> imposta <code class="docutils literal notranslate"><span class="pre">ready=false</span></code></p></li>
+<li><p>La gestione del dispatch <code class="docutils literal notranslate"><span class="pre">cmd(end)</span></code> imposta <code class="docutils literal notranslate"><span class="pre">end=true</span></code></p></li>
+<li><p><a class="reference internal" href="QakActors24.html#emptytransition"><span class="std std-ref">EmptyTransition</span></a> con guardia  <code class="docutils literal notranslate"><span class="pre">end</span></code></p></li>
+<li><p>Gestione del dispatch <code class="docutils literal notranslate"><span class="pre">cmd(continue)</span></code> con guardia <code class="docutils literal notranslate"><span class="pre">ready</span></code> settata dalla funzione <code class="docutils literal notranslate"><span class="pre">check</span></code></p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="guards-a2">
+<h3>guards a2<a class="headerlink" href="#guards-a2" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span> <span class="n">a2</span> <span class="n">context</span> <span class="n">ctxdemoguards</span><span class="p">{</span>
+  <span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span> <span class="p">{</span>
+  <span class="o">/*</span><span class="mi">1</span><span class="o">*/</span><span class="n">forward</span> <span class="n">a1</span> <span class="o">-</span><span class="n">m</span> <span class="n">cmd</span> <span class="p">:</span> <span class="n">cmd</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+  <span class="o">/*</span><span class="mi">2</span><span class="o">*/</span><span class="n">emit</span> <span class="n">alarm</span><span class="p">:</span><span class="n">alarm</span><span class="p">(</span><span class="n">fire</span><span class="p">)</span>
+  <span class="o">/*</span><span class="mi">3</span><span class="o">*/</span><span class="n">forward</span> <span class="n">a1</span> <span class="o">-</span><span class="n">m</span> <span class="n">cmd</span> <span class="p">:</span> <span class="n">cmd</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+  <span class="o">/*</span><span class="mi">4</span><span class="o">*/</span><span class="n">emit</span> <span class="n">alarm</span><span class="p">:</span><span class="n">alarm</span><span class="p">(</span><span class="n">tsunami</span><span class="p">)</span>
+  <span class="o">/*</span><span class="mi">5</span><span class="o">*/</span><span class="n">forward</span> <span class="n">a1</span> <span class="o">-</span><span class="n">m</span> <span class="n">cmd</span> <span class="p">:</span> <span class="n">cmd</span><span class="p">(</span><span class="k">continue</span><span class="p">)</span>
+  <span class="o">/*</span><span class="mi">6</span><span class="o">*/</span><span class="n">forward</span> <span class="n">a1</span> <span class="o">-</span><span class="n">m</span> <span class="n">cmd</span> <span class="p">:</span> <span class="n">cmd</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+  <span class="o">/*</span><span class="mi">7</span><span class="o">*/</span><span class="n">forward</span> <span class="n">a1</span> <span class="o">-</span><span class="n">m</span> <span class="n">cmd</span> <span class="p">:</span> <span class="n">cmd</span><span class="p">(</span><span class="n">end</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><ol class="arabic simple">
+<li><p>Invio di un dispatch <code class="docutils literal notranslate"><span class="pre">cmd(10)</span></code> a <code class="docutils literal notranslate"><span class="pre">a1</span></code>, che viene gestito</p></li>
+<li><p>Emissione di un evento <code class="docutils literal notranslate"><span class="pre">alarm(fire)</span></code>, che viene gestito da <code class="docutils literal notranslate"><span class="pre">a1</span></code></p></li>
+<li><p>Invio di un dispatch <code class="docutils literal notranslate"><span class="pre">cmd(20)</span></code> a <code class="docutils literal notranslate"><span class="pre">a1</span></code>, che non viene gestito</p></li>
+<li><p>Emissione di un evento <code class="docutils literal notranslate"><span class="pre">alarm(tsunami)</span></code>, che non viene gestito da <code class="docutils literal notranslate"><span class="pre">a1</span></code></p></li>
+<li><p>Invio di un dispatch <code class="docutils literal notranslate"><span class="pre">cmd(continue)</span></code> a <code class="docutils literal notranslate"><span class="pre">a1</span></code>, che viene gestito</p></li>
+<li><p>Invio di un dispatch <code class="docutils literal notranslate"><span class="pre">cmd(30)</span></code> a <code class="docutils literal notranslate"><span class="pre">a1</span></code>, che viene gestito</p></li>
+<li><p>Invio di un dispatch  <code class="docutils literal notranslate"><span class="pre">cmd(end)</span></code> a <code class="docutils literal notranslate"><span class="pre">a1</span></code>, che viene gestito terminando il sistema</p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="slide1">Esempio demorequest</span></p>
+</section>
+</section>
+<section id="demorequest-qak">
+<h2>demorequest.qak<a class="headerlink" href="#demorequest-qak" title="Permalink to this heading">¶</a></h2>
+<p>Questo esempio è relativo alla interazione request-reponse.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><a class="reference internal image-reference" href="_images/Archdemorequest.png"><img alt="_images/Archdemorequest.png" class="align-center" src="_images/Archdemorequest.png" style="width: 70%;" /></a>
+</td>
+<td><p>Interazione <span class="blue">caller e called</span></p>
+<a class="reference internal image-reference" href="_images/demorequest.png"><img alt="_images/demorequest.png" class="align-center" src="_images/demorequest.png" style="width: 100%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Messaggi e contesti:</p>
+<blockquote>
+<div><table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">System</span>  <span class="o">-</span><span class="n">msglog</span> <span class="n">qakdemo24</span>
+<span class="n">Request</span> <span class="n">r1</span> <span class="p">:</span> <span class="n">r1</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">Reply</span>   <span class="n">a1</span> <span class="p">:</span> <span class="n">a1</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">Context</span> <span class="n">ctxdemoreq</span> <span class="n">ip</span> <span class="p">[</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span> <span class="n">port</span><span class="o">=</span><span class="mi">8010</span><span class="p">]</span>
+</pre></div>
+</div>
+</td>
+<td><p>Il flag <span class="blue">-msglog</span> popola, a run time, un insieme di log-files relativi ai messaggi ricevuti nella directory <code class="docutils literal notranslate"><span class="pre">logs</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<section id="demorequest-caller">
+<h3>demorequest caller<a class="headerlink" href="#demorequest-caller" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span> <span class="n">caller</span> <span class="n">context</span> <span class="n">ctxdemoreq</span> <span class="p">{</span>
+   <span class="n">State</span> <span class="n">init</span> <span class="n">initial</span> <span class="p">{</span>
+     <span class="n">println</span><span class="p">(</span><span class="s2">&quot;caller starts&quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">blue</span>
+     <span class="n">delay</span> <span class="mi">100</span> <span class="o">//</span><span class="n">give</span> <span class="n">time</span> <span class="n">to</span> <span class="n">start</span> <span class="n">called</span>
+ <span class="o">/*</span><span class="mi">1</span><span class="o">*/</span><span class="n">request</span> <span class="n">called</span> <span class="o">-</span><span class="n">m</span> <span class="n">r1</span> <span class="p">:</span> <span class="n">r1</span><span class="p">(</span><span class="n">hello</span><span class="p">(</span><span class="n">world</span><span class="p">))</span>
+   <span class="p">}</span>
+   <span class="n">Goto</span> <span class="n">work</span>
+
+   <span class="n">State</span> <span class="n">work</span><span class="p">{</span>
+       <span class="o">//</span><span class="n">printCurrentMessage</span> <span class="n">color</span> <span class="n">blue</span>
+   <span class="p">}</span>
+ <span class="o">/*</span><span class="mi">2</span><span class="o">*/</span><span class="n">Transition</span> <span class="n">t0</span> <span class="n">whenReply</span> <span class="n">a1</span> <span class="o">-&gt;</span> <span class="n">handleReply</span>
+
+   <span class="n">State</span> <span class="n">handleReply</span><span class="p">{</span>
+     <span class="n">printCurrentMessage</span> <span class="n">color</span> <span class="n">blue</span>
+ <span class="o">/*</span><span class="mi">3</span><span class="o">*/</span><span class="n">onMsg</span><span class="p">(</span> <span class="n">a1</span><span class="p">:</span><span class="n">a1</span><span class="p">(</span><span class="n">ARG</span><span class="p">)</span> <span class="p">){</span>
+       <span class="n">println</span><span class="p">(</span><span class="s2">&quot;answer=${payloadArg(0)}&quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">blue</span>
+       <span class="n">delay</span> <span class="mi">1000</span>
+     <span class="p">}</span>
+   <span class="p">}</span>
+   <span class="n">Goto</span> <span class="n">work</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><ol class="arabic simple">
+<li><p>invia una request <code class="docutils literal notranslate"><span class="pre">r1</span></code> con payload <code class="docutils literal notranslate"><span class="pre">r1(hello(world))</span></code>
+all’attore locale <code class="docutils literal notranslate"><span class="pre">called</span></code></p></li>
+<li><p>attende il messaggio di reply  <code class="docutils literal notranslate"><span class="pre">a1</span></code>.</p></li>
+<li><p>Si ricordi lo schema di <a class="reference internal" href="QakActors24.html#accesso-al-contenuto-dei-messaggi"><span class="std std-ref">Accesso al contenuto dei messaggi</span></a>.</p></li>
+</ol>
+<p>L’output è:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">answer</span><span class="o">=</span><span class="n">called_caller_hello</span><span class="p">(</span><span class="n">world</span><span class="p">)</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="demorequest-called">
+<h3>demorequest called<a class="headerlink" href="#demorequest-called" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>QActor called context ctxdemoreq {
+    State init initial {
+      println(&quot;called waits ...&quot;) color green
+    }
+    Transition t0
+      whenRequest r1 -&gt; handleRequest
+
+    State handleRequest{
+      printCurrentMessage color green
+      onMsg( r1 : r1(X) ){
+        [# val Answer=&quot;${currentMsg.msgSender()}_${payloadArg(0)}&quot; #]
+        replyTo r1 with a1 : a1( $Answer )
+      }
+    }
+    Goto init
+}
+</pre></div>
+</div>
+</td>
+<td><p><cite>called`</cite> attende una richiesta e quindi invia al chiamante la reply  <code class="docutils literal notranslate"><span class="pre">a1</span></code>
+con payload</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a1</span><span class="p">(</span><span class="n">called_caller_hello</span><span class="p">(</span><span class="n">world</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Si noti l’uso di <code class="docutils literal notranslate"><span class="pre">currentMsg</span></code> per definire il paylod <code class="docutils literal notranslate"><span class="pre">Answer</span></code> della reply.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="slide1">Esempio demoasktocaller</span></p>
+</section>
+</section>
+<section id="demoasktocaller-qak">
+<h2>demoasktocaller.qak<a class="headerlink" href="#demoasktocaller-qak" title="Permalink to this heading">¶</a></h2>
+<p>Un attore  <em>caller</em> invia una richiesta <code class="docutils literal notranslate"><span class="pre">r1</span></code> a un attore <em>called</em> che,
+per rispondere, ha bisogno di altri dati. Per questa ragione, il <em>called</em> invia a sua volta una richiesta <code class="docutils literal notranslate"><span class="pre">r2</span></code>
+per i dati mancanti al <em>caller</em> e, solo dopo avere ricevuto i dati stessi come risposta a <code class="docutils literal notranslate"><span class="pre">r2</span></code>, elabora la richiesta <code class="docutils literal notranslate"><span class="pre">r1</span></code>
+mandando infine la risposta per <code class="docutils literal notranslate"><span class="pre">r1</span></code> al <em>caller</em>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">System</span> <span class="o">/*-</span><span class="n">msglog</span>  <span class="o">-</span><span class="n">trace</span> <span class="o">*/</span> <span class="n">qakdemo24</span>
+
+<span class="n">Request</span> <span class="n">r1</span> <span class="p">:</span> <span class="n">r1</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="s2">&quot;da caller a called&quot;</span>
+<span class="n">Request</span> <span class="n">r2</span> <span class="p">:</span> <span class="n">r2</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="s2">&quot;da called a called&quot;</span>
+<span class="n">Reply</span>   <span class="n">a1</span> <span class="p">:</span> <span class="n">a1</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="k">for</span> <span class="n">r1</span>
+<span class="n">Reply</span>   <span class="n">a2</span> <span class="p">:</span> <span class="n">a2</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="k">for</span> <span class="n">r2</span>
+</pre></div>
+</div>
+<p>Per realizzare questo tipo di interazione, linguaggio qak fornisce la primitiva <a class="reference internal" href="QakActors24.html#operazioni-di-messaggista-punto-a-punto"><span class="std std-ref">ask</span></a></p>
+<section id="demoasktocaller-caller">
+<h3>demoasktocaller caller<a class="headerlink" href="#demoasktocaller-caller" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span> <span class="n">caller</span> <span class="n">context</span> <span class="n">ctxask</span> <span class="p">{</span>
+  <span class="n">State</span> <span class="n">init</span> <span class="n">initial</span> <span class="p">{</span>
+    <span class="n">delay</span> <span class="mi">500</span> <span class="o">//</span><span class="k">for</span> <span class="n">called</span> <span class="n">to</span> <span class="n">be</span> <span class="n">started</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span><span class="n">request</span> <span class="n">called</span> <span class="o">-</span><span class="n">m</span> <span class="n">r1</span> <span class="p">:</span> <span class="n">r1</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="o">//</span><span class="n">delay</span> <span class="mi">1000</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span><span class="n">request</span> <span class="n">called</span> <span class="o">-</span><span class="n">m</span> <span class="n">r1</span> <span class="p">:</span> <span class="n">r1</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="n">Goto</span> <span class="n">work</span>
+
+  <span class="n">State</span> <span class="n">work</span><span class="p">{</span>
+    <span class="o">//</span><span class="n">println</span><span class="p">(</span><span class="s2">&quot;       caller work&quot;</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="n">Transition</span> <span class="n">t0</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span>    <span class="n">whenReply</span>   <span class="n">a1</span> <span class="o">-&gt;</span> <span class="n">handleReply</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span>    <span class="n">whenReply</span>   <span class="n">a2</span> <span class="o">-&gt;</span> <span class="n">handleReply</span>
+<span class="o">/*</span><span class="mi">4</span><span class="o">*/</span>    <span class="n">whenRequest</span> <span class="n">r2</span> <span class="o">-&gt;</span> <span class="n">handleAskFromCalled</span>
+
+  <span class="n">State</span> <span class="n">handleReply</span><span class="p">{</span>
+<span class="o">/*</span><span class="mi">5</span><span class="o">*/</span> <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name handleReply $currentMsg&quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">blue</span>
+  <span class="p">}</span>
+  <span class="n">Goto</span> <span class="n">work</span>
+
+  <span class="n">State</span> <span class="n">handleAskFromCalled</span><span class="p">{</span>
+<span class="o">/*</span><span class="mi">6</span><span class="o">*/</span><span class="n">onMsg</span><span class="p">(</span> <span class="n">r2</span> <span class="p">:</span> <span class="n">r2</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="n">println</span><span class="p">(</span><span class="s2">&quot;       $name handles ask r2(${payloadArg(0)})&quot;</span><span class="p">)</span>
+      <span class="n">println</span><span class="p">(</span><span class="s2">&quot;       $name replies with a2(90)&quot;</span><span class="p">)</span>
+<span class="o">/*</span><span class="mi">7</span><span class="o">*/</span> <span class="n">replyTo</span> <span class="n">r2</span> <span class="k">with</span> <span class="n">a2</span> <span class="p">:</span> <span class="n">a2</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">Goto</span> <span class="n">work</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><ol class="arabic simple">
+<li><p>Invio prima richiesta <code class="docutils literal notranslate"><span class="pre">r1</span></code></p></li>
+<li><p>Invio seconda richiesta <code class="docutils literal notranslate"><span class="pre">r1</span></code></p></li>
+<li><p>Attesa risposta a <code class="docutils literal notranslate"><span class="pre">r1</span></code></p></li>
+<li><p>Attesa risposta a <code class="docutils literal notranslate"><span class="pre">r2</span></code></p></li>
+<li><p>Attesa richiesta dati</p></li>
+<li><p>Gestione delle reply dal <em>called</em></p></li>
+<li><p>Analisi della richiesat dati</p></li>
+<li><p>Risposta alla rchiesta dati fatta dal <em>called</em></p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="demoasktocaller-called">
+<h3>demoasktocaller called<a class="headerlink" href="#demoasktocaller-called" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>QActor called context ctxask {
+[# var RequestArg = &quot;0&quot; #]
+  State init initial {
+  }
+  Transition t0
+/*1*/ whenRequest r1 -&gt; handleRequest
+
+
+  State handleRequest{
+/*2*/onMsg( r1 : r1(10) ){
+      [# RequestArg = payloadArg(0) #]
+      println(&quot; called receives the request r1($RequestArg)&quot;)
+      println(&quot; called askfor r2(theta)&quot;) color magenta
+/*3*/ ask  r2 : r2(theta) forrequest r1
+    }
+/*4*/onMsg( r1 : r1(20) ){
+      [# RequestArg = payloadArg(0) #]
+      println(&quot; called receives the request r1(${payloadArg(0)})&quot;)
+      [# val R = &quot;${RequestArg}_${payloadArg(0)}&quot; #]
+/*5*/ replyTo r1 with a1 : a1( $R   )
+    }
+  }
+  Transition t0
+/*6*/whenTime 1000 -&gt; init
+/*7*/whenReply a2  -&gt; answerAfterAsk
+
+  State answerAfterAsk{
+/*8*/onMsg( a2 : a2(X) ){
+      println(&quot; called receives answer to ask a1(${payloadArg(0)})&quot;)
+      [# val R = &quot;${RequestArg}_${payloadArg(0)}&quot; #]
+      println(&quot; called replies to orginal request with a1($R)&quot;)
+/*9*/ replyTo r1 with a1 : a1( $R   )
+    }
+  }
+  Goto init
+}
+</pre></div>
+</div>
+</td>
+<td><ol class="arabic simple">
+<li><p>Attesa della richiesta <code class="docutils literal notranslate"><span class="pre">r1</span></code></p></li>
+<li><p>Caso della richiesta <code class="docutils literal notranslate"><span class="pre">r1</span></code> con  payload <code class="docutils literal notranslate"><span class="pre">r1(10)</span></code></p></li>
+<li><p>Invio di richiesta dati al <em>caller</em> per richiesta con  payload <code class="docutils literal notranslate"><span class="pre">r1(10)</span></code></p></li>
+<li><p>Caso della richiesta <code class="docutils literal notranslate"><span class="pre">r1</span></code> con  payload <code class="docutils literal notranslate"><span class="pre">r1(20)</span></code></p></li>
+<li><p>Invio di risposta immediata a <code class="docutils literal notranslate"><span class="pre">r1</span></code> con payload <code class="docutils literal notranslate"><span class="pre">r1(20)</span></code></p></li>
+<li><p>Attesa dei dati  richiesti</p></li>
+<li><p>Dopo <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">sec</span></code> si ritiene conclusa la interazione con il <em>caller</em> (caso <code class="docutils literal notranslate"><span class="pre">4</span></code>)</p></li>
+<li><p>Gestione della reply del <em>caller</em></p></li>
+<li><p>Risposta alla prima richiesta <code class="docutils literal notranslate"><span class="pre">r1</span></code> del <em>caller</em></p></li>
+</ol>
+<p>Il punto <code class="docutils literal notranslate"><span class="pre">6-7</span></code> implica che il <em>called</em> decide di non gestire la richiesta <code class="docutils literal notranslate"><span class="pre">r1(20)</span></code> prima
+di ricevere la risposta alla sua <em>ask</em> per <code class="docutils literal notranslate"><span class="pre">r1(10)</span></code>.
+La richiesta <code class="docutils literal notranslate"><span class="pre">r1(20)</span></code> viene quindi accodata in <a class="reference internal" href="QakActors24.html#la-gestione-dei-messaggi"><span class="std std-ref">msgQueueStore</span></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="slide1">Esempio ExternalQActor</span></p>
+</section>
+</section>
+<section id="demoresource-qak">
+<h2>demoresource.qak<a class="headerlink" href="#demoresource-qak" title="Permalink to this heading">¶</a></h2>
+<p>Vi sono situazioni in cui un sistema si configura e si costruisce ‘incrementalmente’, partendo da un nucleo iniziale
+e poi aggiungendo altri componenti, che interagiscono con il nucleo e tra loro sempre mediante scambio di messaggi.</p>
+<p>Supponiamo, come esempio, di introdurre come ‘nucleo di base’ un componente modellato come una singola risorsa/servizio.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Il sistema formato dalla sola <a class="reference internal" href="#resourcecore"><span class="std std-ref">resourcecore</span></a> è descritto come segue:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">System</span> <span class="n">resourcecore</span>
+
+<span class="n">Request</span> <span class="n">cmd</span>        <span class="p">:</span> <span class="n">cmd</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">//</span><span class="n">X</span><span class="o">=</span><span class="n">w</span><span class="o">|</span><span class="n">s</span><span class="o">|</span><span class="n">a</span><span class="o">|</span><span class="n">d</span><span class="o">|</span><span class="n">h</span>
+<span class="n">Reply</span>   <span class="n">replytocmd</span> <span class="p">:</span> <span class="n">replytocmd</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">Event</span>    <span class="n">alarm</span>     <span class="p">:</span> <span class="n">alarm</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+
+<span class="n">Context</span> <span class="n">ctxresourcecore</span> <span class="n">ip</span> <span class="p">[</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span> <span class="n">port</span><span class="o">=</span><span class="mi">8045</span><span class="p">]</span>
+
+<span class="n">QActor</span> <span class="n">resourcecore</span> <span class="n">context</span> <span class="n">ctxresourcecore</span><span class="p">{</span><span class="o">...</span><span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><a class="reference internal image-reference" href="_images/Archresourcecore.png"><img alt="_images/Archresourcecore.png" class="align-center" src="_images/Archresourcecore.png" style="width: 100%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+<section id="resourcecore">
+<h3>resourcecore<a class="headerlink" href="#resourcecore" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 55%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>QActor resourcecore context ctxresourcecore{
+/*1*/[# var ready = true #]
+  State s0 initial {
+      println(&quot;$name waiting ... &quot;) color blue
+  }
+  Transition t0
+  /*2*/ whenRequest cmd and [# ready #]-&gt;handleRequestCmd
+  /*3*/ whenEvent   alarm -&gt; handleAlarm
+
+  State handleAlarm{
+    onMsg( alarm : alarm(on) ){
+      println(&quot;$name alarm on&quot;) color red
+  /*4*/[# ready = false #]
+    }
+    onMsg( alarm : alarm(off) ){
+      println(&quot;$name alarm off&quot;) color red
+  /*5*/[# ready = true #]
+    }
+  }
+  Goto s0
+
+  State handleRequestCmd{
+    printCurrentMessage color blue
+    onMsg( cmd : cmd(X) ){
+      [# val ANSW = &quot;answerFor_${payloadArg(0)}&quot; #]
+  /*6*/replyTo cmd with replytocmd : replytocmd($ANSW)
+    }
+  }
+  Goto s0
+}
+</pre></div>
+</div>
+</td>
+<td><blockquote>
+<div><ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ready</span></code> variabile interna che controlla se il <em>resourcecore</em> è pronto a gestire una richiesta <code class="docutils literal notranslate"><span class="pre">cmd</span></code>.</p></li>
+<li><p>Attesa di una richiesta <code class="docutils literal notranslate"><span class="pre">cmd</span></code> nel caso la <a class="reference internal" href="QakActors24.html#guardia"><span class="std std-ref">Guardia</span></a> <code class="docutils literal notranslate"><span class="pre">ready</span></code> sia vera</p></li>
+<li><p>Attesa di un evento <code class="docutils literal notranslate"><span class="pre">alarm</span></code></p></li>
+<li><p>Nel caso di allarme <code class="docutils literal notranslate"><span class="pre">on</span></code>, <code class="docutils literal notranslate"><span class="pre">ready</span></code> diventa <strong>false</strong></p></li>
+<li><p>Nel caso di allarme <code class="docutils literal notranslate"><span class="pre">off</span></code>, <code class="docutils literal notranslate"><span class="pre">ready</span></code> diventa <strong>true</strong></p></li>
+<li><p>Risposta alla richiesta <code class="docutils literal notranslate"><span class="pre">cmd</span></code> con payload <code class="docutils literal notranslate"><span class="pre">replytocmd(ANSW)</span></code></p></li>
+</ol>
+</div></blockquote>
+<p>I messaggi di richiesta ricevuti durante gli allarmi sono memorizzati in <a class="reference internal" href="QakActors24.html#la-gestione-dei-messaggi"><span class="std std-ref">msgQueueStore</span></a>
+e gestiti ad allarme terminato.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="demoaddtocore-qak">
+<h2>demoaddtocore.qak<a class="headerlink" href="#demoaddtocore-qak" title="Permalink to this heading">¶</a></h2>
+<p>Supponiamo ora che un ulteriore componente QakActor <a class="reference internal" href="#corecaller"><span class="std std-ref">corecaller</span></a> voglia ‘fare sistema’ con <a class="reference internal" href="#resourcecore"><span class="std std-ref">resourcecore</span></a>, inviando una richiesta
+alla risorsa ed emettendo un evento <code class="docutils literal notranslate"><span class="pre">alarm(on)</span></code>.</p>
+<p>Un altro componente <a class="reference internal" href="#alarmoff"><span class="std std-ref">alarmoff</span></a>, emette, con un certo ritardo, l’evento <code class="docutils literal notranslate"><span class="pre">alarm(off)</span></code>.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">System</span> <span class="n">qakdemo24</span>
+
+<span class="n">Request</span> <span class="n">cmd</span>        <span class="p">:</span> <span class="n">cmd</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">//</span><span class="n">X</span><span class="o">=</span><span class="n">w</span><span class="o">|</span><span class="n">s</span><span class="o">|</span><span class="n">a</span><span class="o">|</span><span class="n">d</span><span class="o">|</span><span class="n">h</span>
+<span class="n">Reply</span>   <span class="n">replytocmd</span> <span class="p">:</span> <span class="n">replytocmd</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">Event</span>    <span class="n">alarm</span>     <span class="p">:</span> <span class="n">alarm</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+
+<span class="n">Context</span> <span class="n">ctxaddtocore</span>     <span class="n">ip</span> <span class="p">[</span><span class="n">host</span><span class="o">=</span> <span class="s2">&quot;localhost&quot;</span> <span class="n">port</span><span class="o">=</span><span class="mi">8038</span><span class="p">]</span>
+<span class="n">Context</span> <span class="n">ctxresourcecore</span>  <span class="n">ip</span> <span class="p">[</span><span class="n">host</span><span class="o">=</span> <span class="s2">&quot;127.0.0.1&quot;</span> <span class="n">port</span><span class="o">=</span><span class="mi">8045</span><span class="p">]</span>
+
+<span class="n">ExternalQActor</span> <span class="n">resourcecore</span> <span class="n">context</span> <span class="n">ctxresourcecore</span>
+
+<span class="n">QActor</span> <span class="n">corecaller</span> <span class="n">context</span> <span class="n">ctxaddtocore</span><span class="p">{</span><span class="o">...</span><span class="p">}</span>
+<span class="n">QActor</span> <span class="n">alarmoff</span> <span class="n">context</span> <span class="n">ctxaddtocore</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Si noti:</p>
+<ul class="simple">
+<li><p>la dichiarazione degli stessi tipi di messaggio di  <a class="reference internal" href="#resourcecore"><span class="std std-ref">resourcecore</span></a>.</p></li>
+<li><p>il componente  <a class="reference internal" href="#resourcecore"><span class="std std-ref">resourcecore</span></a>  è dichiarato <span class="slide3">external</span>: si veda <a class="reference internal" href="QakActors24.html#attori-external"><span class="std std-ref">Attori external</span></a>.</p></li>
+</ul>
+<p><span class="remark">I messaggi sono il ‘collante’ del sistema</span></p>
+</td>
+<td><a class="reference internal image-reference" href="_images/Archdemocorecallers.png"><img alt="_images/Archdemocorecallers.png" class="align-center" src="_images/Archdemocorecallers.png" style="width: 100%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+<section id="corecaller">
+<h3>corecaller<a class="headerlink" href="#corecaller" title="Permalink to this heading">¶</a></h3>
+<blockquote>
+<div><table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span> <span class="n">corecaller</span> <span class="n">context</span> <span class="n">ctxaddtocore</span><span class="p">{</span>
+  <span class="p">[</span><span class="c1"># var StartTime = 0L</span>
+    <span class="n">var</span> <span class="n">Elapsed</span>   <span class="o">=</span> <span class="mi">0</span><span class="n">L</span>
+  <span class="c1">#]</span>
+  <span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span> <span class="p">{</span>
+    <span class="n">printCurrentMessage</span>  <span class="n">color</span> <span class="n">blue</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span><span class="n">request</span> <span class="n">resourcecore</span> <span class="o">-</span><span class="n">m</span> <span class="n">cmd</span> <span class="p">:</span> <span class="n">cmd</span><span class="p">(</span><span class="n">caller1</span><span class="p">)</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span><span class="n">memoCurrentTime</span> <span class="n">StartTime</span>
+  <span class="p">}</span>
+  <span class="n">Transition</span> <span class="n">t0</span>
+     <span class="n">whenReply</span> <span class="n">replytocmd</span> <span class="o">-&gt;</span> <span class="n">handleReply</span>
+
+  <span class="n">State</span> <span class="n">handleReply</span><span class="p">{</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span><span class="n">setDuration</span> <span class="n">Elapsed</span> <span class="kn">from</span> <span class="nn">StartTime</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name handleReply Elapsed = $Elapsed &quot;</span><span class="p">)</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name handleReply: emit alarm(on)&quot;</span><span class="p">)</span>
+<span class="o">/*</span><span class="mi">4</span><span class="o">*/</span><span class="n">emit</span> <span class="n">alarm</span> <span class="p">:</span> <span class="n">alarm</span><span class="p">(</span><span class="n">on</span><span class="p">)</span>
+<span class="o">/*</span><span class="mi">5</span><span class="o">*/</span><span class="n">request</span> <span class="n">resourcecore</span> <span class="o">-</span><span class="n">m</span> <span class="n">cmd</span> <span class="p">:</span> <span class="n">cmd</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="o">/*</span><span class="mi">6</span><span class="o">*/</span><span class="n">request</span> <span class="n">resourcecore</span> <span class="o">-</span><span class="n">m</span> <span class="n">cmd</span> <span class="p">:</span> <span class="n">cmd</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="o">/*</span><span class="mi">7</span><span class="o">*/</span><span class="n">memoCurrentTime</span> <span class="n">StartTime</span>
+  <span class="p">}</span>
+  <span class="n">Transition</span> <span class="n">t0</span>
+<span class="o">/*</span><span class="mi">8</span><span class="o">*/</span> <span class="n">whenReply</span> <span class="n">replytocmd</span> <span class="o">-&gt;</span> <span class="n">handleReplyAgain</span>
+
+  <span class="n">State</span> <span class="n">handleReplyAgain</span><span class="p">{</span>
+    <span class="n">printCurrentMessage</span> <span class="n">color</span> <span class="n">blue</span>
+<span class="o">/*</span><span class="mi">9</span><span class="o">*/</span> <span class="n">setDuration</span> <span class="n">Elapsed</span> <span class="kn">from</span> <span class="nn">StartTime</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name handleReplyAgain Elapsed=$Elapsed&quot;</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="n">Transition</span> <span class="n">t0</span>
+      <span class="n">whenReply</span> <span class="n">replytocmd</span> <span class="o">-&gt;</span> <span class="n">handleReplyAgain</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><ol class="arabic simple">
+<li><p>Invio di richiesta <code class="docutils literal notranslate"><span class="pre">cmd</span></code> a <a class="reference internal" href="#resourcecore"><span class="std std-ref">resourcecore</span></a></p></li>
+<li><p>Memorizzazione del tempo corrente: si veda <a class="reference internal" href="QakActors24.html#operazioni-con-il-tempo"><span class="std std-ref">memoCurrentTime</span></a></p></li>
+<li><p>Tempo trascorso alla ricezione della risposta a <code class="docutils literal notranslate"><span class="pre">cmd</span></code></p></li>
+<li><p>Emissione di evento <code class="docutils literal notranslate"><span class="pre">alarm(on)</span></code></p></li>
+<li><p>Invio di nuova richiesta <code class="docutils literal notranslate"><span class="pre">cmd</span></code> a <a class="reference internal" href="#resourcecore"><span class="std std-ref">resourcecore</span></a></p></li>
+<li><p>Invio di ulteriore  richiesta <code class="docutils literal notranslate"><span class="pre">cmd</span></code> a <a class="reference internal" href="#resourcecore"><span class="std std-ref">resourcecore</span></a></p></li>
+<li><p>Attesa delle risposte</p></li>
+<li><p>Tempo trascorso alla ricezione della risposta a <code class="docutils literal notranslate"><span class="pre">cmd</span></code></p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</section>
+<section id="alarmoff">
+<h3>alarmoff<a class="headerlink" href="#alarmoff" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span> <span class="n">alarmoff</span> <span class="n">context</span> <span class="n">ctxcorecaller1</span> <span class="p">{</span>
+ <span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span> <span class="p">{</span>
+    <span class="n">printCurrentMessage</span>  <span class="n">color</span> <span class="n">blue</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span><span class="n">delay</span> <span class="mi">2000</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name alarmoff emit &quot;</span><span class="p">)</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span><span class="n">emit</span> <span class="n">alarm</span> <span class="p">:</span> <span class="n">alarm</span><span class="p">(</span><span class="n">off</span><span class="p">)</span>
+ <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><ol class="arabic simple">
+<li><p>Attesa di <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">sec</span></code></p></li>
+<li><p>Emissione di evento <code class="docutils literal notranslate"><span class="pre">alarm(off)</span></code> che deattiva l’allarme e consetne a <a class="reference internal" href="#resourcecore"><span class="std std-ref">resourcecore</span></a> di tornare <code class="docutils literal notranslate"><span class="pre">ready</span></code></p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="slide1">Esempio Delegazione</span></p>
+</section>
+</section>
+<section id="demodelegate-qak">
+<h2>demodelegate.qak<a class="headerlink" href="#demodelegate-qak" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Il <a class="reference internal" href="#server"><span class="std std-ref">server</span></a> gestisce il dispatch <code class="docutils literal notranslate"><span class="pre">cmd</span></code> e le richieste <code class="docutils literal notranslate"><span class="pre">r1</span></code> e <code class="docutils literal notranslate"><span class="pre">r2</span></code></p></li>
+<li><p>Il server delega al <a class="reference internal" href="#serverworker"><span class="std std-ref">serverworker</span></a> la gestione del  dispatch <code class="docutils literal notranslate"><span class="pre">cmd</span></code> e della richieste <code class="docutils literal notranslate"><span class="pre">r2</span></code></p></li>
+<li><p>Il <a class="reference internal" href="#caller1"><span class="std std-ref">caller1</span></a> invia la richiesta <code class="docutils literal notranslate"><span class="pre">r1</span></code> e gestisce la risposta inviata direttamente dal <a class="reference internal" href="#server"><span class="std std-ref">server</span></a></p></li>
+<li><p>Il <a class="reference internal" href="#caller2"><span class="std std-ref">caller2</span></a> invia il dispatch <code class="docutils literal notranslate"><span class="pre">cmd</span></code> e la richiesta <code class="docutils literal notranslate"><span class="pre">r2</span></code> e gestisce la risposta inviata dal <a class="reference internal" href="#serverworker"><span class="std std-ref">serverworker</span></a></p></li>
+</ul>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">System</span>  <span class="n">qakdemo24</span>
+
+<span class="n">Request</span> <span class="n">r1</span> <span class="p">:</span> <span class="n">r1</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">Reply</span> <span class="n">rr1</span> <span class="p">:</span> <span class="n">rr1</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="k">for</span> <span class="n">r1</span>
+
+<span class="n">Request</span> <span class="n">r2</span> <span class="p">:</span> <span class="n">r2</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">Reply</span> <span class="n">rr2</span> <span class="p">:</span> <span class="n">rr2</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="k">for</span> <span class="n">r2</span>
+
+<span class="n">Dispatch</span> <span class="n">cmd</span> <span class="p">:</span> <span class="n">cmd</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">Context</span> <span class="n">ctxdelegate</span> <span class="n">ip</span> <span class="p">[</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span> <span class="n">port</span><span class="o">=</span><span class="mi">8045</span><span class="p">]</span>
+
+ <span class="n">QActor</span> <span class="n">server</span> <span class="n">context</span> <span class="n">ctxdelegate</span><span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+ <span class="n">QActor</span> <span class="n">serverworker</span> <span class="n">context</span> <span class="n">ctxdelegate</span><span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+ <span class="n">QActor</span> <span class="n">caller1</span> <span class="n">context</span> <span class="n">ctxdelegate</span><span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+ <span class="n">QActor</span> <span class="n">caller2</span> <span class="n">context</span> <span class="n">ctxdelegate</span><span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><a class="reference internal image-reference" href="_images/Archdemodelegate.png"><img alt="_images/Archdemodelegate.png" class="align-center" src="_images/Archdemodelegate.png" style="width: 100%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+<section id="server">
+<h3>server<a class="headerlink" href="#server" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>server</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span> <span class="n">server</span> <span class="n">context</span> <span class="n">ctxdelegate</span><span class="p">{</span>
+  <span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span><span class="p">{</span>
+    <span class="n">delay</span> <span class="mi">200</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span> <span class="n">delegate</span> <span class="n">r2</span> <span class="n">to</span> <span class="n">serverworker</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span> <span class="n">delegate</span> <span class="n">cmd</span> <span class="n">to</span> <span class="n">serverworker</span>
+  <span class="p">}</span>
+  <span class="n">Goto</span> <span class="n">work</span>
+
+  <span class="n">State</span> <span class="n">work</span><span class="p">{</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name working ...&quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">blue</span>
+  <span class="p">}</span>
+  <span class="n">Transition</span> <span class="n">t0</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span>   <span class="n">whenRequest</span> <span class="n">r1</span> <span class="o">-&gt;</span> <span class="n">handle_r1</span>
+
+  <span class="n">State</span> <span class="n">handle_r1</span><span class="p">{</span>
+    <span class="n">printCurrentMessage</span> <span class="n">color</span> <span class="n">blue</span>
+<span class="o">/*</span><span class="mi">4</span><span class="o">*/</span>  <span class="n">replyTo</span> <span class="n">r1</span> <span class="k">with</span> <span class="n">rr1</span> <span class="p">:</span> <span class="n">rr1</span><span class="p">(</span><span class="n">answer</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="n">Goto</span> <span class="n">work</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><ol class="arabic simple">
+<li><p>Delega la gestione della request <code class="docutils literal notranslate"><span class="pre">r2</span></code> al <a class="reference internal" href="#serverworker"><span class="std std-ref">serverworker</span></a></p></li>
+<li><p>Delega la gestione del dispatch <code class="docutils literal notranslate"><span class="pre">cmd</span></code> al <a class="reference internal" href="#serverworker"><span class="std std-ref">serverworker</span></a></p></li>
+<li><p>Attesa della request <code class="docutils literal notranslate"><span class="pre">r1</span></code></p></li>
+<li><p>Risposta alla request <code class="docutils literal notranslate"><span class="pre">r1</span></code></p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="serverworker">
+<h3>serverworker<a class="headerlink" href="#serverworker" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>serverworker</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span> <span class="n">serverworker</span> <span class="n">context</span> <span class="n">ctxdelegate</span><span class="p">{</span>
+  <span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span><span class="p">{</span>
+    <span class="o">//</span><span class="n">delay</span> <span class="mi">1000</span>
+  <span class="p">}</span>
+  <span class="n">Goto</span> <span class="n">work</span>
+
+  <span class="n">State</span> <span class="n">work</span><span class="p">{</span>
+
+  <span class="p">}</span>
+  <span class="n">Transition</span> <span class="n">t0</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span>  <span class="n">whenRequest</span> <span class="n">r2</span> <span class="o">-&gt;</span> <span class="n">handle_r2</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span>  <span class="n">whenMsg</span> <span class="n">cmd</span> <span class="o">-&gt;</span> <span class="n">handlecmd</span>
+
+
+  <span class="n">State</span> <span class="n">handle_r2</span><span class="p">{</span>
+    <span class="n">printCurrentMessage</span> <span class="n">color</span> <span class="n">blue</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span>  <span class="n">replyTo</span> <span class="n">r2</span> <span class="k">with</span> <span class="n">rr2</span> <span class="p">:</span> <span class="n">rr2</span><span class="p">(</span><span class="n">answer</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="n">Goto</span> <span class="n">work</span>
+
+
+  <span class="n">State</span> <span class="n">handlecmd</span><span class="p">{</span>
+<span class="o">/*</span><span class="mi">4</span><span class="o">*/</span><span class="n">printCurrentMessage</span> <span class="n">color</span> <span class="n">blue</span>
+  <span class="p">}</span>
+  <span class="n">Goto</span> <span class="n">work</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><ol class="arabic simple">
+<li><p>Attesa della request delegata <code class="docutils literal notranslate"><span class="pre">r2</span></code></p></li>
+<li><p>Attesa del dispatch delegato <code class="docutils literal notranslate"><span class="pre">cmd</span></code></p></li>
+<li><p>Risposta alla request delegata <code class="docutils literal notranslate"><span class="pre">r2</span></code></p></li>
+<li><p>Gestion del dispatch delegato <code class="docutils literal notranslate"><span class="pre">cmd</span></code></p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="caller1">
+<h3>caller1<a class="headerlink" href="#caller1" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>caller1</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span> <span class="n">caller1</span> <span class="n">context</span> <span class="n">ctxdelegate</span><span class="p">{</span>
+  <span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span><span class="p">{</span>
+    <span class="n">delay</span> <span class="mi">500</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name request r1&quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">green</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span> <span class="n">request</span> <span class="n">server</span> <span class="o">-</span><span class="n">m</span> <span class="n">r1</span> <span class="p">:</span> <span class="n">r1</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="n">Transition</span> <span class="n">t0</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span> <span class="n">whenReply</span> <span class="n">rr1</span> <span class="o">-&gt;</span> <span class="n">handleReply</span>
+
+  <span class="n">State</span> <span class="n">handleReply</span><span class="p">{</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span> <span class="n">printCurrentMessage</span> <span class="n">color</span> <span class="n">green</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><ol class="arabic simple">
+<li><p>Invia la request <code class="docutils literal notranslate"><span class="pre">r1</span></code> al <a class="reference internal" href="#server"><span class="std std-ref">server</span></a></p></li>
+<li><p>Attesa della risposta</p></li>
+<li><p>Gestione della risposta</p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="caller2">
+<h3>caller2<a class="headerlink" href="#caller2" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>caller2</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span> <span class="n">caller2</span> <span class="n">context</span> <span class="n">ctxdelegate</span><span class="p">{</span>
+  <span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span><span class="p">{</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name request r2&quot;</span><span class="p">)</span>    <span class="n">color</span> <span class="n">magenta</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span> <span class="n">request</span> <span class="n">server</span> <span class="o">-</span><span class="n">m</span> <span class="n">r2</span> <span class="p">:</span> <span class="n">r2</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="n">Transition</span> <span class="n">t0</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span> <span class="n">whenReply</span> <span class="n">rr2</span> <span class="o">-&gt;</span> <span class="n">handleReply</span>
+
+  <span class="n">State</span> <span class="n">handleReply</span><span class="p">{</span>
+    <span class="n">printCurrentMessage</span> <span class="n">color</span> <span class="n">magenta</span>
+    <span class="n">delay</span> <span class="mi">1000</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name dispatch cmd&quot;</span><span class="p">)</span>  <span class="n">color</span> <span class="n">magenta</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span> <span class="n">forward</span> <span class="n">server</span> <span class="o">-</span><span class="n">m</span> <span class="n">cmd</span> <span class="p">:</span> <span class="n">cmd</span><span class="p">(</span><span class="n">stop</span><span class="p">)</span>
+    <span class="n">delay</span> <span class="mi">1500</span>
+    <span class="p">[</span><span class="c1"># System.exit(0) #]</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><ol class="arabic simple">
+<li><p>Invia la request <code class="docutils literal notranslate"><span class="pre">r2</span></code> al <a class="reference internal" href="#server"><span class="std std-ref">server</span></a></p></li>
+<li><p>Attesa della risposta</p></li>
+<li><p>Invio del dispatch <code class="docutils literal notranslate"><span class="pre">cmd</span></code> al <a class="reference internal" href="#server"><span class="std std-ref">server</span></a></p></li>
+<li><p>Termina il sistema (per evitare che  rimanga attivo)</p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="slide1">Esempio Creazione</span></p>
+</section>
+</section>
+<section id="democreate-qak">
+<h2>democreate.qak<a class="headerlink" href="#democreate-qak" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Il <a class="reference internal" href="#creator"><span class="std std-ref">creator</span></a> crea due <a class="reference internal" href="#producer"><span class="std std-ref">producer</span></a></p></li>
+<li><p>Ogni <a class="reference internal" href="#producer"><span class="std std-ref">producer</span></a> invia una request <code class="docutils literal notranslate"><span class="pre">distance</span></code>  e una request <code class="docutils literal notranslate"><span class="pre">r2</span></code> al <a class="reference internal" href="#consumer"><span class="std std-ref">consumer</span></a></p></li>
+<li><p>Il <a class="reference internal" href="#consumer"><span class="std std-ref">consumer</span></a> gestisce direttamente la  request <code class="docutils literal notranslate"><span class="pre">distance</span></code>, ma delega la gestione
+della request <code class="docutils literal notranslate"><span class="pre">r2</span></code> al <a class="reference internal" href="#consumerhelper"><span class="std std-ref">consumerhelper</span></a> creato dinamicamente,
+usando la primitiva qak <a class="reference internal" href="QakActors24.html#operazioni-di-delegazione"><span class="std std-ref">delegateCurrentMsgTo</span></a></p></li>
+<li><p>Il <a class="reference internal" href="#consumerhelper"><span class="std std-ref">consumerhelper</span></a> gestisce la  request <code class="docutils literal notranslate"><span class="pre">r2</span></code> , invia la risposta al chiamante e termina</p></li>
+</ul>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">System</span>  <span class="n">qakdemo24</span>
+
+<span class="n">Request</span>  <span class="n">distance</span> <span class="p">:</span> <span class="n">distance</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
+<span class="n">Reply</span> <span class="n">distanceack</span> <span class="p">:</span> <span class="n">ack</span><span class="p">(</span><span class="n">D</span><span class="p">)</span> <span class="k">for</span> <span class="n">distance</span>
+
+<span class="n">Request</span> <span class="n">r2</span> <span class="p">:</span> <span class="n">r2</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">Reply</span> <span class="n">rr2</span>  <span class="p">:</span> <span class="n">rr2</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="k">for</span> <span class="n">r2</span>
+
+<span class="n">Context</span> <span class="n">ctxcreate</span> <span class="n">ip</span> <span class="p">[</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span> <span class="n">port</span><span class="o">=</span><span class="mi">8045</span><span class="p">]</span>
+
+<span class="n">QActor</span> <span class="n">creator</span> <span class="n">context</span> <span class="n">ctxcreate</span><span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+<span class="n">QActor</span> <span class="n">producer</span> <span class="n">context</span> <span class="n">ctxcreate</span>
+                            <span class="n">dynamicOnly</span><span class="p">{</span><span class="o">...</span><span class="p">}</span>
+<span class="n">QActor</span> <span class="n">consumer</span> <span class="n">context</span> <span class="n">ctxcreate</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+<span class="n">QActor</span> <span class="n">consumerhelper</span> <span class="n">context</span> <span class="n">ctxcreate</span>
+                            <span class="n">dynamicOnly</span><span class="p">{</span><span class="o">...</span><span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><a class="reference internal image-reference" href="_images/Archdemocreate.png"><img alt="_images/Archdemocreate.png" class="align-center" src="_images/Archdemocreate.png" style="width: 100%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+<section id="creator">
+<h3>creator<a class="headerlink" href="#creator" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>creator</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span> <span class="n">creator</span> <span class="n">context</span> <span class="n">ctxcreate</span><span class="p">{</span>
+  <span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span><span class="p">{</span>
+    <span class="n">delay</span> <span class="mi">500</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span>    <span class="n">create</span> <span class="n">producer</span> <span class="n">_</span><span class="s2">&quot;p1&quot;</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span>    <span class="n">create</span> <span class="n">producer</span> <span class="n">_</span><span class="s2">&quot;p2&quot;</span>
+    <span class="n">delay</span> <span class="mi">1000</span>
+    <span class="p">[</span><span class="c1"># System.exit(0) #]</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><ol class="arabic simple">
+<li><p>Crea un producer usando la primitiva <a class="reference internal" href="QakActors24.html#creazione-dinamica-di-attori"><span class="std std-ref">create</span></a></p></li>
+<li><p>Crea un altro producer usando la primitiva <a class="reference internal" href="QakActors24.html#creazione-dinamica-di-attori"><span class="std std-ref">create</span></a></p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="producer">
+<h3>producer<a class="headerlink" href="#producer" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>producer</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>QActor producer context ctxcreate dynamicOnly {
+  State s0 initial{
+    println(&quot;$name STARTS&quot;) color blue
+/*1*/request consumer -m distance : distance($MyName)
+    delay 500
+/*2*/request consumer -m r2:r2(10)
+  }
+  Transition t0
+    whenReply distanceack -&gt; handleAnswer
+    whenReply rr2         -&gt; handleAnswer
+
+  State handleAnswer{
+/*3*/ printCurrentMessage color blue
+  }
+  Transition t0
+    whenReply distanceack -&gt; handleAnswer
+    whenReply rr2         -&gt; handleAnswer
+}
+</pre></div>
+</div>
+</td>
+<td><ol class="arabic simple">
+<li><p>Invia la request <code class="docutils literal notranslate"><span class="pre">distance</span></code> al <a class="reference internal" href="#consumer"><span class="std std-ref">consumer</span></a></p></li>
+<li><p>Invia la request <code class="docutils literal notranslate"><span class="pre">r2</span></code> al <a class="reference internal" href="#consumer"><span class="std std-ref">consumer</span></a></p></li>
+<li><p>Gestisce le risposte</p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="consumer">
+<h3>consumer<a class="headerlink" href="#consumer" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>consumer</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>QActor consumer context ctxcreate {
+  State s0 initial{
+    println(&quot;$name STARTS&quot;) color green
+  }
+/*1*/Transition t0
+      whenRequest distance -&gt; handleRequest
+      whenRequest r2       -&gt; handleRequest
+
+  State handleRequest{
+    printCurrentMessage color green
+    if [# currentMsg.msgId() == &quot;r2&quot; #]{
+ /*2*/ delegateCurrentMsgTo consumerhelper
+    }
+    onMsg( distance : distance(D)){
+      [# var D = payloadArg(0) #]
+  /*3*/ replyTo distance with distanceack : ack( $payloadArg(0) )
+    }
+  }
+  /*4*/Transition t0
+        whenRequest distance -&gt; handleRequest
+        whenRequest r2       -&gt; handleRequest
+}
+</pre></div>
+</div>
+</td>
+<td><ol class="arabic simple">
+<li><p>Attesa delle richieste <code class="docutils literal notranslate"><span class="pre">distance</span></code> e <code class="docutils literal notranslate"><span class="pre">r2</span></code></p></li>
+<li><p>Delega il messaggio corrente al <a class="reference internal" href="#consumerhelper"><span class="std std-ref">consumerhelper</span></a> se si tratta di una richiesta <code class="docutils literal notranslate"><span class="pre">r2</span></code></p></li>
+<li><p>Invia la risposta alla richiesta <code class="docutils literal notranslate"><span class="pre">distance</span></code></p></li>
+<li><p>Ccontinua ad attendere richieste</p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="consumerhelper">
+<h3>consumerhelper<a class="headerlink" href="#consumerhelper" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>consumerhelper</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span> <span class="n">consumerhelper</span> <span class="n">context</span> <span class="n">ctxcreate</span> <span class="n">dynamicOnly</span> <span class="p">{</span>
+  <span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span><span class="p">{</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name STARTS&quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">green</span>
+  <span class="p">}</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span><span class="n">Transition</span> <span class="n">t0</span> <span class="n">whenRequest</span> <span class="n">r2</span> <span class="o">-&gt;</span> <span class="n">handle_r2</span>
+
+  <span class="n">State</span> <span class="n">handle_r2</span><span class="p">{</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span> <span class="n">replyTo</span> <span class="n">r2</span> <span class="k">with</span> <span class="n">rr2</span><span class="p">:</span> <span class="n">rr2</span><span class="p">(</span><span class="n">answer</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="n">Transition</span> <span class="n">t0</span> <span class="n">whenRequest</span> <span class="n">r2</span> <span class="o">-&gt;</span> <span class="n">handle_r2</span>
+
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><ol class="arabic simple">
+<li><p>Attende la richiesta <code class="docutils literal notranslate"><span class="pre">r2</span></code> delegatagli dal <a class="reference internal" href="#consumer"><span class="std std-ref">consumer</span></a></p></li>
+<li><p>Gestisce la richiesta e invia la risposta</p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="slide1">Esempio DataStreamer</span></p>
+</section>
+</section>
+<section id="demostreams-qak">
+<h2>demostreams.qak<a class="headerlink" href="#demostreams-qak" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Una sorgente <a class="reference internal" href="#datasource"><span class="std std-ref">datasource</span></a> emette dati usando <a class="reference internal" href="QakActors24.html#operazioni-relative-agli-eventi"><span class="std std-ref">emitlocalstream</span></a></p></li>
+<li><p>Gli eventi sono trasmessi solo ai subscribers locali <a class="reference internal" href="#busy"><span class="std std-ref">busy</span></a> e <a class="reference internal" href="#filter"><span class="std std-ref">filter</span></a></p></li>
+<li><p>L’actor <a class="reference internal" href="#filter"><span class="std std-ref">filter</span></a> (ri)emette solo i dati inferiori a un certo valore</p></li>
+<li><p>L’actor <a class="reference internal" href="#qasink"><span class="std std-ref">qasink</span></a> è interessato agli eventi filtrati e non a quelli originali</p></li>
+</ul>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="n">System</span> <span class="n">qakdemo24</span>
+ <span class="n">Event</span>  <span class="n">data</span> <span class="p">:</span> <span class="n">value</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>   <span class="s2">&quot;emesso da datasource &quot;</span>
+
+ <span class="n">Context</span> <span class="n">ctxstreamsdemo</span> <span class="n">ip</span> <span class="p">[</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span> <span class="n">port</span><span class="o">=</span><span class="mi">8045</span><span class="p">]</span>
+
+<span class="o">//</span><span class="n">Sorgente</span> <span class="n">di</span> <span class="n">eventi</span> <span class="n">data</span>
+ <span class="n">QActor</span> <span class="n">datasource</span> <span class="n">context</span> <span class="n">ctxstreamsdemo</span><span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+
+<span class="o">//</span><span class="n">Propaga</span> <span class="n">solo</span> <span class="n">gli</span> <span class="n">eventi</span> <span class="n">data</span> <span class="n">con</span> <span class="n">valori</span> <span class="n">inferiori</span> <span class="n">a</span> <span class="mi">40</span>
+ <span class="n">QActor</span> <span class="nb">filter</span> <span class="n">context</span> <span class="n">ctxstreamsdemo</span><span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+
+<span class="o">//</span><span class="n">Interessato</span> <span class="n">a</span> <span class="n">data</span><span class="p">,</span>  <span class="n">ma</span> <span class="n">li</span> <span class="n">considera</span> <span class="n">solo</span> <span class="n">dopo</span> <span class="mi">3</span><span class="n">sec</span>
+ <span class="n">QActor</span> <span class="n">busy</span> <span class="n">context</span> <span class="n">ctxstreamsdemo</span><span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+
+<span class="o">//</span><span class="n">Interessato</span> <span class="n">a</span> <span class="n">eventi</span> <span class="n">data</span> <span class="n">opportunamente</span> <span class="n">filtrati</span>
+ <span class="n">QActor</span> <span class="n">qasink</span> <span class="n">context</span> <span class="n">ctxstreamsdemo</span><span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><a class="reference internal image-reference" href="_images/Archdemevstream.png"><img alt="_images/Archdemevstream.png" class="align-center" src="_images/Archdemevstream.png" style="width: 100%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+<section id="datasource">
+<h3>datasource<a class="headerlink" href="#datasource" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>datasource</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> QActor datasource context ctxstreamsdemo{
+  [# var N = 10 #]
+  State s0 initial{
+    delay 1000
+  }
+  Goto work
+
+  State work{
+    println(&quot;$name emitlocalstream $N&quot;) color green
+  /*1*/ emitlocalstream  data : value($N)
+    [# N = N + 10 #]
+    delay 500
+  }
+  /*2*/ Goto work  if [# N &lt; 80 #] else endOWork
+
+  State endOWork{
+    println(&quot;$name ENDS&quot;) color green
+  /*3*/ [# System.exit(0) #]
+  }
+
+}
+</pre></div>
+</div>
+</td>
+<td><ol class="arabic simple">
+<li><p>Usa la primsitiva <a class="reference internal" href="QakActors24.html#operazioni-relative-agli-eventi"><span class="std std-ref">emitlocalstream</span></a> per emettere
+il dato corrente</p></li>
+<li><p>Continua a emettere ogni <code class="docutils literal notranslate"><span class="pre">500msec</span></code> se il dato corrente non supera <code class="docutils literal notranslate"><span class="pre">80</span></code></p></li>
+<li><p>Termina il sistema</p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="filter">
+<h3>filter<a class="headerlink" href="#filter" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>filter</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>QActor filter context ctxstreamsdemo{
+[# var V = 0 #]
+
+  State s0 initial{
+/*1*/    subscribeTo datasource for data
+  }
+/*2*/Transition t0 whenEvent data -&gt; handleData
+
+  State handleData{
+    //printCurrentMessage color magenta
+    onMsg( data : value(V)){
+      [#  V = payloadArg(0).toInt() #]
+      println(&quot;$name handles $V&quot;) color magenta
+      if [# V &lt; 40  #] {
+  /*3*/ emitlocalstream  data : value($V)
+      }
+    }
+  }
+  Transition t0 whenEvent data -&gt; handleData
+}
+</pre></div>
+</div>
+</td>
+<td><ol class="arabic simple">
+<li><p>Si sottosrive a <a class="reference internal" href="#datasource"><span class="std std-ref">datasource</span></a></p></li>
+<li><p>Attende un evento</p></li>
+<li><p>Propaga l’evento se inferiore a <code class="docutils literal notranslate"><span class="pre">40</span></code></p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="qasink">
+<h3>qasink<a class="headerlink" href="#qasink" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>qasink</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span> <span class="n">qasink</span> <span class="n">context</span> <span class="n">ctxstreamsdemo</span><span class="p">{</span>
+
+  <span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span><span class="p">{</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span>  <span class="n">subscribeTo</span> <span class="nb">filter</span> <span class="k">for</span> <span class="n">data</span>
+  <span class="p">}</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span> <span class="n">Transition</span> <span class="n">t0</span> <span class="n">whenEvent</span> <span class="n">data</span> <span class="o">-&gt;</span> <span class="n">handleData</span>
+
+  <span class="n">State</span> <span class="n">handleData</span><span class="p">{</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span>  <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name handles ${currentMsg.msgContent()}&quot;</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="n">Transition</span> <span class="n">t0</span> <span class="n">whenEvent</span> <span class="n">data</span> <span class="o">-&gt;</span> <span class="n">handleData</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><ol class="arabic simple">
+<li><p>Si sottosrive a <a class="reference internal" href="#filter"><span class="std std-ref">filter</span></a></p></li>
+<li><p>Attende un evento</p></li>
+<li><p>Elabora l’evento</p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="busy">
+<h3>busy<a class="headerlink" href="#busy" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>busy</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span> <span class="n">busy</span> <span class="n">context</span> <span class="n">ctxstreamsdemo</span><span class="p">{</span>
+  <span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span><span class="p">{</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name STARTS&quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">cyan</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span>  <span class="n">subscribeTo</span> <span class="n">datasource</span> <span class="k">for</span> <span class="n">data</span>
+  <span class="p">}</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span><span class="n">Transition</span> <span class="n">t0</span> <span class="n">whenTime</span> <span class="mi">3000</span> <span class="o">-&gt;</span> <span class="n">work</span>
+
+  <span class="n">State</span> <span class="n">work</span><span class="p">{</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name PAY ATTENTION&quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">cyan</span>
+  <span class="p">}</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span> <span class="n">Transition</span> <span class="n">t0</span> <span class="n">whenEvent</span> <span class="n">data</span> <span class="o">-&gt;</span> <span class="n">handleData</span>
+
+  <span class="n">State</span> <span class="n">handleData</span><span class="p">{</span>
+<span class="o">/*</span><span class="mi">4</span><span class="o">*/</span>  <span class="n">printCurrentMessage</span> <span class="n">color</span> <span class="n">cyan</span>
+  <span class="p">}</span>
+  <span class="n">Transition</span> <span class="n">t0</span> <span class="n">whenEvent</span> <span class="n">data</span> <span class="o">-&gt;</span> <span class="n">handleData</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><ol class="arabic simple">
+<li><p>Si sottosrive a <a class="reference internal" href="#datasource"><span class="std std-ref">datasource</span></a></p></li>
+<li><p>Simula di essere occupato per <code class="docutils literal notranslate"><span class="pre">3sec</span></code></p></li>
+<li><p>Attende un evento generato da <a class="reference internal" href="#datasource"><span class="std std-ref">datasource</span></a></p></li>
+<li><p>Elabora l’evento</p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="slide1">Esempio Interruzione</span></p>
+</section>
+</section>
+<section id="demointerrupt-qak">
+<h2>demointerrupt.qak<a class="headerlink" href="#demointerrupt-qak" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>L’attore <a class="reference internal" href="#worker"><span class="std std-ref">worker</span></a> nello stato <code class="docutils literal notranslate"><span class="pre">work</span></code>, gestisce il dispatch <code class="docutils literal notranslate"><span class="pre">cmd</span></code> e l’evento <code class="docutils literal notranslate"><span class="pre">alarm</span></code>.</p></li>
+<li><p>L’evento <code class="docutils literal notranslate"><span class="pre">alarm</span></code> provoca il trasferimento allo stato <code class="docutils literal notranslate"><span class="pre">handlealarm</span></code> che termina le sue
+azioni con la primitiva <a class="reference internal" href="QakActors24.html#operazioni-di-ritorno-da-interruzione"><span class="std std-ref">returnFromInterrupt</span></a> che restituisce il controllo allo stato
+<code class="docutils literal notranslate"><span class="pre">work</span></code> senza eseguirne le azioni, ma solo le transizioni. Nel caso di <code class="docutils literal notranslate"><span class="pre">alarm(tsunami)</span></code>.
+termina il sistema.</p></li>
+<li><p>L’attore <a class="reference internal" href="#user"><span class="std std-ref">user</span></a> invia` dispatch <code class="docutils literal notranslate"><span class="pre">cmd</span></code> a <a class="reference internal" href="#worker"><span class="std std-ref">worker</span></a>.</p></li>
+<li><p>L’attore <a class="reference internal" href="#sentinel"><span class="std std-ref">sentinel</span></a> emette prina l’evento <code class="docutils literal notranslate"><span class="pre">alarm(fire)</span></code> e poi l’evento <code class="docutils literal notranslate"><span class="pre">alarm(tsunami)</span></code>.</p></li>
+</ul>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">System</span>  <span class="n">qakdemo24</span>
+
+<span class="n">Dispatch</span> <span class="n">cmd</span>   <span class="p">:</span> <span class="n">cmd</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">Event</span>    <span class="n">alarm</span> <span class="p">:</span> <span class="n">alarm</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">Context</span> <span class="n">ctxinterrupt</span> <span class="n">ip</span> <span class="p">[</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span> <span class="n">port</span><span class="o">=</span><span class="mi">8045</span><span class="p">]</span>
+
+<span class="n">QActor</span> <span class="n">worker</span> <span class="n">context</span> <span class="n">ctxinterrupt</span><span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+<span class="n">QActor</span> <span class="n">user</span> <span class="n">context</span> <span class="n">ctxinterrupt</span><span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+<span class="n">QActor</span> <span class="n">sentinel</span> <span class="n">context</span> <span class="n">ctxinterrupt</span><span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><a class="reference internal image-reference" href="_images/Archdemointerrupt.png"><img alt="_images/Archdemointerrupt.png" class="align-center" src="_images/Archdemointerrupt.png" style="width: 60%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+<section id="worker">
+<h3>worker<a class="headerlink" href="#worker" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>worker</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span> <span class="n">worker</span> <span class="n">context</span> <span class="n">ctxinterrupt</span><span class="p">{</span>
+  <span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span><span class="p">{</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name STARTS&quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">blue</span>
+  <span class="p">}</span>
+  <span class="n">Goto</span> <span class="n">work</span>
+
+  <span class="n">State</span> <span class="n">work</span><span class="p">{</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name WORKING ... &quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">blue</span>
+    <span class="n">delay</span> <span class="mi">1000</span>
+  <span class="p">}</span>
+  <span class="o">/*</span><span class="mi">1</span><span class="o">*/</span><span class="n">Transition</span> <span class="n">t0</span>
+    <span class="n">whenMsg</span> <span class="n">cmd</span>               <span class="o">-&gt;</span> <span class="n">handlecmd</span>
+    <span class="n">whenInterruptEvent</span>  <span class="n">alarm</span> <span class="o">-&gt;</span> <span class="n">handlealarm</span>
+
+  <span class="n">State</span> <span class="n">handlecmd</span><span class="p">{</span>
+  <span class="o">/*</span><span class="mi">2</span><span class="o">*/</span>  <span class="n">printCurrentMessage</span> <span class="n">color</span> <span class="n">blue</span>
+  <span class="p">}</span>
+  <span class="n">Goto</span> <span class="n">work</span>
+
+  <span class="n">State</span> <span class="n">handlealarm</span><span class="p">{</span>
+    <span class="n">printCurrentMessage</span> <span class="n">color</span> <span class="n">black</span>
+  <span class="o">/*</span><span class="mi">3</span><span class="o">*/</span>  <span class="k">if</span><span class="p">[</span><span class="c1"># currentMsg.msgContent() == &quot;alarm(tsunami)&quot; #]{</span>
+      <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name WARNING tsunami ... &quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">red</span>
+      <span class="n">delay</span> <span class="mi">1000</span>
+  <span class="o">/*</span><span class="mi">4</span><span class="o">*/</span> <span class="p">[</span><span class="c1"># System.exit(0) #]</span>
+    <span class="p">}</span>
+    <span class="k">else</span><span class="p">{</span>
+  <span class="o">/*</span><span class="mi">5</span><span class="o">*/</span> <span class="n">returnFromInterrupt</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><ol class="arabic simple">
+<li><p>Attesa del dispatch <code class="docutils literal notranslate"><span class="pre">cmd</span></code> e dell’evento <code class="docutils literal notranslate"><span class="pre">alarm</span></code>.</p></li>
+<li><p>Gestione di <code class="docutils literal notranslate"><span class="pre">cmd</span></code>.</p></li>
+<li><p>Analisi del payload dell’evento <code class="docutils literal notranslate"><span class="pre">alarm</span></code></p></li>
+<li><p>Terminazione del sistema</p></li>
+<li><p>Esecuzione di <a class="reference internal" href="QakActors24.html#operazioni-di-ritorno-da-interruzione"><span class="std std-ref">returnFromInterrupt</span></a> che
+restituisce il controllo allo stato
+interrotto (<code class="docutils literal notranslate"><span class="pre">work</span></code>) senza eseguirne le azioni, ma solo le transizioni.</p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="user">
+<h3>user<a class="headerlink" href="#user" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>user</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span> <span class="n">user</span> <span class="n">context</span> <span class="n">ctxinterrupt</span><span class="p">{</span>
+  <span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span><span class="p">{</span>
+    <span class="n">delay</span> <span class="mi">500</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name forward  cmd(10) &quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">cyan</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span><span class="n">forward</span> <span class="n">worker</span> <span class="o">-</span><span class="n">m</span> <span class="n">cmd</span> <span class="p">:</span> <span class="n">cmd</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">delay</span> <span class="mi">500</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name forward  cmd(20) &quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">cyan</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span><span class="n">forward</span> <span class="n">worker</span> <span class="o">-</span><span class="n">m</span> <span class="n">cmd</span> <span class="p">:</span> <span class="n">cmd</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name ENDS&quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">cyan</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><ol class="arabic simple">
+<li><p>Invio del primo dispatch <code class="docutils literal notranslate"><span class="pre">cmd</span></code></p></li>
+<li><p>Invio del secondo dispatch <code class="docutils literal notranslate"><span class="pre">cmd</span></code></p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="sentinel">
+<h3>sentinel<a class="headerlink" href="#sentinel" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>sentinel</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span> <span class="n">sentinel</span> <span class="n">context</span> <span class="n">ctxinterrupt</span><span class="p">{</span>
+  <span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span><span class="p">{</span>
+    <span class="n">delay</span> <span class="mi">300</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name emits alarm(fire)&quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">magenta</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span> <span class="n">emit</span> <span class="n">alarm</span> <span class="p">:</span> <span class="n">alarm</span><span class="p">(</span><span class="n">fire</span><span class="p">)</span>
+    <span class="n">delay</span> <span class="mi">300</span>
+    <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name emits alarm(tsunami)&quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">magenta</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span> <span class="n">emit</span> <span class="n">alarm</span> <span class="p">:</span> <span class="n">alarm</span><span class="p">(</span><span class="n">tsunami</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><ol class="arabic simple">
+<li><p>Invio dell’evento <em>alarm</em> con payload <code class="docutils literal notranslate"><span class="pre">alarm(fire)</span></code></p></li>
+<li><p>Invio dell’evento <em>alarm</em> con payload <code class="docutils literal notranslate"><span class="pre">alarm(tsunami)</span></code></p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">QakActors24Demo</a><ul>
+<li><a class="reference internal" href="#democodedqactor-qak">democodedqactor.qak</a><ul>
+<li><a class="reference internal" href="#datahandler">datahandler</a></li>
+<li><a class="reference internal" href="#codedactor-workactor">codedActor.workactor</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#demo0-qak">demo0.qak</a><ul>
+<li><a class="reference internal" href="#qactor-demo0">QActor demo0</a></li>
+<li><a class="reference internal" href="#demo0-sender">demo0 sender</a></li>
+<li><a class="reference internal" href="#demo0-perceiver">demo0 perceiver</a></li>
+<li><a class="reference internal" href="#analisi-dei-risultati">Analisi dei risultati</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#demoguards-qak">demoguards.qak</a><ul>
+<li><a class="reference internal" href="#guards-a1">guards a1</a></li>
+<li><a class="reference internal" href="#guards-a2">guards a2</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#demorequest-qak">demorequest.qak</a><ul>
+<li><a class="reference internal" href="#demorequest-caller">demorequest caller</a></li>
+<li><a class="reference internal" href="#demorequest-called">demorequest called</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#demoasktocaller-qak">demoasktocaller.qak</a><ul>
+<li><a class="reference internal" href="#demoasktocaller-caller">demoasktocaller caller</a></li>
+<li><a class="reference internal" href="#demoasktocaller-called">demoasktocaller called</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#demoresource-qak">demoresource.qak</a><ul>
+<li><a class="reference internal" href="#resourcecore">resourcecore</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#demoaddtocore-qak">demoaddtocore.qak</a><ul>
+<li><a class="reference internal" href="#corecaller">corecaller</a></li>
+<li><a class="reference internal" href="#alarmoff">alarmoff</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#demodelegate-qak">demodelegate.qak</a><ul>
+<li><a class="reference internal" href="#server">server</a></li>
+<li><a class="reference internal" href="#serverworker">serverworker</a></li>
+<li><a class="reference internal" href="#caller1">caller1</a></li>
+<li><a class="reference internal" href="#caller2">caller2</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#democreate-qak">democreate.qak</a><ul>
+<li><a class="reference internal" href="#creator">creator</a></li>
+<li><a class="reference internal" href="#producer">producer</a></li>
+<li><a class="reference internal" href="#consumer">consumer</a></li>
+<li><a class="reference internal" href="#consumerhelper">consumerhelper</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#demostreams-qak">demostreams.qak</a><ul>
+<li><a class="reference internal" href="#datasource">datasource</a></li>
+<li><a class="reference internal" href="#filter">filter</a></li>
+<li><a class="reference internal" href="#qasink">qasink</a></li>
+<li><a class="reference internal" href="#busy">busy</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#demointerrupt-qak">demointerrupt.qak</a><ul>
+<li><a class="reference internal" href="#worker">worker</a></li>
+<li><a class="reference internal" href="#user">user</a></li>
+<li><a class="reference internal" href="#sentinel">sentinel</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="QakActorsIntro24.html"
+                          title="previous chapter">QakActorsIntro24</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="QakService24Init.html"
+                          title="next chapter">QakService24Init</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/QakActors24Demo.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="QakService24Init.html" title="QakService24Init"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="QakActorsIntro24.html" title="QakActorsIntro24"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">QakActors24Demo</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>

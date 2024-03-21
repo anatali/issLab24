@@ -1,4 +1,4 @@
-package utils
+package main.resources.utils;
 
 import javafx.application.Application
 import javafx.event.ActionEvent
@@ -75,10 +75,11 @@ class DisplayObj : Application() {
         stage.scene = scene
         stage.show()
         stage.isAlwaysOnTop = true
-    }
+    } 
 
     fun write(s: String?) {
         if (s == null) return  //defensive
+        //CommUtils.outred("write: $s")
         while (outarea == null){
             Thread.sleep(500L)
             //CommUtils.outred("WARNING: display non yet started")
@@ -91,7 +92,7 @@ class DisplayObj : Application() {
     }
     fun print(s: String?) {
         if (s == null) return    //defensive
-        //CommUtils.outred("print: $s")
+        CommUtils.outred("print: $s")
         while (outarea == null){ //defensive
             Thread.sleep(500L)
             CommUtils.outred("WARNING: display non yet started")

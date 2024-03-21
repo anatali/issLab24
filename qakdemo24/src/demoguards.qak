@@ -1,0 +1,70 @@
+System /*-trace*/ qakdemo24
+Dispatch cmd   : cmd( ARG )
+Event alarm    : alarm( DATA )   
+ 
+ 
+Context ctxdemoguards ip [host="localhost" port=8065]
+
+QActor a1 context ctxdemoguards{
+[# var ready     = true
+   var end       = false	
+   fun check( v : String ) : Boolean{
+   	   return v =="cmd(continue)"
+   }
+#]
+   State s0 initial { 	  
+   	 println("$name in s0 end=$end ready=$ready") color blue
+   }
+   Goto end if [# end #] else s1
+   
+   State end{
+   	 println("$name BYE") color magenta
+   	 [# System.exit(0) #]
+   }
+   
+   State s1  { 	  
+   	  println("$name in s1 ready=$ready") color blue
+   }
+   Transition t0 
+        whenEvent alarm and [# ready #]   -> handleAlarm  
+   		whenMsg cmd     and [# ready #]   -> handleCmd 
+   		whenMsg cmd     and [# ! ready #] -> checkCmd
+
+   State handleAlarm  { 	  
+   	println("$name in handleAlarm ready=$ready") color magenta
+   	[# ready = false #]
+   }
+   Goto s1	
+
+   State handleCmd  { 	  
+   	 printCurrentMessage
+   	 //println("$name in handleCmd end=$end ready=$ready") color blue
+   	 onMsg( cmd : cmd(end) ){
+   	 	[# end = true #]
+   	 }
+     //[# ready = check( currentMsg.msgContent() ) #]
+   }
+   Goto end if [# end #] else s1	
+   
+   State checkCmd  { 	  
+   	 println("$name checks $currentMsg") color magenta
+   	 [# ready = check( currentMsg.msgContent() ) #]
+   }
+   Goto s1
+
+}
+
+QActor a2 context ctxdemoguards{
+   State s0 initial { 	  
+   		forward a1 -m cmd : cmd(10)
+   		delay 500
+   		emit alarm:alarm(fire)
+   		//delay 500
+   		forward a1 -m cmd : cmd(20)
+        emit alarm:alarm(tsunami)
+        forward a1 -m cmd : cmd(continue)
+   		forward a1 -m cmd : cmd(30)
+   		//delay 500
+   		forward a1 -m cmd : cmd(end)
+   }
+}

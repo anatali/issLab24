@@ -1,4 +1,4 @@
-package utils;
+package main.resources.utils;
 
 import unibo.basicomm23.utils.CommUtils;
 
