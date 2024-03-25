@@ -1,0 +1,679 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>PingPongSystem24 &#8212; iss24 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="QakService24Synch" href="QakService24Synch.html" />
+    <link rel="prev" title="QakService24Init" href="QakService24Init.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="QakService24Synch.html" title="QakService24Synch"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="QakService24Init.html" title="QakService24Init"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">PingPongSystem24</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="pingpongsystem24">
+<h1>PingPongSystem24<a class="headerlink" href="#pingpongsystem24" title="Permalink to this heading">¶</a></h1>
+<p><span class="slide3">Projects pingpong24, ping24, pong24, ppgreferee</span></p>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h2>
+<p>Design and development of a system that simulates the exchange of information in a <code class="docutils literal notranslate"><span class="pre">ping</span></code>-<code class="docutils literal notranslate"><span class="pre">pong</span></code> style.</p>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading">¶</a></h2>
+<p>Create a distributed software system that simulates how the information is exchanged between a <code class="docutils literal notranslate"><span class="pre">ping</span></code> and a <code class="docutils literal notranslate"><span class="pre">pong</span></code> players.</p>
+<p>The goal <span class="slide2">is not to simulate a ``ping`</span>-<code class="docutils literal notranslate"><span class="pre">pong</span></code> game`, but only to simulate the exchange of information between two end-points.</p>
+</section>
+<section id="requirement-analysis">
+<h2>Requirement analysis<a class="headerlink" href="#requirement-analysis" title="Permalink to this heading">¶</a></h2>
+<p>In the <code class="docutils literal notranslate"><span class="pre">ping</span></code>-<code class="docutils literal notranslate"><span class="pre">pong</span></code> game there are:</p>
+<ul class="simple">
+<li><p>two players, called here <code class="docutils literal notranslate"><span class="pre">ping</span></code> and <code class="docutils literal notranslate"><span class="pre">pong</span></code></p></li>
+<li><p>a ball that is exchanged by the players</p></li>
+<li><p>a initial sender, that the committer has indicated as the <code class="docutils literal notranslate"><span class="pre">ping</span></code></p></li>
+</ul>
+<section id="a-first-model-of-the-system">
+<h3>A first model of the system<a class="headerlink" href="#a-first-model-of-the-system" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ping</span></code> and <code class="docutils literal notranslate"><span class="pre">pong</span></code> are modelled as actors</p></li>
+<li><p>the ball should be modelled as a message, but we don’t have enough requirements to fix it as:</p>
+<ul>
+<li><p>a dispatch, or</p></li>
+<li><p>as a request, or</p></li>
+<li><p>as an event</p></li>
+</ul>
+</li>
+</ul>
+<p>Thus, our first model of the system does not introduce any message.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>System pingpong24
+
+Context ctxping  ip [host=&quot;localhost&quot; port=8014]
+Context ctxpong  ip [host=&quot;127.0.0.1&quot; port=8015]
+
+QActor ``ping`` context ctxping{ //ctxtest
+    State s0 initial{
+        println(&quot;$name STARTS  &quot;) color blue
+    }
+}
+
+
+QActor ``pong`` context ctxpong { //ctxtest
+    State s0 initial{
+        println(&quot;$name STARTS&quot;) color green
+    }
+}
+</pre></div>
+</div>
+</td>
+<td><a class="reference internal image-reference" href="_images/PingPong24Requirements.png"><img alt="_images/PingPong24Requirements.png" class="align-center" src="_images/PingPong24Requirements.png" style="width: 40%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functional-test-plans-non-formal">
+<h3>Functional test plans (non formal)<a class="headerlink" href="#functional-test-plans-non-formal" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>The system works well when the ball is continually exchanged beween the two players.</p></li>
+<li><p>However, the system should be able to terminate its behaviour after a certain number of exchanges.</p></li>
+</ul>
+</section>
+</section>
+<section id="problem-analysis">
+<h2>Problem analysis<a class="headerlink" href="#problem-analysis" title="Permalink to this heading">¶</a></h2>
+<p>For the <span class="slide2">ball as a message</span>, we say that:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the ball as an <strong>event</strong>: is not appropriate, since the information is exchanged between two precise end-points</p></li>
+<li><p>the ball as <strong>request</strong>: is not appropriate, since the gaal of each player is to
+avoid the possibility of a reply from the other player</p></li>
+<li><p>the ball as  <strong>dispatch</strong>: seems more appropriate</p></li>
+</ul>
+</div></blockquote>
+<p><span class="slidekp">The termination problem</span>.</p>
+<p>To evoid an endless exchange of the ball,
+we assume that the system terminates when a player does dot receive the ball within a prefixed amount of tim <a class="reference internal" href="#tmax"><span class="std std-ref">TMAX</span></a>.</p>
+<section id="tmax">
+<h3>TMAX<a class="headerlink" href="#tmax" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">val</span> <span class="n">TMAX</span> <span class="o">=</span> <span class="mi">1500</span>
+</pre></div>
+</div>
+<p>This fact accounts for one the possible situations:</p>
+<ul class="simple">
+<li><p>a player has been unable to receive the ball</p></li>
+<li><p>the ball is lost, out of the game field</p></li>
+<li><p>the ball has hit the net</p></li>
+<li><p>…</p></li>
+</ul>
+<p>Of course, we do not face the problem of indentifying the winner, since the goal of the game is only to exchange the ball.</p>
+</section>
+</section>
+<section id="logical-architecture">
+<h2>Logical architecture<a class="headerlink" href="#logical-architecture" title="Permalink to this heading">¶</a></h2>
+<p><span class="slide3">Project pingpong24</span></p>
+<section id="the-ping-pong-system">
+<h3>The <code class="docutils literal notranslate"><span class="pre">ping</span></code>-<code class="docutils literal notranslate"><span class="pre">pong</span></code> system<a class="headerlink" href="#the-ping-pong-system" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>System pingpong24
+Dispatch ball : ball(N) &quot;info exchanged&quot;
+
+Context ctxping  ip [host=&quot;localhost&quot; port=8014]
+Context ctxpong  ip [host=&quot;127.0.0.1&quot; port=8015]
+
+QActor ``ping`` context ctxping { ... }
+QActor ``pong`` context ctxpong { ... }
+</pre></div>
+</div>
+</td>
+<td><a class="reference internal image-reference" href="_images/PingPong24Analysis0.PNG"><img alt="_images/PingPong24Analysis0.PNG" class="align-center" src="_images/PingPong24Analysis0.PNG" style="width: 60%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Initially, it is wise, <span class="brown">to set up the interaction logic</span>, by defining an executable model where
+both the players are <span class="slide2">in a single  context</span>.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>System pingpong24
+Dispatch ball : ball(N) &quot;info exchanged&quot;
+
+Context ctxtest  ip [host=&quot;localhost&quot; port=8014]
+
+QActor ``ping`` context ctxtest { ... }
+QActor ``pong`` context ctxtest { ... }
+</pre></div>
+</div>
+</td>
+<td><a class="reference internal image-reference" href="_images/PingPong24Analysis0Test.PNG"><img alt="_images/PingPong24Analysis0Test.PNG" class="align-center" src="_images/PingPong24Analysis0Test.PNG" style="width: 60%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="ping">
+<h3>ping<a class="headerlink" href="#ping" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>QActor ``ping`` context ctxtest{
+  [#  var N = 1;
+/*2*/val TMAX = 1500L
+  #]
+  State s0 initial{
+/*2*/delay 1000 //``pong`` started ...
+    println(&quot;$name sends $N  &quot;) color blue
+/*3*/forward ``pong`` -m ball : ball($N)
+  }
+  Goto receive
+
+  State receive{
+    //println(&quot;$name received  &quot;) color blue
+  }
+  Transition t0
+/*4*/whenTimeVar TMAX -&gt; endofexchange
+/*5*/whenMsg ball      -&gt; reply
+
+  State reply{
+    [# N = N + 1 #]
+    delay 500
+    println(&quot;$name sends $N  &quot;) color blue
+    forward ``pong`` -m ball : ball($N)
+  }
+  Goto receive
+
+  State endofexchange{
+    println(&quot;$name ENDS &quot;) color blue
+    [# System.exit(0) #]
+  }
+}
+</pre></div>
+</div>
+</td>
+<td><p><strong>``ping``</strong></p>
+<ol class="arabic simple">
+<li><p>Set <a class="reference internal" href="#tmax"><span class="std std-ref">TMAX</span></a> as Long, to be used in <a class="reference internal" href="QakActors24.html#timeout-per-transizioni"><span class="std std-ref">whenTimeVar</span></a></p></li>
+<li><p>Wait sometime to allow <code class="docutils literal notranslate"><span class="pre">pong</span></code> to start</p></li>
+<li><p>Start the game, by sending the ball to <code class="docutils literal notranslate"><span class="pre">pong</span></code></p></li>
+<li><p>If <a class="reference internal" href="#tmax"><span class="std std-ref">TMAX</span></a> is reached, the game ends</p></li>
+<li><p>If the ball is received, the game continues</p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="pong">
+<h3>pong<a class="headerlink" href="#pong" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>QActor ``pong`` context ctxtest {
+[#  val TMAX = 1500L #]
+  State s0 initial{
+    println(&quot;$name STARTS&quot;) color green
+  }
+  Transition t0
+/*1*/whenTimeVar TMAX -&gt; endofexchange
+/*2*/whenMsg ball     -&gt; reply
+
+  State reply{
+    onMsg( ball : ball(X)){
+     [# val N = payloadArg(0).toInt() #]
+     println(&quot;$name receives $N&quot;) color green
+     if [# N &lt;= 4 #]{
+       delay 500
+  /*3*/forward ``ping`` -m ball : ball($N)
+    }//no forward if N == 5
+    }
+  }
+  Transition t0
+    whenTimeVar TMAX  -&gt; endofexchange
+    whenMsg ball      -&gt; reply
+
+  State endofexchange{
+    println(&quot;$name ENDS &quot;) color green
+
+  }
+}
+</pre></div>
+</div>
+</td>
+<td><p><strong>``pong``</strong></p>
+<ol class="arabic simple">
+<li><p>Set <a class="reference internal" href="#tmax"><span class="std std-ref">TMAX</span></a> as Long, to be used in <a class="reference internal" href="QakActors24.html#timeout-per-transizioni"><span class="std std-ref">whenTimeVar</span></a></p></li>
+<li><p>If <a class="reference internal" href="#tmax"><span class="std std-ref">TMAX</span></a> is reached, the game ends</p></li>
+<li><p>If the ball is received, the game continues</p></li>
+<li><p>Send the ball back to <code class="docutils literal notranslate"><span class="pre">ping</span></code>, if <code class="docutils literal notranslate"><span class="pre">N&lt;=4</span></code></p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="a-first-deployment">
+<h2>A first Deployment<a class="headerlink" href="#a-first-deployment" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Execute <code class="docutils literal notranslate"><span class="pre">gradlew</span> <span class="pre">distZip</span></code></p></li>
+<li><p>Gradle generates: <code class="docutils literal notranslate"><span class="pre">pingpong24\build\distributions\pingpong24-1.0.zip</span></code></p></li>
+<li><p>Copy the zip file under some directory (e.g. <code class="docutils literal notranslate"><span class="pre">C:/Iss24Run</span></code>)</p></li>
+<li><p>Unzip the file</p></li>
+<li><p>Work in in the directory <code class="docutils literal notranslate"><span class="pre">pingpong24-1.0\bin</span></code></p></li>
+<li><p>Run one of the following scripts:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pingpong24.bat</span></code>   (in Windows)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pingpong24.sh</span></code>    (in Unix)</p></li>
+</ul>
+</li>
+</ol>
+<p>This deployment will be used, shortly, during the test of the system.</p>
+</section>
+<section id="test-plans">
+<h2>Test plans<a class="headerlink" href="#test-plans" title="Permalink to this heading">¶</a></h2>
+<p>Let us say that</p>
+<ul class="simple">
+<li><p>The system <strong>works well</strong> if the exchange terminates when the <code class="docutils literal notranslate"><span class="pre">ping</span></code> hits the ball for the <code class="docutils literal notranslate"><span class="pre">5th</span></code> time.</p></li>
+</ul>
+<p>To automate the test, a <em>testUnit</em>  should:</p>
+<ol class="arabic simple">
+<li><p>activate the system</p></li>
+<li><p>understand when the system ends</p></li>
+<li><p>observe the state of one of the players, e.g. <code class="docutils literal notranslate"><span class="pre">ping</span></code></p></li>
+</ol>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><a class="reference internal image-reference" href="_images/PingPong24CtxtestWithObs.PNG"><img alt="_images/PingPong24CtxtestWithObs.PNG" class="align-center" src="_images/PingPong24CtxtestWithObs.PNG" style="width: 100%;" /></a>
+</td>
+<td><p>In order to achieve the above goals, we:</p>
+<ul class="simple">
+<li><p>introduce a new actor (<a class="reference internal" href="#pingobserver"><span class="std std-ref">pingobserver</span></a>) that observes the state of the <a class="reference internal" href="#ping"><span class="std std-ref">ping</span></a> player</p></li>
+<li><p>extend the behavior of the <a class="reference internal" href="#ping"><span class="std std-ref">ping</span></a>  with <a class="reference internal" href="QakActors24.html#operazioni-relative-alla-osservabilita"><span class="std std-ref">updateResource</span></a></p></li>
+<li><p>make the <a class="reference internal" href="#pingobserver"><span class="std std-ref">pingobserver</span></a> able to answer to request from the testUnit</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<section id="a-testable-system">
+<h3>A testable system<a class="headerlink" href="#a-testable-system" title="Permalink to this heading">¶</a></h3>
+<p>In order to promote testing automaticon, let us introdice new messages:</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">System</span> <span class="n">pingpong24</span>
+
+<span class="n">Dispatch</span> <span class="n">ball</span> <span class="p">:</span> <span class="n">ball</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="s2">&quot;info exchanged by the players&quot;</span>
+
+<span class="o">//</span><span class="n">FOR</span> <span class="n">TESTING</span>
+<span class="n">Dispatch</span> <span class="n">ballview</span><span class="p">:</span><span class="n">ball</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>  <span class="s2">&quot;observed info|payload suggested&quot;</span>
+
+<span class="n">Request</span> <span class="n">info</span>   <span class="p">:</span> <span class="n">info</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>   <span class="s2">&quot;sent by testUnit to observer&quot;</span>
+<span class="n">Reply</span>   <span class="n">obsinfo</span><span class="p">:</span> <span class="n">obsinfo</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="k">for</span> <span class="n">info</span>
+</pre></div>
+</div>
+</td>
+<td><p><strong>testable system</strong></p>
+<ul class="simple">
+<li><p><span class="blue">ballview</span>: is used to observe the state of the <code class="docutils literal notranslate"><span class="pre">ping</span></code> player</p></li>
+<li><p><span class="blue">info</span>: is used to request the result of the observer</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="pingobserver">
+<h3>pingobserver<a class="headerlink" href="#pingobserver" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>QActor pingobserver context ctxtest{
+  [# var N = 0; var NLAST = 0; val TOBSMAX=3000L #]
+  State s0 initial{
+    println(&quot;$name STARTS&quot;) color magenta
+/*1*/observeResource ``ping`` msgid ballview
+  }
+  Transition t0
+/*2*/whenTimeVar TOBSMAX -&gt; gameended
+/*3*/whenMsg ballview -&gt; updateinfoongame
+
+  State updateinfoongame{
+      onMsg( ballview :  ball(X) ){
+        [# N = payloadArg(0).toInt() #]
+/*4*/   if [# N &gt; 0 #]{  [# NLAST=N #] }
+      }
+  }
+  Transition t0
+    whenTimeVar TOBSMAX -&gt; gameended
+    whenMsg ballview   -&gt; updateinfoongame
+
+  State gameended{
+    println(&quot;$name waits for request&quot;) color magenta
+  }
+  Transition t0
+      /*5*/whenTime    2000 -&gt; endsystem
+/*6*/whenRequest info -&gt; handleinfo
+
+  State handleinfo{
+    replyTo info with obsinfo : obsinfo($NLAST)
+/*7*/ [# System.exit(0) #]
+  }
+}
+</pre></div>
+</div>
+</td>
+<td><p><strong>pingobserver</strong></p>
+<ol class="arabic simple">
+<li><p>Observe the state of the <code class="docutils literal notranslate"><span class="pre">ping</span></code> player with <code class="docutils literal notranslate"><span class="pre">msgId</span></code> = <span class="blue">ballview</span></p></li>
+<li><p>If too time has passed before observing, the game ends</p></li>
+<li><p>Wiat for the dispatch sent by the observed player</p></li>
+<li><p>Update the last value of the ball received</p></li>
+<li><p>If too time has passed before receiving a request for <code class="docutils literal notranslate"><span class="pre">info</span></code>, the game ends</p></li>
+<li><p>If a request for <code class="docutils literal notranslate"><span class="pre">info</span></code> is received, the last value of the ball is sent to the requester</p></li>
+<li><p>Terminate the system</p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="update-the-deployment">
+<h2>Update the deployment<a class="headerlink" href="#update-the-deployment" title="Permalink to this heading">¶</a></h2>
+<p>If we change the model (and therefore the code of our system) we don’t need to regererate all the  deployment,
+but only to update the code in the <code class="docutils literal notranslate"><span class="pre">bin</span></code> directory, by copying the new jar file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pingpong24</span>\<span class="n">build</span>\<span class="n">libs</span>\<span class="n">pingpong24</span><span class="o">-</span><span class="mf">1.0</span><span class="o">-</span><span class="n">plain</span><span class="o">.</span><span class="n">jar</span>
+</pre></div>
+</div>
+<section id="testunit">
+<h3>testUnit<a class="headerlink" href="#testunit" title="Permalink to this heading">¶</a></h3>
+<p>A test unit is reported in <a class="reference external" href="../../../../pingpong24/src/main/java/test/TestPingPong24SingleCtx.java">TestPingPong24SingleCtx</a> and described in <a class="reference external" href="../../../../pingpong24/userDocs/uniboDisi_pingpong24.html">userDocs/uniboDisi_pingpong24.html</a></p>
+<p>Note that there are two way for activate the system:</p>
+<ul>
+<li><p><span class="slide2">activateSystemUsingGradle</span>: activates the system to be tested by executing</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Process</span> <span class="n">p</span> <span class="o">=</span> <span class="n">Runtime</span><span class="o">.</span><span class="n">getRuntime</span><span class="p">()</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;./gradlew.bat runAll&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p><span class="slide2">activateSystemUsingDeploy</span>: activates the system to be tested by executing</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Process</span> <span class="n">p</span> <span class="o">=</span> <span class="n">Runtime</span><span class="o">.</span><span class="n">getRuntime</span><span class="p">()</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;./src/main/java/test/pingpongexec.bat&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>where, <code class="docutils literal notranslate"><span class="pre">pingpongexec.bat</span></code> is related to our <a class="reference internal" href="#a-first-deployment"><span class="std std-ref">first Deployment</span></a> :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">C</span><span class="p">:</span><span class="o">/</span><span class="n">iss24Run</span><span class="o">/</span><span class="n">pingpong24</span><span class="o">-</span><span class="mf">1.0</span><span class="o">/</span><span class="nb">bin</span>
+<span class="n">pingpong24</span><span class="o">.</span><span class="n">bat</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>The second way is more appropriate for testing, since it is faster and allows to test the system in a more realistic environment.</p>
+</section>
+</section>
+<section id="project">
+<h2>Project<a class="headerlink" href="#project" title="Permalink to this heading">¶</a></h2>
+<p><span class="slide3">Projects ping24, pong24, ppgreferee</span></p>
+<p>To make the project more manageable, we introduce another actor, called <a class="reference internal" href="#referee"><span class="std std-ref">referee</span></a>,
+with the following responsibility:</p>
+<ul class="simple">
+<li><p>start the system by emitting the <span class="slide2">event</span> <code class="docutils literal notranslate"><span class="pre">startgame</span> <span class="pre">:</span> <span class="pre">startgame(X)</span></code></p></li>
+<li><p>stop the system by emitting the  <span class="slide2">event</span> <code class="docutils literal notranslate"><span class="pre">stopgame</span> <span class="pre">:</span> <span class="pre">stopgame(X)</span></code></p></li>
+<li><p>observe the state of the <code class="docutils literal notranslate"><span class="pre">ping</span></code> player</p></li>
+<li><p>observe the state of the <code class="docutils literal notranslate"><span class="pre">pong</span></code> player</p></li>
+<li><p>interact with the <a class="reference internal" href="#testunit"><span class="std std-ref">testUnit</span></a></p></li>
+</ul>
+<a class="reference internal image-reference" href="_images/PingPong24WithReferee.PNG"><img alt="_images/PingPong24WithReferee.PNG" class="align-center" src="_images/PingPong24WithReferee.PNG" style="width: 60%;" /></a>
+<section id="referee">
+<h3>referee<a class="headerlink" href="#referee" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>QActor referee context ctxreferee{
+[# var N = 0 #]
+  State s0 initial{
+    println(&quot;$name STARTS &quot;) color cyan
+    observeResource ping msgid ballview
+    observeResource pong msgid ballview
+  }
+  Goto emitStart
+
+  State emitStart{
+    emit startgame : startgame(oK)
+  }
+  Transition t0
+  /*1*/whenTime 1000          -&gt; emitStart
+  /*2*/whenMsg ballview       -&gt; handlegame
+  /*3*/whenRequest obsconnect -&gt; handleConnect
+
+  State handleConnect{
+      replyTo obsconnect
+         with obsconnected : obsconnected(done)
+  }
+  Transition t0
+    whenMsg ballview -&gt; handlegame
+
+  State handlegame{
+    printCurrentMessage color blue
+    [# N++ #]
+    if [# N == 5 #]{
+      println(&quot;$name emits stop &quot;) color cyan
+      emit stopgame : stopgamegame(oK)
+    }
+    onMsg( ballview :  ball(0) ){
+      autodispatch endgame : endgame(ok)
+    }
+  }
+  Transition t0
+    whenMsg ballview       -&gt; handlegame
+    whenRequest obsconnect -&gt; handleConnect
+    whenMsg endgame        -&gt; checkRequest
+
+  State checkRequest{
+    println(&quot;$name checkRequest &quot;) color red
+  }
+  Transition t0
+      whenTime 1000    -&gt; endgame     //no testing
+      whenRequest info -&gt; handleRequest
+
+  State handleRequest{
+    printCurrentMessage color red
+    replyTo info with obsinfo : obsinfo($N)
+  }
+    Goto endgame
+
+  State endgame{
+    delay 500
+    println(&quot;$name BYE &quot;) color red
+    [# System.exit(0) #]
+  }
+}
+</pre></div>
+</div>
+</td>
+<td><ol class="arabic simple">
+<li><p>Emit <code class="docutils literal notranslate"><span class="pre">startgame</span></code> again is the game seems not started</p></li>
+<li><p>aaa</p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="deployment">
+<h2>Deployment<a class="headerlink" href="#deployment" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="maintenance">
+<h2>Maintenance<a class="headerlink" href="#maintenance" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">PingPongSystem24</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#requirements">Requirements</a></li>
+<li><a class="reference internal" href="#requirement-analysis">Requirement analysis</a><ul>
+<li><a class="reference internal" href="#a-first-model-of-the-system">A first model of the system</a></li>
+<li><a class="reference internal" href="#functional-test-plans-non-formal">Functional test plans (non formal)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#problem-analysis">Problem analysis</a><ul>
+<li><a class="reference internal" href="#tmax">TMAX</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#logical-architecture">Logical architecture</a><ul>
+<li><a class="reference internal" href="#the-ping-pong-system">The <code class="docutils literal notranslate"><span class="pre">ping</span></code>-<code class="docutils literal notranslate"><span class="pre">pong</span></code> system</a></li>
+<li><a class="reference internal" href="#ping">ping</a></li>
+<li><a class="reference internal" href="#pong">pong</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#a-first-deployment">A first Deployment</a></li>
+<li><a class="reference internal" href="#test-plans">Test plans</a><ul>
+<li><a class="reference internal" href="#a-testable-system">A testable system</a></li>
+<li><a class="reference internal" href="#pingobserver">pingobserver</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#update-the-deployment">Update the deployment</a><ul>
+<li><a class="reference internal" href="#testunit">testUnit</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#project">Project</a><ul>
+<li><a class="reference internal" href="#referee">referee</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#testing">Testing</a></li>
+<li><a class="reference internal" href="#deployment">Deployment</a></li>
+<li><a class="reference internal" href="#maintenance">Maintenance</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="QakService24Init.html"
+                          title="previous chapter">QakService24Init</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="QakService24Synch.html"
+                          title="next chapter">QakService24Synch</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/PingPongSystem24.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="QakService24Synch.html" title="QakService24Synch"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="QakService24Init.html" title="QakService24Init"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">PingPongSystem24</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>
