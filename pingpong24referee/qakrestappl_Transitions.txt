@@ -1,0 +1,4 @@
+{"actor":"referee", "msgType":"dispatch", "curstate":"emitStart", "nextstate":"handlegame", "msgId":"ballview"}
+{"actor":"referee", "msgType":"dispatch", "curstate":"handleConnect", "nextstate":"handlegame", "msgId":"ballview"}
+{"actor":"referee", "msgType":"dispatch", "curstate":"handlegame", "nextstate":"handlegame", "msgId":"ballview"}
+{"actor":"referee", "msgType":"dispatch", "curstate":"handlegame", "nextstate":"checkRequest", "msgId":"endgame"}

@@ -1,0 +1,1 @@
+{"actor":"pong", "msgType":"dispatch", "curstate":"receiveball", "nextstate":"answerback", "msgId":"ball"}

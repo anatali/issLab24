@@ -1,0 +1,35 @@
+<html>
+Project description ... con link al codice: <a href=../src/log4j.properties>/log4j.properties</a>
+
+<br/><br/>
+<h3>Modello del sistema testabile</h3>
+<a href=../src/pingpong24.qak target="pingpong24">pingpong24.qak</a>
+
+<h2>TestUnit</h2>
+
+<a href=../src/main/java/test/TestPingPong24SingleCtx.java target="pingpong24">TestPingPong24SingleCtx.java</a>
+
+<h3>Design for testing</h3>
+
+The system works well if the exchange terminates when the ping hits the ball for th 5th time.
+
+To automate the test, a testUnit should:
+
+<ol>
+<li>activate the system</li>
+<li>understand when the system ends</li>
+<li>observe the state of one of the players, e.g. ping
+</ol>
+
+In order to achieve the above goals, we:
+
+<ul>
+<li>introduce a new actor (<i>pingobserver</i>) that observes the state of the <i>ping</i> player</li>
+
+<li>extend the behavior of the ping with updateResource</li>
+
+<li>make the pingobserver able to answer to request from the testUnit</li>
+</ul>
+
+
+</html>
