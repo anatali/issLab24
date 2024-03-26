@@ -74,9 +74,7 @@ QActor pong context ctxtest {
 		
 	}
 }
-/*
- * Observer per testing
- */ 
+ 
 
  QActor pingobserver context ctxtest{
  	[# var N = 0; var NLAST = 0; val TOBSMAX = 3000L #]
@@ -96,12 +94,16 @@ QActor pong context ctxtest {
     		if [# N > 0 #]{ 
     			[# NLAST=N #]
     		}
+//    		else{
+//    			autodispatch endgame : endgame($NLAST)
+//    		}
     	}
     }
 	Transition t0 
 	    whenTimeVar TOBSMAX -> gameended
 		whenMsg ballview -> updateinfogame
- 		
+//		whenMsg endgame  -> gameended
+		
 	State gameended{
 		println("$name waits for request") color magenta
 	}
