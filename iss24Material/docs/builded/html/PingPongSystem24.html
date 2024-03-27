@@ -470,7 +470,7 @@ but only to update the code in the <code class="docutils literal notranslate"><s
 <section id="project">
 <h2>Project<a class="headerlink" href="#project" title="Permalink to this heading">¶</a></h2>
 <p><span class="slide3">Projects ping24, pong24, ppgreferee</span></p>
-<p>To make the project more manageable, we introduce another actor, called <span class="xref std std-ref">referee</span>,
+<p>To make the project more manageable, we introduce another actor, called <a class="reference internal" href="#referee"><span class="std std-ref">referee</span></a>,
 with the following responsibilities:</p>
 <ul class="simple">
 <li><p>start the system by emitting the <span class="slide2">event</span> <code class="docutils literal notranslate"><span class="pre">startgame</span> <span class="pre">:</span> <span class="pre">startgame(X)</span></code></p></li>
@@ -479,7 +479,25 @@ with the following responsibilities:</p>
 <li><p>observe the state of the <code class="docutils literal notranslate"><span class="pre">pong</span></code> player</p></li>
 <li><p>interact with the <a class="reference internal" href="#testunit"><span class="std std-ref">testUnit</span></a></p></li>
 </ul>
-<a class="reference internal image-reference" href="_images/PingPong24WithReferee.PNG"><img alt="_images/PingPong24WithReferee.PNG" class="align-center" src="_images/PingPong24WithReferee.PNG" style="width: 80%;" /></a>
+<section id="referee">
+<h3>referee<a class="headerlink" href="#referee" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 30%" />
+<col style="width: 30%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><a class="reference internal image-reference" href="_images/PingPong24WithReferee.PNG"><img alt="_images/PingPong24WithReferee.PNG" class="align-center" src="_images/PingPong24WithReferee.PNG" style="width: 100%;" /></a>
+</td>
+<td><a class="reference internal image-reference" href="_images/PingPong24PingReferee.PNG"><img alt="_images/PingPong24PingReferee.PNG" class="align-center" src="_images/PingPong24PingReferee.PNG" style="width: 100%;" /></a>
+</td>
+<td><a class="reference internal image-reference" href="_images/PingPong24PongReferee.PNG"><img alt="_images/PingPong24PongReferee.PNG" class="align-center" src="_images/PingPong24PongReferee.PNG" style="width: 100%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
 </section>
 <section id="testing">
 <h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">¶</a></h2>
@@ -530,7 +548,10 @@ with the following responsibilities:</p>
 <li><a class="reference internal" href="#testunit">testUnit</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#project">Project</a></li>
+<li><a class="reference internal" href="#project">Project</a><ul>
+<li><a class="reference internal" href="#referee">referee</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#testing">Testing</a></li>
 <li><a class="reference internal" href="#deployment">Deployment</a></li>
 <li><a class="reference internal" href="#maintenance">Maintenance</a></li>
