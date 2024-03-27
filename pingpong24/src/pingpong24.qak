@@ -1,7 +1,7 @@
-System pingpong24 
+System -trace pingpong24 
  
 Dispatch ball : ball(N) "info exchanged by the players"
-
+  
 //FOR TESTING
 Dispatch ballview : ball(N)  "observed info | payload not mandatory"
 Request info      : info(X)  "sent by the testUnit to the observer"
@@ -26,7 +26,7 @@ QActor ping context ctxtest{
 	  
 	State receive{
 		//println("$name received  ") color blue
-	}
+	} 
 	Transition t0 
 		whenTimeVar TMAX -> endofexchange
 		whenMsg ball     -> reply

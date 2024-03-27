@@ -14,3 +14,4 @@ context(ctxtest, "localhost",  "TCP", "8014").
  static(pong).
   qactor( pingobserver, ctxtest, "it.unibo.pingobserver.Pingobserver").
  static(pingobserver).
+tracing.

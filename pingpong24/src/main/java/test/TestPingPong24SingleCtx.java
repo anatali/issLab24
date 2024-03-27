@@ -57,7 +57,7 @@ public static void activateSystemUsingGradle() {
 			try {
 				CommUtils.outmagenta("TestPingPong24SingleCtx activateSystemUsingGradle ");
 				Process p = Runtime.getRuntime().exec("./gradlew.bat runAll");
-				showOutput(p,ColorsOut.BLACK);
+				//showOutput(p,ColorsOut.BLACK);
 			} catch ( Exception e) {
 				CommUtils.outred("TestPingPong24SingleCtx activate ERROR " + e.getMessage());
 			}
@@ -91,8 +91,8 @@ public static void activateSystemUsingDeploy() {
 	@BeforeClass
 	public static void activate() {
 		CommUtils.outmagenta("TestPingPong24SingleCtx activate ");
-		activateSystemUsingGradle();
-		//activateSystemUsingDeploy();
+		//activateSystemUsingGradle();
+		activateSystemUsingDeploy();
 	}
 /*
  * After each test	
