@@ -1,0 +1,47 @@
+System pingping24
+//Parte pong 
+Dispatch ball : ball(N)
+
+Context ctxping  ip [host="127.0.0.1" port=8014] 
+Context ctxpong  ip [host="localhost" port=8015]
+
+
+
+
+QActor ping context ctxping{  
+	State s0 initial{
+		println("$name STARTS") color blue
+		forward pong -m ball : ball($N)
+	}
+	Transition t0 whenMsg ball -> handleball
+	
+	State handleball{
+		printCurrentMessage color blue
+		println("$name answer $N ") color blue
+		delay 500
+		if[# N < 3 #] { 
+			[# N = N + 1 #]
+			forward pong -m ball : ball($N) 			
+		}else{
+			//delay 500
+			[# System.exit(0) #]
+		}		
+		
+	}
+	Transition t0 whenMsg ball -> handleball
+}
+
+QActor pong context ctxpong{  
+	State s0 initial{
+		println("$name STARTS") color green
+	} 
+	Transition t0 whenMsg ball -> handleball
+	
+	State handleball{
+		printCurrentMessage color green
+		delay 500
+		println("$name reply  ") color green
+		forward ping -m ball : ball(pong)
+	}
+	Transition t0 whenMsg ball -> handleball
+}

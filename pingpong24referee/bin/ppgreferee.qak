@@ -1,0 +1,25 @@
+System pingpong24 
+Dispatch ball : ball(N) "info scambiata e osservata"
+
+//Dispatch game : game(X) "info per arcboter"
+ 
+Context ctxreferee  ip [host="localhost" port=8013] 
+Context ctxping     ip [host="127.0.0.1" port=8014] 
+Context ctxpong     ip [host="127.0.0.1" port=8015]
+
+ExternalQActor ping context ctxping  
+ExternalQActor pong context ctxpong
+
+QActor referee context ctxreferee{ 
+	State s0 initial{ 
+		println("$name STARTS ") color magenta
+		observeResource ping msgid ball
+		observeResource pong msgid ball
+	}
+	Transition t0 whenMsg ball -> handlegame
+	
+	State handlegame{
+		printCurrentMessage color magenta
+	}
+	Transition t0 whenMsg ball -> handlegame
+}

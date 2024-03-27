@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - Class TestPingPong24</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>Class TestPingPong24</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/default-package.html">default-package</a> &gt; TestPingPong24</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">1</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">6.537s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard output</a>
+</li>
+<li>
+<a href="#tab2">Standard error</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">testPingPong</td>
+<td class="success">6.537s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>?[35mTestPingPong24 activate ?[0m
+?[35mTestPingPong24 starts the referee ?[0m
+?[35msysUtil createContexts  localContextName=ctxreferee host=localhost?[0m
+?[33m               %%% sysUtil | loadheory  ppgreferee.pl?[0m
+?[33m               %%% sysUtil | loadheory  sysRules.pl?[0m
+?[33m               %%% CoapResourceCtx ctxreferee | created AFTER INIT ?[0m
+?[33mtcpSrv | port=8013 ctxrefereeMsgH?[0m
+?[33mtcpSrv | TcpServer waiting on port 8013?[0m
+?[33m               %%% QakContext ctxreferee | serverCoap started on port 8013 with added ctxreferee?[0m
+?[33m               %%% sysUtil | createTheContext ctxping for DIFFERENT node (localContextName=ctxreferee host=127.0.0.1)  thread=Thread-4 @coroutine#1 numOfTheads=18?[0m
+?[33m               %%% CoapResourceCtx ctxping | created AFTER INIT ?[0m
+?[33m               %%% sysUtil | createTheContext ctxpong for DIFFERENT node (localContextName=ctxreferee host=127.0.0.1)  thread=Thread-4 @coroutine#1 numOfTheads=19?[0m
+?[33m               %%% CoapResourceCtx ctxpong | created AFTER INIT ?[0m
+?[35m               %%% QakContext ctxreferee | addCtxProxy ip=127.0.0.1:8014?[0m
+?[33mtcpSrv | TcpServer 8013 accepted connection on 51661 with userDefHandler=ctxrefereeMsgH thname=tcpSrv?[0m
+?[33m    --- ConnectionFactory | create tcp port:8013?[0m
+?[35mCONNECTED ?[0m
+?[33mtcpSrv | TcpServer waiting on port 8013?[0m
+?[35mtestPingPong ======================================= ?[0m
+?[34mctxrefereeMsgH | not found destination=referee RETRYING 1 ...?[0m
+?[34mctxrefereeMsgH | not found destination=referee RETRYING 2 ...?[0m
+?[34mctxrefereeMsgH | not found destination=referee RETRYING 3 ...?[0m
+?[34mctxrefereeMsgH | not found destination=referee RETRYING 4 ...?[0m
+               %%% NodeProxy proxyctxping | WAIT/RETRY TO SET PROXY TO 127.0.0.1:8014 
+?[34mctxrefereeMsgH | not found destination=referee RETRYING 5 ...?[0m
+?[34mctxrefereeMsgH | not found destination=referee RETRYING 6 ...?[0m
+?[34mctxrefereeMsgH | not found destination=referee RETRYING 7 ...?[0m
+?[31m               %%% NodeProxy proxyctxping | in ctxreferee PROXY ACTIVATED TO 127.0.0.1:8014 ?[0m
+?[35m               %%% QakContext ctxpong | addCtxProxy ip=127.0.0.1:8014?[0m
+?[31m               %%% NodeProxy proxyctxping | in ctxpong PROXY ACTIVATED TO 127.0.0.1:8014 ?[0m
+?[35m               %%% QakContext ctxreferee | addCtxProxy ip=127.0.0.1:8015?[0m
+?[31m               %%% NodeProxy proxyctxpong | in ctxreferee PROXY ACTIVATED TO 127.0.0.1:8015 ?[0m
+?[35m               %%% QakContext ctxping | addCtxProxy ip=127.0.0.1:8015?[0m
+?[31m               %%% NodeProxy proxyctxpong | in ctxping PROXY ACTIVATED TO 127.0.0.1:8015 ?[0m
+?[33m               %%% sysUtil|createTheActors in ctxreferee:[referee]  thread=Thread-4 @coroutine#1 numOfTheads=27?[0m
+?[36mreferee STARTS ?[0m
+?[35mActorBasic Lancio CoapObserverSupport 8014 &quot;coroutine#23&quot;:ActorCoroutine{Active}@2d7a7a37 ballview?[0m
+?[35mActorBasic Lancio CoapObserverSupport 8015 &quot;coroutine#23&quot;:ActorCoroutine{Active}@2d7a7a37 ballview?[0m
+               %%%  ActorBasicFsm referee|s0:adds msg(info,request,tester,referee,info(x),0) in queue
+?[33mCoapObserverSupport | content=nonews msgid=ballview?[0m
+?[33mCoapObserverSupport | content=ball(1) msgid=ballview?[0m
+?[36mreferee in handlegame | msg(ballview,dispatch,pong,referee,nonews,12) | qakcpuspool-5 @coroutine#29 n=34?[0m
+?[36mreferee in handlegame | msg(ballview,dispatch,ping,referee,ball(1),13) | qakcpuspool-5 @coroutine#30 n=34?[0m
+?[33mCoapObserverSupport | content=ball(1) msgid=ballview?[0m
+?[36mreferee in handlegame | msg(ballview,dispatch,pong,referee,ball(1),14) | qakcpuspool-12 @coroutine#32 n=34?[0m
+?[33mCoapObserverSupport | content=ball(2) msgid=ballview?[0m
+?[36mreferee in handlegame | msg(ballview,dispatch,ping,referee,ball(2),15) | qakcpuspool-9 @coroutine#34 n=34?[0m
+?[33mCoapObserverSupport | content=ball(2) msgid=ballview?[0m
+?[36mreferee in handlegame | msg(ballview,dispatch,pong,referee,ball(2),16) | qakcpuspool-10 @coroutine#36 n=34?[0m
+?[33mCoapObserverSupport | content=ball(3) msgid=ballview?[0m
+?[36mreferee in handlegame | msg(ballview,dispatch,ping,referee,ball(3),17) | qakcpuspool-4 @coroutine#38 n=34?[0m
+?[33mCoapObserverSupport | content=ball(3) msgid=ballview?[0m
+?[36mreferee in handlegame | msg(ballview,dispatch,pong,referee,ball(3),18) | qakcpuspool-9 @coroutine#40 n=34?[0m
+?[33mCoapObserverSupport | content=ball(0) msgid=ballview?[0m
+?[36mreferee in handlegame | msg(ballview,dispatch,ping,referee,ball(0),19) | qakcpuspool-3 @coroutine#42 n=34?[0m
+?[34mreferee endofgame ?[0m
+?[36mreferee in handleRequest | msg(info,request,tester,referee,info(x),0) | qakcpuspool-12 @coroutine#44 n=35?[0m
+?[34mtestPingPong reply=msg(obsinfo,reply,referee,tester,obsinfo(8),21)?[0m
+?[35mend of test ?[0m
+</pre>
+</span>
+</div>
+<div id="tab2" class="tab">
+<h2>Standard error</h2>
+<span class="code">
+<pre>SLF4J: Failed to load class &quot;org.slf4j.impl.StaticLoggerBinder&quot;.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 8.4</a> at 23 mar 2024, 12:45:15</p>
+</div>
+</div>
+</body>
+</html>

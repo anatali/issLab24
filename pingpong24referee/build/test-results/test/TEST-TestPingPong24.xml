@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="TestPingPong24" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-03-23T11:45:08" hostname="NATDELL" time="6.537">
+  <properties/>
+  <testcase name="testPingPong" classname="TestPingPong24" time="6.537"/>
+  <system-out><![CDATA[?[35mTestPingPong24 activate ?[0m
+?[35mTestPingPong24 starts the referee ?[0m
+?[35msysUtil createContexts  localContextName=ctxreferee host=localhost?[0m
+?[33m               %%% sysUtil | loadheory  ppgreferee.pl?[0m
+?[33m               %%% sysUtil | loadheory  sysRules.pl?[0m
+?[33m               %%% CoapResourceCtx ctxreferee | created AFTER INIT ?[0m
+?[33mtcpSrv | port=8013 ctxrefereeMsgH?[0m
+?[33mtcpSrv | TcpServer waiting on port 8013?[0m
+?[33m               %%% QakContext ctxreferee | serverCoap started on port 8013 with added ctxreferee?[0m
+?[33m               %%% sysUtil | createTheContext ctxping for DIFFERENT node (localContextName=ctxreferee host=127.0.0.1)  thread=Thread-4 @coroutine#1 numOfTheads=18?[0m
+?[33m               %%% CoapResourceCtx ctxping | created AFTER INIT ?[0m
+?[33m               %%% sysUtil | createTheContext ctxpong for DIFFERENT node (localContextName=ctxreferee host=127.0.0.1)  thread=Thread-4 @coroutine#1 numOfTheads=19?[0m
+?[33m               %%% CoapResourceCtx ctxpong | created AFTER INIT ?[0m
+?[35m               %%% QakContext ctxreferee | addCtxProxy ip=127.0.0.1:8014?[0m
+?[33mtcpSrv | TcpServer 8013 accepted connection on 51661 with userDefHandler=ctxrefereeMsgH thname=tcpSrv?[0m
+?[33m    --- ConnectionFactory | create tcp port:8013?[0m
+?[35mCONNECTED ?[0m
+?[33mtcpSrv | TcpServer waiting on port 8013?[0m
+?[35mtestPingPong ======================================= ?[0m
+?[34mctxrefereeMsgH | not found destination=referee RETRYING 1 ...?[0m
+?[34mctxrefereeMsgH | not found destination=referee RETRYING 2 ...?[0m
+?[34mctxrefereeMsgH | not found destination=referee RETRYING 3 ...?[0m
+?[34mctxrefereeMsgH | not found destination=referee RETRYING 4 ...?[0m
+               %%% NodeProxy proxyctxping | WAIT/RETRY TO SET PROXY TO 127.0.0.1:8014 
+?[34mctxrefereeMsgH | not found destination=referee RETRYING 5 ...?[0m
+?[34mctxrefereeMsgH | not found destination=referee RETRYING 6 ...?[0m
+?[34mctxrefereeMsgH | not found destination=referee RETRYING 7 ...?[0m
+?[31m               %%% NodeProxy proxyctxping | in ctxreferee PROXY ACTIVATED TO 127.0.0.1:8014 ?[0m
+?[35m               %%% QakContext ctxpong | addCtxProxy ip=127.0.0.1:8014?[0m
+?[31m               %%% NodeProxy proxyctxping | in ctxpong PROXY ACTIVATED TO 127.0.0.1:8014 ?[0m
+?[35m               %%% QakContext ctxreferee | addCtxProxy ip=127.0.0.1:8015?[0m
+?[31m               %%% NodeProxy proxyctxpong | in ctxreferee PROXY ACTIVATED TO 127.0.0.1:8015 ?[0m
+?[35m               %%% QakContext ctxping | addCtxProxy ip=127.0.0.1:8015?[0m
+?[31m               %%% NodeProxy proxyctxpong | in ctxping PROXY ACTIVATED TO 127.0.0.1:8015 ?[0m
+?[33m               %%% sysUtil|createTheActors in ctxreferee:[referee]  thread=Thread-4 @coroutine#1 numOfTheads=27?[0m
+?[36mreferee STARTS ?[0m
+?[35mActorBasic Lancio CoapObserverSupport 8014 "coroutine#23":ActorCoroutine{Active}@2d7a7a37 ballview?[0m
+?[35mActorBasic Lancio CoapObserverSupport 8015 "coroutine#23":ActorCoroutine{Active}@2d7a7a37 ballview?[0m
+               %%%  ActorBasicFsm referee|s0:adds msg(info,request,tester,referee,info(x),0) in queue
+?[33mCoapObserverSupport | content=nonews msgid=ballview?[0m
+?[33mCoapObserverSupport | content=ball(1) msgid=ballview?[0m
+?[36mreferee in handlegame | msg(ballview,dispatch,pong,referee,nonews,12) | qakcpuspool-5 @coroutine#29 n=34?[0m
+?[36mreferee in handlegame | msg(ballview,dispatch,ping,referee,ball(1),13) | qakcpuspool-5 @coroutine#30 n=34?[0m
+?[33mCoapObserverSupport | content=ball(1) msgid=ballview?[0m
+?[36mreferee in handlegame | msg(ballview,dispatch,pong,referee,ball(1),14) | qakcpuspool-12 @coroutine#32 n=34?[0m
+?[33mCoapObserverSupport | content=ball(2) msgid=ballview?[0m
+?[36mreferee in handlegame | msg(ballview,dispatch,ping,referee,ball(2),15) | qakcpuspool-9 @coroutine#34 n=34?[0m
+?[33mCoapObserverSupport | content=ball(2) msgid=ballview?[0m
+?[36mreferee in handlegame | msg(ballview,dispatch,pong,referee,ball(2),16) | qakcpuspool-10 @coroutine#36 n=34?[0m
+?[33mCoapObserverSupport | content=ball(3) msgid=ballview?[0m
+?[36mreferee in handlegame | msg(ballview,dispatch,ping,referee,ball(3),17) | qakcpuspool-4 @coroutine#38 n=34?[0m
+?[33mCoapObserverSupport | content=ball(3) msgid=ballview?[0m
+?[36mreferee in handlegame | msg(ballview,dispatch,pong,referee,ball(3),18) | qakcpuspool-9 @coroutine#40 n=34?[0m
+?[33mCoapObserverSupport | content=ball(0) msgid=ballview?[0m
+?[36mreferee in handlegame | msg(ballview,dispatch,ping,referee,ball(0),19) | qakcpuspool-3 @coroutine#42 n=34?[0m
+?[34mreferee endofgame ?[0m
+?[36mreferee in handleRequest | msg(info,request,tester,referee,info(x),0) | qakcpuspool-12 @coroutine#44 n=35?[0m
+?[34mtestPingPong reply=msg(obsinfo,reply,referee,tester,obsinfo(8),21)?[0m
+?[35mend of test ?[0m
+]]></system-out>
+  <system-err><![CDATA[SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+]]></system-err>
+</testsuite>
