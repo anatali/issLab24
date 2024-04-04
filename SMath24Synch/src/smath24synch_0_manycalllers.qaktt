@@ -1,0 +1,122 @@
+System smath24synchmanycallers
+/*
+ * MODEL of  two callers and a callerobserver
+ */ 
+Request dofibo : dofibo(N) "request to send to the service"
+Reply fibodone : fibodone( CALLER,N,RESULT,REQTIME,ELABTIME ) for dofibo   
+ 
+Event   startcaller : startcaller(X)
+ 
+//For observe and test
+Dispatch callerinfo : callerdone(CALLER,REQTIME,ELABTIME,ELAPSED)    
+Dispatch obsend : obsend(X) "automsg of callerobserver"
+
+Request info      : info(X)  "sent by the testUnit to the callerobserver"
+Reply   obsinfo   : obsinfo(X) for info
+
+Context ctxmanycallers  ip [host="localhost" port=8035]
+Context ctxsmath        ip [host="127.0.0.1" port=8033]
+    
+ExternalQActor smathsynch context ctxsmath
+     
+QActor clr1 context ctxmanycallers{
+	[# var StartTime = 0L 
+	   var Elapsed   = 0L			   
+	#]
+	State s0 initial{ 
+		delay 500 
+		println("$name STARTS dofibo(41) ") color cyan
+		memoCurrentTime StartTime
+ 		request smathsynch -m dofibo : dofibo(43)
+		emitlocalstream   startcaller : startcaller(ok)		
+	}
+	Transition t0  
+		whenReply fibodone -> handleAnswer
+		 
+	State handleAnswer{
+        setDuration Elapsed from StartTime		
+        printCurrentMessage color cyan
+		onMsg( fibodone : fibodone( CALLER,N,RESULT,REQTIME,ELABTIME ) ){
+		    updateResource [# "callerdone($name, ${payloadArg(3)}, ${payloadArg(4)}, $Elapsed)" #]
+		} 
+	}
+} 
+
+QActor clr2 context ctxmanycallers{
+	[# var StartTime = 0L 
+	   var Elapsed   = 0L			   
+	#]
+	State s0 initial{ 
+ 		subscribeTo clr1 for startcaller
+	}	
+	Transition t0 whenEvent startcaller -> work
+	
+	State work{
+		println("$name STARTS dofibo(1)") color blue
+		memoCurrentTime StartTime
+		request smathsynch -m dofibo : dofibo(1)
+	}
+	Transition t0 
+		whenReply fibodone -> handleAnswer
+		 
+	State handleAnswer{
+        setDuration Elapsed from StartTime		
+        printCurrentMessage color blue
+		onMsg( fibodone : fibodone( CALLER,N,RESULT,REQTIME,ELABTIME ) ){
+		    updateResource [# "callerdone($name, ${payloadArg(3)}, ${payloadArg(4)}, $Elapsed)" #]
+		}
+	}
+}  
+
+/*
+ * WARNING:
+ * If clr2 requests for a low number,
+ * checking the sequence of the answers is not safe, 
+ * since  clr2 could send the answer before clr1.
+ * 
+ * It is safer to check that the response time of clr2 
+ * is higher than the response time of clr1
+ */
+ 
+ 
+QActor manycallerobserver context ctxmanycallers withobj obsdata using "main.java.ObserverData.create()"{
+
+	State s0 initial{ 
+		println("$name STARTS  ") color green
+		observeResource clr1 msgid callerinfo
+		observeResource clr2 msgid callerinfo
+	}	  
+	Transition t0 whenMsg callerinfo -> handleinfo
+ 
+	State handleinfo{
+		printCurrentMessage color green
+		onMsg( callerinfo : callerdone(CALLER,REQTIME,ELABTIME,ELAPSED) ){
+			[# obsdata.addToHistory( ""+payloadArg(0)+"_"+payloadArg(1)+"_"+payloadArg(2)+"_"+payloadArg(3) ) #]
+			println("manycallerobserver check=${obsdata.checkManyCallers()}") color magenta			
+		}
+		if [#  obsdata.ready() #] {
+			autodispatch obsend : obsend(ok)
+		}
+	} 
+	Transition t0  
+				  whenMsg callerinfo -> handleinfo
+				  whenMsg obsend      -> waitRequestFromTester
+
+    State waitRequestFromTester{
+    	
+    }
+	Transition t0 whenTime 1000   -> endofobs
+                 whenRequest info -> handlerequest
+                      
+	State handlerequest{
+		[# val R = obsdata.checkManyCallers() #]
+		replyTo info with obsinfo : obsinfo(  $R )
+	} 
+	Goto endofobs
+	
+	State endofobs{
+		println("manycallerobserver BYE") color green
+		[# System.exit(0) #]				
+	}
+	
+}

@@ -1,0 +1,256 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>ServiceMath24Facade &#8212; iss24 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Facade24" href="Facade24.html" />
+    <link rel="prev" title="ServiceMath24Asynch" href="ServiceMath24Asynch.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="Facade24.html" title="Facade24"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="ServiceMath24Asynch.html" title="ServiceMath24Asynch"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">ServiceMath24Facade</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="servicemath24facade">
+<h1>ServiceMath24Facade<a class="headerlink" href="#servicemath24facade" title="Permalink to this heading">¶</a></h1>
+<p><span class="slide3">Project SMath24Asynch</span></p>
+<p><span class="slidekp">PREVIOUS</span>: <a class="reference internal" href="ServiceMath24Asynch.html#servicemath24asynch"><span class="std std-ref">ServiceMath24Asynch</span></a></p>
+<section id="servicemath24facade-introduction">
+<h2>ServiceMath24Facade Introduction<a class="headerlink" href="#servicemath24facade-introduction" title="Permalink to this heading">¶</a></h2>
+<p>This is an update of the project described in <a class="reference internal" href="ServiceMath24Asynch.html#servicemath24asynch"><span class="std std-ref">ServiceMath24Asynch</span></a>. that equips the service
+with a user <strong>Console</strong> and a <strong>Display</strong>.</p>
+</section>
+<section id="servicemath24facade-requirements">
+<h2>ServiceMath24Facade-Requirements<a class="headerlink" href="#servicemath24facade-requirements" title="Permalink to this heading">¶</a></h2>
+<p>The system <code class="docutils literal notranslate"><span class="pre">smath24asynch</span></code> must behave as described in <a class="reference internal" href="#servicemath24facade-requirements"><span class="std std-ref">ServiceMath24Facade-Requirements</span></a>.</p>
+<p>Moreover system must:</p>
+<ul class="simple">
+<li><p>allow human users to send commands to the service through a Console</p></li>
+<li><p>show the results of the user request on a Display</p></li>
+<li><p>update the Display with information (if any) emitted ny the system using the primitve
+<a class="reference internal" href="QakActors24.html#operazioni-relative-alla-osservabilita"><span class="std std-ref">updateResource</span></a></p></li>
+</ul>
+</section>
+<section id="servicemath24facade-requirements-analysis">
+<h2>ServiceMath24Facade-Requirements analysis<a class="headerlink" href="#servicemath24facade-requirements-analysis" title="Permalink to this heading">¶</a></h2>
+<p>According to the principles of the <a class="reference internal" href="Architetture.html#la-clean-architecture"><span class="std std-ref">Clean architecture</span></a>,
+the system deployed in <a class="reference internal" href="ServiceMath24Asynch.html#servicemath24asynch"><span class="std std-ref">ServiceMath24Asynch</span></a>
+is <span class="slide2">the core around which</span> we build another system to reach the new requirements</p>
+<section id="servicemath24facade-model-from-the-requirements">
+<h3>ServiceMath24Facade-model from the Requirements<a class="headerlink" href="#servicemath24facade-model-from-the-requirements" title="Permalink to this heading">¶</a></h3>
+<p>A first model of the <cite>service</cite> can be set as follows (<a class="reference external" href="../../../../Smath24AsynchFacade/src/smath24asynchfacadereq.qaktt">smath24asynchfacadereq.qak</a>):</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><a class="reference internal image-reference" href="_images/SMath24AsyncFacadeReq.PNG"><img alt="_images/SMath24AsyncFacadeReq.PNG" class="align-center" src="_images/SMath24AsyncFacadeReq.PNG" style="width: 100%;" /></a>
+</td>
+<td><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">facademock</span></code>: a place-holder for a component that provides the <strong>Console</strong> and the <strong>Display</strong></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">actionexec</span></code>: actor dynamically created for the parallel handling of requests,
+as stated in <a class="reference internal" href="ServiceMath24Asynch.html#smath24asynch-model-from-the-requirements"><span class="std std-ref">SMath24Asynch-model</span></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">smathinfo</span></code>: dispatch related to <a class="reference internal" href="QakActors24.html#operazioni-relative-alla-osservabilita"><span class="std std-ref">updateResource</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="servicemath24facade-test-plans">
+<h2>ServiceMath24Facade-Test plans<a class="headerlink" href="#servicemath24facade-test-plans" title="Permalink to this heading">¶</a></h2>
+<p>The test-plans for the <cite>service</cite> has been already introduced in <a class="reference internal" href="ServiceMath24Asynch.html#smath24asynch-test-plans"><span class="std std-ref">SMath24Asynch-Test plans</span></a>.</p>
+<p>The testing of the Facade is done with the help of an human user.</p>
+</section>
+<section id="servicemath24facade-problem-analysis">
+<h2>ServiceMath24Facade-Problem analysis<a class="headerlink" href="#servicemath24facade-problem-analysis" title="Permalink to this heading">¶</a></h2>
+<p>The responsibility to add  a <strong>Console</strong> and a <strong>Display</strong>  to the service system,
+is given to the <code class="docutils literal notranslate"><span class="pre">facademock</span></code> component:</p>
+<ul class="simple">
+<li><p>the <strong>Console</strong> can be implemented as a simple text-based interface</p></li>
+<li><p>the <strong>Display</strong> can be implemented by following the example reported in <a class="reference internal" href="QakActorsIntro24.html#helloworld3-withobj"><span class="std std-ref">helloworld3 withobj</span></a></p></li>
+</ul>
+</section>
+<section id="servicemath24facade-logical-architecture">
+<h2>ServiceMath24Facade-Logical architecture<a class="headerlink" href="#servicemath24facade-logical-architecture" title="Permalink to this heading">¶</a></h2>
+<p>The model introduced in
+<a class="reference internal" href="#servicemath24facade-model-from-the-requirements"><span class="std std-ref">ServiceMath24Facade-model from the Requirements</span></a> already captures the logical architecture of the system.</p>
+</section>
+<section id="servicemath24facade-project">
+<h2>ServiceMath24Facade-Project<a class="headerlink" href="#servicemath24facade-project" title="Permalink to this heading">¶</a></h2>
+<p>To simplify the code of the <code class="docutils literal notranslate"><span class="pre">smathasynchfacade</span></code>,
+the model (<a class="reference external" href="../../../../Smath24AsynchFacade/src/smath24asynchfacadeproject.qaktt">smath24asynchfacadeproject.qak</a>) of our project does introduce a new
+actor <code class="docutils literal notranslate"><span class="pre">facadeviewer</span></code> to which <code class="docutils literal notranslate"><span class="pre">smathasynchfacade</span></code> delegates the handling the <code class="docutils literal notranslate"><span class="pre">smathinfo</span></code> dispatch.</p>
+<p>This new actor makes use of the same display created (a a singleton) by <code class="docutils literal notranslate"><span class="pre">facademock</span></code>
+according to the example reported in <a class="reference internal" href="QakActorsIntro24.html#helloworld3-withobj"><span class="std std-ref">helloworld3 withobj</span></a>.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><a class="reference internal image-reference" href="_images/SMath24AsyncFacadeMock.PNG"><img alt="_images/SMath24AsyncFacadeMock.PNG" class="align-center" src="_images/SMath24AsyncFacadeMock.PNG" style="width: 100%;" /></a>
+</td>
+<td><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">facademock</span></code>: a place-holder for a component that provides the <strong>Console</strong>  and the <strong>Display</strong></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">facadeviewer</span></code>: a place-holder for a component that handles the dispatch <code class="docutils literal notranslate"><span class="pre">smathinfo</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">actionexec</span></code>: actor dynamically created for the parallel handling of requests,
+as stated in <a class="reference internal" href="ServiceMath24Asynch.html#smath24asynch-model-from-the-requirements"><span class="std std-ref">SMath24Asynch-model</span></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">smathinfo</span></code>: dispatch related to <a class="reference internal" href="QakActors24.html#operazioni-relative-alla-osservabilita"><span class="std std-ref">updateResource</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="servicemath24facade-testing">
+<h2>ServiceMath24Facade-Testing<a class="headerlink" href="#servicemath24facade-testing" title="Permalink to this heading">¶</a></h2>
+<p>Testing was already  discussed in the <a class="reference internal" href="#servicemath24facade-test-plans"><span class="std std-ref">ServiceMath24Facade-Test plans</span></a>.</p>
+</section>
+<section id="servicemath24facade-deployment">
+<h2>ServiceMath24Facade-Deployment<a class="headerlink" href="#servicemath24facade-deployment" title="Permalink to this heading">¶</a></h2>
+<p>The deployment process is, at the moment, quite similar to  <a class="reference internal" href="PingPongSystem24.html#pps0-a-first-deployment"><span class="std std-ref">PPS0-A first Deployment</span></a>.</p>
+<p>Our deploy directory id always <code class="docutils literal notranslate"><span class="pre">C:/DidatticRun</span></code></p>
+</section>
+<section id="servicemath24facade-maintenance">
+<h2>ServiceMath24Facade-Maintenance<a class="headerlink" href="#servicemath24facade-maintenance" title="Permalink to this heading">¶</a></h2>
+<p>We recall what said in <a class="reference internal" href="PingPongSystem24.html#update-the-deployment"><span class="std std-ref">Update the deployment</span></a>.</p>
+</section>
+</section>
+<section id="servicemath24facade-with-a-web-facade">
+<h1>ServiceMath24Facade with a Web facade<a class="headerlink" href="#servicemath24facade-with-a-web-facade" title="Permalink to this heading">¶</a></h1>
+<p>The model <a class="reference external" href="../../../../Smath24AsynchFacade/src/smath24asynchfacadeweb.qaktt">smath24asynchfacadeweb.qak</a> adds a real web facade, that exploits a library already provided by
+unibo.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><a class="reference internal image-reference" href="_images/SMath24AsyncFacadeWeb.PNG"><img alt="_images/SMath24AsyncFacadeWeb.PNG" class="align-center" src="_images/SMath24AsyncFacadeWeb.PNG" style="width: 100%;" /></a>
+</td>
+<td><p>The project of the Facade is</p>
+<p><span class="slide3">Project servicefacade24</span></p>
+<p>The description is in <a class="reference internal" href="Facade24.html#facade24"><span class="std std-ref">Facade24</span></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">ServiceMath24Facade</a><ul>
+<li><a class="reference internal" href="#servicemath24facade-introduction">ServiceMath24Facade Introduction</a></li>
+<li><a class="reference internal" href="#servicemath24facade-requirements">ServiceMath24Facade-Requirements</a></li>
+<li><a class="reference internal" href="#servicemath24facade-requirements-analysis">ServiceMath24Facade-Requirements analysis</a><ul>
+<li><a class="reference internal" href="#servicemath24facade-model-from-the-requirements">ServiceMath24Facade-model from the Requirements</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#servicemath24facade-test-plans">ServiceMath24Facade-Test plans</a></li>
+<li><a class="reference internal" href="#servicemath24facade-problem-analysis">ServiceMath24Facade-Problem analysis</a></li>
+<li><a class="reference internal" href="#servicemath24facade-logical-architecture">ServiceMath24Facade-Logical architecture</a></li>
+<li><a class="reference internal" href="#servicemath24facade-project">ServiceMath24Facade-Project</a></li>
+<li><a class="reference internal" href="#servicemath24facade-testing">ServiceMath24Facade-Testing</a></li>
+<li><a class="reference internal" href="#servicemath24facade-deployment">ServiceMath24Facade-Deployment</a></li>
+<li><a class="reference internal" href="#servicemath24facade-maintenance">ServiceMath24Facade-Maintenance</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#servicemath24facade-with-a-web-facade">ServiceMath24Facade with a Web facade</a></li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="ServiceMath24Asynch.html"
+                          title="previous chapter">ServiceMath24Asynch</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="Facade24.html"
+                          title="next chapter">Facade24</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/ServiceMath24Facade.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="Facade24.html" title="Facade24"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="ServiceMath24Asynch.html" title="ServiceMath24Asynch"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">ServiceMath24Facade</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>

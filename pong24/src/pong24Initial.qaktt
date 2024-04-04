@@ -1,0 +1,45 @@
+System pingpong24_pong
+//Parte pong 
+Dispatch ball : ball(N)
+
+Event startgame : startgame(X)
+Event stopgame  : stopgame(X)
+
+/*
+ * Pong si pone in attesa di ball
+ * Simula una mancata replica a N=5
+ *  
+ */
+Context ctxpong  ip [host="localhost" port=8015]
+Context ctxping  ip [host="127.0.0.1" port=8014] 
+  
+ExternalQActor ping  context ctxping 
+   
+QActor pong context ctxpong {  
+	[#  val TMAX = 1500L #]
+	State s0 initial{
+		println("$name STARTS") color green
+	} 
+	Transition t0 
+	    whenTimeVar TMAX -> endofexchange
+		whenMsg ball     -> reply
+	
+	State reply{
+		onMsg( ball : ball(X)){
+			[# val N = payloadArg(0).toInt() #]
+			println("$name receives $N") color green
+			if [# N <= 4 #]{
+				delay 500
+				forward ping -m ball : ball($N)
+			}//no forward if N == 5			
+		}		
+	}
+	Transition t0 
+		whenTimeVar TMAX -> endofexchange
+		whenMsg ball     -> reply	
+
+	State endofexchange{
+		println("$name ENDS ") color green
+		
+	}
+}

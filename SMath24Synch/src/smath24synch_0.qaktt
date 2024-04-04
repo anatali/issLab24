@@ -1,0 +1,70 @@
+System smath24synch 
+/*     
+ * MODEL of the service after requirement analysis
+ */
+Request dofibo : dofibo(N) "request to send to the service"
+Reply fibodone : fibodone( CALLER,N,RESULT,REQTIME,ELABTIME) for dofibo
+      
+Context ctxsmath   ip [host="localhost" port=8033] 
+        
+/*   
+ * The service handles the requests in FIFO order
+ */     
+QActor smathsynch context ctxsmath{ 
+	[# var StartTime      = 0L 
+	   var StartElabTime  = 0L 
+	   var CurRequestTime = 0L		
+	   var ElabTime       = 0L 
+	   fun fibo(N:Int) : Int {
+	   	 if( N == 1 || N == 2 ) return 1
+	   	 else return fibo(N-1)+fibo(N-2)
+	   } 
+	#]   
+	State s0 initial{   
+		println("$name STARTS ") color blue
+		memoCurrentTime StartTime
+	}
+	Transition t0
+		whenRequest dofibo -> handleRequest
+		
+	State handleRequest{ 
+ 		setDuration CurRequestTime from StartTime
+		printCurrentMessage color blue 
+		updateResource [# "$currentMsg" #] 
+		memoCurrentTime StartElabTime
+		onMsg( dofibo : dofibo(N) ){
+			[#  val N      = payloadArg(0).toInt()
+				val Caller = currentMsg.msgSender() 
+				val R      = fibo(N) //Elab fibo(N)
+ 			#]		
+ 			setDuration ElabTime from StartElabTime	
+ 			println("$name replies to $Caller after $CurRequestTime  ") color blue
+			replyTo dofibo with fibodone : fibodone($Caller,$N,$R,$CurRequestTime,$ElabTime)		
+		} 
+	}
+	Transition t0     
+		whenRequest dofibo -> handleRequest
+		 
+}  
+
+/* 
+ * Caller demo for rapid testing
+ */
+ 
+/* 
+QActor callerdemo context ctxcaller{
+	State s0 initial{ 
+		println("$name STARTS ") color blue
+	}	
+	
+	State work{
+		request smath -m dofibo : dofibo(5)
+	}
+	Transition t0 
+		whenReply fibodone -> handleAnswer
+		
+	State handleAnswer{
+		printCurrentMessage
+	}
+} 
+ */ 

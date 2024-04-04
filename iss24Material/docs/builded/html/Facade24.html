@@ -1,0 +1,491 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Facade24 &#8212; iss24 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="QakService24Init" href="QakService24Init.html" />
+    <link rel="prev" title="ServiceMath24Facade" href="ServiceMath24Facade.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="QakService24Init.html" title="QakService24Init"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="ServiceMath24Facade.html" title="ServiceMath24Facade"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Facade24</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="facade24">
+<h1>Facade24<a class="headerlink" href="#facade24" title="Permalink to this heading">¶</a></h1>
+<p><span class="slide3">Progetto servicefacade24</span></p>
+<p><span class="blue">Obiettivo</span>: dotare il sistema <a class="reference internal" href="QakService24Init.html#qakservice24init"><span class="std std-ref">service</span></a> di una Facade
+per l’interazione <span class="xref std std-ref">REST</span> via Web con l’utente.</p>
+<p>Si vuole costruire una libreria ad hoc per una spefica applicazione qak,
+che permetta agli utenti un acesso Web all’applicazione,
+relazionandosi con uno specifico attore del sistema applicativo.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Nel caso del sistema <a class="reference internal" href="QakService24Init.html#qakservice24init"><span class="std std-ref">service</span></a>
+(versione <a class="reference internal" href="QakService24Memo.html#qakservice24memo"><span class="std std-ref">QakService24Memo</span></a>),
+la pagina HTML si presenta come in figura.</p></td>
+<td><a class="reference internal image-reference" href="_images/servicefacade24_1.PNG"><img alt="_images/servicefacade24_1.PNG" class="align-center" src="_images/servicefacade24_1.PNG" style="width: 100%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Al variare dell’applicazione, di dovrà creare una nuova versione della Facade che potrà
+essere specificata nella parte finale del modello mediante una frase del tipo:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Facade</span> <span class="n">f</span> <span class="n">port</span> <span class="o">&lt;</span><span class="n">portNum</span><span class="o">&gt;</span> <span class="n">usingactor</span> <span class="o">&lt;</span><span class="n">actorName</span><span class="o">&gt;</span> <span class="n">inctx</span> <span class="o">&lt;</span><span class="n">contextName</span><span class="o">&gt;</span>
+    <span class="n">appl</span> <span class="s2">&quot;&lt;applicationName&gt;&quot;</span>
+    <span class="n">UserLibs</span> <span class="o">-</span><span class="n">f</span> <span class="s2">&quot;&lt;facdelib&gt;&quot;</span> <span class="o">-</span><span class="n">f</span> <span class="s2">&quot;&quot;</span><span class="o">&lt;</span><span class="n">facdelib</span><span class="o">&gt;-</span><span class="n">plain</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+<p>La costruzione della Facade adotta il seguente schema:</p>
+<ul class="simple">
+<li><p>la Facade costituisce un <strong>(sotto)sistema autonomo</strong>, che si relaziona con il sistema applicativo comunicando con
+l’attore <code class="docutils literal notranslate"><span class="pre">&lt;actorName&gt;</span></code></p></li>
+<li><p>le interazioni tra il sistema applicativo e la Facade avvegono  via <span class="xref std std-ref">websocket</span></p></li>
+<li><p>la Facade è costruita in <span class="xref std std-ref">SpringBoot</span>.
+Il suo <a class="reference internal" href="#servicefacadecontroller"><span class="std std-ref">ServiceFacadeController</span></a> fornisce solo la pagina iniziale
+compsta da una area di input e una area di output</p></li>
+<li><p>la parte che realizza e gestisce l’input deve essere ridefinita per ogni diversa applicazione, mentre la parte
+che realizza  e gestisce l’output può essere considerata invariante</p></li>
+<li><p>la interazione con l’attore <code class="docutils literal notranslate"><span class="pre">&lt;actorName&gt;</span></code> del sistema applicativo avviene in due modi:</p>
+<ul>
+<li><p>usando una connessione TCP (si veda <a class="reference internal" href="#actoroutin"><span class="std std-ref">ActorOutIn</span></a>) al contesto dell’attore, usata per inviare all’attore
+le richieste di input. La risposta viene visualizzata nell’area di output (si veda <a class="reference internal" href="#applguicore"><span class="std std-ref">updateMsg</span></a>);</p></li>
+<li><p>osservando via CoAP (si veda <a class="reference internal" href="#coapobserver"><span class="std std-ref">CoapObserver</span></a>)  le informazioni inviate dall’attore
+usando la primitiva <span class="xref std std-ref">updateResource</span>, che vengono visualizzati nell’area di output.</p></li>
+</ul>
+</li>
+</ul>
+<section id="facade24-vista-interna">
+<h2>Facade24: vista interna<a class="headerlink" href="#facade24-vista-interna" title="Permalink to this heading">¶</a></h2>
+<p>L’organizzazione interna della Facade si compone di oggetti Java, che vengono creati a partire dal
+componente <a class="reference internal" href="#servicefacadecontroller"><span class="std std-ref">ServiceFacadeController</span></a>.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 75%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#servicefacadecontroller"><span class="std std-ref">ServiceFacadeController</span></a></p>
+<p>crea <a class="reference internal" href="#facadebuilder"><span class="std std-ref">FacadeBuilder</span></a></p>
+<p>che crea e configura gli altri componenti,
+come da figura</p>
+</td>
+<td><a class="reference internal image-reference" href="_images/Facade24Creation.PNG"><img alt="_images/Facade24Creation.PNG" class="align-center" src="_images/Facade24Creation.PNG" style="width: 100%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="facade24-interazioni">
+<h2>Facade24: interazioni<a class="headerlink" href="#facade24-interazioni" title="Permalink to this heading">¶</a></h2>
+<a class="reference internal image-reference" href="_images/Facade24Inside.PNG"><img alt="_images/Facade24Inside.PNG" class="align-center" src="_images/Facade24Inside.PNG" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="_images/Facade24CoapObs.PNG"><img alt="_images/Facade24CoapObs.PNG" class="align-center" src="_images/Facade24CoapObs.PNG" style="width: 80%;" /></a>
+<ul class="simple">
+<li><p><a class="reference internal" href="#websocketconfiguration"><span class="std std-ref">WebSocketConfiguration</span></a>  è il componente che abilita le ws in Spring e che viene creato
+subito dal configuratore di SpirngBoot</p></li>
+<li><p><a class="reference internal" href="#servicefacadecontroller"><span class="std std-ref">ServiceFacadeController</span></a> dà la pagina iniziale.
+Il suo costruttore crea <a class="reference internal" href="#facadebuilder"><span class="std std-ref">FacadeBuilder</span></a> che a sua volta crea:</p>
+<ul>
+<li><p><a class="reference internal" href="#wshandler"><span class="std std-ref">WSHandler</span></a> che opera come gestore dei messaggi su ws (si veda <span class="xref std std-ref">Il gestore WebSocketHandlerDemo</span>)</p></li>
+<li><p><a class="reference internal" href="#applguicore"><span class="std std-ref">ApplguiCore</span></a> che contiene la logica applicativa (domain core) della gui</p></li>
+<li><p><a class="reference internal" href="#actoroutin"><span class="std std-ref">ActorOutIn</span></a> che lavora come Adapter verso l’attore <code class="docutils literal notranslate"><span class="pre">&lt;actorName&gt;</span></code> descritto nel file <a class="reference internal" href="#facadeconfig-json"><span class="std std-ref">facadeConfig.json</span></a>.</p></li>
+<li><p><a class="reference internal" href="#coapobserver"><span class="std std-ref">CoapObserver</span></a> che crea un client-observer CoAP verso l’attore <code class="docutils literal notranslate"><span class="pre">&lt;actorName&gt;</span></code></p></li>
+</ul>
+</li>
+</ul>
+<p><span class="slide1">Principi architetturali</span></p>
+<p>Molti componenti ovviamente nascono perchè voluti dal framework <span class="xref std std-ref">SpringBoot</span>.</p>
+<p>La presenza di <a class="reference internal" href="#applguicore"><span class="std std-ref">ApplguiCore</span></a> e di <a class="reference internal" href="#actoroutin"><span class="std std-ref">ActorOutIn</span></a> è invece legata ai <span class="slide2">principi</span>
+<a class="reference internal" href="Principi.html#id1"><span class="std std-ref">SOLID</span></a> de <a class="reference internal" href="Architetture.html#la-clean-architecture"><span class="std std-ref">La Clean Architecture</span></a>.</p>
+<section id="facade24-funzionamento">
+<h3>Facade24: funzionamento<a class="headerlink" href="#facade24-funzionamento" title="Permalink to this heading">¶</a></h3>
+<ol class="arabic">
+<li><p>Un client (diciamo <strong>clientMaster</strong>)  fa <a class="reference external" href="http://localhost:8088">http://localhost:8088</a>. La pagina può essere aperta anche da altri nodi.</p></li>
+<li><p><a class="reference internal" href="#servicefacadecontroller"><span class="std std-ref">ServiceFacadeController</span></a> restituisce pagina HTML che include <a class="reference internal" href="#guimain-js"><span class="std std-ref">guimain.js</span></a></p></li>
+<li><p>il <strong>clientMaster</strong> preme <code class="docutils literal notranslate"><span class="pre">SEND</span></code> (con il valore <code class="docutils literal notranslate"><span class="pre">20</span></code> nel campo <em>requestInput</em> di <a class="reference internal" href="#qakfacadegui-html"><span class="std std-ref">qakFacadeGui.html</span></a>) :
+<strong>onclick</strong>  attiva  <code class="docutils literal notranslate"><span class="pre">submitRequest</span></code> in <a class="reference internal" href="#guimain-js"><span class="std std-ref">guimain.js</span></a> che fa <code class="docutils literal notranslate"><span class="pre">sendMessage</span></code> con argomento <code class="docutils literal notranslate"><span class="pre">&quot;request/20&quot;</span></code></p></li>
+<li><p>il server esegue <code class="docutils literal notranslate"><span class="pre">handleTextMessage</span></code>  di <a class="reference internal" href="#wshandler"><span class="std std-ref">WSHandler</span></a> che chiama <code class="docutils literal notranslate"><span class="pre">handleWsMsg</span></code> di <a class="reference internal" href="#applguicore"><span class="std std-ref">ApplguiCore</span></a>
+che chiama <code class="docutils literal notranslate"><span class="pre">dorequest</span></code> di <a class="reference internal" href="#actoroutin"><span class="std std-ref">ActorOutIn</span></a> che confeziona un <strong>IApplMessage msg</strong> e chiama
+<code class="docutils literal notranslate"><span class="pre">sendToActor(IApplMessage</span> <span class="pre">message,</span> <span class="pre">String</span> <span class="pre">requestId)</span></code> che fa <code class="docutils literal notranslate"><span class="pre">tcpConn.request(message)</span></code> SINCRONA, attendendo
+la risposta</p></li>
+<li><p>quando l’attrore applicativo <code class="docutils literal notranslate"><span class="pre">&lt;actorName&gt;</span></code> invia la risposta, <a class="reference internal" href="#actoroutin"><span class="std std-ref">ActorOutIn</span></a> esegue
+<code class="docutils literal notranslate"><span class="pre">handleReplyMsg</span></code> di <a class="reference internal" href="#applguicore"><span class="std std-ref">ApplguiCore</span></a> che gestisce la risposta chimando  <code class="docutils literal notranslate"><span class="pre">sendToAll(..)</span></code> di <a class="reference internal" href="#actoroutin"><span class="std std-ref">ActorOutIn</span></a>
+che chiama   <code class="docutils literal notranslate"><span class="pre">sendToAll(..)</span></code> di <a class="reference internal" href="#wshandler"><span class="std std-ref">WSHandler</span></a> per aggiornare tutte le pagine connesse,
+tra cui quella del <strong>clientMaster</strong>.</p>
+<p>In questa interazione, si vuole aderire al principio che la logica applicativa <a class="reference internal" href="#applguicore"><span class="std std-ref">ApplguiCore</span></a> della Facade
+ha <span class="slide2">solo dipendenze dall’adapter</span> <a class="reference internal" href="#actoroutin"><span class="std std-ref">ActorOutIn</span></a>, i cui metodi sono voluti da <a class="reference internal" href="#applguicore"><span class="std std-ref">ApplguiCore</span></a> stessa.</p>
+</li>
+<li><p><a class="reference internal" href="#guimain-js"><span class="std std-ref">guimain.js</span></a> della pagina HTML di ogni client esegue <code class="docutils literal notranslate"><span class="pre">socket.onmessage</span></code> e quindi visualizza il messaggio
+ricevuto via websocket nell’area di output.</p></li>
+</ol>
+</section>
+</section>
+<section id="facade24-i-componenti">
+<h2>Facade24: i componenti<a class="headerlink" href="#facade24-i-componenti" title="Permalink to this heading">¶</a></h2>
+<p>Si riporta nel seguito l’elenco dei componenti interni di Facade24, con qualche elemento di codice,
+lasciando i dettagli alla consultazione dei files sorgente nel progetto.</p>
+<p>Si noti in particolare il qualificatore <strong>synchronized</strong> in <a class="reference internal" href="#wshandler"><span class="std std-ref">WSHandler</span></a> e il <a class="reference internal" href="#customcontainer"><span class="std std-ref">CustomContainer</span></a>.</p>
+<section id="applsysteminfo">
+<h3>ApplSystemInfo<a class="headerlink" href="#applsysteminfo" title="Permalink to this heading">¶</a></h3>
+<p><a class="reference internal" href="#customcontainer"><span class="std std-ref">CustomContainer</span></a> crea un oggetto di questa classe, che
+legge il file <a class="reference internal" href="#facadeconfig-json"><span class="std std-ref">facadeConfig.json</span></a> (usando <a class="reference internal" href="#qaksysconfigsupport"><span class="std std-ref">QaksysConfigSupport</span></a>)
+e fissa i valori di variabili che danno le informazioni sul sistena:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="n">static</span> <span class="n">String</span> <span class="n">qakSysHost</span><span class="p">;</span>
+<span class="n">public</span> <span class="n">static</span> <span class="n">String</span> <span class="n">qakSysPort</span><span class="p">;</span>
+<span class="n">public</span> <span class="n">static</span> <span class="n">String</span> <span class="n">qakSysCtx</span><span class="p">;</span>
+<span class="n">public</span> <span class="n">static</span> <span class="n">String</span> <span class="n">applActorName</span><span class="p">;</span>
+<span class="n">public</span> <span class="n">static</span> <span class="n">String</span> <span class="n">ctxportStr</span><span class="p">;</span>
+<span class="n">public</span> <span class="n">static</span> <span class="nb">int</span> <span class="n">ctxport</span><span class="p">;</span>
+<span class="n">public</span> <span class="n">static</span> <span class="n">String</span> <span class="n">facadeportStr</span><span class="p">;</span>
+<span class="n">public</span> <span class="n">static</span> <span class="nb">int</span> <span class="n">facadeport</span><span class="p">;</span>
+<span class="n">public</span> <span class="n">static</span> <span class="n">String</span> <span class="n">appName</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="qaksysconfigsupport">
+<h3>QaksysConfigSupport<a class="headerlink" href="#qaksysconfigsupport" title="Permalink to this heading">¶</a></h3>
+<p>Utility per leggere i valori del file  <a class="reference internal" href="#facadeconfig-json"><span class="std std-ref">facadeConfig.json</span></a>
+.. code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="k">class</span> <span class="nc">QaksysConfigSupport</span>
+
+    <span class="n">public</span> <span class="n">static</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">readConfig</span><span class="p">(</span> <span class="n">String</span> <span class="n">fName</span> <span class="p">)</span>
+    <span class="n">protected</span> <span class="n">static</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">readTheContent</span><span class="p">(</span> <span class="n">String</span> <span class="n">config</span> <span class="p">)</span> <span class="n">throws</span> <span class="n">JSONException</span>
+</pre></div>
+</div>
+</section>
+<section id="facadeconfig-json">
+<h3>facadeConfig.json<a class="headerlink" href="#facadeconfig-json" title="Permalink to this heading">¶</a></h3>
+<p>Generato dalla <a class="reference internal" href="QakActors24.html#qak-software-factory"><span class="std std-ref">Qak software factory</span></a> nella directory accessibile anche a Facade24.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="s2">&quot;8011&quot;</span><span class="p">,</span> <span class="s2">&quot;context&quot;</span><span class="p">:</span><span class="s2">&quot;ctxservice&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;facade&quot;</span><span class="p">:</span> <span class="s2">&quot;servicemath&quot;</span><span class="p">,</span> <span class="s2">&quot;facadeport&quot;</span><span class="p">:</span><span class="s2">&quot;8088&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;sysdescr&quot;</span><span class="p">:</span><span class="s2">&quot;servicemathsynchbase&quot;</span> <span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="servicefacadecontroller">
+<h3>ServiceFacadeController<a class="headerlink" href="#servicefacadecontroller" title="Permalink to this heading">¶</a></h3>
+<p>Questo componente restituisce semplicemente la pagina <a class="reference internal" href="#qakfacadegui-html"><span class="std std-ref">qakFacadeGui.html</span></a>. Tutte le interazioni col server
+saranno via WebSocket.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@Controller</span>
+<span class="n">public</span> <span class="k">class</span> <span class="nc">ServiceFacadeController</span>
+ <span class="n">protected</span> <span class="n">ApplSystemInfo</span> <span class="n">qakSys</span><span class="p">;</span>
+
+    <span class="n">private</span> <span class="n">void</span> <span class="n">updateViewmodel</span><span class="p">(</span><span class="n">Model</span> <span class="n">model</span><span class="p">,</span> <span class="n">String</span> <span class="n">info</span> <span class="p">)</span>
+
+    <span class="nd">@GetMapping</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+    <span class="n">public</span> <span class="n">String</span> <span class="n">homePage</span><span class="p">(</span><span class="n">Model</span> <span class="n">viewmodel</span><span class="p">){</span>
+        <span class="n">viewmodel</span><span class="o">.</span><span class="n">addAttribute</span><span class="p">(</span><span class="s2">&quot;appname&quot;</span><span class="p">,</span> <span class="n">ApplSystemInfo</span><span class="o">.</span><span class="n">appName</span><span class="p">);</span>
+        <span class="k">return</span> <span class="s2">&quot;qakFacadeGUI&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>Il componente <a class="reference internal" href="#customcontainer"><span class="std std-ref">CustomContainer</span></a> fissa il nome dell’applicazione, che viene riportata nella
+pagina HTML attraverso l’attributo <code class="docutils literal notranslate"><span class="pre">&quot;appname&quot;</span></code>.</p>
+</section>
+<section id="facadebuilder">
+<h3>FacadeBuilder<a class="headerlink" href="#facadebuilder" title="Permalink to this heading">¶</a></h3>
+<p>Componente che crea e configura gli ogetti-componenti della Facade:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#wshandler"><span class="std std-ref">WSHandler</span></a> che opera come gestore dei messaggi su ws (si veda <span class="xref std std-ref">Il gestore WebSocketHandlerDemo</span>)</p></li>
+<li><p><a class="reference internal" href="#applguicore"><span class="std std-ref">ApplguiCore</span></a> che contiene la logica applicativa (domain core) della gui</p></li>
+<li><p><a class="reference internal" href="#actoroutin"><span class="std std-ref">ActorOutIn</span></a> che lavora come Adapter verso l’attore <code class="docutils literal notranslate"><span class="pre">&lt;actorName&gt;</span></code> descritto nel file <a class="reference internal" href="#facadeconfig-json"><span class="std std-ref">facadeConfig.json</span></a>.</p></li>
+<li><p><a class="reference internal" href="#coapobserver"><span class="std std-ref">CoapObserver</span></a> che crea un client-observer CoAP verso l’attore <code class="docutils literal notranslate"><span class="pre">&lt;actorName&gt;</span></code></p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wsHandler</span>    <span class="o">=</span> <span class="n">new</span> <span class="n">WSHandler</span><span class="p">();</span>
+<span class="n">outinadapter</span> <span class="o">=</span> <span class="n">new</span> <span class="n">ActorOutIn</span><span class="p">(</span> <span class="n">wsHandler</span> <span class="p">);</span>
+<span class="n">guiCore</span>      <span class="o">=</span> <span class="n">new</span> <span class="n">ApplguiCore</span><span class="p">(</span><span class="n">outinadapter</span><span class="p">);</span>
+
+<span class="n">outinadapter</span><span class="o">.</span><span class="n">setGuiCore</span><span class="p">(</span><span class="n">guiCore</span><span class="p">);</span> <span class="o">//</span><span class="n">Injection</span>
+<span class="n">wsHandler</span><span class="o">.</span><span class="n">setGuiCore</span><span class="p">(</span><span class="n">guiCore</span><span class="p">);</span> <span class="o">//</span><span class="n">Injection</span>
+</pre></div>
+</div>
+<p>L’<strong>injection</strong> è necessaria per via del’ordine di costruzione e della mutua referenza.</p>
+</section>
+<section id="websocketconfiguration">
+<h3>WebSocketConfiguration<a class="headerlink" href="#websocketconfiguration" title="Permalink to this heading">¶</a></h3>
+<p>Questo componente è richiesto da <span class="xref std std-ref">SpringBoot</span> per la gestione delle ws
+(tramite <a class="reference internal" href="#wshandler"><span class="std std-ref">WSHandler</span></a> creato da  <a class="reference internal" href="#facadebuilder"><span class="std std-ref">FacadeBuilder</span></a>).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@Configuration</span>
+<span class="nd">@EnableWebSocket</span>
+<span class="n">public</span> <span class="k">class</span> <span class="nc">WebSocketConfiguration</span> <span class="n">implements</span> <span class="n">WebSocketConfigurer</span>
+
+<span class="nd">@Override</span>
+<span class="n">public</span> <span class="n">void</span> <span class="n">registerWebSocketHandlers</span><span class="p">(</span><span class="n">WebSocketHandlerRegistry</span> <span class="n">registry</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">registry</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">FacadeBuilder</span><span class="o">.</span><span class="n">wsHandler</span><span class="p">,</span> <span class="n">wsPath</span><span class="p">)</span><span class="o">.</span><span class="n">setAllowedOrigins</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="wshandler">
+<h3>WSHandler<a class="headerlink" href="#wshandler" title="Permalink to this heading">¶</a></h3>
+<p>Gestore delle interazioni via WebSocket.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="k">class</span> <span class="nc">WSHandler</span> <span class="n">extends</span> <span class="n">AbstractWebSocketHandler</span>
+<span class="n">private</span> <span class="n">ApplguiCore</span> <span class="n">guiCore</span><span class="p">;</span>
+
+  <span class="o">//</span><span class="n">Injiection</span>
+  <span class="n">public</span> <span class="n">void</span> <span class="n">setGuiCore</span><span class="p">(</span><span class="n">ApplguiCore</span> <span class="n">gui</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">guiCore</span> <span class="o">=</span> <span class="n">gui</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="n">protected</span> <span class="n">void</span> <span class="n">handleTextMessage</span><span class="p">(</span> <span class="n">WebSocketSession</span> <span class="n">session</span><span class="p">,</span><span class="n">TextMessage</span> <span class="n">message</span><span class="p">)</span>
+    <span class="n">guiCore</span><span class="o">.</span><span class="n">handleWsMsg</span><span class="p">(</span> <span class="n">msg</span> <span class="p">);</span>
+
+  <span class="n">protected</span> <span class="n">synchronized</span>  <span class="n">void</span> <span class="n">sendToAll</span><span class="p">(</span><span class="n">String</span> <span class="n">message</span><span class="p">)</span>
+   <span class="k">for</span> <span class="p">(</span><span class="n">WebSocketSession</span> <span class="n">session</span> <span class="p">:</span> <span class="n">sessions</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">try</span> <span class="p">{</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">sendMessage</span><span class="p">(</span><span class="n">new</span> <span class="n">TextMessage</span><span class="p">(</span><span class="n">message</span><span class="p">));</span>
+        <span class="p">}</span> <span class="n">catch</span> <span class="p">(</span><span class="ne">Exception</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+            <span class="o">...</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>Il metodo <code class="docutils literal notranslate"><span class="pre">sendToAll</span></code> è <strong>synchronized</strong> perchè vi possono essere chiamate concorrenti da
+<a class="reference internal" href="#applguicore"><span class="std std-ref">ApplguiCore</span></a> e <a class="reference internal" href="#coapobserver"><span class="std std-ref">CoapObserver</span></a>.</p>
+</section>
+<section id="applguicore">
+<h3>ApplguiCore<a class="headerlink" href="#applguicore" title="Permalink to this heading">¶</a></h3>
+<p>Rappreesenta il <strong>core business</strong>’** della Facade24, che ha la responsabilità di decidere cosa fare
+per ogni messaggio di input e come inviare informazioni in uscita attraverso l’adapter
+<a class="reference internal" href="#actoroutin"><span class="std std-ref">ActorOutIn</span></a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="k">class</span> <span class="nc">ApplguiCore</span>
+<span class="n">private</span>   <span class="n">ActorOutIn</span> <span class="n">outinadapter</span><span class="p">;</span>
+
+<span class="n">public</span> <span class="n">ApplguiCore</span><span class="p">(</span> <span class="n">ActorOutIn</span> <span class="n">outinadapter</span> <span class="p">){</span>
+     <span class="n">this</span><span class="o">.</span><span class="n">outinadapter</span> <span class="o">=</span> <span class="n">outinadapter</span><span class="p">;</span>
+     <span class="n">destActor</span>         <span class="o">=</span> <span class="n">ApplSystemInfo</span><span class="o">.</span><span class="n">applActorName</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">public</span> <span class="n">void</span> <span class="n">hanldeMsgFromActor</span><span class="p">(</span><span class="n">String</span> <span class="n">msg</span><span class="p">,</span> <span class="n">String</span> <span class="n">requestId</span><span class="p">)</span>
+   <span class="n">updateMsg</span><span class="p">(</span> <span class="n">msg</span> <span class="p">);</span>
+<span class="n">protected</span> <span class="n">void</span> <span class="n">updateMsg</span><span class="p">(</span> <span class="n">String</span> <span class="n">msg</span> <span class="p">)</span>
+    <span class="n">outinadapter</span><span class="o">.</span><span class="n">sendToAll</span><span class="p">(</span> <span class="n">msg</span>  <span class="p">);</span>
+<span class="n">public</span> <span class="n">void</span> <span class="n">handleWsMsg</span><span class="p">(</span><span class="n">String</span> <span class="n">msg</span><span class="p">,</span> <span class="n">String</span> <span class="n">msgId</span><span class="p">)</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">request</span><span class="o">/</span><span class="mi">20</span> <span class="n">che</span> <span class="n">chiama</span><span class="p">:</span>
+  <span class="o">//</span><span class="n">isola</span> <span class="n">il</span> <span class="n">payload</span> <span class="mi">20</span> <span class="n">dal</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">request</span><span class="o">/</span><span class="mi">20</span> <span class="n">e</span> <span class="n">poi</span> <span class="n">chiama</span>
+
+  <span class="n">private</span> <span class="n">void</span> <span class="n">dorequest</span><span class="p">(</span> <span class="n">String</span> <span class="n">payload</span> <span class="p">)</span>
+    <span class="n">outinadapter</span><span class="o">.</span><span class="n">dorequest</span><span class="p">(</span>
+       <span class="s2">&quot;gui&quot;</span><span class="p">,</span><span class="n">destActor</span><span class="p">,</span><span class="n">reqid</span><span class="p">,</span><span class="n">reqcontent</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span><span class="n">payload</span><span class="p">)</span> <span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="actoroutin">
+<h3>ActorOutIn<a class="headerlink" href="#actoroutin" title="Permalink to this heading">¶</a></h3>
+<p>Crea la connessione TCP all’attore <code class="docutils literal notranslate"><span class="pre">&lt;actorName&gt;</span></code> del sistema applicativo</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="k">class</span> <span class="nc">ActorOutIn</span>
+    <span class="n">public</span> <span class="n">ActorOutIn</span><span class="p">(</span><span class="n">WSHandler</span> <span class="n">wsHandler</span> <span class="p">)</span>
+        <span class="n">crea</span> <span class="n">tcpConn</span> <span class="nb">all</span><span class="s1">&#39;actor di Facade</span>
+    <span class="n">public</span> <span class="n">void</span> <span class="n">dorequest</span><span class="p">(</span><span class="n">String</span> <span class="n">msg</span> <span class="p">)</span>
+      <span class="n">IApplMessage</span> <span class="n">message</span> <span class="o">=</span> <span class="n">CommUtils</span><span class="o">.</span><span class="n">buildRequest</span><span class="p">(</span><span class="n">senderId</span><span class="p">,</span> <span class="n">reqid</span><span class="p">,</span> <span class="n">reqarg</span>  <span class="p">,</span> <span class="n">destActor</span><span class="p">);</span>
+      <span class="n">sendToActor</span><span class="p">(</span> <span class="n">message</span> <span class="p">);</span>
+    <span class="n">private</span> <span class="n">void</span> <span class="n">sendToActor</span><span class="p">(</span> <span class="n">IApplMessage</span> <span class="n">message</span> <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="coapobserver">
+<h3>CoapObserver<a class="headerlink" href="#coapobserver" title="Permalink to this heading">¶</a></h3>
+<p>Osserva l’attore  <code class="docutils literal notranslate"><span class="pre">&lt;actorName&gt;</span></code> da cui riceve le informazioni inviate da <span class="xref std std-ref">updateResource</span> e le
+invia a <em>hanldeMsgFromActor</em> di <a class="reference internal" href="#applguicore"><span class="std std-ref">ApplguiCore</span></a> che le pubblica su tutte le pagine connesse usando
+<a class="reference internal" href="#wshandler"><span class="std std-ref">WSHandler</span></a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="k">class</span> <span class="nc">CoapObserver</span> <span class="n">implements</span> <span class="n">CoapHandler</span>
+
+<span class="n">public</span> <span class="n">CoapObserver</span><span class="p">(</span><span class="n">ApplguiCore</span> <span class="n">guiCore</span><span class="p">,</span> <span class="n">String</span> <span class="n">actor</span><span class="p">)</span>
+
+<span class="nd">@Override</span>
+<span class="n">public</span> <span class="n">void</span> <span class="n">onLoad</span><span class="p">(</span><span class="n">CoapResponse</span> <span class="n">response</span><span class="p">)</span>
+  <span class="n">guiCore</span><span class="o">.</span><span class="n">hanldeMsgFromActor</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">getResponseText</span><span class="p">(),</span> <span class="s2">&quot;&quot;</span><span class="p">);</span>
+<span class="nd">@Override</span>
+<span class="n">public</span> <span class="n">void</span> <span class="n">onError</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="customcontainer">
+<h3>CustomContainer<a class="headerlink" href="#customcontainer" title="Permalink to this heading">¶</a></h3>
+<p>Crea <a class="reference internal" href="#applsysteminfo"><span class="std std-ref">ApplSystemInfo</span></a> e  Fissa il nome della applicazione al valore
+<code class="docutils literal notranslate"><span class="pre">ApplSystemInfo.appName</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@Configuration</span>
+<span class="n">public</span> <span class="k">class</span> <span class="nc">CustomContainer</span> <span class="n">implements</span>
+    <span class="n">WebServerFactoryCustomizer</span><span class="o">&lt;</span><span class="n">ConfigurableServletWebServerFactory</span><span class="o">&gt;</span>
+
+    <span class="n">ApplSystemInfo</span><span class="o">.</span><span class="n">readConfig</span><span class="p">();</span>
+    <span class="nb">int</span> <span class="n">port</span> <span class="o">=</span> <span class="n">ApplSystemInfo</span><span class="o">.</span><span class="n">facadeport</span><span class="p">;</span>
+    <span class="n">factory</span><span class="o">.</span><span class="n">setPort</span><span class="p">(</span><span class="n">port</span><span class="p">);</span>  <span class="o">//</span><span class="n">customization</span>
+
+    <span class="n">public</span> <span class="n">void</span> <span class="n">customize</span><span class="p">(</span><span class="n">ConfigurableServletWebServerFactory</span> <span class="n">factory</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="guimain-js">
+<h3>guimain.js<a class="headerlink" href="#guimain-js" title="Permalink to this heading">¶</a></h3>
+<p>Codice JavaScript inserito nella pagina <a class="reference internal" href="#qakfacadegui-html"><span class="std std-ref">qakFacadeGui.html</span></a> per interagire con il server via WebSocket.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>const msgArea = document.getElementById(&quot;messageArea&quot;);
+
+function connect()
+    const host     = document.location.host;
+    const pathname = document.location.pathname;
+    const addr     = &quot;ws://&quot; + host + pathname + &quot;accessgui&quot;;
+    socket = new WebSocket(addr);
+    socket.onopen = function (event)
+    socket.onerror = function (event)
+    socket.onmessage = function (event)
+        showMsg( `${event.data}`)
+
+function showMsg(message)
+   msgArea.innerHTML +=  message + &quot;\n&quot;
+
+function submitRequest()
+    sendMessage(&quot;dorequest/&quot; + requestInput.value);
+
+function submitTheCmd()
+
+function submitTheExit()
+
+function sendMessage(message)
+    socket.send(message);
+</pre></div>
+</div>
+</section>
+<section id="qakfacadegui-html">
+<h3>qakFacadeGui.html<a class="headerlink" href="#qakfacadegui-html" title="Permalink to this heading">¶</a></h3>
+<p>Pagina HTML definita in <code class="docutils literal notranslate"><span class="pre">resources/templates</span></code>, che usa <a class="reference internal" href="#guimain-js"><span class="std std-ref">guimain.js</span></a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="nb">input</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;text&quot;</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;requestInput&quot;</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;requestInput&quot;</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="nb">input</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;req&quot;</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;submit&quot;</span> <span class="n">onclick</span><span class="o">=</span><span class="s2">&quot;submitRequest()&quot;</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;SEND&quot;</span><span class="o">&gt;</span>
+
+<span class="o">&lt;</span><span class="n">div</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;info&quot;</span><span class="o">&gt;</span>
+     <span class="o">&lt;</span><span class="n">textarea</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;messageArea&quot;</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;messageArea&quot;</span>
+         <span class="n">font</span><span class="o">=</span><span class="s2">&quot;Arial&quot;</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;font-size:10pt&quot;</span> <span class="n">rows</span><span class="o">=</span><span class="s2">&quot;7&quot;</span> <span class="n">cols</span><span class="o">=</span><span class="s2">&quot;25&quot;</span><span class="o">&gt;&lt;/</span><span class="n">textarea</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+
+<span class="o">&lt;</span><span class="n">script</span> <span class="n">src</span><span class="o">=</span><span class="s2">&quot;../guimain.js&quot;</span><span class="o">&gt;&lt;/</span><span class="n">script</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Facade24</a><ul>
+<li><a class="reference internal" href="#facade24-vista-interna">Facade24: vista interna</a></li>
+<li><a class="reference internal" href="#facade24-interazioni">Facade24: interazioni</a><ul>
+<li><a class="reference internal" href="#facade24-funzionamento">Facade24: funzionamento</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#facade24-i-componenti">Facade24: i componenti</a><ul>
+<li><a class="reference internal" href="#applsysteminfo">ApplSystemInfo</a></li>
+<li><a class="reference internal" href="#qaksysconfigsupport">QaksysConfigSupport</a></li>
+<li><a class="reference internal" href="#facadeconfig-json">facadeConfig.json</a></li>
+<li><a class="reference internal" href="#servicefacadecontroller">ServiceFacadeController</a></li>
+<li><a class="reference internal" href="#facadebuilder">FacadeBuilder</a></li>
+<li><a class="reference internal" href="#websocketconfiguration">WebSocketConfiguration</a></li>
+<li><a class="reference internal" href="#wshandler">WSHandler</a></li>
+<li><a class="reference internal" href="#applguicore">ApplguiCore</a></li>
+<li><a class="reference internal" href="#actoroutin">ActorOutIn</a></li>
+<li><a class="reference internal" href="#coapobserver">CoapObserver</a></li>
+<li><a class="reference internal" href="#customcontainer">CustomContainer</a></li>
+<li><a class="reference internal" href="#guimain-js">guimain.js</a></li>
+<li><a class="reference internal" href="#qakfacadegui-html">qakFacadeGui.html</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="ServiceMath24Facade.html"
+                          title="previous chapter">ServiceMath24Facade</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="QakService24Init.html"
+                          title="next chapter">QakService24Init</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Facade24.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="QakService24Init.html" title="QakService24Init"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="ServiceMath24Facade.html" title="ServiceMath24Facade"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Facade24</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>

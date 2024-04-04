@@ -1,0 +1,397 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>ServiceMath24Synch &#8212; iss24 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="ServiceMath24Asynch" href="ServiceMath24Asynch.html" />
+    <link rel="prev" title="PingPongSystem24Dstributed" href="PingPongSystem24Dstributed.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="ServiceMath24Asynch.html" title="ServiceMath24Asynch"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="PingPongSystem24Dstributed.html" title="PingPongSystem24Dstributed"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">ServiceMath24Synch</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="servicemath24synch">
+<h1>ServiceMath24Synch<a class="headerlink" href="#servicemath24synch" title="Permalink to this heading">¶</a></h1>
+<p><span class="slide3">Project SMath24Synch</span></p>
+<section id="servicemath24-introduction">
+<h2>ServiceMath24 Introduction<a class="headerlink" href="#servicemath24-introduction" title="Permalink to this heading">¶</a></h2>
+<p>We face here the design and the development of a software system (named <code class="docutils literal notranslate"><span class="pre">smath24synch</span></code>)  that provides a service
+for the calculation of Fibonacci numbers.</p>
+</section>
+<section id="smath24synch-requirements">
+<h2>SMath24Synch-Requirements<a class="headerlink" href="#smath24synch-requirements" title="Permalink to this heading">¶</a></h2>
+<p>The system <code class="docutils literal notranslate"><span class="pre">smath24synch</span></code> must behave as follows:</p>
+<ol class="arabic simple">
+<li><p>Wait for a request for the calculation of the <code class="docutils literal notranslate"><span class="pre">Nth</span></code> ( <code class="docutils literal notranslate"><span class="pre">N&gt;=0</span></code> ) number of Fibonacci.</p></li>
+<li><p>Receive a request (from an external  <code class="docutils literal notranslate"><span class="pre">Caller</span></code>) for the calculation of a Fibonacci number.</p></li>
+<li><p>Calculate the requested number.</p></li>
+<li><p>Return to the  <code class="docutils literal notranslate"><span class="pre">Caller</span></code> the result of the calculation. <span class="slide2">The answer must include</span>:</p>
+<ul class="simple">
+<li><p>the name of the <code class="docutils literal notranslate"><span class="pre">Caller</span></code></p></li>
+<li><p>the requested number <code class="docutils literal notranslate"><span class="pre">N</span></code></p></li>
+<li><p>the result</p></li>
+<li><p>the time when the request is handled by the service</p></li>
+<li><p>the time required for the calculation.</p></li>
+</ul>
+</li>
+<li><p>Finally, return to point <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
+</ol>
+</section>
+<section id="smath24synch-requirements-analysis">
+<h2>SMath24Synch-Requirements analysis<a class="headerlink" href="#smath24synch-requirements-analysis" title="Permalink to this heading">¶</a></h2>
+<p><span class="slide1">Synchronous???</span></p>
+<p>The adjective <span class="remark">synchronous</span>  associated to this version must be carefully
+<span class="remark">interpreted and understood</span>.</p>
+<p>From the requirements, we infer that the behavior of a system composed by the service <code class="docutils literal notranslate"><span class="pre">smath24synch</span></code>
+and some caller, can be <span class="slide2">better specified as follows</span>:</p>
+<ul class="simple">
+<li><p>a caller is not constrained to block, waiting for the answer</p></li>
+<li><p>the service elaborates in a <cite>FIFO</cite> order the requesta coming from a same client or from different clients</p></li>
+</ul>
+<p>It is quite immediate to define a formal model of <code class="docutils literal notranslate"><span class="pre">smath24synch</span></code> using the <a class="reference internal" href="QakActors24.html#linguaggio-qak"><span class="std std-ref">qak language</span></a>.</p>
+<section id="smath24synch-model-messages">
+<h3>SMath24Synch-model messages<a class="headerlink" href="#smath24synch-model-messages" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">System</span> <span class="n">smath</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span> <span class="n">Request</span> <span class="n">dofibo</span> <span class="p">:</span> <span class="n">dofibo</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="n">Reply</span> <span class="n">fibodone</span> <span class="p">:</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span>  <span class="n">fibodone</span><span class="p">(</span> <span class="n">CALLER</span><span class="p">,</span><span class="n">N</span><span class="p">,</span><span class="n">RESULT</span><span class="p">,</span><span class="n">REQTIME</span><span class="p">,</span><span class="n">ELABTIME</span><span class="p">)</span> <span class="k">for</span> <span class="n">dofibo</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+</td>
+<td><ol class="arabic simple">
+<li><p>The request</p></li>
+<li><p>Payload of the reply</p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 85%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CALLER</span></code></p></td>
+<td><p>The name of the requestor</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">N</span></code></p></td>
+<td><p>The number of Fibonacci to be computed</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">RESULT</span></code></p></td>
+<td><p>The Nth number of Fibonacci</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">REQTIME</span></code></p></td>
+<td><p>The time, given by the <span class="remark">service clock</span>, when the request was elaborated</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ELABTIME</span></code></p></td>
+<td><p>The time required to elaborate the request, <span class="remark">measured by the service</span></p></td>
+</tr>
+</tbody>
+</table>
+<p><span class="slide1">About elaboration time</span></p>
+</section>
+<section id="about-the-time">
+<h3>About the time<a class="headerlink" href="#about-the-time" title="Permalink to this heading">¶</a></h3>
+<p>We stress that:</p>
+<ul class="simple">
+<li><p>the elaboration time as <span class="remark">measured by a caller</span> is the time elapsed from the sending of the request
+to the reception of the answer</p></li>
+<li><p>even if tha caller immediately waits for the answer,
+the elaboration time as measured by a caller is usually <span class="blue">higher than</span> the <span class="remark">time measured by the service</span></p></li>
+<li><p>the relativity theory tells us the clocks at the service site and at the caller sites,
+<span class="remark">do never measure the same time</span>. The difference
+is more relevant if the two sites are in different positiions within a gravitational field or
+if they are moving.</p></li>
+</ul>
+</section>
+<section id="smath24synch-model-of-the-requirements">
+<h3>SMath24Synch-model of the Requirements<a class="headerlink" href="#smath24synch-model-of-the-requirements" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Model of the <cite>service</cite> (<a class="reference external" href="../../../../SMath24Synch/src/smath24synch_0.qak">smath24synch_0.qak</a>)</p>
+<a class="reference internal image-reference" href="_images/SMath24Base.png"><img alt="_images/SMath24Base.png" class="align-center" src="_images/SMath24Base.png" style="width: 35%;" /></a>
+</td>
+<td><p>Model of the system from the point of view of a <cite>caller</cite>  (<a class="reference external" href="../../../../SMath24Synch/src/smath24synch_0_caller.qak">smath24synch_0_caller.qak</a>)</p>
+<a class="reference internal image-reference" href="_images/SMath24CallerRequirements.png"><img alt="_images/SMath24CallerRequirements.png" class="align-center" src="_images/SMath24CallerRequirements.png" style="width: 100%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="smath24synch-test-plans">
+<h2>SMath24Synch-Test plans<a class="headerlink" href="#smath24synch-test-plans" title="Permalink to this heading">¶</a></h2>
+<p>The <a class="reference internal" href="#smath24synch-requirements"><span class="std std-ref">SMath24Synch-Requirements</span></a> do introduce some  <a class="reference external" href="https://en.wikipedia.org/wiki/User_story">User_story</a> -&gt;  useful to define our test plans.</p>
+<section id="smath24synch-a-first-test">
+<h3>SMath24Synch: a first test<a class="headerlink" href="#smath24synch-a-first-test" title="Permalink to this heading">¶</a></h3>
+<p><span class="slidekp">User story: First test</span>: if I’m the caller of the service <code class="docutils literal notranslate"><span class="pre">smath24synch</span></code> and I send a request
+<code class="docutils literal notranslate"><span class="pre">fibo(8)</span></code>, I expect to receive the answer <code class="docutils literal notranslate"><span class="pre">fibodone(21)</span></code>.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>The request:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">IApplMessage</span> <span class="n">req</span>  <span class="o">=</span>
+    <span class="n">CommUtils</span><span class="o">.</span><span class="n">buildRequest</span><span class="p">(</span><span class="s2">&quot;tester&quot;</span><span class="p">,</span><span class="s2">&quot;dofibo&quot;</span><span class="p">,</span><span class="s2">&quot;dofibo(8)&quot;</span><span class="p">,</span><span class="s2">&quot;smath&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</td>
+<td><p>expects the answer:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fibodone</span><span class="p">(</span><span class="n">tester</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The test unit <a class="reference external" href="../../../../SMath24Synch/src/main/java/test/smath24synch_0Test.java">smath24synch_0Test</a> simulates a caller named <code class="docutils literal notranslate"><span class="pre">tester</span></code> that:</p>
+<ul class="simple">
+<li><p>set a TCP-connection with <code class="docutils literal notranslate"><span class="pre">localhost</span></code> at port <code class="docutils literal notranslate"><span class="pre">8033</span></code></p></li>
+<li><p>sends the request <code class="docutils literal notranslate"><span class="pre">req</span></code>  over the connection</p></li>
+</ul>
+<p>This test activates the service by using (as done in <a class="reference internal" href="PingPongSystem24.html#pps0-testunit"><span class="std std-ref">PPS0-testUnit</span></a>) the utility methods
+<span class="slide3">activateServiceUsingGradle</span> and <span class="slide3">activateServiceUsingDeploy</span>.
+The last one, exploits the script <a class="reference external" href="../../../../SMath24Synch/src/main/java/test/smath24synch.bat">smath24synch.bat</a> that activates the service <a class="reference internal" href="#smath24synch-deployment"><span class="std std-ref">deployed</span></a>
+on the local machine.</p>
+</section>
+<section id="smath24synch-one-caller-test">
+<h3>SMath24Synch: one caller test<a class="headerlink" href="#smath24synch-one-caller-test" title="Permalink to this heading">¶</a></h3>
+<p><span class="slidekp">User story: One caller test</span>: if I’m the caller of the service <code class="docutils literal notranslate"><span class="pre">smath24synch</span></code> and I send two requests
+<code class="docutils literal notranslate"><span class="pre">fibo(8)</span></code> and, afterwards, <code class="docutils literal notranslate"><span class="pre">fibo(41)</span></code>, I expect to receive the answers <code class="docutils literal notranslate"><span class="pre">fibodone(8)</span></code> and <code class="docutils literal notranslate"><span class="pre">fibodone(41)</span></code> in this order.</p>
+<p>The test unit <a class="reference external" href="../../../../SMath24Synch/src/main/java/test/Smath24synch_0TestOneCaller.java">Smath24synch_0TestOneCaller</a> makes us of a model <a class="reference external" href="../../../../SMath24Synch/src/smath24synch_0_caller.qak">smath24synch_0_caller.qak</a>
+that expòoits a POJO, instance of <a class="reference external" href="../../../../SMath24Synch/src/main/java/ObserverData.java">ObserverData.java</a>, to check (method <code class="docutils literal notranslate"><span class="pre">checkOneCallers()</span></code>
+the sequence of the answers <span class="slide2">as perceived by the caller</span>.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">c1</span></code> sends two requests to the service <code class="docutils literal notranslate"><span class="pre">smath24asynch</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">c1</span></code> expects receive the answer in FIFO order,
+even if the second request requires less elaboration time.</p></li>
+</ul>
+<p>This test unit makes a request on the result od the computation
+to the <span class="slide2">observer of the callers</span> defined in the model
+<a class="reference external" href="../../../../SMath24Synch/src/smath24synch_0_caller.qak">smath24synch_0_caller.qak</a>, that exploits the method <code class="docutils literal notranslate"><span class="pre">checkOneCallers()</span></code>
+defined by the class <a class="reference external" href="../../../../SMath24Synch/src/main/java/ObserverData.java">ObserverData.java</a>.</p>
+</td>
+<td><a class="reference internal image-reference" href="_images/SMath24OneCallerTest.png"><img alt="_images/SMath24OneCallerTest.png" class="align-center" src="_images/SMath24OneCallerTest.png" style="width: 100%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="smath24synch-many-callers-test">
+<h3>SMath24Synch: many callers test<a class="headerlink" href="#smath24synch-many-callers-test" title="Permalink to this heading">¶</a></h3>
+<p><span class="slidekp">User story: Two callers test</span>:  there are two callers of  <code class="docutils literal notranslate"><span class="pre">smath24synch</span></code> named <code class="docutils literal notranslate"><span class="pre">clr1</span></code> and <code class="docutils literal notranslate"><span class="pre">clr2</span></code>.
+<code class="docutils literal notranslate"><span class="pre">clr1</span></code> sends a request for a number <code class="docutils literal notranslate"><span class="pre">N</span></code> and afterwards emits an event to activate <code class="docutils literal notranslate"><span class="pre">clr2</span></code>.
+Once activated, <code class="docutils literal notranslate"><span class="pre">clr2</span></code> sends a request for a number <code class="docutils literal notranslate"><span class="pre">N1&lt;N</span></code>.
+I expect that  <code class="docutils literal notranslate"><span class="pre">clr2</span></code>  (<strong>normally</strong>) receives the answer after  <code class="docutils literal notranslate"><span class="pre">clr1</span></code>.</p>
+<p>This testing-case shows that <span class="slide1">also the testing phase requires careful analysis and design</span>.</p>
+<ul class="simple">
+<li><p>The model <a class="reference external" href="../../../../SMath24Synch/src/smath24synch_0_manycalllers.qak">smath24synch_0_manycallers.qak</a> defines two callers: <code class="docutils literal notranslate"><span class="pre">clr1</span></code> and <code class="docutils literal notranslate"><span class="pre">clr2</span></code> <span class="slide2">working in the same context</span>
+and uses a POJO, instance of <a class="reference external" href="../../../../SMath24Synch/src/main/java/ObserverData.java">ObserverData.java</a>, to check the sequence of the answers <span class="slide2">perceived by each caller</span>.</p></li>
+<li><p>The caller <code class="docutils literal notranslate"><span class="pre">clr1</span></code> sends a request for the calculation of the <code class="docutils literal notranslate"><span class="pre">41th</span></code> Fibonacci number and then <span class="brown">emits an event</span>
+to activate the caller <code class="docutils literal notranslate"><span class="pre">clr2</span></code>, in order to force a sequnce in the calls.</p></li>
+<li><p>The caller <code class="docutils literal notranslate"><span class="pre">clr2</span></code> sends a request for the calculation of the <code class="docutils literal notranslate"><span class="pre">8th</span></code> Fibonacci number.</p></li>
+<li><p>The service <a class="reference external" href="../../../../SMath24Synch/src/smath24synch_0.qak">smath24synch_0.qak</a> receives as first the request from <code class="docutils literal notranslate"><span class="pre">clr1</span></code> and then the request from <code class="docutils literal notranslate"><span class="pre">clr2</span></code></p></li>
+<li><p>Thus, the caller <code class="docutils literal notranslate"><span class="pre">clr2</span></code> <span class="slide2">should receive the answer after</span> the caller <code class="docutils literal notranslate"><span class="pre">clr1</span></code>,
+even if it has sent a request that requires less time to be elaborated.
+However, <strong>this sentence is not always true</strong>, since the time when an answer is perceived by a caller
+depends on the underlying infrastructure.</p></li>
+</ul>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><a class="reference internal image-reference" href="_images/SMath24ManyCallers.png"><img alt="_images/SMath24ManyCallers.png" class="align-center" src="_images/SMath24ManyCallers.png" style="width: 100%;" /></a>
+</td>
+<td><p>When <code class="docutils literal notranslate"><span class="pre">clr2</span></code> makes the request for some <code class="docutils literal notranslate"><span class="pre">N</span></code> very small, and the callers work
+under the same JVM, it often perceives the answer before  <code class="docutils literal notranslate"><span class="pre">clr1</span></code>.</p>
+<p>If the two callers work in different JVMs, we must consider the third point mentioned in <a class="reference internal" href="#about-the-time"><span class="std std-ref">About the time</span></a>.</p>
+<p>For this reason, the <span class="slide2">test is made</span> not on the time of the perception of the answer by the callers, but
+on the time of  <span class="slide2">perception of the request</span> by the service.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>See the method in <code class="docutils literal notranslate"><span class="pre">checkManyCallers()</span></code> in <a class="reference external" href="../../../../SMath24Synch/src/main/java/ObserverData.java">ObserverData.java</a> and the test in <a class="reference external" href="../../../../SMath24Synch/src/main/java/test/Smath24synch_0TestManyCallers.java">smath24synch_0TestManyCallers</a>.</p>
+</section>
+</section>
+<section id="smath24synch-problem-analysis">
+<h2>SMath24Synch-Problem analysis<a class="headerlink" href="#smath24synch-problem-analysis" title="Permalink to this heading">¶</a></h2>
+<p>Our requirment analysis has already shown that we should focus our attention on the
+<a class="reference internal" href="Principi.html#vista-interna-di-un-sistema"><span class="std std-ref">internal view</span></a> of the service,
+rather than on view od the system as perceived by the callers.</p>
+</section>
+<section id="smath24synch-logical-architecture">
+<h2>SMath24Synch-Logical architecture<a class="headerlink" href="#smath24synch-logical-architecture" title="Permalink to this heading">¶</a></h2>
+<p>The model introduced in
+<a class="reference internal" href="#smath24synch-model-of-the-requirements"><span class="std std-ref">SMath24Synch-model of the Requirements</span></a> already captures the logical architecture of the system.</p>
+</section>
+<section id="smath24synch-project">
+<h2>SMath24Synch-Project<a class="headerlink" href="#smath24synch-project" title="Permalink to this heading">¶</a></h2>
+<p>The function  <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">fibo(N:Int):Int</span></code>  that claculates the <code class="docutils literal notranslate"><span class="pre">Nth</span></code> number of Fibonacci
+should be embedded into an object created by an utility class <a class="reference external" href="../../../../SMath24Synch/src/main/kotlin/MathUtils.kt">MathUtils.kt</a>.</p>
+<p>For an example, see <a class="reference internal" href="QakActorsIntro24.html#helloworld3-withobj"><span class="std std-ref">helloworld3 withobj</span></a>.</p>
+<p>In our case</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span> <span class="n">smath</span> <span class="n">context</span> <span class="n">ctxsmath</span>  <span class="n">withobj</span> <span class="n">math</span> <span class="n">using</span> <span class="s2">&quot;MathUtils.create()&quot;</span>
+<span class="o">//</span><span class="n">The</span> <span class="nb">object</span> <span class="n">math</span> <span class="ow">is</span> <span class="n">an</span> <span class="n">instance</span> <span class="n">of</span> <span class="n">MathUtils</span><span class="o">.</span><span class="n">kt</span><span class="p">:</span> <span class="n">it</span> <span class="n">can</span> <span class="n">be</span> <span class="n">used</span> <span class="ow">in</span> <span class="n">the</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">states</span> <span class="n">of</span> <span class="n">actor</span><span class="o">.</span>
+</pre></div>
+</div>
+</section>
+<section id="smath24synch-testing">
+<h2>SMath24Synch-Testing<a class="headerlink" href="#smath24synch-testing" title="Permalink to this heading">¶</a></h2>
+<p>Testing was already planned and discussed in the <a class="reference internal" href="#smath24synch-test-plans"><span class="std std-ref">SMath24Synch-Test plans</span></a>.</p>
+</section>
+<section id="smath24synch-deployment">
+<h2>SMath24Synch-Deployment<a class="headerlink" href="#smath24synch-deployment" title="Permalink to this heading">¶</a></h2>
+<p>The deployment process is, at the moment, quite similar to  <a class="reference internal" href="PingPongSystem24.html#pps0-a-first-deployment"><span class="std std-ref">PPS0-A first Deployment</span></a>.</p>
+<p>As we can see from the script <a class="reference external" href="../../../../SMath24Synch/src/main/java/test/smath24synch.bat">smath24synch.bat</a>, our deploy directory id now <code class="docutils literal notranslate"><span class="pre">C:/DidatticRun</span></code></p>
+</section>
+<section id="smath24synch-maintenance">
+<h2>SMath24Synch-Maintenance<a class="headerlink" href="#smath24synch-maintenance" title="Permalink to this heading">¶</a></h2>
+<p>We recall what said in <a class="reference internal" href="PingPongSystem24.html#update-the-deployment"><span class="std std-ref">Update the deployment</span></a>.</p>
+<p><span class="slidekp">NEXT</span>: <a class="reference internal" href="ServiceMath24Asynch.html#servicemath24asynch"><span class="std std-ref">ServiceMath24Asynch</span></a></p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">ServiceMath24Synch</a><ul>
+<li><a class="reference internal" href="#servicemath24-introduction">ServiceMath24 Introduction</a></li>
+<li><a class="reference internal" href="#smath24synch-requirements">SMath24Synch-Requirements</a></li>
+<li><a class="reference internal" href="#smath24synch-requirements-analysis">SMath24Synch-Requirements analysis</a><ul>
+<li><a class="reference internal" href="#smath24synch-model-messages">SMath24Synch-model messages</a></li>
+<li><a class="reference internal" href="#about-the-time">About the time</a></li>
+<li><a class="reference internal" href="#smath24synch-model-of-the-requirements">SMath24Synch-model of the Requirements</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#smath24synch-test-plans">SMath24Synch-Test plans</a><ul>
+<li><a class="reference internal" href="#smath24synch-a-first-test">SMath24Synch: a first test</a></li>
+<li><a class="reference internal" href="#smath24synch-one-caller-test">SMath24Synch: one caller test</a></li>
+<li><a class="reference internal" href="#smath24synch-many-callers-test">SMath24Synch: many callers test</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#smath24synch-problem-analysis">SMath24Synch-Problem analysis</a></li>
+<li><a class="reference internal" href="#smath24synch-logical-architecture">SMath24Synch-Logical architecture</a></li>
+<li><a class="reference internal" href="#smath24synch-project">SMath24Synch-Project</a></li>
+<li><a class="reference internal" href="#smath24synch-testing">SMath24Synch-Testing</a></li>
+<li><a class="reference internal" href="#smath24synch-deployment">SMath24Synch-Deployment</a></li>
+<li><a class="reference internal" href="#smath24synch-maintenance">SMath24Synch-Maintenance</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="PingPongSystem24Dstributed.html"
+                          title="previous chapter">PingPongSystem24Dstributed</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="ServiceMath24Asynch.html"
+                          title="next chapter">ServiceMath24Asynch</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/ServiceMath24Synch.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="ServiceMath24Asynch.html" title="ServiceMath24Asynch"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="PingPongSystem24Dstributed.html" title="PingPongSystem24Dstributed"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">ServiceMath24Synch</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>

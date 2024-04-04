@@ -1,0 +1,172 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>PingPongSystem24Distributed &#8212; iss24 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="ServiceMath24Synch" href="ServiceMath24Synch.html" />
+    <link rel="prev" title="PingPongSystem24" href="PingPongSystem24.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="ServiceMath24Synch.html" title="ServiceMath24Synch"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="PingPongSystem24.html" title="PingPongSystem24"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">PingPongSystem24Distributed</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="pingpongsystem24distributed">
+<h1>PingPongSystem24Distributed<a class="headerlink" href="#pingpongsystem24distributed" title="Permalink to this heading">¶</a></h1>
+<p><span class="slide3">Projects ping24, pong24, ppgreferee</span></p>
+<p><span class="slidekp">PREVIOUS</span>: <a class="reference internal" href="PingPongSystem24.html#pingpongsystem24"><span class="std std-ref">PingPongSystem24</span></a></p>
+<section id="introduction-distributed">
+<h2>Introduction-distributed<a class="headerlink" href="#introduction-distributed" title="Permalink to this heading">¶</a></h2>
+<p>Design and development of a system that simulates the exchange of information in a <code class="docutils literal notranslate"><span class="pre">ping</span></code>-<code class="docutils literal notranslate"><span class="pre">pong</span></code> style.</p>
+<p>Since we have already developed the system in a single context (<a class="reference internal" href="PingPongSystem24.html#pingpongsystem24"><span class="std std-ref">PingPongSystem24</span></a>), we can now distribute
+the system in a network of nodes. Let us call as <code class="docutils literal notranslate"><span class="pre">PPSD</span></code> (<em>PingPongSystemDistributed</em>) the distributed version of the system.</p>
+<p>Our starting point here is the final <a class="reference internal" href="PingPongSystem24.html#pps0-project"><span class="std std-ref">PPS0-Project</span></a> that has produced the following system architecture:</p>
+<blockquote>
+<div><a class="reference internal image-reference" href="_images/PingPong24SingleCtxWithReferee.PNG"><img alt="_images/PingPong24SingleCtxWithReferee.PNG" class="align-center" src="_images/PingPong24SingleCtxWithReferee.PNG" style="width: 100%;" /></a>
+</div></blockquote>
+<p>The goal now is to distribute the system in a network of nodes, each one running a different component of the system.</p>
+</section>
+<section id="ppsd-logical-architecture">
+<h2>PPSD-Logical architecture<a class="headerlink" href="#ppsd-logical-architecture" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>View of the system from the perspective of the <code class="docutils literal notranslate"><span class="pre">referee</span></code> (model <a class="reference external" href="../../../../pingpong24referee/src/ppgreferee.qaktt">ppgreferee.qak</a>).</p>
+<a class="reference internal image-reference" href="_images/PingPong24WithReferee.PNG"><img alt="_images/PingPong24WithReferee.PNG" class="align-center" src="_images/PingPong24WithReferee.PNG" style="width: 100%;" /></a>
+<p><code class="docutils literal notranslate"><span class="pre">ballView</span></code> is the information made visibile by the players.</p>
+</td>
+<td><p>Perspective of <code class="docutils literal notranslate"><span class="pre">ping</span></code> (<a class="reference external" href="../../../../ping24/src/ping24Distributed.qaktt">ping24Distributed.qak</a>)</p>
+<a class="reference internal image-reference" href="_images/PingPong24PingReferee.PNG"><img alt="_images/PingPong24PingReferee.PNG" class="align-center" src="_images/PingPong24PingReferee.PNG" style="width: 100%;" /></a>
+<p>Perspective of <code class="docutils literal notranslate"><span class="pre">pong</span></code> (<a class="reference external" href="../../../../pong24/src/pong24Distributed.qaktt">pong24Distributed.qak</a>)</p>
+<a class="reference internal image-reference" href="_images/PingPong24PongReferee.PNG"><img alt="_images/PingPong24PongReferee.PNG" class="align-center" src="_images/PingPong24PongReferee.PNG" style="width: 100%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="ppsd-execution">
+<h2>PPSD-Execution<a class="headerlink" href="#ppsd-execution" title="Permalink to this heading">¶</a></h2>
+<p>Execute</p>
+<ol class="arabic simple">
+<li><p>Creote distribution for ping (<a class="reference external" href="../../../../ping24/src/ping24Distributed.qaktt">ping24Distributed.qak</a>) and open in <code class="docutils literal notranslate"><span class="pre">C:/DidatticRun</span></code></p></li>
+<li><p>Creote distribution for pong (<a class="reference external" href="../../../../pong24/src/pong24Distributed.qaktt">pong24Distributed.qak</a>) and open in <code class="docutils literal notranslate"><span class="pre">C:/DidatticRun</span></code></p></li>
+<li><p>Creote distribution for ppgreferee (<a class="reference external" href="../../../../pingpong24referee/src/ppgreferee.qaktt">ppgreferee.qak</a>) and open in in <code class="docutils literal notranslate"><span class="pre">C:/DidatticRun</span></code></p></li>
+</ol>
+<p>Now:</p>
+<ul class="simple">
+<li><p>Launch <a class="reference external" href="../../../../pingpong24referee/src/main/java/test/TestPingPong24Distributed.java">TestPingPong24Distributed</a></p></li>
+</ul>
+<p>or:</p>
+<ul class="simple">
+<li><p>Open one WindowsTerninal (that shows ANSI colors) for each distribution</p></li>
+<li><p>Launch ping, pong e ppgreferee</p></li>
+</ul>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">PingPongSystem24Distributed</a><ul>
+<li><a class="reference internal" href="#introduction-distributed">Introduction-distributed</a></li>
+<li><a class="reference internal" href="#ppsd-logical-architecture">PPSD-Logical architecture</a></li>
+<li><a class="reference internal" href="#ppsd-execution">PPSD-Execution</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="PingPongSystem24.html"
+                          title="previous chapter">PingPongSystem24</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="ServiceMath24Synch.html"
+                          title="next chapter">ServiceMath24Synch</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/PingPongSystem24Distributed.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="ServiceMath24Synch.html" title="ServiceMath24Synch"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="PingPongSystem24.html" title="PingPongSystem24"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">PingPongSystem24Distributed</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>

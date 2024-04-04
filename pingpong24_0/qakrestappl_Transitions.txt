@@ -1,0 +1,6 @@
+{"actor":"ping", "msgType":"dispatch", "curstate":"starthit", "nextstate":"reply", "msgId":"ball"}
+{"actor":"ping", "msgType":"dispatch", "curstate":"reply", "nextstate":"reply", "msgId":"ball"}
+{"actor":"pong", "msgType":"dispatch", "curstate":"s0", "nextstate":"reply", "msgId":"ball"}
+{"actor":"pong", "msgType":"dispatch", "curstate":"reply", "nextstate":"reply", "msgId":"ball"}
+{"actor":"referee", "msgType":"dispatch", "curstate":"emitStart", "nextstate":"handlegame", "msgId":"ballview"}
+{"actor":"referee", "msgType":"dispatch", "curstate":"handlegame", "nextstate":"handlegame", "msgId":"ballview"}

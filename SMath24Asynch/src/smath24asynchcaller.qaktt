@@ -1,0 +1,111 @@
+System smath24asynchcaller
+/* 
+ * MODEL of the service 
+ * form the caller point of view 
+ * after requirement analysis for testing
+ */  
+Request dofibo : dofibo(N) "request to send to the service"
+Reply fibodone : fibodone( CALLER,N,RESULT,ELABTIME ) for dofibo
+    
+//For observe and test
+Dispatch callerinfo : callerdone( CALLER,N )    
+ 
+Dispatch obsend : obsend(X) "automsg of callerobserver"
+
+Request info      : info(X)  "sent by the testUnit to the callerobserver"
+Reply   obsinfo   : obsinfo(X) for info
+
+Context ctxcaller  ip [host="localhost" port=8035]
+Context ctxsmath   ip [host="127.0.0.1" port=8033]
+  
+ExternalQActor smathasynch context ctxsmath
+
+
+/*
+ * c1 sends two requests and expects to 
+ * receive first the answer to the second request  
+ */
+QActor c1 context ctxcaller{
+	[# var NAnswer   = 0  
+	   var StartTime = 0L 
+	   var Elapsed   = 0L			   
+	#]
+	State s0 initial{ 
+		println("$name STARTS ") color blue
+		delay 1000 //five time to activate the observer ..
+	}	
+	Goto work 
+	
+	State work{
+		memoCurrentTime StartTime
+		request smathasynch -m dofibo : dofibo(43)
+		request smathasynch -m dofibo : dofibo(8)
+	}
+	Transition t0 
+		whenReply fibodone -> handleAnswer
+		 
+	State handleAnswer{ 
+        setDuration Elapsed from StartTime		
+        printCurrentMessage color cyan
+		onMsg( fibodone : fibodone( CALLER,N,RESULT,ELABTIME) ){		 
+		    updateResource [# "callerdone($name,${payloadArg(1)})" #]
+		}				 
+	}  
+	Transition t0 
+		whenReply fibodone -> handleAnswer
+	
+}
+
+QActor callerobserver context ctxcaller withobj obsdata using "main.java.ObserverData.create()"{
+ 
+	State s0 initial{ 
+		println("$name STARTS  ") color green
+		observeResource c1 msgid callerinfo
+	}	   
+	Transition t0 whenMsg callerinfo -> handleinfo
+ 
+	State handleinfo{
+		printCurrentMessage color green
+		onMsg( callerinfo : callerdone(CALLER,N) ){
+			[# obsdata.addToHistory( ""+payloadArg(0)+"_"+payloadArg(1)  ) #]
+			println("callerobserver checkOneCaller=${obsdata.checkOneCaller()}") color green			
+		}
+		if [#  obsdata.ready() #]{
+			autodispatch obsend : obsend(ok)
+		}
+	} 
+	Transition t0 whenMsg callerinfo -> handleinfo
+				  whenMsg obsend     -> waitRequestFromTester
+    
+    State waitRequestFromTester{
+    	
+    }
+	Transition t0 whenTime 1000   -> endofobs
+                 whenRequest info -> handlerequest
+	
+	State handlerequest{
+		[# val R = obsdata.checkOneCaller() #]
+		replyTo info with obsinfo : obsinfo(  $R )
+	} 
+	Goto endofobs
+	
+	State endofobs{
+		println("callerobserver BYE") color green
+		delay 1000
+		[# System.exit(0) #]				
+	}
+	
+}
+
+QActor testmock context ctxcaller{
+	State s0 initial{ 
+		request callerobserver -m info : info(ok)
+	}
+	Transition t0 whenReply obsinfo -> docheck
+	
+	State docheck{
+		onMsg( obsinfo:obsinfo(R)){
+			println("$name result:${payloadArg(0)}") color magenta
+		}
+	}
+}

@@ -114,8 +114,8 @@
 </ul>
 </section>
 </section>
-<section id="problem-analysis">
-<h2>Problem analysis<a class="headerlink" href="#problem-analysis" title="Permalink to this heading">¶</a></h2>
+<section id="pps-problem-analysis">
+<h2>PPS-Problem analysis<a class="headerlink" href="#pps-problem-analysis" title="Permalink to this heading">¶</a></h2>
 <p>For the <span class="slide2">ball as a message</span>, we say that:</p>
 <ul class="simple">
 <li><p>the ball as an <strong>event</strong>: is not appropriate, since the information is exchanged between two precise end-points</p></li>
@@ -452,7 +452,7 @@ but only to update the code in the <code class="docutils literal notranslate"><s
 </div>
 <section id="pps0-testunit">
 <h3>PPS0-testUnit<a class="headerlink" href="#pps0-testunit" title="Permalink to this heading">¶</a></h3>
-<p>A test unit is reported in <a class="reference external" href="../../../../pingpong24/src/main/java/test/TestPingPong24SingleCtx.java">TestPingPong24SingleCtx</a> and described in <a class="reference external" href="../../../../pingpong24/userDocs/uniboDisi_pingpong24.html">userDocs/uniboDisi_pingpong24.html</a></p>
+<p>A test unit is reported in <a class="reference external" href="../../../../pingpong24_0/src/main/java/test/TestPingPong24SingleCtx.java">TestPingPong24SingleCtx</a> and described in <a class="reference external" href="../../../../pingpong24_0/userDocs/uniboDisi_pingpong24.html">userDocs/uniboDisi_pingpong24.html</a></p>
 <p>Note that there are two way for activate the system:</p>
 <ul>
 <li><p><span class="slide2">activateSystemUsingGradle</span>: activates the system to be tested by executing</p>
@@ -488,7 +488,7 @@ with the following responsibilities:</p>
 <p>Let us call the new version of the system <code class="docutils literal notranslate"><span class="pre">PPSD</span></code>.</p>
 <section id="towards-a-referee">
 <h3>Towards a referee<a class="headerlink" href="#towards-a-referee" title="Permalink to this heading">¶</a></h3>
-<p>See <a class="reference external" href="../../../../pingpong24/src/pingpong24Referee.qak">pingpong24Referee.qak</a> and <a class="reference external" href="../../../../pingpong24/src/main/java/test/TestPingPong24SingleCtxWithReferee.java">TestPingPong24SingleCtxWithReferee</a></p>
+<p>See <a class="reference external" href="../../../../pingpong24_0/src/pingpong24Referee.qaktt">pingpong24Referee.qak</a> and <a class="reference external" href="../../../../pingpong24_0/src/main/java/test/TestPingPong24SingleCtxWithReferee.java">TestPingPong24SingleCtxWithReferee</a></p>
 <table class="docutils align-default" style="width: 100%">
 <colgroup>
 <col style="width: 70%" />
@@ -508,15 +508,31 @@ with the following responsibilities:</p>
 </table>
 </section>
 </section>
-<section id="testing">
-<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">¶</a></h2>
+<section id="pps0-testing">
+<h2>PPS0-Testing<a class="headerlink" href="#pps0-testing" title="Permalink to this heading">¶</a></h2>
 </section>
-<section id="deployment">
-<h2>Deployment<a class="headerlink" href="#deployment" title="Permalink to this heading">¶</a></h2>
+<section id="pps0-deployment">
+<h2>PPS0-Deployment<a class="headerlink" href="#pps0-deployment" title="Permalink to this heading">¶</a></h2>
 </section>
-<section id="maintenance">
-<h2>Maintenance<a class="headerlink" href="#maintenance" title="Permalink to this heading">¶</a></h2>
+<section id="pps0-maintenance">
+<h2>PPS0-Maintenance<a class="headerlink" href="#pps0-maintenance" title="Permalink to this heading">¶</a></h2>
 <p><span class="slidekp">NEXT</span>: <a class="reference internal" href="PingPongSystem24Distributed.html#pingpongsystem24distributed"><span class="std std-ref">PingPongSystem24Distributed</span></a></p>
+</section>
+<section id="pps0-execution">
+<h2>PPS0-Execution<a class="headerlink" href="#pps0-execution" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Creote distribution for ping (<a class="reference external" href="../../../../ping24/src/ping24Initial.qaktt">ping24Initial.qak</a>) and open in <code class="docutils literal notranslate"><span class="pre">C:/DidatticRun</span></code></p></li>
+<li><p>Creote distribution for pong (<a class="reference external" href="../../../../ping24/src/ping24Initial.qaktt">ping24Initial.qak</a>) and open in <code class="docutils literal notranslate"><span class="pre">C:/DidatticRun</span></code></p></li>
+</ol>
+<p>Now:</p>
+<ul class="simple">
+<li><p>Launch <a class="reference external" href="../../../../pingpong24_0/src/main/java/test/TestPingPong24SingleCtxWithReferee.java">TestPingPong24SingleCtxWithReferee</a></p></li>
+</ul>
+<p>or:</p>
+<ul class="simple">
+<li><p>Open one WindowsTerninal (that shows ANSI colors) for each distribution</p></li>
+<li><p>Launch ping, pong</p></li>
+</ul>
 </section>
 </section>
 
@@ -538,7 +554,7 @@ with the following responsibilities:</p>
 <li><a class="reference internal" href="#functional-test-plans-non-formal">Functional test plans (non formal)</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#problem-analysis">Problem analysis</a><ul>
+<li><a class="reference internal" href="#pps-problem-analysis">PPS-Problem analysis</a><ul>
 <li><a class="reference internal" href="#tmax">TMAX</a></li>
 </ul>
 </li>
@@ -562,9 +578,10 @@ with the following responsibilities:</p>
 <li><a class="reference internal" href="#towards-a-referee">Towards a referee</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#testing">Testing</a></li>
-<li><a class="reference internal" href="#deployment">Deployment</a></li>
-<li><a class="reference internal" href="#maintenance">Maintenance</a></li>
+<li><a class="reference internal" href="#pps0-testing">PPS0-Testing</a></li>
+<li><a class="reference internal" href="#pps0-deployment">PPS0-Deployment</a></li>
+<li><a class="reference internal" href="#pps0-maintenance">PPS0-Maintenance</a></li>
+<li><a class="reference internal" href="#pps0-execution">PPS0-Execution</a></li>
 </ul>
 </li>
 </ul>

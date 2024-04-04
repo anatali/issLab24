@@ -22,7 +22,9 @@ plugins {
 }
 
 version '1.0'
-//java { sourceCompatibility = '11' }
+java {
+   sourceCompatibility = '11'
+}
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(11))
@@ -62,7 +64,7 @@ dependencies {
 
     /* COROUTINES ******************************************************************************* */
     // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core
-    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: "$kotlinVersion", ext: 'pom'
+    implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: "$kotlinVersion" 
     // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core-jvm', version: "$kotlinVersion"
 
@@ -133,15 +135,23 @@ dependencies {
 	//depends on spring-boot-starter-logging, which already pulls in spring-jcl for us.
 	//When using starters, Logback is used for logging by default.
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    
 }
 	
 sourceSets {
+/*
+    main.java.srcDirs += 'src'
+    main.java.srcDirs += 'src/main/kotlin'
+    test.java.srcDirs += 'src/test'		//test is specific
+    test.java.srcDirs += 'src/main/kotlin/test'
+    */
     main.java.srcDirs += 'src'
     main.java.srcDirs += 'src/main/java'
     main.java.srcDirs += 'src/main/kotlin'
     main.java.srcDirs += 'src/main/resources'
     test.java.srcDirs += 'src/main/java/test'		//test is specific
     test.java.srcDirs += 'src/main/kotlin/test'
+    
 }
   
 
@@ -155,6 +165,7 @@ eclipse {
 application {
     // Define the main class for the application.
     mainClass = 'it.unibo.ctxservice.MainCtxserviceKt'
+    //mainClass = 'main.java.ServiceCallerTCPNaive'
 }
  
  jar {
@@ -182,6 +193,7 @@ distributions {
              from './servicemath24synch.pl'
              from './sysRules.pl'
              from './facadeConfig.json'
+             //from 'src/dist'
         }
     }
 } 

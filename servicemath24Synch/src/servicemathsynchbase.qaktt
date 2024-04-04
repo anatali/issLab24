@@ -1,0 +1,29 @@
+System /*-trace*/ servicemathsynchbase 
+//Messages for the application 
+Request dofibo   : dofibo(N)
+Reply   fibodone : fibodone( CALLER,N,RESULT,TIME ) for dofibo
+  
+//Dispatch exit : exit(X)   
+
+Context ctxservice ip [host="localhost" port=8710]     
+ 
+CodedQActor servicemath context ctxservice className "Servicecodedbasic"
+ 
+//QActor sentinel context ctxservice{
+//	State s0 initial{
+//		
+//	}
+//	Transition t0 whenMsg exit -> handleExit
+//	
+//	State handleExit{
+//		println("$name | exit ")
+//		[# System.exit(0) #]
+//	}
+//}
+
+
+
+//Facade f port 8088 usingactor servicemathcoded inctx ctxservice  
+//                   appl "unibo.servicefacade24.Servicefacade24Application" 
+//                   UserLibs -f "servicefacade24-1.0" -f "servicefacade24-1.0-plain"
+    

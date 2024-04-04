@@ -153,11 +153,10 @@ table, th, td {
     <p> <a href="https://www.unibo.it/it/didattica/insegnamenti/insegnamento/2022/468003" target="web">SITO WEB di Ateneo</a> &nbsp;&nbsp;&nbsp;
 	<a href="https://virtuale.unibo.it/course/view.php?id=35152" target="web">ISS on Virtuale</a>&nbsp;&nbsp;&nbsp;
 	<a href="https://teams.microsoft.com/l/meetup-join/19%3ameeting_ZGZjZWFkYWItZmJmNi00MDFkLTkxYWQtMjkzNGQwYmZkZjdi%40thread.v2/0?context=%7b%22Tid%22%3a%22e99647dc-1b08-454a-bf8c-699181b389ab%22%2c%22Oid%22%3a%2230bff848-0ba2-44c9-9553-393c2818f0d1%22%7d" target="web">Teams</a>&nbsp;&nbsp;&nbsp;
-	<a href="https://corsi.unibo.it/magistrale/ingegneriainformatica/orario-lezioni" target="web">orario lez.</a>&nbsp;&nbsp;&nbsp;
-	<a href="https://pling.ing.unibo.it/orario" target="web">orario Lab2.</a>&nbsp;&nbsp;&nbsp;
+	<a href="https://corsi.unibo.it/magistrale/ingegneriainformatica/orario-lezioni" target="web">orario</a>&nbsp;&nbsp;&nbsp;
 	<a href="https://app.wooclap.com/ISS23START" target="web">https://app.wooclap.com/ISS23START</a>&nbsp;&nbsp;&nbsp;
 	<a href="html/Studenti2024.html" target="web">Frequentanti 2024</a>&nbsp;&nbsp;&nbsp;
-	<!-- Panopto  cartella del corso con Id: a0fe5e4b-a1ae-4772-97a4-ae42012435ee  
+	<!-- Panopto  cartella del corso con Id: a0fe5e4b-a1ae-4772-97a4-ae42012435ee 
 	 http://panopto.unibo.it
 	 https://www.unibo.it/it/didattica/insegnamenti/insegnamento/2020/385373
 	 -->
@@ -377,8 +376,7 @@ Suggerimenti sul
 <td>
 <ol>
 <li>Discussione sul sistema PingPong24: 
-<a href="html/PingPongSystem24.html" target="web">sistema PingPong24</a> in ambiente locale con deployment e testing. La transizione whenTime
-</li>
+<a href="html/PingPongSystem24.html" target="web">sistema PingPong24</a> in ambiente locale con deployment e testing</li>
 <li>Estensione al distribuito: opportunità di introdurre un <b>referee</b> che funga da coordinatore e osservatore</li>
 </ol>
 
@@ -398,7 +396,24 @@ Suggerimenti sul
     
 <tr><td><m>04/04/2024 (15-18)</m></td><td>Lab2</td> 
 <td>
- 
+<ol>
+<li>Aggiornamento del materiale didattico: qak plugin versione <tt>1.5.5</tt> e librerie</li>
+<li>Sperimentazione del sistema Ping-pong con referee 
+(<a href="html/PingPongSystem24Distributed.html" target="web">PingPongSystem24Distributed</a>)
+in distribuito e Testing automatizzato. Il referee come emettitore di eventi.</li>
+<li>Dall' <a href="html/QakService24Usage.html#servicemath:-attivazione" target="web">uso del servizo servicemath</a> 
+alla sua progettazione e costruzione <a href="html/ServiceMath24Synch.html" target="web">ServiceMath24Synch</a>.
+Interpretazione della qualificazione <b>servizio sicnrono</b> </li>
+<li>Progetto e realizzazione di una versione <b>asicnrona</b> (a gestione parallela delle richieste) del servzio
+<a href="html/ServiceMath24Asynch.html" target="web">ServiceMath24Asynch</a>. Creazione dinamica di attori con delega di 
+gestione della richiesta</li>
+<li>Come dotare il servizio di componenti per la interazione uomo-macchina:
+<a href="html/ServiceMath24Facade.html" target="web">ServiceMath24Facade</a> nel quadro della 
+<a href="html/Architetture.html#la-clean-architecture" target="web">Clean Architecture</a>
+</li>
+</ol>
+<kc>WORKTODO: modello della analisi</kc>: si costruisca una modello della Archtettura Logica del
+<a href="html/SitemaRilevamento.html" target="web">Sistema di Rilevamento</a> che una azienda ha intensione di costruire.
 </td>
  
 </tr>

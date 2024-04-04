@@ -1,0 +1,82 @@
+System pingpong24_pong
+//Parte pong 
+Dispatch ball : ball(N)
+
+Event startgame : startgame(X)
+Event stopgame  : stopgame(X)
+ 
+/*
+ * Pong si pone in attesa di ball
+ * quando riceve l'evento startgame
+ */ 
+Context ctxpong  ip [host="localhost" port=8015]
+Context ctxping  ip [host="127.0.0.1" port=8014] 
+  
+ExternalQActor ping  context ctxping 
+   
+QActor pong context ctxpong{    
+	[# var N = -1 #]
+
+	State s0 initial{
+		println("$name STARTS ") color green
+	} 
+	Transition t0 whenEvent startgame -> receiveball
+
+	State receiveball  {
+       println("$name receieveball  ") color green
+	}
+	Transition t0 
+	      whenEvent stopgame -> endgame
+	      whenMsg ball       -> answerback
+ 
+    State answerback{
+		printCurrentMessage color green
+		onMsg( ball : ball(N) ){
+			[# N = payloadArg(0).toInt() #]
+		} 
+		if [# N > 0 #] { 
+			delay 300
+		    println("$name answerback $N ") color green
+			forward ping -m ball : ball($N)
+		}	     	
+    }
+    Goto receiveball if [# N > 0 #] else endgame
+//	Transition t0 
+//	      whenEvent stopgame -> endgame
+//	      whenMsg ball       -> answerback
+    
+	State endgame{
+		println("$name BYE  ") color blue
+		[# System.exit(0) #]
+	}
+
+} 
+
+/*
+ *     State receiveballold  {
+		[# var N = -1 #]
+		println("$name receieveball  ") color green
+		printCurrentMessage color green
+		onMsg( ball : ball(N) ){
+			[# N = payloadArg(0).toInt() #]
+		} 
+		println("$name handleball $N ") color green
+//		if[# N == 0 #] {
+//			delay 300
+//			//[# System.exit(0) #]		
+//			forward ping -m ball : ball($N)	
+//		}else{
+//			delay 500
+//			updateResource [# "ball($N)" #]
+//			forward ping -m ball : ball($N)
+//		}		
+	} 
+	Transition t0 
+	              whenEvent stopgame -> endgame
+	              whenMsg ball       ->  answerback
+//	Transition t0 
+//	              whenEvent stopgame -> endgame
+//	              whenMsg ball  and [# N > 0 #]  -> receiveball
+//	              whenMsg ball  and [# N == 0 #] -> endgame
+ 
+ */ 

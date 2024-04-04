@@ -1,0 +1,92 @@
+System smath24asynchmanycallers
+/*
+ * MODEL of  two callers and a callerobserver
+ */ 
+Request dofibo : dofibo(N) "request to send to the service"
+Reply fibodone : fibodone( CALLER,N,RESULT,REQTIME,ELABTIME ) for dofibo
+ 
+Event   startcaller : startcaller(X)
+Dispatch callerinfo : callerdone(X)   //payload indicativo
+
+Request info      : info(X)  "sent by the testUnit to the callerobserver"
+Reply   obsinfo   : obsinfo(X) for info
+ 
+Context ctxmanycallers  ip [host="localhost" port=8035]
+Context ctxsmath        ip [host="127.0.0.1" port=8033]
+    
+ExternalQActor smathasynch context ctxsmath
+     
+QActor clr1 context ctxmanycallers{
+	State s0 initial{ 
+		delay 500 
+		println("$name dofibo(43) ") color cyan
+ 		request smathasynch -m dofibo : dofibo(43)
+		emitlocalstream   startcaller : startcaller(ok)		
+	}
+	Transition t0  
+		whenReply fibodone -> handleAnswer
+		 
+	State handleAnswer{
+		printCurrentMessage color cyan
+		updateResource [# "callerdone($name)" #]
+	}
+} 
+
+QActor clr2 context ctxmanycallers{
+	[# var StartTime = 0L 
+	   var Elapsed   = 0L			   
+	#]
+	State s0 initial{ 
+ 		subscribeTo clr1 for startcaller
+	}	
+	Transition t0 whenEvent startcaller -> work
+	
+	State work{
+		println("$name STARTS dofibo(8)") color blue
+		memoCurrentTime StartTime
+		request smathasynch -m dofibo : dofibo(8)
+	}
+	Transition t0 
+		whenReply fibodone -> handleAnswer
+		 
+	State handleAnswer{
+		updateResource [# "callerdone($name)" #]
+		setDuration Elapsed from StartTime
+		println("$name Elapsed=$Elapsed") color blue
+		//printCurrentMessage color blue
+	}
+}  
+
+QActor callerobserver context ctxmanycallers withobj obsdata using "main.java.ObserverData.create()"{
+
+	State s0 initial{ 
+		println("$name STARTS  ") color black
+		observeResource clr1 msgid callerinfo
+		observeResource clr2 msgid callerinfo
+	}	  
+	Transition t0 whenMsg callerinfo -> handleinfo
+ 
+	State handleinfo{
+		printCurrentMessage color green
+		[# obsdata.addToHistory( currentMsg.msgContent() ) #]
+		println("callerobserver check=${obsdata.check()}") color  green
+	}
+	Transition t0 
+	              whenTime 2000       -> endofobs
+	              whenMsg callerinfo  -> handleinfo
+                  whenRequest info and [# obsdata.ready() #] -> handlerequest
+                   
+	
+	State handlerequest{
+		[# val R = obsdata.check() #]
+		replyTo info with obsinfo : obsinfo(  $R )
+	} 
+	Goto endofobs
+	
+	State endofobs{
+		println("callerobserver BYE") color magenta
+		[# System.exit(0) #]				
+	}
+
+	
+}

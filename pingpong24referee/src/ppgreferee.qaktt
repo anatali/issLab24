@@ -1,0 +1,132 @@
+System ppgreferee  
+Dispatch ballview : ball(N)  "info  osservata | payload INDICATIVO"
+ 
+Request info    : info(X)
+Reply   obsinfo : obsinfo(X) for info
+ 
+Request obsconnect : obsconnect(X)
+Reply   obsconnected : obsconnected(X) for obsconnect
+ 
+Event startgame : startgame(X)
+Event stopgame  : stopgame(X)
+  
+Dispatch endgame : endgame(X) 
+ 
+/*
+ * Il referee richiede che siano attivi i players ping e pong
+ * Solo dopo può rispondere alla richiesta obsconnect
+ */
+Context ctxreferee  ip [host="localhost" port=8013] 
+Context ctxping     ip [host="127.0.0.1" port=8014] 
+Context ctxpong     ip [host="127.0.0.1" port=8015]
+   
+ExternalQActor ping context ctxping   
+ExternalQActor pong context ctxpong 
+
+QActor referee context ctxreferee{ 
+[# var N = 0;  val TOBSMAX=3000L #]
+	State s0 initial{ 
+		println("$name STARTS ") color blue
+		observeResource ping msgid ballview
+		observeResource pong msgid ballview   
+	}
+	Goto emitStart
+		
+	State emitStart{
+		println("$name emits start ") color blue
+		emit startgame : startgame(oK)		
+	}
+	Transition t0 
+		whenTime 1000          -> emitStart  //perhaps the previous was lost
+		whenMsg ballview       -> handlegame
+ 	
+	State handlegame{
+		printCurrentMessage  
+		[# N++ #]
+ 	}
+	Transition t0 
+	    whenTimeVar TOBSMAX -> gameended
+		whenMsg ballview    -> handlegame  
+
+    
+    State gameended{
+		println("$name gameended ") color blue
+    }	
+   Transition t0
+      whenTime    1000 -> endsystem
+      whenRequest info -> handleRequest
+
+	State handleRequest{  
+		printCurrentMessage  
+		replyTo info with obsinfo : obsinfo($N)
+	}
+    Goto endsystem
+   
+    State endsystem{
+ 	   delay 3000
+       println("$name BYE") color magenta
+       //[# System.exit(0) #]
+    }                  
+}
+ 
+/*  
+QActor referee context ctxreferee{ 
+[# var N = 0 #]
+	State s0 initial{ 
+		println("$name STARTS ") color blue
+		observeResource ping msgid ballview
+		observeResource pong msgid ballview   
+	}
+	Goto emitStart
+		
+	State emitStart{
+		println("$name emits start ") color blue
+		emit startgame : startgame(oK)		
+	}
+	Transition t0 
+		whenTime 1000          -> emitStart
+		whenMsg ballview       -> handlegame
+		whenRequest obsconnect -> handleConnect
+	
+    State handleConnect{
+    	printCurrentMessage color red
+    	replyTo obsconnect with obsconnected : obsconnected(done)
+    }
+	Transition t0 
+		whenMsg ballview -> handlegame
+	
+	State handlegame{
+		printCurrentMessage color blue
+		[# N++ #]
+		if [# N == 5 #]{  
+			println("$name emits stop ") color blue
+			emit stopgame : stopgamegame(oK)
+		}
+		onMsg( ballview :  ball(0) ){
+			autodispatch endgame : endgame(ok)
+		}
+	}
+	Transition t0 whenMsg ballview       -> handlegame  
+		          whenRequest obsconnect -> handleConnect
+	              whenMsg endgame        -> checkRequest
+
+	
+	State checkRequest{
+		println("$name checkRequest ") color red
+	} 
+	Transition t0  
+			whenTime 1000    -> endgame     //no testing
+			whenRequest info -> handleRequest
+	
+	State handleRequest{  
+		printCurrentMessage color red
+		replyTo info with obsinfo : obsinfo($N)
+	}
+    Goto endgame
+    
+    State endgame{
+		delay 500
+		println("$name BYE ") color red
+		[# System.exit(0) #]    	
+    }	
+ */

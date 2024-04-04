@@ -1,0 +1,44 @@
+System pingpong24_ping 
+//Parte ping    
+Dispatch ball : ball(N) "info scambiata"
+
+Context ctxping  ip [host="localhost" port=8014] 
+Context ctxpong  ip [host="127.0.0.1" port=8015]
+
+ExternalQActor pong context ctxpong  
+ 
+/*
+ * Ping inizia a battere
+ * dopo 1 sec.
+ * Termina quando nnn riceve ball entro TMAX
+ */
+QActor ping context ctxping{  
+	[# var N = 1 ; val TMAX = 1500L #]
+ 	State s0 initial{
+		delay 1000 //pong started ... 
+		//Starts the game
+		println("$name sends $N  ") color blue
+		forward pong -m ball : ball($N)
+	} 
+	Goto receive
+	  
+	State receive{
+		//println("$name received  ") color blue
+	}
+	Transition t0 
+		whenTimeVar TMAX -> endofexchange
+		whenMsg ball     -> reply
+	
+	State reply{
+		[# N = N + 1 #]
+		delay 500
+		println("$name sends $N  ") color blue
+		updateResource [# "ball($N)" #]
+		forward pong -m ball : ball($N)
+	}
+	Goto receive	
+	 
+	State endofexchange{
+		//updateResource [# "ball(0)" #] //means end
+	}
+ }

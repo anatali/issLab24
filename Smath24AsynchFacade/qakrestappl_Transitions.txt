@@ -1,0 +1,2 @@
+{"actor":"facadeviewer", "msgType":"dispatch", "curstate":"s0", "nextstate":"showinfo", "msgId":"smathinfo"}
+{"actor":"facadeviewer", "msgType":"dispatch", "curstate":"showinfo", "nextstate":"showinfo", "msgId":"smathinfo"}

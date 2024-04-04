@@ -1,0 +1,86 @@
+System /*-msglog  -trace */   smath24asynch
+//mqttBroker "broker.hivemq.com" : 1883 eventTopic "servicemathouttopic" 
+ 
+//Messages for the application 
+Request dofibo   : dofibo(N) "to service"
+Reply   fibodone : fibodone( CALLER,N,RESULT,ELABTIME ) for dofibo 
+        
+   
+Context ctxsmath ip [host="localhost" port=8033]  
+ 
+/* 
+QActor display context ctxsmath {  //withobj d using "utils.DisplayObj.create()"
+ 	State s0 initial{		
+	}
+	Transition t0 whenMsg out -> handleout
+	
+	State handleout{
+		printCurrentMessage color yellow
+		[# val SOUT = "${currentMsg.msgContent()}" #]
+		//[# d.write( SOUT ) #]
+		c	
+	} 
+	Transition t0 whenMsg out -> handleout
+}
+*/
+
+/*
+ * SERVICE 
+ */
+QActor smathasynch  context ctxsmath {
+	 
+	State init initial { 
+		println("$name  STARTS ") color blue		
+	}	
+	Transition t0 whenRequest dofibo -> work
+	 
+	State work{
+		[#val CurMsg = currentMsg #]
+		 printCurrentMessage 
+         updateResource [# "$currentMsg" #]
+	     delegateCurrentMsgTo actionexec
+	}  
+	Transition t0   whenRequest dofibo -> work
+
+ }
+
+QActor actionexec  context ctxsmath withobj math using "MathUtils.create()" dynamicOnly{ 
+	[# var CurRequestTime = 0L; var SOUT="todo" #]
+	State init initial { 
+		//println("$name | STARTS ")  color blue
+    }	  
+    Transition t0 whenRequest dofibo -> work
+	 
+	State work{
+		printCurrentMessage color blue
+		onMsg( dofibo : dofibo( N ) ){
+			[#   
+				var ReqArg  = payloadArg(0) 
+ 				var Sender  = currentMsg.msgSender() 
+			#]  
+			//println("$name | work N=$N ${sysUtil.curThread()}") color blue
+			[# 
+			   val T0 = getCurrentTime()  
+ 			   var F  = math.fibo( ReqArg.toInt() )  
+ 			   val TF = getDuration(T0)   
+    		   SOUT   = "fibovalue($ReqArg , $F,  $TF)" 
+			#]
+ 			println("$SOUT") color cyan 
+			//forward display -m out : out($SOUT)
+			updateResource [# "$SOUT" #]
+			replyTo dofibo with fibodone : fibodone($Sender, $ReqArg, $F,  $TF)
+ 			//CALLER,N,RESULT,ELABTIME
+			terminate 0 
+ // CHECK
+//			[# var anames = sysUtil.getAllActorNames(context!!.name) #]
+//			println("$name | AFTER: $anames")
+		} 
+	} 
+ }
+     
+ 
+ 
+//Facade f port 8088 usingactor smathasynch inctx ctxsmath  
+//                   appl "unibo.servicefacade24.Servicefacade24Application" 
+//                   UserLibs -f "servicefacade24-1.0" -f "servicefacade24-1.0-plain"
+	

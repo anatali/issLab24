@@ -1,0 +1,89 @@
+System pingpong24_ping 
+//Parte ping    
+Dispatch ball : ball(N) "info scambiata"
+
+Event startgame : startgame(X)
+Event stopgame  : stopgame(X)
+ 
+/*
+ * Ping inizia a battere
+ * quando riceve l'evento startgame.
+ * Termina quando nnn riceve ball entro 
+ */
+Context ctxping  ip [host="localhost" port=8014] 
+Context ctxpong  ip [host="127.0.0.1" port=8015]
+//Context ctxtest  ip [host="localhost" port=8014] 
+           
+ExternalQActor pong context ctxpong  
+  
+  
+QActor ping context ctxping{ //ctxtest
+	[# 
+        var N    = 1 
+	    val NMAX = 7
+	#]
+	State s0 initial{
+		println("$name STARTS handleball $N") color blue
+	} 
+	Transition t0 whenEvent startgame -> starthit
+	
+	State starthit{
+		updateResource [# "ball($N)" #]
+		forward pong -m ball : ball($N)		
+	}
+	Transition t0 whenMsg ball -> handleball
+	
+	State handleball{
+		printCurrentMessage color blue
+		println("$name handleball $N ") color blue
+		[# N = N + 1 #]
+		delay 500
+//		if[# N == NAMAX #] {  
+			updateResource [# "ball($N)" #]
+			forward pong -m ball : ball($N)			
+//			delay 500
+//			[# System.exit(0) #]
+//		}
+//		else{ 		
+//			delay 500
+//			updateResource [# "ball($N)" #]
+//			forward pong -m ball : ball($N) 
+//		}
+		 	
+	}   
+//	Transition t0 whenMsg ball       -> handleball
+//	              whenEvent stopgame -> endgame 
+	     
+	Transition t0 whenEvent stopgame -> endgame 
+	              whenMsg ball  and [# N < NMAX  #] -> handleball
+	              //whenMsg ball  and [# N >= NMAX #] -> endgame
+	             
+	         
+	State endgame{
+		println("$name BYE when N=$N ") color blue
+		updateResource [# "ball(0)" #]
+		forward pong -m ball : ball(0)		
+		delay 500	
+		[# System.exit(0) #]
+	}
+}   
+
+
+
+/* 
+QActor pong context ctxpong { //ctxtest
+	State s0 initial{
+		println("$name STARTS") color green
+	} 
+	Transition t0 whenMsg ball -> handleball
+	
+	State handleball{
+		printCurrentMessage color green
+		delay 500
+		println("$name reply  ") color green
+		forward ping -m ball : ball(pong)
+	}
+	Transition t0 whenMsg ball -> handleball
+}
+ 
+*/

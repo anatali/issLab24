@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>SitemaRilevamento &#8212; iss24 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="QakService24Init" href="QakService24Init.html" />
+    <link rel="prev" title="Facade24" href="Facade24.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="QakService24Init.html" title="QakService24Init"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Facade24.html" title="Facade24"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">SitemaRilevamento</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="sitemarilevamento">
+<h1>SitemaRilevamento<a class="headerlink" href="#sitemarilevamento" title="Permalink to this heading">¶</a></h1>
+<section id="sitemarilevamento-introduzione">
+<h2>SitemaRilevamento: Introduzione<a class="headerlink" href="#sitemarilevamento-introduzione" title="Permalink to this heading">¶</a></h2>
+<p>Si vuole esplorare come sia possibile costruire modelli eseguibili di un
+sistema software partendo dalla analisi del problema, senza entrare subiot nai dettagli tecnologici
+necessari per la costruzione effettiva del software.</p>
+<p>Il caso di studio è una applicazione IOT denominata <code class="docutils literal notranslate"><span class="pre">WD</span></code> (<strong>WolfDetection</strong>).</p>
+</section>
+<section id="wd-requirements">
+<h2>WD-Requirements<a class="headerlink" href="#wd-requirements" title="Permalink to this heading">¶</a></h2>
+<p>Una stazione sperimentale per lo studio di lupi allo stato libero, ha disolocato in una zona di interesse
+un RaspberryPi dotato di una fotocamera, di un sonar HC-SR04 e di un Led (di colore blu).</p>
+<p>Nella stazione è disponibile un altro RaspberryPi, dotato di un Led di colore rosso.</p>
+<p>Si chiede di costruire un sistema software che:</p>
+<ul class="simple">
+<li><p>permetta l’accensione e lo spegnimento remoto del sonar mediante comandi impartiti dalla stazione</p></li>
+<li><p>accenda il Led blu quando il sonar rileva un ostacolo a distanza inferiore a un limite prefissato DMIN</p></li>
+<li><p>scatti una fotografia dell’ostacolo rilevato a distanza inferiore a DMIN e la invii ad un elaboratore di
+immagini in grado di capire se l’ostacolo è un lupo</p></li>
+<li><p>accenda il Led rosso presso la stazione, se è stato rilevato un lupo</p></li>
+<li><p>spenga il Led blu e il Led rosso quando il sonar non rileva più ostacoli a distanza inferiore a DMIN</p></li>
+</ul>
+</section>
+<section id="wd-requirement-analysis">
+<h2>WD-Requirement analysis<a class="headerlink" href="#wd-requirement-analysis" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="wd-problema-analysis">
+<h2>WD-Problema analysis<a class="headerlink" href="#wd-problema-analysis" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="ws-logical-architecture">
+<h2>WS-Logical architecture<a class="headerlink" href="#ws-logical-architecture" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">SitemaRilevamento</a><ul>
+<li><a class="reference internal" href="#sitemarilevamento-introduzione">SitemaRilevamento: Introduzione</a></li>
+<li><a class="reference internal" href="#wd-requirements">WD-Requirements</a></li>
+<li><a class="reference internal" href="#wd-requirement-analysis">WD-Requirement analysis</a></li>
+<li><a class="reference internal" href="#wd-problema-analysis">WD-Problema analysis</a></li>
+<li><a class="reference internal" href="#ws-logical-architecture">WS-Logical architecture</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="Facade24.html"
+                          title="previous chapter">Facade24</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="QakService24Init.html"
+                          title="next chapter">QakService24Init</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/SitemaRilevamento.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="QakService24Init.html" title="QakService24Init"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Facade24.html" title="Facade24"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">SitemaRilevamento</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>

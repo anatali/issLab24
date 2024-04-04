@@ -1,0 +1,2 @@
+{"actor":"callerobserver", "msgType":"dispatch", "curstate":"s0", "nextstate":"handleinfo", "msgId":"callerinfo"}
+{"actor":"callerobserver", "msgType":"dispatch", "curstate":"handleinfo", "nextstate":"handleinfo", "msgId":"callerinfo"}

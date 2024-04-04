@@ -1,0 +1,129 @@
+System pingpong24_0  
+ 
+Dispatch ball : ball(N) "info exchanged by the players"
+   
+//FOR THE referee
+Dispatch ballview : ball(N)  "observed info | payload not mandatory"
+
+Request info      : info(X)  "sent by the testUnit to the referee"
+Reply   obsinfo   : obsinfo(X) for info
+ 
+//EMITTED BY THE referee
+Event startgame : startgame(X)
+Event stopgame  : stopgame(X)
+
+Context ctxtest  ip [host="localhost" port=8014]  
+
+      
+QActor ping context ctxtest{  
+	[# var N = 1 ; val TMAX = 1500L #]
+ 	State s0 initial{
+		println("$name STARTS $N  ") color blue
+	} 
+	Transition t0 whenEvent startgame -> starthit
+	
+	
+	State starthit{
+		forward pong -m ball : ball($N)		
+	}
+	Transition t0 
+		whenTimeVar TMAX -> endofexchange
+		whenMsg ball     -> reply	  
+	
+	State reply{
+		[# N = N + 1 #]
+		delay 500
+		println("$name sends $N  ") color blue
+		updateResource [# "ball($N)" #]
+		forward pong -m ball : ball($N)
+	}
+	Transition t0  
+		whenTimeVar TMAX -> endofexchange
+		whenMsg ball     -> reply	  
+
+	 
+	State endofexchange{
+		println("$name ENDS  ") color blue
+	}
+ }
+    
+ 
+QActor pong context ctxtest {  
+	[#  val TMAX = 1500L #]
+	State s0 initial{
+		println("$name STARTS") color green
+	} 
+	Transition t0 
+	    whenTimeVar TMAX -> endofexchange
+		whenMsg ball     -> reply
+	
+	State reply{
+		onMsg( ball : ball(X)){
+			[# val N = payloadArg(0).toInt() #]
+			println("$name receives $N") color green
+			if [# N <= 4 #]{
+				delay 500
+				forward ping -m ball : ball($N)
+			}//no forward if N == 5			
+		}		
+	}
+	Transition t0 
+		whenTimeVar TMAX -> endofexchange
+		whenMsg ball     -> reply	
+
+	State endofexchange{
+		println("$name ENDS ") color green
+		
+	}
+}
+
+
+/*
+ * Referee as coordinator
+ */ 
+
+ QActor referee context ctxtest{ 
+[# var N = 0; var NLAST = 0; val TOBSMAX=3000L #]
+	State s0 initial{ 
+		println("$name STARTS ") color cyan
+		observeResource ping msgid ballview
+		observeResource pong msgid ballview   
+	}
+	Goto emitStart
+		
+	State emitStart{
+		println("$name emits start ") color cyan
+		emit startgame : startgame(oK)		
+	}
+	Transition t0 
+		whenTime 1000          -> emitStart  //perhaps the previous was lost
+		whenMsg ballview       -> handlegame
+ 	
+	State handlegame{
+		printCurrentMessage color cyan
+		[# N++ #]
+ 	}
+	Transition t0 
+	    whenTimeVar TOBSMAX -> gameended
+		whenMsg ballview    -> handlegame  
+
+	State handleRequest{  
+		printCurrentMessage color cyan
+		replyTo info with obsinfo : obsinfo($N)
+	}
+    Goto endsystem
+    
+    State gameended{
+		println("$name gameended ") color cyan
+    }	
+   Transition t0
+      whenTime    1000 -> endsystem
+      whenRequest info -> handleRequest
+   
+    State endsystem{
+ 	   delay 1000
+       println("$name BYE") color magenta
+       [# System.exit(0) #]
+    }                  
+ 
+}

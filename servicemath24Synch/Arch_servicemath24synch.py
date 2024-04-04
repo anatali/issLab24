@@ -17,6 +17,10 @@ eventedgeattr = {
     'color': 'red',
     'style': 'dotted'
 }
+evattr = {
+    'color': 'darkgreen',
+    'style': 'dotted'
+}
 with Diagram('servicemath24synchArch', show=False, outformat='png', graph_attr=graphattr) as diag:
   with Cluster('env'):
      sys = Custom('','./qakicons/system.png')
