@@ -1,0 +1,119 @@
+System pingpong24 
+
+Dispatch ball : ball(N) "info exchanged by the players"
+
+//FOR TESTING
+Dispatch ballview : ball(N)  "observed info | payload not mandatory"
+Request info      : info(X)  "sent by the testUnit to the observer"
+Reply   obsinfo   : obsinfo(X) for info
+
+Dispatch endgame : endgame(X) "sent as an automsg by the observer"
+ 
+//Context ctxping  ip [host="localhost" port=8014] 
+//Context ctxpong  ip [host="127.0.0.1" port=8015]
+Context ctxtest  ip [host="localhost" port=8014]  
+      
+QActor ping context ctxtest{  
+	[# var N = 1 ; val TMAX = 1500L #]
+ 	State s0 initial{
+		delay 1000 //pong started ... 
+		//Starts the game
+		println("$name sends $N  ") color blue
+		forward pong -m ball : ball($N)
+	} 
+	Goto receive
+	  
+	State receive{
+		//println("$name received  ") color blue
+	}
+	Transition t0 
+		whenTimeVar TMAX -> endofexchange
+		whenMsg ball     -> reply
+	
+	State reply{
+		[# N = N + 1 #]
+		delay 500
+		println("$name sends $N  ") color blue
+		updateResource [# "ball($N)" #]
+		forward pong -m ball : ball($N)
+	}
+	Goto receive	
+	
+	State endofexchange{
+		updateResource [# "ball(0)" #]
+//		delay 2000
+// 		println("$name ENDS ") color blue
+//		[# System.exit(0) #]
+	}
+ }
+    
+ 
+QActor pong context ctxtest {  
+	[#  val TMAX = 1500L #]
+	State s0 initial{
+		println("$name STARTS") color green
+	} 
+	Transition t0 
+	    whenTimeVar TMAX -> endofexchange
+		whenMsg ball     -> reply
+	
+	State reply{
+		onMsg( ball : ball(X)){
+			[# val N = payloadArg(0).toInt() #]
+			println("$name receives $N") color green
+			if [# N <= 4 #]{
+				delay 500
+				forward ping -m ball : ball($N)
+			}//no forward if N == 5			
+		}		
+	}
+	Transition t0 
+		whenTimeVar TMAX -> endofexchange
+		whenMsg ball     -> reply	
+
+	State endofexchange{
+		println("$name ENDS ") color green
+		
+	}
+}
+ 
+
+ QActor pingobserver context ctxtest{
+ 	[# var N = 0; var NLAST = 0 #]
+ 	State s0 initial{
+		println("$name STARTS") color magenta
+		observeResource ping msgid ballview
+	} 
+	Transition t0 
+		whenMsg ballview -> updateinfoongame
+		
+		
+    State updateinfoongame{
+    	onMsg( ballview :  ball(X) ){
+    		[# N = payloadArg(0).toInt() #]
+    		println("$name views $N") color magenta
+    		if [# N> 0 #]{ 
+    			[# NLAST=N #]
+    		}else{
+    			autodispatch endgame : endgame($NLAST)
+    		}
+    	}
+    }
+	Transition t0 
+		whenMsg ballview   -> updateinfoongame
+		whenMsg endgame    -> gameended
+		
+	State gameended{
+		println("$name waits for request") color magenta
+	}
+	Transition t0 
+		whenRequest info -> handleinfo
+		
+	State handleinfo{
+		replyTo info with obsinfo : obsinfo($NLAST)
+		println("$name ENDS  NLAST=$NLAST") color magenta
+		[# System.exit(0) #]
+		
+	}
+ 	
+ }
