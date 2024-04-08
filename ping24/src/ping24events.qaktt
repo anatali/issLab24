@@ -1,0 +1,103 @@
+System ping24events
+
+Event ball : ball(N) "info exchanged by the players"
+   
+Context ctxpingev  ip [host="localhost" port=8014] 
+Context ctxpongev  ip [host="127.0.0.1" port=8015]
+
+
+ExternalQActor pongev context ctxpongev      
+
+QActor pingev context ctxpingev 
+          withobj display using "DisplayData.create()"{  //withobj display using "DisplayObj.create()"  DisplayData
+	[# var N = 1 ; val TMAX = 3000L;
+	   var StartTime = 0L; var Elapsed= 0L 
+	   var map = HashMap<Int, Int>()
+	   val Obs = main.java.PingData()
+	#] 
+ 	State s0 initial{
+		delay 1000 //pongev started ... 
+		//Starts the game
+		println("$name sends $N  ") color blue
+		[# display.print("$name emits $N") #]	
+		memoCurrentTime StartTime
+		emit ball : ball($N)
+	} 
+	Goto receive
+	  
+	State receive{
+		//println("$name received  ") color blue
+	}
+	Transition t0 
+		whenTimeVar TMAX -> endofexchange
+		whenEvent ball     -> reply
+	 
+	State reply{
+		setDuration Elapsed from StartTime
+		[# Obs.addToHistory(""+Elapsed)  #]
+		onMsg( ball : ball(V)){
+			println("$name perceives ${payloadArg(0)}} $Elapsed") color blue
+			[# display.print("$name perceives ${payloadArg(0)} $Elapsed") #]		
+		}
+		[# N = N + 1 #] 
+		//delay 500
+		println("$name sends $N  ") color blue
+		[# display.print("$name emits $N") #]	
+ 		emit ball : ball($N)
+	} 
+	Goto receive	
+	
+	State endofexchange{
+		updateResource [# "ball(0)" #]
+		[# Obs.showHistory() #]
+		[# display.setReady(Obs) #]
+//		delay 2000
+ 		println("$name ENDS ") color blue
+		//[# System.exit(0) #]
+	}
+ }
+    
+/* 
+QActor pongev context ctxtest  {  //withobj d using "DisplayObj.create()"
+	[#  val TMAX = 1500L; val dd = DisplayData.create() #]
+	State s0 initial{
+		//delay 1000 //wait display creation
+		println("$name STARTS") color green
+		[# dd.createData()  #] 
+	} 
+	Transition t0 
+	    whenTimeVar TMAX -> endofexchange
+		whenEvent ball     -> reply
+	
+	State reply{
+		onMsg( ball : ball(X)){
+			[# val N = payloadArg(0).toInt() #]
+			println("$name perceives $N") color green
+			//[# d.print("$name perceives $N") #]
+			if [# N <= 4 #]{
+				delay 500
+				[# val V = "reply$N" #]
+				println("$name emits $V ..........v") color green
+				emit ball : ball($V) 
+			}//no forward if N == 5		
+			//else{ [#  dd.showData() #] 	}
+		}		
+	} 
+	Transition t0 
+		whenTimeVar TMAX -> endofexchange
+		whenEvent ball     -> reply	
+
+	State endofexchange{
+		println("$name ENDS ") color green		
+	}
+}
+*/  
+
+/*
+v=514 vold=0.0 vv=514.0 x=0.0
+v=1028 vold=514.0 vv=514.0 x=514.0
+v=1537 vold=514.0 vv=1023.0 x=1028.0
+v=2048 vold=1023.0 vv=1025.0 x=2051.0
+v=2556 vold=1025.0 vv=1531.0 x=3076.0
+v=3060 vold=1531.0 vv=1529.0 x=4607.0
+ */ 

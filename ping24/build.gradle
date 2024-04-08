@@ -147,7 +147,7 @@ eclipse {
 
 application {
     //Define the main class for the application.
-    mainClassName    = 'it.unibo.ctxping.MainCtxpingKt'
+    mainClassName    = 'it.unibo.ctxpingev.MainCtxpingevKt'
 }
  
  jar {
@@ -179,13 +179,19 @@ distributions {
     }
 } 
 
-task run0(type: JavaExec) {
+task runPing(type: JavaExec) {
     group = "Execution"
     description = "Run the main class with JavaExecTask"
     classpath = sourceSets.main.runtimeClasspath
-    main = 'it.unibo.ctxping.MainCtxpingKt'
+    main = 'it.unibo.ctxpingev.MainCtxpingevKt'
 }
 
+task runJarPing(type: Exec) { //no: ci vule la distribuzione
+    dependsOn jar
+    group = "Execution"
+    description = "Run the output executable jar with ExecTask"
+    commandLine "java", "-jar", jar.archiveFile.get()
+}
 /*
 //TODO
 tasks.register('copyReport', Copy) {

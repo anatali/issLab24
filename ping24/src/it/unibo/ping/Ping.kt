@@ -21,64 +21,38 @@ class Ping ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) :
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
-		 
-		        var N    = 1 
-			    val NMAX = 7
+		 var N = 1  
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						CommUtils.outblue("$name STARTS handleball $N")
+						CommUtils.outblue("$name STARTS")
+						forward("ball", "ball($N)" ,"pong" ) 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t00",targetState="starthit",cond=whenEvent("startgame"))
+					 transition(edgeName="t00",targetState="handleball",cond=whenDispatch("ball"))
 				}	 
-				state("starthit") { //this:State
+				state("handleball") { //this:State
 					action { //it:State
-						updateResourceRep( "ball($N)"  
-						)
+						CommUtils.outblue("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						 	   
+						CommUtils.outblue("$name answer $N ")
+						if(  N < 3  
+						 ){ N = N + 1  
 						forward("ball", "ball($N)" ,"pong" ) 
+						}
+						else
+						 {delay(500) 
+						  System.exit(0)  
+						 }
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
 					 transition(edgeName="t01",targetState="handleball",cond=whenDispatch("ball"))
-				}	 
-				state("handleball") { //this:State
-					action { //it:State
-						CommUtils.outblue("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
-						 	   
-						CommUtils.outblue("$name handleball $N ")
-						 N = N + 1  
-						delay(500) 
-						updateResourceRep( "ball($N)"  
-						)
-						forward("ball", "ball($N)" ,"pong" ) 
-						//genTimer( actor, state )
-					}
-					//After Lenzi Aug2002
-					sysaction { //it:State
-					}	 	 
-					 transition(edgeName="t02",targetState="endgame",cond=whenEvent("stopgame"))
-					transition(edgeName="t03",targetState="handleball",cond=whenDispatchGuarded("ball",{ N < NMAX   
-					}))
-				}	 
-				state("endgame") { //this:State
-					action { //it:State
-						CommUtils.outblue("$name BYE when N=$N ")
-						updateResourceRep( "ball(0)"  
-						)
-						forward("ball", "ball(0)" ,"pong" ) 
-						delay(500) 
-						 System.exit(0)  
-						//genTimer( actor, state )
-					}
-					//After Lenzi Aug2002
-					sysaction { //it:State
-					}	 	 
 				}	 
 			}
 		}

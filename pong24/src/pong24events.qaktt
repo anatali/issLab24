@@ -1,0 +1,48 @@
+System pong24events 
+ 
+Event ball : ball(N) "info exchanged by the players"
+  
+Context ctxpongev  ip [host="localhost" port=8015]
+Context ctxpingev  ip [host="127.0.0.1" port=8014] 
+ 
+ExternalQActor pingev context ctxpingev    
+  
+  
+QActor pongev context ctxpongev withobj d using "DisplayObj.create()" {  //withobj d using "DisplayObj.create()"
+	[#  val TMAX = 3000L; 
+		//val dd = DisplayData.create() 
+	#]
+	State s0 initial{ 
+		//delay 1000 //wait display creation
+		println("$name STARTS") color green
+		//[# dd.createData()  #] 
+	} 
+	Transition t0 
+	    whenTimeVar TMAX -> endofexchange
+		whenEvent ball     -> reply
+	
+	State reply{
+		onMsg( ball : ball(X)){
+			[# val N = payloadArg(0).toInt() #]
+			println("$name perceives $N") color green
+			[# d.print("$name perceives $N") #]
+			if [# N < 10 #]{
+				delay 500
+				[# val V = "reply$N" #]
+				println("$name emits $V ..........v") color green
+				emit ball : ball($V) 
+			}//no forward if N == 5		
+			//else{ [#  dd.showData() #] 	}
+		}		
+	}   
+	Transition t0 
+		whenTimeVar TMAX -> endofexchange
+		whenEvent ball     -> reply	
+
+	State endofexchange{
+		println("$name ENDS ") color green		
+	}
+}
+  
+
+ 
