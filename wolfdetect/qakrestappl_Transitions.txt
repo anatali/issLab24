@@ -1,0 +1,6 @@
+{"actor":"ledred", "msgType":"dispatch", "curstate":"s0", "nextstate":"handleLedcmd", "msgId":"ledCmd"}
+{"actor":"ledred", "msgType":"dispatch", "curstate":"handleLedcmd", "nextstate":"handleLedcmd", "msgId":"ledCmd"}
+{"actor":"ledblu", "msgType":"dispatch", "curstate":"s0", "nextstate":"handleLedcmd", "msgId":"ledCmd"}
+{"actor":"ledblu", "msgType":"dispatch", "curstate":"handleLedcmd", "nextstate":"handleLedcmd", "msgId":"ledCmd"}
+{"actor":"wolfdetector", "msgType":"dispatch", "curstate":"s0", "nextstate":"dosonarjob", "msgId":"startsonar"}
+{"actor":"wolfdetector", "msgType":"dispatch", "curstate":"dosonarjob", "nextstate":"endsonarjob", "msgId":"stopsonar"}

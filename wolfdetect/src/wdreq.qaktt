@@ -1,0 +1,62 @@
+System wdreq
+
+Dispatch startsonar : startsonar(X)  "Dispatch NOT a requirement"
+Dispatch stopsonar  : stopsonar(X)   "Dispatch NOT a requirement"
+
+Context ctxstation  ip [host="localhost" port=8077]
+Context ctxsraspblu ip [host="localhost" port=8078]
+Context ctxsraspred ip [host="localhost" port=8079]
+Context ctxsimgrec  ip [host="localhost" port=8076]
+
+  
+QActor station context ctxstation{ //
+	State s0 initial{
+		println("$name STARTS")
+		delay 1000 //wait for other actors to start ...
+		forward sonarremote -m startsonar : startsonar(1)
+		delay 1000
+		forward sonarremote -m stopsonar : stopsonar(1)
+		delay 1000
+		println("$name ENDS")
+		[# System.exit(0) #]
+	} 
+}
+QActor ledred context ctxsraspred{ //
+	State s0 initial{
+		println("$name STARTS")
+	}
+}
+QActor ledblu context ctxsraspblu{ //
+	State s0 initial{
+		println("$name STARTS")
+	}
+}
+QActor camera context ctxsraspblu{ //
+	State s0 initial{
+		println("$name STARTS")
+	}
+} 
+  
+
+QActor sonarremote context ctxsraspblu withobj sonar using "hcsr04" { //
+//USA il sonarremote fisico
+	State s0 initial{
+		println("$name STARTS")
+	}
+	Transition t0 whenMsg startsonar -> dosonarjob
+	
+	State dosonarjob{
+		println("$name working ...")
+	}
+	Transition t0 whenMsg stopsonar -> endsonarjob
+	
+	State endsonarjob{
+		println("$name ENDS")
+	}
+}  
+
+QActor imagerecusage context ctxsraspblu{ //
+	State s0 initial{
+		println("$name STARTS")
+	}
+}

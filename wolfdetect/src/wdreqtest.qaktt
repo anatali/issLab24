@@ -1,0 +1,166 @@
+System wdreq
+
+Dispatch startsonar : startsonar(X)  "Dispatch NOT a requirement"
+Dispatch stopsonar  : stopsonar(X)   "Dispatch NOT a requirement"
+
+//Event distance      : distance(D)
+Event obstacle      : obstacle(X)
+
+Request takePhoto   : takePhoto(X)
+Reply photo         : photo(PHOTO) for takePhoto
+
+Request detectWolf  : detectWolf(PHOTO)
+Reply   iswolf      : iswolf(V) for detectWolf //V=true / false
+
+Dispatch ledCmd     : ledCmd(V)  //V = on / off
+
+
+//Context ctxstation  ip [host="localhost" port=8077]
+//Context ctxsraspblu ip [host="localhost" port=8078]
+//Context ctxsraspred ip [host="localhost" port=8079]
+//Context ctxsimgrec  ip [host="localhost" port=8076]
+
+Context ctxwdtest ip [host="localhost" port=8077]
+  
+QActor station context ctxwdtest{ //ctxstation
+	State s0 initial{
+		println("$name STARTS")
+		delay 1000 //wait for other actors to start ...
+		forward wolfdetector -m startsonar : startsonar(1)
+//		delay 1000
+//		forward wolfdetector -m stopsonar : stopsonar(1)
+//		delay 1000
+//		println("$name ENDS")
+		//[# System.exit(0) #]
+	} 
+}
+QActor ledred context ctxwdtest{ //ctxsraspred
+	State s0 initial{
+		println("$name STARTS")
+	}
+	Transition t0 whenMsg ledCmd -> handleLedcmd
+	
+	State handleLedcmd{
+		onMsg( ledCmd : ledCmd(on)){
+			println("$name ON") color magenta
+		}
+		onMsg( ledCmd : ledCmd(off)){
+			println("$name OFF") color magenta
+		}
+	}
+	Transition t0 whenMsg ledCmd -> handleLedcmd
+}
+QActor ledblu context ctxwdtest{ //ctxsraspblu
+	State s0 initial{
+		println("$name STARTS")
+	}
+	Transition t0 whenMsg ledCmd -> handleLedcmd
+	
+	State handleLedcmd{
+		onMsg( ledCmd : ledCmd(on)){
+			println("$name ON") color blue
+		}
+		onMsg( ledCmd : ledCmd(off)){
+			println("$name OFF") color blue
+		}
+	}
+	Transition t0 whenMsg ledCmd -> handleLedcmd
+}
+
+QActor camera context ctxwdtest{ //ctxsraspblu
+	State s0 initial{
+		println("$name READY")
+	}
+	Transition t0 whenRequest takePhoto -> dojob
+	
+	State dojob{
+		println("$name TAKES a PHOTO") color green
+		replyTo takePhoto with photo : photo(ok)
+	}
+	Goto s0
+} 
+ 
+QActor wolfdetector context ctxwdtest { //withobj sonar using "hcsr04"
+//USA il wolfdetector fisico
+	State s0 initial{
+		println("$name STARTS")
+		delay 1000
+		subscribeTo sonarmock for obstacle
+	}
+	Transition t0 whenMsg startsonar -> dosonarjob
+	
+	State dosonarjob{
+		println("$name working ...")
+		//Attivo sonar pipe che produce l'evento distance oppure obstacle
+		//QUI USO sonamock
+	}
+	Transition t0 
+	    whenTime 2000      -> noobstacle
+		whenEvent obstacle -> handleObstacle
+		whenMsg stopsonar  -> endsonarjob
+	
+	
+	State noobstacle{
+		forward ledblu -m ledCmd : ledCmd( off )
+		forward ledred -m ledCmd : ledCmd( off )
+	}
+	Goto dosonarjob 
+	
+	State handleObstacle{
+		println("$name found an obstacke  ") color blue
+		forward ledblu -m ledCmd : ledCmd( on )
+		request camera -m takePhoto : takePhoto(ok)
+	}
+	Transition t0 whenReply photo -> handlePhoto
+	
+	
+	State handlePhoto{
+		println("$name handle the photo  ") color cyan
+		onMsg( photo : photo( V )){
+			request imagerecusage -m detectWolf  : detectWolf( payloadArg(0) )
+		}		
+	}
+	Transition t0 whenReply iswolf -> checkWolfAnswer
+	
+	
+	State checkWolfAnswer{
+		onMsg( iswolf : iswolf( true )){
+			forward ledred -m ledCmd : ledCmd( on )
+		}
+		onMsg( iswolf : iswolf( false )){  //pleonastico?
+			forward ledred -m ledCmd : ledCmd( off )
+		}
+	}
+	Goto dosonarjob
+	
+	
+	
+	State endsonarjob{
+		println("$name ENDS")
+	} 
+}  
+
+QActor sonarmock context ctxwdtest{
+	State s0 initial{
+		delay 1500
+		println("$name EMITS obstacle ")
+		emitlocalstream  obstacle : obstacle(ok)
+		//emit obstacle : obstacle(ok)
+		delay 2000
+	}
+	Goto s0
+} 
+
+
+QActor imagerecusage context ctxwdtest{ //ctxsraspblu
+	State s0 initial{
+		println("$name STARTS")
+	}
+	Transition t0 whenRequest detectWolf -> scanimage
+	
+	State scanimage{
+		//Just to do something ...
+		replyTo detectWolf with iswolf : iswolf(true)
+	}
+	Transition t0 whenRequest detectWolf -> scanimage
+}

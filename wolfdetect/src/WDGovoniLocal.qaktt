@@ -1,0 +1,295 @@
+System wdgovoni 
+
+Dispatch ledOn: ledOn(X)
+Dispatch ledOff: ledOff(X)
+Dispatch sonarOn: sonarOn(X)
+Dispatch sonarOff: sonarOff(X)
+Event sonarDistance: sonarDistance(X)
+Dispatch sonarDistance: sonarDistance(X)
+  
+Request takePhoto: takePhoto(X)
+Reply photo: photo(X) for takePhoto
+
+Request scanPhoto: scanPhoto(X)
+Reply photoContent: photoContent(X) for scanPhoto
+
+Request switchStatus: switchStatus(X)
+Reply switchStatus: switchStatus(X) for switchStatus
+
+Request stationStatus: stationStatus(X)
+Reply stationStatus: stationStatus(D,DETECTED) for stationStatus
+
+
+Context ctxwdtest ip [host="localhost" port=8030]
+
+QActor led_blue context ctxwdtest {
+	State off initial {}
+	Transition t0
+		whenMsg ledOff -> off
+		whenMsg ledOn -> upd_on
+		whenRequest switchStatus -> tell_off
+	State upd_off {
+		println ("$name(OFF)") color blue
+		updateResource [# "$name(OFF)" #]
+	}
+	Goto off
+	State tell_off {
+		onMsg(switchStatus:switchStatus(X)) {
+			replyTo switchStatus with switchStatus:switchStatus(OFF)
+		}
+	}
+	Goto off
+
+
+	State on {}
+	Transition t0
+		whenMsg ledOn -> on
+		whenMsg ledOff -> upd_off
+		whenRequest switchStatus -> tell_on
+	State upd_on {
+		println ("$name(ON)") color blue
+		updateResource [# "$name(ON)" #]
+	}
+	Goto on
+	State tell_on {
+		onMsg(switchStatus:switchStatus(X)) {
+			replyTo switchStatus with switchStatus:switchStatus(ON)
+		}
+	}
+	Goto on
+}
+QActor led_red context ctxwdtest {
+	State off initial {}
+	Transition t0
+		whenMsg ledOff -> off
+		whenMsg ledOn -> upd_on
+		whenRequest switchStatus -> tell_off
+	State upd_off {
+		println ("$name(OFF)") color red
+		updateResource [# "$name(OFF)" #]
+	}
+	Goto off
+	State tell_off {
+		onMsg(switchStatus:switchStatus(X)) {
+			replyTo switchStatus with switchStatus:switchStatus(OFF)
+		}
+	}
+	Goto off
+
+
+	State on {}
+	Transition t0
+		whenMsg ledOn -> on
+		whenMsg ledOff -> upd_off
+		whenRequest switchStatus -> tell_on
+	State upd_on {
+		println ("$name(ON)") color red
+		updateResource [# "$name(ON)" #]
+	}
+	Goto on
+	State tell_on {
+		onMsg(switchStatus:switchStatus(X)) {
+			replyTo switchStatus with switchStatus:switchStatus(ON)
+		}
+	}
+	Goto on
+}
+QActor sonar context ctxwdtest {
+	[#
+		val INTERVAL = 1000L;
+		//var DISTANCE = 80000;
+		var DISTANCE = 80000;
+	#]
+	State off initial {}
+	Transition t0
+		whenMsg sonarOn -> upd_on
+		whenMsg sonarOff -> off
+		whenRequest switchStatus -> tell_off
+	State upd_off {
+		println ("$name(OFF)") color green
+		updateResource [# "$name(OFF)" #]
+	}
+	Goto off
+	State tell_off {
+		onMsg(switchStatus:switchStatus(X)) {
+			replyTo switchStatus with switchStatus:switchStatus(OFF)
+		}
+	}
+	Goto off
+	
+	State on {
+		updateResource [# "$name(ON)" #]
+	}
+	Transition t0
+		whenTimeVar INTERVAL -> scanning
+		whenMsg sonarOff -> upd_off
+		whenMsg sonarOn -> on
+		whenRequest switchStatus -> tell_on
+		//whenRequest sonarDist -> tell_dist
+	State upd_on {
+		println ("$name(ON)") color green
+		updateResource [# "$name(ON)" #]
+	}
+	Goto on
+	State tell_on {
+		onMsg(switchStatus:switchStatus(X)) {
+			replyTo switchStatus with switchStatus:switchStatus(ON)
+		}
+	}
+	Goto on
+	
+	State scanning {
+		delay 5000
+		[# DISTANCE = (500..20000).random(); #]
+		println ("sonarDistance($DISTANCE)") color green
+		updateResource [# "sonarDistance($DISTANCE)" #]
+		emit sonarDistance: sonarDistance($DISTANCE)
+	}
+	Goto on
+	
+	//WORKAROUND (event isn't caught by onMsg??)
+	/*
+	State tell_dist {
+		onMsg(sonarDist: sonarDist(X)) {
+			replyTo sonarDist with sonarDist:sonarDist($DISTANCE)
+		}
+	}
+	Goto on
+	*/
+}
+QActor camera context ctxwdtest {
+	[#
+		var P = "placeholder_photo_buffer";
+	#]
+	State s0 initial {}
+	Transition t0 whenRequest takePhoto -> takingPhoto
+	
+	State takingPhoto {
+		onMsg (takePhoto: takePhoto(X)) {
+			delay 1000
+			[# P = if ((0..10).random()<7) "placeholder_photo_buffer" else "placeholder_wolf_photo";#]
+			println ("photo($P)") color cyan
+			updateResource [# "photo($P)" #]
+			replyTo takePhoto with photo: photo($P)
+		}
+	}
+	Goto s0
+}
+QActor img_analyzer context ctxwdtest {
+	[#
+		var P = "NONE";
+	#]
+	State waiting initial {}
+	Transition t0 whenRequest scanPhoto -> scanning
+	
+	State scanning {
+		onMsg(scanPhoto: scanPhoto(X)) {
+			[#
+				val PBuf = payloadArg(0);
+				P = if (PBuf=="placeholder_wolf_photo") "WOLF" else "NONE";
+			#]
+			delay 2000
+			println ("photo($PBuf)") color magenta
+			println ("photoContent($P)") color magenta
+			updateResource [# "photoContent($P)" #]
+			replyTo scanPhoto with photoContent: photoContent($P)
+		}
+	}
+	Goto waiting
+}
+
+QActor station_main context ctxwdtest {
+	[#
+		val DMIN = 10000;
+		var D = 0;
+		var PHOTO = "none"
+		var SEEN = "none";
+	#]
+	State s0 initial {
+		forward sonar -m sonarOn : sonarOn(0)
+		//observeResource sonar msgid sonarDistance
+	}
+	Goto idle
+	
+	State idle {}
+	Transition t0
+		whenRequest stationStatus -> info
+		whenEvent sonarDistance -> sonarUpdate
+	//WORKAROUND (event isn't caught by onMsg??)
+		//whenEvent sonarDistance -> sonarRequest
+		
+	//sonar status on/off interferes with resources
+		//whenMsg sonarDistance -> sonarUpdate
+		
+		
+	State info {
+		onMsg (stationStatus:stationStatus(X)) {
+			replyTo stationStatus with stationStatus:stationStatus($D,$SEEN)
+		}
+	}
+	Goto idle
+	/*
+	//WORKAROUND (event isn't caught by onMsg??)
+	State sonarRequest {
+		println ("WORKAROUND") color yellow
+		request sonar -m sonarDist:sonarDist(0)
+	}
+	
+	Transition t0 whenReply sonarDist -> sonarUpdate
+	*/
+	State sonarUpdate {
+		//printCurrentMessage
+		onMsg(sonarDistance: sonarDistance(X)) {
+			[# D = payloadArg(0).toInt(); #]
+			println ("stationDistance($D)") color yellow
+			updateResource [# "stationDistance($D)" #]
+		}
+		/*
+		//WORKAROUND (event isn't caught by onMsg??)
+		onMsg(sonarDist: sonarDist(X)) {
+			[# D = payloadArg(0).toInt(); #]
+			println ("stationDistance($D)") color yellow
+			updateResource [# "stationDistance($D)" #]
+		}
+		*/
+	}
+	Goto photo1 if [# D <= DMIN #] else lightsOff
+	
+	State lightsOff {
+			println ("station: led off") color yellow
+			forward led_blue -m ledOff: ledOff(0)
+			forward led_red -m ledOff: ledOff(0)
+	}
+	Goto idle
+	
+	State photo1 {
+		println ("station: blue led on") color yellow
+		forward led_blue -m ledOn: ledOn(0)
+		request camera -m takePhoto: takePhoto(0)
+	}
+	Transition t0 whenReply photo -> photo2
+	State photo2 {
+		onMsg(photo:photo(X)) {
+			[# PHOTO = payloadArg(0); #]
+			println ("stationPhoto($PHOTO)") color yellow
+			updateResource [# "stationPhoto($PHOTO)" #]
+			request img_analyzer -m scanPhoto: scanPhoto($PHOTO)
+		}
+	}
+	Transition t0 whenReply photoContent -> photo3
+	State photo3 {
+		onMsg(photoContent:photoContent(X)) {
+			[# SEEN = payloadArg(0) #]
+			println ("stationDetected($SEEN)") color yellow
+			updateResource [# "stationDetected($SEEN)" #]
+		}
+	}
+	Goto wolfFound if [# SEEN=="WOLF" #] else idle
+	
+	State wolfFound {
+		println ("station: red led on") color yellow
+		forward led_red -m ledOn: ledOn(0)
+	}
+	Goto idle
+	
+}
