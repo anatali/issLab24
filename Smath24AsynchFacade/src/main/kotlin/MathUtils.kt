@@ -72,7 +72,7 @@ class MathUtils {
             val v2 = fibo(n - 2)
             return Pair(v1 + v2, v1)
         }
-
+/*
     fun fibo4(
         n: Int, engine: Prolog
     ): Int { //vuso della cache Prolog
@@ -121,7 +121,7 @@ class MathUtils {
         //if( R2 != null ) CommUtils.outyellow("fiboWithMemo $n R2:  $R2 "   )
         return v1+v2
     }
-
+*/
  
 }//MathUtils
  
