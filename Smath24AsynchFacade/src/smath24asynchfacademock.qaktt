@@ -122,7 +122,7 @@ QActor facadeviewer context ctxsmathfacade withobj applutil using "DisplayObj.cr
     Transition t0 
     	whenMsg smathinfo  -> showinfo
 }
-
+ 
 /*
 Facade facadesmathasynch port 8088 usingactor smathasynchfacade inctx ctxsmathfacade  
                    appl "unibo.servicefacade24.Servicefacade24Application" 

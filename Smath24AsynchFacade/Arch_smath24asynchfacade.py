@@ -28,9 +28,7 @@ with Diagram('smath24asynchfacadeArch', show=False, outformat='png', graph_attr=
      with Cluster('ctxsmathfacade', graph_attr=nodeattr):
           smathasynchfacade=Custom('smathasynchfacade','./qakicons/symActorSmall.png')
           actionexec=Custom('actionexec','./qakicons/symActorDynamicWithobj.png')
-          facadeviewer=Custom('facadeviewer','./qakicons/symActorWithobjSmall.png')
      facadesmathasynch=Custom('facadesmathasynch','./qakicons/server.png')
      smathasynchfacade >> Edge(color='magenta', style='dotted', decorate='true', label='<currentMsg &nbsp; >',  fontcolor='black') >> actionexec
      facadesmathasynch >> Edge(color='blue', style='solid', decorate='true', label='< &harr; >',  fontcolor='blue') >> smathasynchfacade
-     smathasynchfacade >> Edge(color='blue', style='solid',  decorate='true', label='<smathinfo &nbsp; >',  fontcolor='blue') >> facadeviewer
 diag

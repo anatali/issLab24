@@ -209,8 +209,9 @@ docker build -t smath24:1.0 .  //NOTE THE DOT!!
     <span class="c1">#image: docker.io/natbodocker/smath24:1.0</span>
     <span class="n">image</span><span class="p">:</span> <span class="n">smath24</span><span class="p">:</span><span class="mf">1.0</span>
     <span class="n">ports</span><span class="p">:</span>
-      <span class="o">-</span> <span class="mi">8033</span><span class="p">:</span><span class="mi">8033</span>
-      <span class="o">-</span> <span class="mi">8088</span><span class="p">:</span><span class="mi">8088</span>
+    <span class="o">-</span> <span class="mi">8033</span><span class="p">:</span><span class="mi">8033</span><span class="o">/</span><span class="n">tcp</span>
+    <span class="o">-</span> <span class="mi">8033</span><span class="p">:</span><span class="mi">8033</span><span class="o">/</span><span class="n">udp</span>
+    <span class="o">-</span> <span class="mi">8088</span><span class="p">:</span><span class="mi">8088</span>
 </pre></div>
 </div>
 </td>
