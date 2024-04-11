@@ -44,7 +44,7 @@
             
   <section id="servicemath24facade">
 <h1>ServiceMath24Facade<a class="headerlink" href="#servicemath24facade" title="Permalink to this heading">¶</a></h1>
-<p><span class="slide3">Project SMath24Asynch</span></p>
+<p><span class="slide3">Project Smath24AsynchFacade</span></p>
 <p><span class="slidekp">PREVIOUS</span>: <a class="reference internal" href="ServiceMath24Asynch.html#servicemath24asynch"><span class="std std-ref">ServiceMath24Asynch</span></a></p>
 <section id="servicemath24facade-introduction">
 <h2>ServiceMath24Facade Introduction<a class="headerlink" href="#servicemath24facade-introduction" title="Permalink to this heading">¶</a></h2>
@@ -143,7 +143,8 @@ as stated in <a class="reference internal" href="ServiceMath24Asynch.html#smath2
 <section id="servicemath24facade-deployment">
 <h2>ServiceMath24Facade-Deployment<a class="headerlink" href="#servicemath24facade-deployment" title="Permalink to this heading">¶</a></h2>
 <p>The deployment process is, at the moment, quite similar to  <a class="reference internal" href="PingPongSystem24.html#pps0-a-first-deployment"><span class="std std-ref">PPS0-A first Deployment</span></a>.</p>
-<p>Our deploy directory id always <code class="docutils literal notranslate"><span class="pre">C:/DidatticRun</span></code></p>
+<p>Our deploy directory id always <code class="docutils literal notranslate"><span class="pre">C:/DidatticRun</span></code>.</p>
+<p>Leter, w’ll see <a class="reference internal" href="#servicemath24facade-deployment-with-docker"><span class="std std-ref">ServiceMath24Facade-Deployment with Docker</span></a>.</p>
 </section>
 <section id="servicemath24facade-maintenance">
 <h2>ServiceMath24Facade-Maintenance<a class="headerlink" href="#servicemath24facade-maintenance" title="Permalink to this heading">¶</a></h2>
@@ -169,6 +170,76 @@ unibo.</p>
 </tr>
 </tbody>
 </table>
+<section id="servicemath24facade-deployment-with-docker">
+<h2>ServiceMath24Facade-Deployment with Docker<a class="headerlink" href="#servicemath24facade-deployment-with-docker" title="Permalink to this heading">¶</a></h2>
+<p>See:  <a class="reference external" href="_static/IntroDocker23.html">introDocker</a>.</p>
+<p>The version of the service deployed on Docker removes from the model the usage of the
+<a class="reference internal" href="#servicemath24facade-project"><span class="std std-ref">facademock</span></a>  and the Display.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Il file <a class="reference external" href="../../../../Smath24AsynchFacade/Dockerfile">Dockerfile</a></p></td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FROM</span> <span class="n">openjdk</span><span class="p">:</span><span class="mf">12.0.2</span>
+<span class="n">EXPOSE</span> <span class="mi">8033</span>
+<span class="c1">## ADD extracts the tar</span>
+<span class="n">ADD</span> <span class="o">./</span><span class="n">build</span><span class="o">/</span><span class="n">distributions</span><span class="o">/</span><span class="n">smath24asynchfacade</span><span class="o">-</span><span class="mf">1.0</span><span class="o">.</span><span class="n">tar</span> <span class="o">/</span>
+<span class="n">WORKDIR</span> <span class="o">/</span><span class="n">smath24asynchfacade</span><span class="o">-</span><span class="mf">1.0</span><span class="o">/</span><span class="nb">bin</span>
+<span class="n">COPY</span> <span class="o">./*.</span><span class="n">pl</span> <span class="o">./</span>
+<span class="n">COPY</span> <span class="o">./*.</span><span class="n">json</span> <span class="o">./</span>
+
+<span class="n">CMD</span> <span class="p">[</span><span class="s2">&quot;bash&quot;</span><span class="p">,</span> <span class="s2">&quot;smath24asynchfacade&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>Creazione di una immagine di nome <code class="docutils literal notranslate"><span class="pre">smath24:1.0</span></code></p></td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>gradlew distTar
+docker build -t smath24:1.0 .  //NOTE THE DOT!!
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Il file <a class="reference external" href="../../../../Smath24AsynchFacade/smath24.yaml">smath24.yaml</a></p></td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">version</span><span class="p">:</span> <span class="s1">&#39;3&#39;</span>
+<span class="n">services</span><span class="p">:</span>
+  <span class="n">smath</span><span class="p">:</span>
+    <span class="c1">#image: docker.io/natbodocker/smath24:1.0</span>
+    <span class="n">image</span><span class="p">:</span> <span class="n">smath24</span><span class="p">:</span><span class="mf">1.0</span>
+    <span class="n">ports</span><span class="p">:</span>
+      <span class="o">-</span> <span class="mi">8033</span><span class="p">:</span><span class="mi">8033</span>
+      <span class="o">-</span> <span class="mi">8088</span><span class="p">:</span><span class="mi">8088</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<section id="servicemath24facade-launch-the-image">
+<h3>ServiceMath24Facade: launch the image<a class="headerlink" href="#servicemath24facade-launch-the-image" title="Permalink to this heading">¶</a></h3>
+<p>Launch and activate:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">--</span><span class="n">rm</span> <span class="o">--</span><span class="n">name</span> <span class="n">smath24</span> <span class="o">-</span><span class="n">p8033</span><span class="p">:</span><span class="mi">8033</span><span class="o">/</span><span class="n">tcp</span> <span class="o">-</span><span class="n">p8088</span><span class="p">:</span><span class="mi">8088</span><span class="o">/</span><span class="n">tcp</span> <span class="o">-</span><span class="n">p8088</span><span class="p">:</span><span class="mi">8088</span><span class="o">/</span><span class="n">udp</span>
+</pre></div>
+</div>
+<p>Launch the bash shell:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">--</span><span class="n">rm</span> <span class="o">--</span><span class="n">name</span> <span class="n">smath24</span> <span class="o">-</span><span class="n">p8033</span><span class="p">:</span><span class="mi">8033</span><span class="o">/</span><span class="n">tcp</span> <span class="o">-</span><span class="n">p8088</span><span class="p">:</span><span class="mi">8088</span><span class="o">/</span><span class="n">tcp</span> <span class="o">-</span><span class="n">p8088</span><span class="p">:</span><span class="mi">8088</span><span class="o">/</span><span class="n">udp</span> <span class="o">--</span><span class="n">privileged</span> <span class="n">smath24</span><span class="p">:</span><span class="mf">1.0</span>  <span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">bash</span>
+</pre></div>
+</div>
+</section>
+<section id="servicemath24facade-using-composer">
+<h3>ServiceMath24Facade: using Composer<a class="headerlink" href="#servicemath24facade-using-composer" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="o">-</span><span class="n">f</span> <span class="n">smath24</span><span class="o">.</span><span class="n">yaml</span>  <span class="n">up</span>
+</pre></div>
+</div>
+</section>
+<section id="using-the-service-vie-programs">
+<h3>Using the service vie programs<a class="headerlink" href="#using-the-service-vie-programs" title="Permalink to this heading">¶</a></h3>
+<p>Let us redo now the <a class="reference internal" href="QakService24Usage.html#uso-del-servizio-servicemath"><span class="std std-ref">usage experiments</span></a>
+reported in the project <span class="slide3">servicemath24Usage</span>.</p>
+</section>
+</section>
 </section>
 
 
@@ -197,7 +268,15 @@ unibo.</p>
 <li><a class="reference internal" href="#servicemath24facade-maintenance">ServiceMath24Facade-Maintenance</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#servicemath24facade-with-a-web-facade">ServiceMath24Facade with a Web facade</a></li>
+<li><a class="reference internal" href="#servicemath24facade-with-a-web-facade">ServiceMath24Facade with a Web facade</a><ul>
+<li><a class="reference internal" href="#servicemath24facade-deployment-with-docker">ServiceMath24Facade-Deployment with Docker</a><ul>
+<li><a class="reference internal" href="#servicemath24facade-launch-the-image">ServiceMath24Facade: launch the image</a></li>
+<li><a class="reference internal" href="#servicemath24facade-using-composer">ServiceMath24Facade: using Composer</a></li>
+<li><a class="reference internal" href="#using-the-service-vie-programs">Using the service vie programs</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
   </div>
