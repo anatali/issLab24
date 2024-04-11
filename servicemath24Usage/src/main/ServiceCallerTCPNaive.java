@@ -10,10 +10,10 @@ import unibo.basicomm23.utils.BasicMsgUtil;
 public class ServiceCallerTCPNaive {
 	private final String destination = "smathasynchfacade";
 	private final String sender      = "clientjava";
-	private final String hostAddr    = "192.168.1.68";
+	private final String hostAddr    = "localhost";
 	private final int    port        = 8033;
 	private final String msgid       = "dofibo";
-	private final String msgcontent  = "dofibo(33)";
+	private final String msgcontent  = "dofibo(23)";
 	private Socket socket   ;
 
 	public void doJob() {
