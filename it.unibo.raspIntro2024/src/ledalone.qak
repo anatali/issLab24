@@ -1,0 +1,85 @@
+/*
+ * This model gives essential and relevant information about
+ * 	     STRUCTURE, INTERACTION and BEHAVIOR
+ * about the system
+ * 
+ * The model is EXECUTABLE
+ */
+
+ 	//"tcp://mqtt.eclipse.org:1883"
+	//mqtt.eclipse.org
+	//tcp://test.mosquitto.org
+	//mqtt.fluux.io
+	//"tcp://broker.hivemq.com" 
+
+ 
+System -msglog ledalone
+//mqttBroker "broker.hivemq.com" :  1883  eventTopic "unibo/nat/ledalone/events"
+
+Dispatch turnOn  : turnOn(X)       
+Dispatch turnOff : turnOff(X)    
+
+Event ledchanged : ledchanged( V ) 
+
+Context ctxledalone  ip [host="localhost" port=8080] 	 	 
+  
+QActor led context ctxledalone {     
+[#   
+   var state   = false  
+#]    
+	State s0 initial {  		
+  		println("led started")
+        [# machineExec("python ledPython25On.py")#]
+  		delay 1000
+        [# machineExec("python ledPython25Off.py")#]
+ 	} 
+ 	Goto waitCmd       
+	 
+	State waitCmd{  
+		println("led waits ...") 
+	}   
+	Transition t0     
+ 		whenMsg turnOn  -> turnLedOn
+		whenMsg turnOff -> turnLedOff
+   	  
+	State  turnLedOn{  
+		printCurrentMessage  color blue
+		[# Runtime.getRuntime().exec("python ledPython25On.py") #]
+ 		[# state = true 	#]
+		//emit ledchanged : ledchanged(on)
+		updateResource [# "ledstate($state)" #]
+		 
+ 	}	  
+	Goto waitCmd  
+	      
+	State  turnLedOff{  
+ 		printCurrentMessage   
+        [# Runtime.getRuntime().exec("python ledPython25Off.py") #]
+		[# state = false 		#]		 
+		emit ledchanged : ledchanged(off)
+		updateResource [# "ledstate($state)"	#]
+ 	}	
+	Goto waitCmd         
+}
+ 
+/*
+ * For a test ...
+ */
+ /*  
+QActor ledusage context ctxledalone {     
+  
+	State s0 initial {  		
+  		println("ledusage started")
+ 	} 
+ 	Goto work
+ 	
+ 	State work{
+  		forward led -m turnOn : turnOn(ok)
+  		delay 1000
+        forward led -m turnOff : turnOff(ok)
+   		delay 1000		
+ 	}
+ 	Goto work	       
+	 
+}
+*/

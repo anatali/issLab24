@@ -1,0 +1,2 @@
+{"actor":"led", "msgType":"dispatch", "curstate":"waitCmd", "nextstate":"turnLedOn", "msgId":"turnOn"}
+{"actor":"led", "msgType":"dispatch", "curstate":"waitCmd", "nextstate":"turnLedOff", "msgId":"turnOff"}

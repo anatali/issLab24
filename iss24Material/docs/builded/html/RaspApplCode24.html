@@ -1,0 +1,380 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>RaspApplCode24 &#8212; iss24 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="QakService24Init" href="QakService24Init.html" />
+    <link rel="prev" title="RaspBasicCode" href="RaspBasicCode.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="QakService24Init.html" title="QakService24Init"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="RaspBasicCode.html" title="RaspBasicCode"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">RaspApplCode24</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="raspapplcode24">
+<h1>RaspApplCode24<a class="headerlink" href="#raspapplcode24" title="Permalink to this heading">¶</a></h1>
+<p>Premessa: <a class="reference internal" href="RaspberrySoftware.html#raspberrysoftware"><span class="std std-ref">RaspberrySoftware</span></a> e <a class="reference internal" href="RaspBasicCode.html#raspbasiccode"><span class="std std-ref">RaspBasicCode</span></a>.</p>
+<p><span class="slide3">Project it.unibo.raspIntro2024</span></p>
+<p>In questa sezione affrontimao i seguenti punti:</p>
+<ol class="arabic simple">
+<li><p>Costruzione di un sistena software Sonar-Led technology-dependent su RaspberryPi</p></li>
+<li><p>Sofware per un Sonar che invia infornazioni sulla distanza rilevata via MQTT</p></li>
+<li><p>Sistema <a class="reference internal" href="#sonarandled"><span class="std std-ref">SonarAndLed</span></a> locale technology-dependent per <a class="reference internal" href="SitemaRilevamento.html#sitemarilevamento"><span class="std std-ref">SitemaRilevamento</span></a></p></li>
+</ol>
+<p>Software da installare:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">paho</span><span class="o">-</span><span class="n">mqtt</span>
+<span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="n">pip</span>
+<span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="n">matplotlib</span>
+</pre></div>
+</div>
+<section id="verifica-dispositivi">
+<h2>Verifica dispositivi<a class="headerlink" href="#verifica-dispositivi" title="Permalink to this heading">¶</a></h2>
+<p>Riportiamo qui codice per sperimentare la corretta installazione del <code class="docutils literal notranslate"><span class="pre">Led</span></code> e del  sonar
+<a class="reference internal" href="RaspBasicCode.html#usiamo-un-sonar-hc-sr04"><span class="std std-ref">HC-SR04</span></a> su RaspberryPi.</p>
+<section id="software-per-il-led">
+<h3>Software per il Led<a class="headerlink" href="#software-per-il-led" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference external" href="../../../../it.unibo.raspIntro2024/code/bash/bls/led25GpioTurnOn.sh">led25GpioTurnOn.sh</a>, <a class="reference external" href="../../../../it.unibo.raspIntro2024/code/bash/bls/led25GpioTurnOff.sh">led25GpioTurnOff.sh</a></p></td>
+<td><p>Accensione/spegnimento in bash (NO su BullsEye)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="../../../../it.unibo.raspIntro2024/code/bash/bls/led25OnOff.sh">led25OnOff.sh</a></p></td>
+<td><p>Blinking in bash (NO su BullsEye)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="../../../../it.unibo.raspIntro2024/code/c/ledOnOff.c">ledOnOff.c</a></p></td>
+<td><p>Blinking in C</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="../../../../it.unibo.raspIntro2024/code/python/ledPython25.py">ledPython25.py</a></p></td>
+<td><p>Blinking in Python</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="software-per-il-sonar">
+<h3>Software per il Sonar<a class="headerlink" href="#software-per-il-sonar" title="Permalink to this heading">¶</a></h3>
+<p><span class="remark">ATTENZIONE</span>: per gli esempi in Python, si fa riferimento a <span class="slide2">Python3</span>. Si veda
+<a class="reference internal" href="RaspberrySoftware.html#installazione-del-modulo-gpio-per-python3"><span class="std std-ref">Installazione del modulo GPIO per Python3</span></a></p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference external" href="../../../../it.unibo.raspIntro2024/code/c/SonarAlone.c">SonarAlone.c</a></p></td>
+<td><p>Software per il <code class="docutils literal notranslate"><span class="pre">sonarHCSR04</span></code> scritto in C</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="../../../../it.unibo.raspIntro2024/code/python/sonar.py">sonar.py</a></p></td>
+<td><p>Software per il <code class="docutils literal notranslate"><span class="pre">sonarHCSR04</span></code> scritto in Python</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="../../../../it.unibo.raspIntro2024/code/python/SonarMqtt.py">SonarMqtt.py</a></p>
+</td>
+<td><p>Software per il <code class="docutils literal notranslate"><span class="pre">sonarHCSR04</span></code> scritto in Python che pubblica sul broker MQTT
+<span class="brown">mqtt.eclipseprojects.io</span> TOPIC= <span class="blue">unibo/sonar/events</span> l’evento
+<code class="docutils literal notranslate"><span class="pre">msg(sonardata,event,sonar,none,distance(D),N)</span></code>.</p>
+<p>Si veda <a class="reference external" href="../../../../it.unibo.raspIntro2024/code/python/mqttPlotQakEvents.py">mqttPlotQakEvents.py</a>  come possibile receiver.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="../../../../it.unibo.raspIntro2024/code/python/mqttPlotQakEvents.py">mqttPlotQakEvents.py</a></p></td>
+<td><p>Un ricevitore che fa subscribe a TOPIC= <span class="blue">unibo/sonar/events</span> per visualizzare
+su un grafico i dati del Sonar</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="../../../../it.unibo.raspIntro2024/code/python/pipes/ControllerMqtt.py">ControllerMqtt.py</a></p></td>
+<td><p>Un controller che libera il Sonar da compiti di interazione applicativa.
+Da usarsi in una pipe insieme a <a class="reference external" href="../../../../it.unibo.raspIntro2024/code/python/pipes/LedDevice.py">LedDevice.py</a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">sonar</span><span class="o">.</span><span class="n">py</span> <span class="o">|</span> <span class="n">python</span> <span class="n">ControllerMqtt</span><span class="o">.</span><span class="n">py</span> <span class="o">|</span> <span class="n">python</span> <span class="n">LedDevice</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="slide1">Costruiamo applicazioni</span></p>
+</section>
+<section id="sonarandled">
+<h3>SonarAndLed<a class="headerlink" href="#sonarandled" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Sistema organizzato in funzioni  Python</p></li>
+<li><p>Ciascuna funzione ha una precisa responsbilità</p></li>
+<li><p>La funzione <code class="docutils literal notranslate"><span class="pre">doJob()</span></code> funge da coordinatore</p></li>
+<li><p>La funzione <code class="docutils literal notranslate"><span class="pre">applLogic</span></code> definisce la logica applicativa</p></li>
+<li><p>La funzione <code class="docutils literal notranslate"><span class="pre">forward</span></code> invia informazioni via MQTT</p></li>
+</ul>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Inizializzazione</p></td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">RPi.GPIO</span> <span class="k">as</span> <span class="nn">GPIO</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">paho.mqtt.client</span> <span class="k">as</span> <span class="nn">paho</span>
+
+<span class="c1">### CONFIGURATION FOR LED</span>
+<span class="n">GPIO</span><span class="o">.</span><span class="n">setmode</span><span class="p">(</span><span class="n">GPIO</span><span class="o">.</span><span class="n">BCM</span><span class="p">)</span>
+<span class="n">GPIO</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span><span class="n">GPIO</span><span class="o">.</span><span class="n">OUT</span><span class="p">)</span>
+
+<span class="c1">### CONFIGURATION FOR SONAR</span>
+<span class="n">GPIO</span><span class="o">.</span><span class="n">setmode</span><span class="p">(</span><span class="n">GPIO</span><span class="o">.</span><span class="n">BCM</span><span class="p">)</span>
+<span class="n">GPIO</span><span class="o">.</span><span class="n">setwarnings</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">TRIG</span> <span class="o">=</span> <span class="mi">17</span>
+<span class="n">ECHO</span> <span class="o">=</span> <span class="mi">27</span>
+<span class="n">GPIO</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">TRIG</span><span class="p">,</span><span class="n">GPIO</span><span class="o">.</span><span class="n">OUT</span><span class="p">)</span>
+<span class="n">GPIO</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">ECHO</span><span class="p">,</span><span class="n">GPIO</span><span class="o">.</span><span class="n">IN</span><span class="p">)</span>
+
+<span class="c1">### MQTT</span>
+<span class="n">brokerAddr</span><span class="o">=</span><span class="s2">&quot;mqtt.eclipseprojects.io&quot;</span>
+<span class="n">msg</span>       <span class="o">=</span> <span class="s2">&quot;msg(sonardata,event,sonar,none,distance(D),N)&quot;</span>
+<span class="n">n</span>         <span class="o">=</span> <span class="mi">1</span>
+<span class="n">client</span>    <span class="o">=</span> <span class="n">paho</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">paho</span><span class="o">.</span><span class="n">CallbackAPIVersion</span><span class="o">.</span><span class="n">VERSION1</span><span class="p">,</span><span class="s2">&quot;sonarAndLed&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">init</span><span class="p">():</span>
+    <span class="n">GPIO</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">TRIG</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>   <span class="c1">#TRIG parte LOW</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">brokerAddr</span><span class="p">,</span> <span class="mi">1883</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;Waiting a few seconds for the sensor to settle&#39;</span><span class="p">)</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>Coordinatore e attivatore</p></td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">doJob</span><span class="p">():</span>
+    <span class="n">init</span><span class="p">()</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">sonarWork</span><span class="p">()</span>
+        <span class="k">if</span><span class="p">(</span> <span class="n">d</span>  <span class="o">&gt;</span> <span class="mf">0.0</span> <span class="ow">and</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="mf">150.0</span> <span class="p">):</span> <span class="c1"># FILTRO</span>
+            <span class="c1">#distance = d</span>
+            <span class="nb">print</span> <span class="p">(</span> <span class="n">d</span>  <span class="p">)</span>
+        <span class="n">applLogic</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>           <span class="c1"># LOGICA APPLICATIVA</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;sonarAndLed is starting ... &#39;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">doJob</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;sonarAndLed BYE ... &#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Logica applicativa</p></td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">applLogic</span><span class="p">(</span><span class="n">distance</span><span class="p">):</span>
+        <span class="k">if</span><span class="p">(</span> <span class="n">distance</span>  <span class="o">&gt;</span> <span class="mf">0.0</span> <span class="ow">and</span> <span class="n">distance</span> <span class="o">&lt;</span> <span class="mf">5.0</span> <span class="p">):</span>
+            <span class="n">ledOn</span><span class="p">()</span>
+            <span class="n">forward</span><span class="p">(</span><span class="n">distance</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ledOff</span><span class="p">()</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>Funzioni operative</p></td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ledOn</span><span class="p">():</span>
+  <span class="n">GPIO</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span><span class="n">GPIO</span><span class="o">.</span><span class="n">HIGH</span><span class="p">)</span>
+  <span class="c1">##forward()  #QUI???</span>
+
+<span class="k">def</span> <span class="nf">ledOff</span><span class="p">():</span>
+  <span class="n">GPIO</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span><span class="n">GPIO</span><span class="o">.</span><span class="n">LOW</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">sonarWork</span><span class="p">():</span>
+  <span class="n">GPIO</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">TRIG</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>    <span class="c1">#invia impulsoTRIG</span>
+  <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.00001</span><span class="p">)</span>
+  <span class="n">GPIO</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">TRIG</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+  <span class="c1">#attendi che ECHO parta e memorizza tempo</span>
+  <span class="k">while</span> <span class="n">GPIO</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">ECHO</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+      <span class="n">pulse_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+  <span class="c1"># register the last timestamp</span>
+  <span class="k">while</span> <span class="n">GPIO</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">ECHO</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+      <span class="n">pulse_end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+  <span class="n">pulse_duration</span> <span class="o">=</span> <span class="n">pulse_end</span> <span class="o">-</span> <span class="n">pulse_start</span>
+  <span class="n">dist</span> <span class="o">=</span> <span class="n">pulse_duration</span> <span class="o">*</span> <span class="mi">17165</span>   <span class="c1">#distance = vt/2</span>
+  <span class="k">return</span> <span class="n">dist</span>
+
+<span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="n">distance</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">n</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="s2">&quot;unibo/sonar/events&quot;</span><span class="p">,</span>
+     <span class="n">msg</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;D&quot;</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">distance</span><span class="p">))</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">)))</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="slide">Da Python-code ad attori</span></p>
+</section>
+</section>
+<section id="sonar-e-led-come-attori">
+<h2>Sonar e Led come attori<a class="headerlink" href="#sonar-e-led-come-attori" title="Permalink to this heading">¶</a></h2>
+<p>Il software di basso livello viene inglobato all’interno di attori qak che
+possono sfruttare la <a class="reference internal" href="QakActors24.html#qak-infrastructure"><span class="std std-ref">Qak infrastructure</span></a> per interagire tra loro, in locale
+e/o in remoto, in modo <em>technology-independent</em>.</p>
+<section id="progetto-unibo-sonarqak24">
+<h3>Progetto  unibo.sonarqak24<a class="headerlink" href="#progetto-unibo-sonarqak24" title="Permalink to this heading">¶</a></h3>
+<p>Sviluppiamo un sistema software che utilizza il <a class="reference internal" href="RaspBasicCode.html#usiamo-un-sonar-hc-sr04"><span class="std std-ref">SONAR HC-SR04</span></a>
+operando in diverse fasi:</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="#sonarqak24-fase1"><span class="std std-ref">sonarqak24 Fase1</span></a>: predisposizione della gestione dei dispositivi.</p></li>
+<li><p><span class="xref std std-ref">sonarqak24 Fase2</span>: progettazione del <a class="reference internal" href="SitemaRilevamento.html#sitemarilevamento"><span class="std std-ref">SitemaRilevamento</span></a></p></li>
+</ol>
+<p><span class="slide1">Fase1</span></p>
+</section>
+<section id="sonarqak24-fase1">
+<h3>sonarqak24 Fase1<a class="headerlink" href="#sonarqak24-fase1" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 70%" />
+<col style="width: 30%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><span class="slide2">GOAL Fase1</span>: Costruire un (sotto)sistema ad attori che utilizza
+il <a class="reference internal" href="RaspBasicCode.html#usiamo-un-sonar-hc-sr04"><span class="std std-ref">SONAR HC-SR04</span></a>.</p>
+<ol class="arabic simple">
+<li><p>Definizione del <a class="reference internal" href="QakActors24.html#attori-coded"><span class="std std-ref">CodedQActor</span></a> di nome <span class="blue">sonar</span> che opera come un simulatore del sonar
+(classe Kotlin <code class="docutils literal notranslate"><span class="pre">sonarSimulator</span></code>) o che esegue codice Python per la gestione di un sonar fisico
+<a class="reference internal" href="RaspBasicCode.html#usiamo-un-sonar-hc-sr04"><span class="std std-ref">SONAR HC-SR04</span></a> (classe Kotlin <a class="reference external" href="../../../../unibo.sonarqak23/src/kotlin/sonarHCSR04Support23.kt">sonarHCSR04Support23.kt</a>).
+Questo attore emmete l’evento locale
+<code class="docutils literal notranslate"><span class="pre">sonar:distance(D)</span></code> usando la primitiva <a class="reference internal" href="QakActors24.html#operazioni-relative-agli-eventi"><span class="std std-ref">emitLocalstream</span></a>.</p></li>
+<li><p>Definizione dei <a class="reference internal" href="QakActors24.html#attori-coded"><span class="std std-ref">CodedQActor</span></a> di nome <span class="blue">dataCleaner</span> e <span class="blue">distancefilter</span> ciascuno dei quali
+opera come uno <a class="reference internal" href="QakActors24.html#attori-streamer"><span class="std std-ref">StreamedQActor</span></a>. Pertanto, essi sono usabili per costruire una pipe
+che ha  <span class="blue">sonar</span> come sorgente-dati e che provvede a eliminare dati spuri (<span class="blue">dataCleaner</span>)
+e a generare  (<span class="blue">distancefilter</span>) eventi significativi per il livello applicativo.</p></li>
+<li><p>Definizione di un attore <span class="blue">sonar24</span> che crea la pipe  <code class="docutils literal notranslate"><span class="pre">sonar-dataCleaner-distancefilter</span></code>
+per la gestione dei dati emessi dal <span class="blue">sonar</span>, e
+gestisce l’evento <strong>sonardata</strong> (emesso da <span class="blue">dataCleaner</span>)
+e l’evento locale <strong>obstacle</strong> (emesso da <span class="blue">distancefilter</span>).</p></li>
+<li><p>Esecuzione del sistema prima su PC (con <span class="blue">sonar</span> simulato) e poi sul Raspberry (prima con
+<span class="blue">sonar</span> simulato e poi con <span class="blue">sonar fisico</span>).</p></li>
+</ol>
+</td>
+<td><a class="reference internal image-reference" href="_images/ArchSonarqak23Fase1.png"><img alt="_images/ArchSonarqak23Fase1.png" src="_images/ArchSonarqak23Fase1.png" style="width: 100%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">RaspApplCode24</a><ul>
+<li><a class="reference internal" href="#verifica-dispositivi">Verifica dispositivi</a><ul>
+<li><a class="reference internal" href="#software-per-il-led">Software per il Led</a></li>
+<li><a class="reference internal" href="#software-per-il-sonar">Software per il Sonar</a></li>
+<li><a class="reference internal" href="#sonarandled">SonarAndLed</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#sonar-e-led-come-attori">Sonar e Led come attori</a><ul>
+<li><a class="reference internal" href="#progetto-unibo-sonarqak24">Progetto  unibo.sonarqak24</a></li>
+<li><a class="reference internal" href="#sonarqak24-fase1">sonarqak24 Fase1</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="RaspBasicCode.html"
+                          title="previous chapter">RaspBasicCode</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="QakService24Init.html"
+                          title="next chapter">QakService24Init</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/RaspApplCode24.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="QakService24Init.html" title="QakService24Init"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="RaspBasicCode.html" title="RaspBasicCode"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">RaspApplCode24</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>

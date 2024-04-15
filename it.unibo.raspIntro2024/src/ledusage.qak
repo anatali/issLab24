@@ -1,0 +1,47 @@
+/*
+ * This model gives essential and relevant information about
+ * 	     STRUCTURE, INTERACTION and BEHAVIOR
+ * about the system
+ * 
+ * The model is EXECUTABLE
+ */
+
+ 	//"tcp://mqtt.eclipse.org:1883"
+	//mqtt.eclipse.org
+	//tcp://test.mosquitto.org
+	//mqtt.fluux.io
+	//"tcp://broker.hivemq.com" 
+
+/*
+ * Declares the messages and the events in explicit way
+ */
+System /*-msglog*/ ledusage
+//mqttBroker "broker.hivemq.com" :  1883  eventTopic "unibo/nat/ledalone/events"
+
+Dispatch turnOn  : turnOn(X)       
+Dispatch turnOff : turnOff(X)    
+
+Event ledchanged : ledchanged( V ) 
+
+Context ctxledusage  ip [host="localhost" port=8080] 	 	 
+Context ctxledalone  ip [host="192.168.1.40" port=8080] 	 	 
+
+ExternalQActor led context ctxledalone
+
+QActor ledusage context ctxledusage {     
+   
+	State s0 initial {  		
+  		println("ledusage started")
+ 	} 
+ 	Goto work
+ 	
+ 	State work{
+  		forward led -m turnOn : turnOn(ok)
+  		delay 1000
+        forward led -m turnOff : turnOff(ok)
+   		delay 1000		
+ 	}
+ 	Goto work	       
+	 
+}
+
