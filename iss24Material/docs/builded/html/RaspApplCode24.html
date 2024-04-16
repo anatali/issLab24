@@ -49,8 +49,9 @@
 <p>In questa sezione affrontimao i seguenti punti:</p>
 <ol class="arabic simple">
 <li><p>Costruzione di un sistena software Sonar-Led technology-dependent su RaspberryPi</p></li>
-<li><p>Sofware per un Sonar che invia infornazioni sulla distanza rilevata via MQTT</p></li>
-<li><p>Sistema <a class="reference internal" href="#sonarandled"><span class="std std-ref">SonarAndLed</span></a> locale technology-dependent per <a class="reference internal" href="SitemaRilevamento.html#sitemarilevamento"><span class="std std-ref">SitemaRilevamento</span></a></p></li>
+<li><p>Sofware per un Sonarche emette via MQTT la distanza rilevata  (<a class="reference external" href="../../../../it.unibo.raspIntro2024/code/python/SonarMqtt.py">SonarMqtt.py</a>)
+che può essere visualizzata con un grafico ((<a class="reference external" href="../../../../it.unibo.raspIntro2024/code/python/mqttPlotQakEvents.py">mqttPlotQakEvents.py</a>)</p></li>
+<li><p>Sistema <a class="reference internal" href="#id2"><span class="std std-ref">SonarAndLed</span></a> locale technology-dependent per <a class="reference internal" href="SitemaRilevamento.html#sitemarilevamento"><span class="std std-ref">SitemaRilevamento</span></a></p></li>
 </ol>
 <p>Software da installare:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">paho</span><span class="o">-</span><span class="n">mqtt</span>
@@ -125,10 +126,10 @@ Da usarsi in una pipe insieme a <a class="reference external" href="../../../../
 </table>
 <p><span class="slide1">Costruiamo applicazioni</span></p>
 </section>
-<section id="sonarandled">
-<h3>SonarAndLed<a class="headerlink" href="#sonarandled" title="Permalink to this heading">¶</a></h3>
+<section id="id2">
+<h3>SonarAndLed<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
-<li><p>Sistema organizzato in funzioni  Python</p></li>
+<li><p>Sistema <a class="reference external" href="../../../../it.unibo.raspIntro2024/code/python/SonarAndLed.py">SonarAndLed</a> organizzato in funzioni  Python</p></li>
 <li><p>Ciascuna funzione ha una precisa responsbilità</p></li>
 <li><p>La funzione <code class="docutils literal notranslate"><span class="pre">doJob()</span></code> funge da coordinatore</p></li>
 <li><p>La funzione <code class="docutils literal notranslate"><span class="pre">applLogic</span></code> definisce la logica applicativa</p></li>
@@ -251,15 +252,20 @@ Da usarsi in una pipe insieme a <a class="reference external" href="../../../../
 <p>Il software di basso livello viene inglobato all’interno di attori qak che
 possono sfruttare la <a class="reference internal" href="QakActors24.html#qak-infrastructure"><span class="std std-ref">Qak infrastructure</span></a> per interagire tra loro, in locale
 e/o in remoto, in modo <em>technology-independent</em>.</p>
+<ol class="arabic simple">
+<li><p>Definiamo un sistena che permette l’accensione/spegimento remoto di un Led:
+<a class="reference external" href="../../../../it.unibo.raspIntro2024/src/ledalone.qak">ledalone.qak</a>.</p></li>
+<li><p>Definiamo un sistena ad attori (<a class="reference internal" href="#progetto-unibo-sonarqak24"><span class="std std-ref">Progetto  unibo.sonarqak24</span></a>) che utilizza
+il <a class="reference internal" href="RaspBasicCode.html#usiamo-un-sonar-hc-sr04"><span class="std std-ref">SONAR HC-SR04</span></a> per emettere informazioni di distanza filtrate
+e anche informazioni di livello applicativo, quali la rilevazione di un ostacolo.</p></li>
+</ol>
 <section id="progetto-unibo-sonarqak24">
 <h3>Progetto  unibo.sonarqak24<a class="headerlink" href="#progetto-unibo-sonarqak24" title="Permalink to this heading">¶</a></h3>
 <p>Sviluppiamo un sistema software che utilizza il <a class="reference internal" href="RaspBasicCode.html#usiamo-un-sonar-hc-sr04"><span class="std std-ref">SONAR HC-SR04</span></a>
 operando in diverse fasi:</p>
 <ol class="arabic simple">
 <li><p><a class="reference internal" href="#sonarqak24-fase1"><span class="std std-ref">sonarqak24 Fase1</span></a>: predisposizione della gestione dei dispositivi.</p></li>
-<li><p><span class="xref std std-ref">sonarqak24 Fase2</span>: progettazione del <a class="reference internal" href="SitemaRilevamento.html#sitemarilevamento"><span class="std std-ref">SitemaRilevamento</span></a></p></li>
 </ol>
-<p><span class="slide1">Fase1</span></p>
 </section>
 <section id="sonarqak24-fase1">
 <h3>sonarqak24 Fase1<a class="headerlink" href="#sonarqak24-fase1" title="Permalink to this heading">¶</a></h3>
@@ -269,7 +275,7 @@ operando in diverse fasi:</p>
 <col style="width: 30%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><span class="slide2">GOAL Fase1</span>: Costruire un (sotto)sistema ad attori che utilizza
+<tr class="row-odd"><td><p><span class="slide2">GOAL</span>: Costruire un (sotto)sistema ad attori che utilizza
 il <a class="reference internal" href="RaspBasicCode.html#usiamo-un-sonar-hc-sr04"><span class="std std-ref">SONAR HC-SR04</span></a>.</p>
 <ol class="arabic simple">
 <li><p>Definizione del <a class="reference internal" href="QakActors24.html#attori-coded"><span class="std std-ref">CodedQActor</span></a> di nome <span class="blue">sonar</span> che opera come un simulatore del sonar
@@ -281,12 +287,6 @@ Questo attore emmete l’evento locale
 opera come uno <a class="reference internal" href="QakActors24.html#attori-streamer"><span class="std std-ref">StreamedQActor</span></a>. Pertanto, essi sono usabili per costruire una pipe
 che ha  <span class="blue">sonar</span> come sorgente-dati e che provvede a eliminare dati spuri (<span class="blue">dataCleaner</span>)
 e a generare  (<span class="blue">distancefilter</span>) eventi significativi per il livello applicativo.</p></li>
-<li><p>Definizione di un attore <span class="blue">sonar24</span> che crea la pipe  <code class="docutils literal notranslate"><span class="pre">sonar-dataCleaner-distancefilter</span></code>
-per la gestione dei dati emessi dal <span class="blue">sonar</span>, e
-gestisce l’evento <strong>sonardata</strong> (emesso da <span class="blue">dataCleaner</span>)
-e l’evento locale <strong>obstacle</strong> (emesso da <span class="blue">distancefilter</span>).</p></li>
-<li><p>Esecuzione del sistema prima su PC (con <span class="blue">sonar</span> simulato) e poi sul Raspberry (prima con
-<span class="blue">sonar</span> simulato e poi con <span class="blue">sonar fisico</span>).</p></li>
 </ol>
 </td>
 <td><a class="reference internal image-reference" href="_images/ArchSonarqak23Fase1.png"><img alt="_images/ArchSonarqak23Fase1.png" src="_images/ArchSonarqak23Fase1.png" style="width: 100%;" /></a>
@@ -294,6 +294,7 @@ e l’evento locale <strong>obstacle</strong> (emesso da <span class="blue">dist
 </tr>
 </tbody>
 </table>
+<p><span class="worktodo">TODO: affrontare la progettazione</span> del <a class="reference internal" href="SitemaRilevamento.html#sitemarilevamento"><span class="std std-ref">SitemaRilevamento</span></a>.</p>
 </section>
 </section>
 </section>
@@ -312,7 +313,7 @@ e l’evento locale <strong>obstacle</strong> (emesso da <span class="blue">dist
 <li><a class="reference internal" href="#verifica-dispositivi">Verifica dispositivi</a><ul>
 <li><a class="reference internal" href="#software-per-il-led">Software per il Led</a></li>
 <li><a class="reference internal" href="#software-per-il-sonar">Software per il Sonar</a></li>
-<li><a class="reference internal" href="#sonarandled">SonarAndLed</a></li>
+<li><a class="reference internal" href="#id2">SonarAndLed</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#sonar-e-led-come-attori">Sonar e Led come attori</a><ul>
