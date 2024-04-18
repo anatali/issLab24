@@ -1,0 +1,243 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>SistemaRilevamento &#8212; iss24 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="RaspberrySoftware" href="RaspberrySoftware.html" />
+    <link rel="prev" title="Facade24" href="Facade24.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="RaspberrySoftware.html" title="RaspberrySoftware"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Facade24.html" title="Facade24"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">SistemaRilevamento</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="sistemarilevamento">
+<h1>SistemaRilevamento<a class="headerlink" href="#sistemarilevamento" title="Permalink to this heading">¶</a></h1>
+<section id="sitemarilevamento-introduzione">
+<h2>SitemaRilevamento: Introduzione<a class="headerlink" href="#sitemarilevamento-introduzione" title="Permalink to this heading">¶</a></h2>
+<p>Si vuole esplorare come sia possibile costruire modelli eseguibili di un
+sistema software partendo dalla analisi del problema, senza entrare subito nai dettagli tecnologici
+necessari per la costruzione effettiva del software.</p>
+<p>Il caso di studio è una applicazione IOT denominata <code class="docutils literal notranslate"><span class="pre">WD</span></code> (<strong>WolfDetection</strong>).</p>
+</section>
+<section id="wd-requirements">
+<h2>WD-Requirements<a class="headerlink" href="#wd-requirements" title="Permalink to this heading">¶</a></h2>
+<p>Una stazione sperimentale per lo studio di lupi allo stato libero, ha disolocato in una zona di interesse
+un RaspberryPi dotato di una fotocamera, di un sonar <a class="reference internal" href="RaspBasicCode.html#usiamo-un-sonar-hc-sr04"><span class="std std-ref">HC-SR04</span></a> e di un Led (di colore blu).</p>
+<p>Nella stazione è disponibile un altro RaspberryPi, dotato di un Led di colore rosso.</p>
+<p>Si chiede di costruire un sistema software che:</p>
+<ul class="simple">
+<li><p>permetta l’accensione e lo spegnimento remoto del sonar mediante comandi impartiti dalla stazione</p></li>
+<li><p>accenda il Led blu quando il sonar rileva un ostacolo a distanza inferiore a un limite prefissato DMIN</p></li>
+<li><p>scatti una fotografia dell’ostacolo rilevato a distanza inferiore a DMIN e la invii ad un elaboratore di
+immagini in grado di capire se l’ostacolo è un lupo</p></li>
+<li><p>accenda il Led rosso presso la stazione, se è stato rilevato un lupo</p></li>
+<li><p>spenga il Led blu e il Led rosso quando il sonar non rileva più ostacoli a distanza inferiore a DMIN</p></li>
+</ul>
+</section>
+<section id="wd-requirement-analysis">
+<h2>WD-Requirement analysis<a class="headerlink" href="#wd-requirement-analysis" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>The model  <a class="reference external" href="../../../../wolfdetect/src/wdreq.qaktt">wdreq.qak</a>
+shows (formally) the requirements of the WD system, by using the names of the
+entities of the original text.</p>
+<a class="reference internal image-reference" href="_images/WolfDetectReq.PNG"><img alt="_images/WolfDetectReq.PNG" class="align-center" src="_images/WolfDetectReq.PNG" style="width: 80%;" /></a>
+</td>
+<td><p>The <code class="docutils literal notranslate"><span class="pre">sonarremote</span></code> entity  embeds the <a class="reference internal" href="RaspBasicCode.html#usiamo-un-sonar-hc-sr04"><span class="std std-ref">HC-SR04</span></a> sonar.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">imagerecusage</span></code> entity is introduced as the way to access the image recognition service,
+that is <strong>external</strong> to our WD sofwtare.
+<span class="slide2">It is not a requirement</span> (we could use also a simple POJO),
+but just a way to show that the WD system can interact with other systems.</p>
+<p>There is no  requirement about the interacion amnong the entities, besides the commands to the sonar.</p>
+<p>The entities <code class="docutils literal notranslate"><span class="pre">ledblue</span></code>, <code class="docutils literal notranslate"><span class="pre">camera</span></code> and <code class="docutils literal notranslate"><span class="pre">imagerecusage</span></code>
+<span class="slide2">could be modelled as POJO</span>, but in this case they will be hidden,
+<strong>embedded in some actor</strong>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="wd-problema-analysis">
+<h2>WD-Problema analysis<a class="headerlink" href="#wd-problema-analysis" title="Permalink to this heading">¶</a></h2>
+<p>Let us <span class="slide1">discuss the problems posed by the application</span></p>
+<p><span class="slidekp">P1 - About the responsibilities of the entities</span></p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">sonarremote</span></code> entity is able to react to <strong>commands</strong> from the <code class="docutils literal notranslate"><span class="pre">station</span></code>
+and is responsible for the detection of obstacles. Thus,
+<span class="remark">it is NOT REDUCIBLE</span> to the physical sonar <a class="reference internal" href="RaspBasicCode.html#usiamo-un-sonar-hc-sr04"><span class="std std-ref">HC-SR04</span></a>.</p></li>
+<li><p>Should  the <code class="docutils literal notranslate"><span class="pre">ledblu</span></code> entity have other responsibilities besides the simple turning on and off of the blue led?.
+Our <span class="remark">answer is NO</span>, for the <a class="reference internal" href="Principi.html#id1"><span class="std std-ref">Single responsibility principle</span></a>.</p></li>
+<li><p>The same applies to the <code class="docutils literal notranslate"><span class="pre">ledrosso</span></code> entity.</p></li>
+</ul>
+<p><span class="slidekp">P2 - What is the relation between sonarremote and the physical sonar?</span>.</p>
+<ul class="simple">
+<li><p>The physical sonar can be viewed as a <strong>source of data</strong>, <span class="slide2">working according to the ‘pipe’ pattern</span>
+described in <a class="reference internal" href="QakActors24Demo.html#demostreams-qak"><span class="std std-ref">demostreams.qak</span></a>.
+Now, the problem is:</p></li>
+</ul>
+<p><span class="slidekp">P3 - Which is the information generated by the physical sonar pipe?</span>.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>The current (filtered) value of the  distance measured by the <a class="reference internal" href="RaspBasicCode.html#usiamo-un-sonar-hc-sr04"><span class="std std-ref">HC-SR04</span></a></p></td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Event</span> <span class="n">sonarData</span> <span class="p">:</span> <span class="n">sonarData</span><span class="p">(</span> <span class="n">D</span>  <span class="p">)</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>The logic information required by the application?</p></td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Event</span> <span class="n">obstacle</span> <span class="p">:</span> <span class="n">obstacle</span><span class="p">(</span> <span class="n">D</span>  <span class="p">)</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>In any case, we model the information generated by the sonar as an <span class="remark">event</span>
+since the sonar, as a device, does not have knowledge  about its users.</p>
+<p>In order to keep the application logic simpler, <span class="slide2">we opt here for the obstcale event</span>.</p>
+<p><span class="slidekp">P4 - Where is the imagerecognizer located?</span>.</p>
+<ol class="arabic simple">
+<li><p><span class="slide3">On a remote server</span>, that is not part of the WD system: in this case,
+the image taken by the <code class="docutils literal notranslate"><span class="pre">camera</span></code> should be sent to the server by the <code class="docutils literal notranslate"><span class="pre">imagerecusage</span></code> located on the <code class="docutils literal notranslate"><span class="pre">ctxraspblue</span></code>.</p></li>
+<li><p><span class="slide3">On the ctxstation</span>: in this case, the image taken by the camera should be sent to some entity
+of the <code class="docutils literal notranslate"><span class="pre">ctxstation</span></code> by the <code class="docutils literal notranslate"><span class="pre">imagerecusage</span></code> located on the <code class="docutils literal notranslate"><span class="pre">ctxraspblue</span></code>.</p></li>
+<li><p><span class="slide3">On the ctxraspblue</span>: in this case, the image taken by the <code class="docutils literal notranslate"><span class="pre">camera</span></code> should be sent to the <code class="docutils literal notranslate"><span class="pre">imagerecognizer</span></code>
+local to  the <code class="docutils literal notranslate"><span class="pre">ctxraspblue</span></code>.</p></li>
+</ol>
+<p>We ask to the customer to clarify this point. The answer is: <span class="remark">1</span>.</p>
+<p><span class="slidekp">P5 - Who has the responsibility of activating the camera and sending  the images?</span>.</p>
+<p>The main candidate is the <code class="docutils literal notranslate"><span class="pre">sonarremote</span></code>, that could work as the <span class="slide1">coordinator</span> of the application activities.
+It could better renamed as <span class="slide2">wolfdetector</span>.</p>
+<p>As an alternative, we could select the <code class="docutils literal notranslate"><span class="pre">station</span></code>, but this would imply higher network traffic.</p>
+</section>
+<section id="ws-logical-architecture">
+<h2>WS-Logical architecture<a class="headerlink" href="#ws-logical-architecture" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 80%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Il modello: <a class="reference external" href="../../../../wolfdetect/src/wdreqtest.qaktt">wdreqtest.qak</a></p></td>
+<td><a class="reference internal image-reference" href="_images/WolfDetectReqTest.AnalisiStreamEvent.PNG"><img alt="_images/WolfDetectReqTest.AnalisiStreamEvent.PNG" class="align-center" src="_images/WolfDetectReqTest.AnalisiStreamEvent.PNG" style="width: 80%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">SistemaRilevamento</a><ul>
+<li><a class="reference internal" href="#sitemarilevamento-introduzione">SitemaRilevamento: Introduzione</a></li>
+<li><a class="reference internal" href="#wd-requirements">WD-Requirements</a></li>
+<li><a class="reference internal" href="#wd-requirement-analysis">WD-Requirement analysis</a></li>
+<li><a class="reference internal" href="#wd-problema-analysis">WD-Problema analysis</a></li>
+<li><a class="reference internal" href="#ws-logical-architecture">WS-Logical architecture</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="Facade24.html"
+                          title="previous chapter">Facade24</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="RaspberrySoftware.html"
+                          title="next chapter">RaspberrySoftware</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/SistemaRilevamento.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="RaspberrySoftware.html" title="RaspberrySoftware"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Facade24.html" title="Facade24"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">SistemaRilevamento</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>

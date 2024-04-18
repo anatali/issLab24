@@ -51,7 +51,7 @@
 <li><p>Costruzione di un sistena software Sonar-Led technology-dependent su RaspberryPi</p></li>
 <li><p>Sofware per un Sonarche emette via MQTT la distanza rilevata  (<a class="reference external" href="../../../../it.unibo.raspIntro2024/code/python/SonarMqtt.py">SonarMqtt.py</a>)
 che può essere visualizzata con un grafico ((<a class="reference external" href="../../../../it.unibo.raspIntro2024/code/python/mqttPlotQakEvents.py">mqttPlotQakEvents.py</a>)</p></li>
-<li><p>Sistema <a class="reference internal" href="#id2"><span class="std std-ref">SonarAndLed</span></a> locale technology-dependent per <a class="reference internal" href="SitemaRilevamento.html#sitemarilevamento"><span class="std std-ref">SitemaRilevamento</span></a></p></li>
+<li><p>Sistema <a class="reference internal" href="#id2"><span class="std std-ref">SonarAndLed</span></a> locale technology-dependent per <a class="reference internal" href="SistemaRilevamento.html#sistemarilevamento"><span class="std std-ref">SistemaRilevamento</span></a></p></li>
 </ol>
 <p>Software da installare:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">paho</span><span class="o">-</span><span class="n">mqtt</span>
@@ -244,57 +244,115 @@ Da usarsi in una pipe insieme a <a class="reference external" href="../../../../
 </tr>
 </tbody>
 </table>
-<p><span class="slide">Da Python-code ad attori</span></p>
 </section>
 </section>
-<section id="sonar-e-led-come-attori">
-<h2>Sonar e Led come attori<a class="headerlink" href="#sonar-e-led-come-attori" title="Permalink to this heading">¶</a></h2>
-<p>Il software di basso livello viene inglobato all’interno di attori qak che
-possono sfruttare la <a class="reference internal" href="QakActors24.html#qak-infrastructure"><span class="std std-ref">Qak infrastructure</span></a> per interagire tra loro, in locale
-e/o in remoto, in modo <em>technology-independent</em>.</p>
-<ol class="arabic simple">
-<li><p>Definiamo un sistena che permette l’accensione/spegimento remoto di un Led:
-<a class="reference external" href="../../../../it.unibo.raspIntro2024/src/ledalone.qak">ledalone.qak</a>.</p></li>
-<li><p>Definiamo un sistena ad attori (<a class="reference internal" href="#progetto-unibo-sonarqak24"><span class="std std-ref">Progetto  unibo.sonarqak24</span></a>) che utilizza
-il <a class="reference internal" href="RaspBasicCode.html#usiamo-un-sonar-hc-sr04"><span class="std std-ref">SONAR HC-SR04</span></a> per emettere informazioni di distanza filtrate
-e anche informazioni di livello applicativo, quali la rilevazione di un ostacolo.</p></li>
+<section id="progetto-sonarqak24">
+<h2>Progetto sonarqak24<a class="headerlink" href="#progetto-sonarqak24" title="Permalink to this heading">¶</a></h2>
+<p><span class="slide3">Progetto unibo.sonarqak24</span></p>
+<p>Goal: sviluppare un componente software che utilizza il <a class="reference internal" href="RaspBasicCode.html#usiamo-un-sonar-hc-sr04"><span class="std std-ref">SONAR HC-SR04</span></a>
+e che sia in grado di:</p>
+<ul class="simple">
+<li><p>ricevere via rete ed eseguire comandi di <code class="docutils literal notranslate"><span class="pre">sonarstart/sonarstop</span></code></p></li>
+<li><p>inviare ad altri componenti software i vaori di distanza rilevati, filtrati in modo che ogni valore
+<code class="docutils literal notranslate"><span class="pre">D</span></code> emesso sia un valore intero tale che <code class="docutils literal notranslate"><span class="pre">0&lt;D&lt;=150</span></code></p></li>
+</ul>
+<section id="sonarqak24-analisi-del-problema">
+<h3>sonarqak24: analisi del problema<a class="headerlink" href="#sonarqak24-analisi-del-problema" title="Permalink to this heading">¶</a></h3>
+<ol class="arabic">
+<li><p>Disponiamo di codice di basso livello <a class="reference external" href="../../../../it.unibo.raspIntro2024/code/python/sonar.py">sonar.py</a> che attiva il sonar fisico e scrive sul dispositivo
+standard di output, a intervalli temporali fissi, i valori della distanza corrente rilevata.</p></li>
+<li><p>Il codice <a class="reference external" href="../../../../it.unibo.raspIntro2024/code/python/sonar.py">sonar.py</a>  non è in grado di inviare informazioi in rete nè di ricevere comandi di <code class="docutils literal notranslate"><span class="pre">sonarstart/sonarstop</span></code>.
+Ha inoltre una forma di filtraggio dei valori molto limitata.</p></li>
+<li><p>Non si ritiene opportuno modificare il codice di basso livello per rispondere alle esigenze applicative.
+Si ritiene invece più opportuno procedere in modo top down, partendo dalla definizione di un
+componente di alto livello, denominato <code class="docutils literal notranslate"><span class="pre">sonar24</span></code> e modellato come un Actor capace di gestire
+i seguenti dispatch:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Dispatch</span> <span class="n">sonarstart</span> <span class="p">:</span> <span class="n">sonarstart</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">Dispatch</span> <span class="n">sonarstop</span>  <span class="p">:</span> <span class="n">sonarstop</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Ricordando i concetti de <a class="reference internal" href="Architetture.html#la-clean-architecture"><span class="std std-ref">La Clean Architecture</span></a>, occorre ora rispondere alla seguente domanda:</p>
+<p>come <code class="docutils literal notranslate"><span class="pre">sonar24</span></code> <span class="slide2">intende ricevere i valori D della distanza misurata</span>?</p>
+<p>Per motivi di modularità ed estendiblità, si propende per l’uso di un event:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Event</span> <span class="n">sonardata</span> <span class="p">:</span> <span class="n">distance</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Eventi di questo tipo si suppongono  generati da un altro componente, denominato <code class="docutils literal notranslate"><span class="pre">sonardevice</span></code>,
+anch’esso modellato come un Actor</p>
+</li>
+<li><p>Per motivi di efficienza e per evitare l’inutile trasmissione di eventi via rete, si
+ritiene opportuno utilizzare il concetto di <a class="reference internal" href="QakActors24.html#attori-streamer"><span class="std std-ref">Attori streamer</span></a>,
+e le primitive <a class="reference internal" href="QakActors24.html#operazioni-di-messaggista-publisch-subscribe"><span class="std std-ref">subscribeTo</span></a>
+e <a class="reference internal" href="QakActors24.html#operazioni-relative-agli-eventi"><span class="std std-ref">emitLocalstream</span></a></p></li>
+<li><p>Il componente <code class="docutils literal notranslate"><span class="pre">sonardevice</span></code> può incapsulare il codice di basso livello <a class="reference external" href="../../../../it.unibo.raspIntro2024/code/python/sonar.py">sonar.py</a>
+e implementare i comandi <code class="docutils literal notranslate"><span class="pre">sonarstart/sonarstop</span></code>, che gli possono essere delegati
+da <code class="docutils literal notranslate"><span class="pre">sonar24</span></code></p></li>
 </ol>
-<section id="progetto-unibo-sonarqak24">
-<h3>Progetto  unibo.sonarqak24<a class="headerlink" href="#progetto-unibo-sonarqak24" title="Permalink to this heading">¶</a></h3>
-<p>Sviluppiamo un sistema software che utilizza il <a class="reference internal" href="RaspBasicCode.html#usiamo-un-sonar-hc-sr04"><span class="std std-ref">SONAR HC-SR04</span></a>
-operando in diverse fasi:</p>
-<ol class="arabic simple">
-<li><p><a class="reference internal" href="#sonarqak24-fase1"><span class="std std-ref">sonarqak24 Fase1</span></a>: predisposizione della gestione dei dispositivi.</p></li>
-</ol>
-</section>
-<section id="sonarqak24-fase1">
-<h3>sonarqak24 Fase1<a class="headerlink" href="#sonarqak24-fase1" title="Permalink to this heading">¶</a></h3>
+<p>Ne consegue la seguente Architettura Logica:</p>
 <table class="docutils align-default" style="width: 100%">
 <colgroup>
-<col style="width: 70%" />
-<col style="width: 30%" />
+<col style="width: 60%" />
+<col style="width: 40%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><span class="slide2">GOAL</span>: Costruire un (sotto)sistema ad attori che utilizza
-il <a class="reference internal" href="RaspBasicCode.html#usiamo-un-sonar-hc-sr04"><span class="std std-ref">SONAR HC-SR04</span></a>.</p>
-<ol class="arabic simple">
-<li><p>Definizione del <a class="reference internal" href="QakActors24.html#attori-coded"><span class="std std-ref">CodedQActor</span></a> di nome <span class="blue">sonar</span> che opera come un simulatore del sonar
-(classe Kotlin <code class="docutils literal notranslate"><span class="pre">sonarSimulator</span></code>) o che esegue codice Python per la gestione di un sonar fisico
-<a class="reference internal" href="RaspBasicCode.html#usiamo-un-sonar-hc-sr04"><span class="std std-ref">SONAR HC-SR04</span></a> (classe Kotlin <a class="reference external" href="../../../../unibo.sonarqak23/src/kotlin/sonarHCSR04Support23.kt">sonarHCSR04Support23.kt</a>).
-Questo attore emmete l’evento locale
-<code class="docutils literal notranslate"><span class="pre">sonar:distance(D)</span></code> usando la primitiva <a class="reference internal" href="QakActors24.html#operazioni-relative-agli-eventi"><span class="std std-ref">emitLocalstream</span></a>.</p></li>
-<li><p>Definizione dei <a class="reference internal" href="QakActors24.html#attori-coded"><span class="std std-ref">CodedQActor</span></a> di nome <span class="blue">dataCleaner</span> e <span class="blue">distancefilter</span> ciascuno dei quali
-opera come uno <a class="reference internal" href="QakActors24.html#attori-streamer"><span class="std std-ref">StreamedQActor</span></a>. Pertanto, essi sono usabili per costruire una pipe
-che ha  <span class="blue">sonar</span> come sorgente-dati e che provvede a eliminare dati spuri (<span class="blue">dataCleaner</span>)
-e a generare  (<span class="blue">distancefilter</span>) eventi significativi per il livello applicativo.</p></li>
-</ol>
+<tr class="row-odd"><td><a class="reference internal image-reference" href="_images/sonar24Analisi.PNG"><img alt="_images/sonar24Analisi.PNG" class="align-center" src="_images/sonar24Analisi.PNG" style="width: 100%;" /></a>
 </td>
-<td><a class="reference internal image-reference" href="_images/ArchSonarqak23Fase1.png"><img alt="_images/ArchSonarqak23Fase1.png" src="_images/ArchSonarqak23Fase1.png" style="width: 100%;" /></a>
+<td><p>La emissione di eventi con <a class="reference internal" href="QakActors24.html#operazioni-relative-agli-eventi"><span class="std std-ref">emitLocalstream</span></a>
+non viene  visualizzata. Se fosse emesso con <a class="reference internal" href="QakActors24.html#operazioni-relative-agli-eventi"><span class="std std-ref">emit</span></a>
+si avrebbe:</p>
+<a class="reference internal image-reference" href="_images/sonar24AnalisiEv.PNG"><img alt="_images/sonar24AnalisiEv.PNG" class="align-center" src="_images/sonar24AnalisiEv.PNG" style="width: 100%;" /></a>
 </td>
 </tr>
 </tbody>
 </table>
-<p><span class="worktodo">TODO: affrontare la progettazione</span> del <a class="reference internal" href="SitemaRilevamento.html#sitemarilevamento"><span class="std std-ref">SitemaRilevamento</span></a>.</p>
+</section>
+<section id="sonarqak24-progettazione">
+<h3>sonarqak24:progettazione<a class="headerlink" href="#sonarqak24-progettazione" title="Permalink to this heading">¶</a></h3>
+<p>Il componente <code class="docutils literal notranslate"><span class="pre">sonardevice</span></code> può essere realizzato in due modi:</p>
+<ul class="simple">
+<li><p>in modo esplicito, definendo un Actor nel modello applicativo</p></li>
+<li><p>in modo ‘sommerso’, definendo un <a class="reference internal" href="QakActors24.html#attori-coded"><span class="std std-ref">CodedQActor</span></a>  come <a class="reference external" href="../../../../it.unibo.raspIntro2024/code/kotlin/sonarHCSR04Support23.kt">sonarHCSR04Support23.kt</a></p></li>
+</ul>
+<p>Inoltre  un filtraggio più accurato dei valori di distanza può essere ottenuto
+costruendo una pipe di attori che ha  <span class="blue">sonardevice</span> come sorgente-dati e
+un componente <span class="blue">dataCleaner</span> che provvede a eliminare dati spuri.</p>
+<p>L’architettura logica di progetto diventa:</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 80%" />
+<col style="width: 20%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><a class="reference internal image-reference" href="_images/sonar24Progetto.PNG"><img alt="_images/sonar24Progetto.PNG" class="align-center" src="_images/sonar24Progetto.PNG" style="width: 80%;" /></a>
+</td>
+<td><p>La emissione di eventi con <a class="reference internal" href="QakActors24.html#operazioni-relative-agli-eventi"><span class="std std-ref">emitLocalstream</span></a>
+non viene  visualizzata</p></td>
+</tr>
+</tbody>
+</table>
+<p>Inoltre, la pipe può essere estesa introducendo un componente terminale
+<span class="blue">distancefilter</span> capace di generare eventi significativi per il livello applicativo,
+quali ad esenpio:</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Event</span> <span class="n">obstacle</span>  <span class="p">:</span> <span class="n">obstacle</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 80%" />
+<col style="width: 20%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><a class="reference internal image-reference" href="_images/sonar24Progetto1.PNG"><img alt="_images/sonar24Progetto1.PNG" class="align-center" src="_images/sonar24Progetto1.PNG" style="width: 80%;" /></a>
+</td>
+<td><p>L’evento <code class="docutils literal notranslate"><span class="pre">obstacle</span></code> viene visualizzato in quanto emesso usando la primitiva
+<a class="reference internal" href="QakActors24.html#operazioni-relative-agli-eventi"><span class="std std-ref">emit</span></a></p></td>
+</tr>
+</tbody>
+</table>
+<p><span class="worktodo">TODO: affrontare la progettazione</span> del <a class="reference internal" href="SistemaRilevamento.html#sistemarilevamento"><span class="std std-ref">SistemaRilevamento</span></a>.</p>
 </section>
 </section>
 </section>
@@ -316,9 +374,9 @@ e a generare  (<span class="blue">distancefilter</span>) eventi significativi pe
 <li><a class="reference internal" href="#id2">SonarAndLed</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#sonar-e-led-come-attori">Sonar e Led come attori</a><ul>
-<li><a class="reference internal" href="#progetto-unibo-sonarqak24">Progetto  unibo.sonarqak24</a></li>
-<li><a class="reference internal" href="#sonarqak24-fase1">sonarqak24 Fase1</a></li>
+<li><a class="reference internal" href="#progetto-sonarqak24">Progetto sonarqak24</a><ul>
+<li><a class="reference internal" href="#sonarqak24-analisi-del-problema">sonarqak24: analisi del problema</a></li>
+<li><a class="reference internal" href="#sonarqak24-progettazione">sonarqak24:progettazione</a></li>
 </ul>
 </li>
 </ul>
