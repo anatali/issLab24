@@ -1,0 +1,1 @@
+{"actor":"basicrobot0", "msgType":"dispatch", "curstate":"work", "nextstate":"execcmd", "msgId":"cmd"}

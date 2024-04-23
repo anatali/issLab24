@@ -1,0 +1,56 @@
+package main.resources.gui;
+
+
+//import unibo.appl1.map.Application1ExploreByColumn;
+import unibo.appl1.common.IAppl1Core;
+import unibo.basicomm23.utils.CommUtils;
+import java.util.Observable;
+import java.util.Observer;
+
+/*
+ */
+//TODO: Fare IApplication
+public class StartStopGuiLocal implements  Observer{
+private String[] buttonLabels  = new String[] {"start", "stop", "resume", "exit" };
+//private Application1FullMapOld appl;
+//private 	Application1UseMap appl;
+	private IAppl1Core appl;
+	public StartStopGuiLocal() {
+		ButtonAsGui concreteButton = ButtonAsGui.createButtons( "", buttonLabels );
+		concreteButton.addObserver( this );
+   	}
+	
+ 	@Override
+	public void update( Observable o , Object arg ) {
+		try {
+			String move = arg.toString();
+			CommUtils.outgreen("GUI input move=" + move);
+			if( move.equals("exit")) System.exit(1);
+			switch( move ){
+				case "start"   : { //appl = new Application1FullMapOld("localhost");
+				                    //appl = new Application1UseMap("localhost");
+									//appl = new Application1ExploreByColumn("localhost");
+				                    new Thread(){
+				                   	public void run() {
+										try {
+											appl.start();
+										} catch (Exception e) {
+											CommUtils.outred(
+                                            " StartStopGuiLocal | start ERROR:" + e.getMessage() );;
+										}
+									}
+								   }.start();
+				                   break;}
+				case "stop"    : {appl.stop();break;}
+				case "resume"  : {appl.resume();}
+			}
+		} catch (Exception e) {
+			CommUtils.outred(" StartStopGuiLocal | update ERROR:" + e.getMessage() );;
+		}	
+	}
+	
+	public static void main( String[] args) {
+ 		new StartStopGuiLocal(   );
+    }
+}
+

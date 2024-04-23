@@ -327,7 +327,7 @@ un componente <span class="blue">dataCleaner</span> che provvede a eliminare dat
 <tr class="row-odd"><td><a class="reference internal image-reference" href="_images/sonar24Progetto.PNG"><img alt="_images/sonar24Progetto.PNG" class="align-center" src="_images/sonar24Progetto.PNG" style="width: 80%;" /></a>
 </td>
 <td><p>La emissione di eventi con <a class="reference internal" href="QakActors24.html#operazioni-relative-agli-eventi"><span class="std std-ref">emitLocalstream</span></a>
-non viene  visualizzata</p></td>
+viene  visualizzata</p></td>
 </tr>
 </tbody>
 </table>
@@ -339,20 +339,36 @@ quali ad esenpio:</p>
 </pre></div>
 </div>
 </div></blockquote>
+<p><span class="worktodo">TODO: affrontare la progettazione</span> del <a class="reference internal" href="SistemaRilevamento.html#sistemarilevamento"><span class="std std-ref">SistemaRilevamento</span></a>.</p>
+<p>Iniziamo com <a class="reference external" href="../../../../unibo.sonarqak24/src/sonarqak24base.qak">sonarqak24base</a>. I key-points sono:</p>
 <table class="docutils align-default" style="width: 100%">
 <colgroup>
-<col style="width: 80%" />
-<col style="width: 20%" />
+<col style="width: 40%" />
+<col style="width: 60%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><a class="reference internal image-reference" href="_images/sonar24Progetto1.PNG"><img alt="_images/sonar24Progetto1.PNG" class="align-center" src="_images/sonar24Progetto1.PNG" style="width: 80%;" /></a>
+<tr class="row-odd"><td><a class="reference internal image-reference" href="_images/sonar24ProgettoBase.PNG"><img alt="_images/sonar24ProgettoBase.PNG" class="align-center" src="_images/sonar24ProgettoBase.PNG" style="width: 80%;" /></a>
 </td>
-<td><p>L’evento <code class="docutils literal notranslate"><span class="pre">obstacle</span></code> viene visualizzato in quanto emesso usando la primitiva
-<a class="reference internal" href="QakActors24.html#operazioni-relative-agli-eventi"><span class="std std-ref">emit</span></a></p></td>
+<td><ul class="simple">
+<li><p>definizione esplicita a livello di modello di <code class="docutils literal notranslate"><span class="pre">sonardevice</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sonar24</span></code> fa <code class="docutils literal notranslate"><span class="pre">subscribeTo</span> <span class="pre">sonardevice</span> <span class="pre">for</span> <span class="pre">sonardata</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sonardevice</span></code> fa <a class="reference internal" href="QakActors24.html#operazioni-relative-agli-eventi"><span class="std std-ref">emitLocalstream</span></a> dell’evento <code class="docutils literal notranslate"><span class="pre">sonardata</span></code></p></li>
+<li><p>uso di <a class="reference external" href="../../../../it.unibo.raspIntro2024/code/python/sonar.py">sonar.py</a> come dispositivo di basso livello attivato all’interno di <code class="docutils literal notranslate"><span class="pre">sonardevice</span></code></p></li>
+<li><p>uso della feature <span class="remark">lateinit</span> di Koltlin</p></li>
+<li><p>uso di <span class="remark">autodispatch</span> <code class="docutils literal notranslate"><span class="pre">doread</span></code> per continuare a consumare i valori
+che  <a class="reference external" href="../../../../it.unibo.raspIntro2024/code/python/sonar.py">sonar.py</a> scrive sul dispositico di output</p></li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
-<p><span class="worktodo">TODO: affrontare la progettazione</span> del <a class="reference internal" href="SistemaRilevamento.html#sistemarilevamento"><span class="std std-ref">SistemaRilevamento</span></a>.</p>
+<p>Una volta verificato che questo sistema minimale funziona, aggiungiamo i comandi di <code class="docutils literal notranslate"><span class="pre">sonarstart/sonarstop</span></code>
+e in componente esplicita a livello di modello di <code class="docutils literal notranslate"><span class="pre">datacleaner</span></code>, come proposto
+nella  architettura logica di <a class="reference internal" href="#sonarqak24-progettazione"><span class="std std-ref">progetto</span></a></p>
+<p>Si veda: <a class="reference external" href="../../../../unibo.sonarqak24/src/sonarqak24.qak">sonarqak24</a>. I key-points sono:</p>
+<ul class="simple">
+<li><p>…</p></li>
+</ul>
 </section>
 </section>
 </section>

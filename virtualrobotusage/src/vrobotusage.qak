@@ -1,0 +1,190 @@
+System vrobotusage
+/*
+ * Propedeutico a basicrobot
+ * Usa VrobotHLMovesActors24
+ * Risponde a 
+ *      Dispatch cmd : cmd(MOVE)
+ *      Request  step
+ */
+Dispatch cmd : cmd(MOVE)  "MOVE = w|s|a|d   mosse del virtual robot"
+//Event vrinfo : vrinfo(A,B)
+Event  sonardata   : sonar( DISTANCE ) 	   
+Event obstacle     : obstacle(X) 
+
+Request step       : step(TIME)	
+Reply stepdone     : stepdone(V)                 for step
+Reply stepfailed   : stepfailed(DURATION, CAUSE) for step
+
+Dispatch stepdone  : stepdone(TIME)	
+
+Context ctxvrobotusage  ip [host="localhost" port=8120]
+
+/*
+ * Accede al virtual robot usando main.resources.robotvirtual.VrobotHLMovesActors23
+ */
+ /* 
+QActor vrclient context ctxvrobotusage withobj vr using "VrobotHLMovesActors24.create()"{
+	import "main.resources.robotvirtual.VrobotHLMovesActors24"
+	import "main.resources.gui.*" 
+	State s0 initial{
+		println("$name STARTS") color blue
+		[# GuiUtils.showSystemInfo() #]
+		[# vr.setTrace(true)  
+		   vr.connect("localhost", myself) 
+		#]
+		[# VrobotHLCmdGuiLocal(vr) #]
+		 //
+//		[# vr.move("a") #]
+//		[# vr.move("d") #]
+	}
+	Goto dojob
+	
+	State dojob{
+		delay 500
+		[# vr.move("w")#]
+//		delay 1300
+//		[# vr.move("h")#]
+//		delay 1000
+//		[# vr.move("s")#]
+//		delay 1300
+//		[# vr.move("h")#]
+		//[# System.exit(0) #]
+	}
+	
+	
+}
+*/
+
+QActor vrclienthl context ctxvrobotusage {
+	State s0 initial{
+		println("$name STARTS") color green
+		delay 1500  //give tme to start ...
+	}	
+	Goto work
+	
+	State work{
+		//forward basicrobot0 -m cmd : cmd(l)
+		delay 1000
+		request basicrobot0 -m step : step(350)
+	}	
+	Transition t0 
+		whenReply stepdone   -> work
+		whenReply stepfailed -> end
+	
+	State end{
+		println("$name BYE") color green
+	}
+}
+
+/*
+ * Esegue comandi di alto livello che mappa in comandi cril usando main.resources.robotvirtual.VrobotHLMovesActors23
+ * Risponde a richieste step
+ */
+QActor basicrobot0 context ctxvrobotusage withobj vr using "VrobotHLMovesActors24.create()"{
+	import "main.resources.robotvirtual.VrobotHLMovesActors24"
+	import "main.resources.gui.*" 
+
+
+[#  
+    GuiUtils.showSystemInfo()
+    vr.setTrace(true) 
+    vr.connect("localhost", myself) 
+    VrobotHLCmdGuiLocal(vr)
+
+	var StepTime      = 0L
+    var StartTime     = 0L      
+    var Duration      = 0L   
+    var RobotType     = "" 
+    var CurrentMove   = "unkknown"
+    var StepSynchRes  = false
+    var AnswerKo      = ""     
+#]
+	State s0 initial{
+		println("$name STARTS") color green
+	}	
+	Goto work
+
+	State work{ 
+		//printCurrentMessage   
+        //updateResource [# "basicrobot(started)" #]
+		discardMsg Off //We want store the non-handled messages
+		println("basicrobot0  | waiting, working   ")  color magenta 
+	} 
+	Transition t0   whenRequest  step      -> doStep		
+					whenMsg     cmd        -> execcmd
+				  	//whenMsg     end        -> endwork			  
+
+	State execcmd{ 
+		printCurrentMessage 
+ 			onMsg( cmd : cmd(MOVE) ){
+	  			//activate the motors  
+	  			[# CurrentMove = payloadArg(0) #] 
+				//run uniborobots.robotSupport.move( payloadArg(0 ) )
+				run vr.move( payloadArg(0 ) )
+				updateResource [# "moveactivated(${payloadArg(0)})" #]
+			}
+ 	 }
+	 Goto work   
+
+	State doStep{ 	
+		memoCurrentTime StartTime  
+		onMsg( step : step(T) ){
+			[# StepTime = payloadArg(0).toLong()  #]
+		}
+		[# StepSynchRes = vr.step( StepTime ) #] 
+	}
+	Goto stepok if [# StepSynchRes #] else stepKo
+	
+	State stepok{   
+		//printCurrentMessage
+		[# StepSynchRes = false #]
+ 		run vr.move( "h" )  //stop the (real) robot 
+		updateResource [# "stepDone($StepTime)" #]
+   		//emit info : info( stepdone($StepTime) )
+   		replyTo step with stepdone : stepdone($StepTime)
+		//println("basicrobot | stepDone reply done")
+  	}
+	Goto work  
+ 
+	State stepKo{ 
+		//println("$name stepKo AnswerKo=$AnswerKo") color red 	 
+		if [# AnswerKo == "" #]{
+			setDuration Duration from StartTime
+			//printCurrentMessage
+			run vr.move( "h" )  //stop the (real) robot
+			[# var TunedDuration   = StepTime - ((Duration * 0.80)).toLong()   #]
+			//println("basicrobot | stepKo $StepTime  duration=$Duration  TunedDuration=$TunedDuration") color magenta
+			if [# TunedDuration > 30 #]{
+				run vr.move( "s" )
+				delayVar TunedDuration 
+				run vr.move( "h" ) 
+		 		updateResource [# "stepFail($Duration)" #] 
+		 		delay 300
+			}
+		 	replyTo step with stepfailed : stepfailed($Duration, obst)
+	 	}else{
+	 		replyTo step with stepfailed : stepfailed($Duration, $AnswerKo)
+	 		[# AnswerKo = "" #]
+	 	}
+    } 
+    Goto work 
+}
+
+
+
+QActor vrobserver context ctxvrobotusage{
+	State s0 initial{
+		println("$name STARTS") color green
+	}
+	Transition t0 
+	    whenEvent sonardata -> handleVrinfo
+		whenEvent obstacle   -> handleVrinfo
+	
+	State handleVrinfo{
+		printCurrentMessage color green
+	}
+	Transition t0 
+	    whenEvent sonardata -> handleVrinfo	
+		whenEvent obstacle -> handleVrinfo
+	
+}
