@@ -21,10 +21,13 @@ evattr = {
     'color': 'darkgreen',
     'style': 'dotted'
 }
-with Diagram('vrobotusageArch', show=False, outformat='png', graph_attr=graphattr) as diag:
+with Diagram('vrqakArch', show=False, outformat='png', graph_attr=graphattr) as diag:
   with Cluster('env'):
      sys = Custom('','./qakicons/system.png')
 ### see https://renenyffenegger.ch/notes/tools/Graphviz/attributes/label/HTML-like/index
-     with Cluster('ctxvrobotusage', graph_attr=nodeattr):
-          vrclient=Custom('vrclient','./qakicons/symActorSmall.png')
+     with Cluster('ctxvrqak', graph_attr=nodeattr):
+          vrqak=Custom('vrqak','./qakicons/symActorWithobjSmall.png')
+          vrobserver=Custom('vrobserver','./qakicons/symActorSmall.png')
+     vrqak >> Edge( label='sonardata', **eventedgeattr, decorate='true', fontcolor='red') >> vrqak
+     sys >> Edge( label='sonardata', **evattr, decorate='true', fontcolor='darkgreen') >> vrobserver
 diag

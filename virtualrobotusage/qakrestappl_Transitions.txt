@@ -1,1 +1,2 @@
-{"actor":"basicrobot0", "msgType":"dispatch", "curstate":"work", "nextstate":"execcmd", "msgId":"cmd"}
+{"actor":"bw24core", "msgType":"dispatch", "curstate":"doboundary", "nextstate":"handleVrinfo", "msgId":"vrinfo"}
+{"actor":"bw24core", "msgType":"dispatch", "curstate":"doboundary", "nextstate":"pausetherobot", "msgId":"pause"}

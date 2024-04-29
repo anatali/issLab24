@@ -1,0 +1,127 @@
+System bw24
+/*
+ * bw24naive
+ */
+Dispatch cmd    : cmd(MOVE)  "MOVE = w|s|a|d|p   mosse del virtual robot"
+Event vrinfo    : vrinfo(A,B)
+Dispatch vrinfo : vrinfo(A,B)
+
+Event  sonardata   : sonar( DISTANCE ) 	   
+Event obstacle     : obstacle(X) 
+
+Dispatch pause     : pause(X) 
+
+Context ctxbw24  ip [host="localhost" port=8120     ]
+
+/*
+ * Accede al virtual robot usando main.resources.robotvirtual.VrobotLLMoves24
+ */
+ 
+QActor bw24core context ctxbw24 withobj vr using "VrobotLLMoves24.create(\"localhost\",myself)"{
+	import "main.resources.robotvirtual.VrobotLLMoves24"
+	import "main.resources.gui.*" 
+	[# var N = 0 #] 
+	State s0 initial{ 
+		println("$name STARTS") color blue
+		[# GuiUtils.showSystemInfo() #]
+		[# vr.setTrace(true)  #]
+		//[# VrobotHLCmdGuiLocal(vr) #] //just to have a console ...
+	}
+	Goto doboundary
+	
+	State doboundary{
+		delay 200
+		[# vr.forward(2400)#]  //a long time, so to hit a wall
+		//[# vr.step(2400)#]   //come sopra
+		//[# vr.forward(-1) #]  //forever ...
+	}
+	Transition t0 
+	    whenMsg   vrinfo   -> handleVrinfo
+	    whenMsg   pause    -> pausetherobot
+	    whenEvent obstacle -> stoptherobot
+		//whenEvent vrinfo -> handleVrinfo
+	
+	State handleVrinfo{
+		//[# vr.move("h") #]
+		[# N = N + 1 #]
+		//printCurrentMessage color magenta
+		onMsg( vrinfo:vrinfo( TIME,collision ) ){ //vrinfo(moveForward-collision,false)
+			println("$name | ${payloadArg(0)} ${payloadArg(1)} N=$N") color magenta
+			[# vr.turnLeft() #]
+			if [# N == 4 #]{
+				[# System.exit(0) #]
+			}
+		}
+	}
+	Goto doboundary
+
+	State stoptherobot{
+		printCurrentMessage color red
+		[# vr.halt()   #]
+	} 
+	State pausetherobot{
+		[# vr.halt()   #]
+		printCurrentMessage color red
+		//println("$name | pausetherobot") color magenta
+		delay 2000
+	}
+	Goto doboundary
+}
+
+/*
+ * In attesa del sonar fisico ...
+ */
+QActor sonar24mock context ctxbw24{
+	State s0 initial{ 
+		println("$name | START") color blue
+		delay 8000
+//		emit obstacle : obstacle(10)
+		println("$name | ENDS")  color blue
+	}  
+} 
+
+/*
+ * Gestisce gli eventi emessi dal supporto VrobotLLMoves24  e sona24
+ */
+QActor vrobserver context ctxbw24{
+	State s0 initial{
+		println("$name STARTS") color cyan
+	}
+	Goto observing
+	
+	State observing{ 
+		
+	}
+	Transition t0 
+	    whenEvent sonardata  -> handleSonar
+		whenEvent obstacle   -> handleObstacle
+		whenEvent vrinfo     -> handleVrinfo
+	
+	State handleVrinfo{
+		printCurrentMessage color cyan
+	}
+	Goto observing  //li perdo?
+
+	State handleObstacle{
+		printCurrentMessage color cyan
+	}
+	Goto observing   
+
+	State handleSonar{
+		printCurrentMessage color cyan
+		forward bw24core -m pause : pause(1)
+	}
+	Transition t0
+	    whenEvent sonardata  -> ignoreSonarData
+	    
+	State   ignoreSonarData{
+		println("$name | ignoreSonarData ") color yellow
+	}
+	Transition t0
+		whenTime 3100        -> observing       //devo sapere quando riprende ...
+	    whenEvent sonardata  -> ignoreSonarData	
+} 
+
+
+
+ 

@@ -1,6 +1,6 @@
 package main.resources.robotvirtual;
 
-public interface IVrobotMoves {
+public interface IVrobotLLMoves {
 	//Ispirate da VirtualRobot23
     public void turnLeft() throws Exception;
     public void turnRight() throws Exception;
@@ -10,9 +10,4 @@ public interface IVrobotMoves {
 
     //Nuove operazioni
     public boolean step(long time) throws Exception;
-    public void stepAsynch(int time) throws Exception;
-    
-    //Aril (Abstract Robot Interaction Lanaguage)
-    //cmd=w | s | l | r | h"
-    public void move(String cmd ) throws Exception;
 }

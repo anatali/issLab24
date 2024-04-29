@@ -150,7 +150,7 @@ eclipse {
 
 application {
     //Define the main class for the application.
-    mainClassName    = 'it.unibo.ctxvrobotusage.MainCtxvrobotusageKt'
+    mainClassName    = 'it.unibo.ctxbw24.MainCtxbw24Kt'
 }
  
  jar {
@@ -182,11 +182,11 @@ distributions {
     }
 } 
 
-task run0(type: JavaExec) {
+task runVr(type: JavaExec) {
     group = "Execution"
     description = "Run the main class with JavaExecTask"
     classpath = sourceSets.main.runtimeClasspath
-    main = 'it.unibo.ctxvrobotusage.MainCtxvrobotusageKt'
+    main = 'it.unibo.ctxvrqak.MainCtxvrqakKt'
 }
 
 /*

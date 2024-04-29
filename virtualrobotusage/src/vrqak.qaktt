@@ -1,0 +1,140 @@
+System vrqak
+/*
+ * PROPEDEUTICO a basicrobot
+ * Usa VrobotLLMoves24
+ * Risponde a 
+ *      Dispatch cmd : cmd(MOVE)
+ *      Request  step
+ * 
+ * Può essere attivato come risorsa esterna all'applicazione
+ */
+//Dispatch cmd    : cmd(MOVE,T)  "MOVE = w|s|a|d|p   mosse del virtual robot"
+
+Dispatch halt   : halt(X)
+Dispatch cmd    : cmd(M)
+
+Request  cmd    : cmd(MOVE,T)  "MOVE = w|s|a|d|p   mosse del virtual robot"
+Reply cmddone   : cmddone(R)          for cmd
+Reply cmdfailed : cmdfailed(T,CAUSE)  for cmd
+ 
+//Dispatch pause  : pause(X)     //APPLICATIVE!
+Dispatch vrinfo : vrinfo(A,B)
+
+Event  sonardata   : sonar( DISTANCE ) 	   
+
+Request step       : step(TIME)	
+Reply stepdone     : stepdone(V)                 for step
+Reply stepfailed   : stepfailed(DURATION, CAUSE) for step
+
+
+Context ctxvrqak  ip [host="localhost" port=8125]
+
+QActor vrqak context ctxvrqak withobj vr using "VrobotLLMoves24.create(\"localhost\",myself)"{  
+	import "main.resources.robotvirtual.VrobotLLMoves24"
+	//import "main.resources.gui.*" 
+	[# var doingAsynchStep = false  #]
+	State s0 initial{
+		println("$name STARTS") color blue
+		//[# GuiUtils.showSystemInfo() #]
+		[# vr.setTrace(true) #]
+		//subscribeTo vrqak for vrinfo
+		subscribeTo vrqak for sonardata
+		println("$name subscribe to myself done") color blue
+		//[# VrobotHLCmdGuiLocal(vr) #] //just to have a console ...
+	} 
+	Goto work
+	
+	State work{
+		println("$name | work") color blue
+	}
+	Transition t0
+	   whenMsg     halt  -> dohalt
+	   whenMsg     cmd  -> handlecmd
+	   whenRequest cmd  -> handlecmdrequest
+	   whenRequest step -> handleAsynchStep
+
+    State dohalt{   	
+    	printCurrentMessage color red
+    	[# vr.halt() #]
+    }
+    Goto work
+	/*
+	 * Durante un movimento è stato rilveato un segnale dal sonar
+	 */
+
+	State handleSonarData{
+		printCurrentMessage color magenta   
+		onMsg( sonardata : sonar(D) ){
+			[# var D = payloadArg(0) #]
+			//emitlocalstream sonardata : sonar($D)  //vengono accodati tutti ??
+			[# val sonarEvent = "sonardata(" +  D + ")" #]
+			println("$name | handleSonarData $sonarEvent") color magenta 
+			updateResource  [# "$sonarEvent" #]      
+			updateResource  [# "nonews" #]     //per evitare che CoAP ripeta il dato
+		}
+	} 
+	Transition t0 whenMsg vrinfo -> handleVrinfoMsgReply //altri eventi li volgio perder
+
+	State handlecmd{
+		println("$name | handlecmd") color blue
+		onMsg( cmd : cmd(M) ){
+			[# val Move = payloadArg(0);  #]
+			if [# Move == "h" #] { [# vr.halt() #]     }
+			if [# Move == "a" || Move == "l" #]{ [# vr.turnLeft() #]  }
+			if [# Move == "d" || Move == "r" #]{ [# vr.turnRight() #] }
+		}
+	}
+	Goto work	   
+
+	State handlecmdrequest{
+		println("$name | handlecmdrequest") color blue
+		onMsg( cmd : cmd(M,T) ){
+			[# val Move = payloadArg(0); val T = payloadArg(1).toInt() #]
+			if [# Move == "h" #] { [# vr.halt() #]     }
+			if [# Move == "p" #] { [# vr.step(T.toLong()) #]    }  //synch
+			if [# Move == "w" #] { [# vr.forward(T) #] }
+			if [# Move == "s" #] { [# vr.backward(T) #]}
+			if [# Move == "a" || Move == "l" #]{ [# vr.turnLeft() #]  }
+			if [# Move == "d" || Move == "r" #]{ [# vr.turnRight() #] }
+		}
+	}
+	Transition t0 
+		whenEvent sonardata -> handleSonarData 
+		whenMsg vrinfo -> handleVrinfoMsgReply
+  
+    
+	State handleVrinfoMsgReply{
+		println("$name | handleVrinfoMsgReply $currentMsg") color yellow
+		onMsg( vrinfo : vrinfo(M,elapsed)){
+			if [# doingAsynchStep #]{  replyTo step with stepdone : stepdone(ok)} 
+			else {replyTo cmd with cmddone : cmddone(elapsed)}
+		}
+		onMsg( vrinfo : vrinfo(T,collision)){
+			[# val T = payloadArg(0) #]
+			if [# doingAsynchStep #]{ 
+				replyTo step with stepfailed : stepfailed($T,collision)
+				[# doingAsynchStep = false #]
+			} 
+			else {
+				replyTo cmd with cmdfailed : cmdfailed($T,collision)
+				[# doingAsynchStep = false #]
+			}
+		}
+	}	
+	Goto work
+
+  	 
+	State handleAsynchStep{
+		println("$name | handleAsynchStep") color blue
+		[# doingAsynchStep = true  #]
+		onMsg( step:step(T)){
+			[# vr.forward(payloadArg(0).toInt() ) #]
+		}
+	}	
+	Transition t0
+	    whenEvent sonardata  -> handleSonarData  
+	    whenMsg   vrinfo     -> handleVrinfoMsgReply
+
+	
+ }
+

@@ -17,7 +17,7 @@
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="BasicRobot24" href="BasicRobot24.html" />
+    <link rel="next" title="VrobotLLMoves24" href="VrobotLLMoves24.html" />
     <link rel="prev" title="QakService24Ask" href="QakService24Ask.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -27,7 +27,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="BasicRobot24.html" title="BasicRobot24"
+          <a href="VrobotLLMoves24.html" title="VrobotLLMoves24"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="QakService24Ask.html" title="QakService24Ask"
@@ -392,7 +392,69 @@ invoca l’utilità <code class="docutils literal notranslate"><span class="pre"
 oltre lo <strong>sceneSocket</strong>.</p>
 <p>Questo evento è gestito da un apposito handler (vedi <code class="docutils literal notranslate"><span class="pre">sceneSocketInfoHandler</span></code> in <code class="docutils literal notranslate"><span class="pre">WebpageServer.js</span></code>),
 che reindirizza le informazioni a tutti i client connessi sulla  <code class="docutils literal notranslate"><span class="pre">8091</span></code>.</p>
+</section>
+<section id="wenv-come-immagine-docker">
+<h3>WEnv come immagine docker<a class="headerlink" href="#wenv-come-immagine-docker" title="Permalink to this heading">¶</a></h3>
+<p>WEnv viene anche distribuito come immagine Docker.</p>
+<section id="dockerfile-e-creazione-dell-immagine">
+<h4>Dockerfile e creazione dell’immagine<a class="headerlink" href="#dockerfile-e-creazione-dell-immagine" title="Permalink to this heading">¶</a></h4>
+<p>Il file di nome <strong>Dockerfile</strong> nella directory <code class="docutils literal notranslate"><span class="pre">it.unibo.virtualRobot2020</span></code> contiene le istruzioni per creare una
+immagine Docker (per una introduizione a Docker si veda <a class="reference external" href="./_static/IntroDocker23.html">Introduction to Docker and DockerCompose</a>).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">node</span><span class="p">:</span><span class="mi">17</span><span class="o">-</span><span class="n">alpine</span>
+<span class="n">RUN</span> <span class="n">mkdir</span> <span class="o">-</span><span class="n">p</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">node</span>
+<span class="n">EXPOSE</span> <span class="mi">8090</span>
+<span class="n">EXPOSE</span> <span class="mi">8091</span>
+<span class="n">COPY</span> <span class="o">./</span><span class="n">node</span><span class="o">/</span><span class="n">WEnv</span><span class="o">/</span><span class="n">server</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">node</span><span class="o">/</span><span class="n">WEnv</span><span class="o">/</span><span class="n">server</span>
+<span class="n">COPY</span> <span class="o">./</span><span class="n">node</span><span class="o">/</span><span class="n">WEnv</span><span class="o">/</span><span class="n">WebGLScene</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">node</span><span class="o">/</span><span class="n">WEnv</span><span class="o">/</span><span class="n">WebGLScene</span>
+<span class="c1">#set default dir so that next commands executes in it</span>
+<span class="n">WORKDIR</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">node</span><span class="o">/</span><span class="n">WEnv</span><span class="o">/</span><span class="n">WebGLScene</span>
+<span class="n">RUN</span> <span class="n">npm</span> <span class="n">install</span>
+<span class="n">WORKDIR</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">node</span><span class="o">/</span><span class="n">WEnv</span><span class="o">/</span><span class="n">server</span>
+<span class="n">RUN</span> <span class="n">npm</span> <span class="n">install</span>
+<span class="n">WORKDIR</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">node</span><span class="o">/</span><span class="n">WEnv</span><span class="o">/</span><span class="n">server</span><span class="o">/</span><span class="n">src</span>
+<span class="n">CMD</span> <span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">,</span> <span class="s2">&quot;WebpageServer&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>L’immagine Docker può essere creata sul proprio PC eseguendo il comando (nella directory che contiene il <em>Dockerfile</em>):</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">build</span> <span class="pre">-t</span> <span class="pre">virtualrobotdisi23:1.0</span> <span class="pre">.</span></code>    //Notare il .</p>
+</div></blockquote>
+</section>
+<section id="esecuzione-della-immagine">
+<h4>Esecuzione della immagine<a class="headerlink" href="#esecuzione-della-immagine" title="Permalink to this heading">¶</a></h4>
+<p>L’immagine Docker di WEnv può essere attivata sul PC con il comando:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">ti</span> <span class="o">-</span><span class="n">p</span> <span class="mi">8090</span><span class="p">:</span><span class="mi">8090</span> <span class="o">-</span><span class="n">p</span> <span class="mi">8091</span><span class="p">:</span><span class="mi">8091</span> <span class="o">--</span><span class="n">rm</span>  <span class="n">virtualrobotdisi23</span><span class="p">:</span><span class="mf">1.0</span>
+</pre></div>
+</div>
+<p>Il comando:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">ti</span> <span class="o">-</span><span class="n">p</span> <span class="mi">8090</span><span class="p">:</span><span class="mi">8090</span> <span class="o">-</span><span class="n">p</span> <span class="mi">8091</span><span class="p">:</span><span class="mi">8091</span>
+              <span class="o">--</span><span class="n">rm</span>  <span class="n">virtualrobotdisi23</span><span class="p">:</span><span class="mf">1.0</span> <span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">sh</span>
+</pre></div>
+</div>
+<p>permette di ispezionare il contenuto della macchina virtuale e di attivare manualmente il sistema
+(eseguendo  <code class="docutils literal notranslate"><span class="pre">node</span> <span class="pre">WebpageServer.js</span></code>).</p>
+</section>
+<section id="modificare-la-scena-nella-immagine">
+<h4>Modificare la scena nella immagine<a class="headerlink" href="#modificare-la-scena-nella-immagine" title="Permalink to this heading">¶</a></h4>
+<p>Una volta attivata l’immagine docker, il comando</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">dockerps</span> <span class="pre">ps</span> <span class="pre">-a</span></code></p>
+</div></blockquote>
+<p>restituisce una tabella con 7 campi:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">CONTAINERID</span>&#160;&#160; <span class="pre">IMAGE</span>&#160;&#160;&#160;&#160; <span class="pre">COMMAND</span>&#160;&#160; <span class="pre">CREATED</span>&#160;&#160; <span class="pre">STATUS</span>&#160;&#160;&#160; <span class="pre">PORTS</span>&#160;&#160;&#160;&#160; <span class="pre">NAMES</span></code></p>
+</div></blockquote>
+<p>Per modificare il file che definisce la scena, si può copiare una nuova versione attraverso il comando <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">cp</span></code>
+e rendere permanente la modifica salvando il container.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span><span class="n">change</span> <span class="n">the</span> <span class="n">scene</span>
+<span class="n">docker</span> <span class="n">cp</span> <span class="n">sceneConfig</span><span class="o">.</span><span class="n">js</span>
+       <span class="n">CONTAINERID</span><span class="p">:</span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">node</span><span class="o">/</span><span class="n">WEnv</span><span class="o">/</span><span class="n">WebGLScene</span><span class="o">/</span><span class="n">sceneConfig</span><span class="o">.</span><span class="n">js</span>
+<span class="o">//</span><span class="n">Save</span> <span class="n">the</span> <span class="n">cotainer</span>
+<span class="n">docker</span> <span class="n">commit</span>  <span class="n">CONTAINERID</span>
+</pre></div>
+</div>
 <p><span class="slide">Programmi naive di uso di WEnv</span></p>
+</section>
 </section>
 </section>
 <section id="programmi-naive">
@@ -830,29 +892,11 @@ e per visualizzare ogni <a class="reference internal" href="#messaggio-di-stato"
 </tbody>
 </table>
 </li>
-<li><p>Definiamo un adapter (<a class="reference external" href="../../../../virtualrobotusage/src/main/resources/robotvirtual/VrobotHLMovesActors24.java">VrobotHLMovesActors24</a>) che converta i comandi di movimento in comandi per il robot
+<li><p>Definiamo un adapter (<a class="reference internal" href="VrobotLLMoves24.html#id1"><span class="std std-ref">VrobotLLMoves24</span></a>) che converta i comandi di movimento in comandi per il robot
 e che trasformi i messaggi di stato in eventi applicativi.</p></li>
 </ol>
-<section id="id1">
-<h3>VrobotHLMovesActors24<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
-<table class="docutils align-default" style="width: 100%">
-<colgroup>
-<col style="width: 55%" />
-<col style="width: 45%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p>Il supporto <a class="reference external" href="../../../../virtualrobotusage/src/main/resources/robotvirtual/VrobotHLMovesActors24.java">VrobotHLMovesActors24</a> comunica in modo asincrono con il <a class="reference internal" href="#virtualrobot23"><span class="std std-ref">VirtualRobot</span></a> e
-traduce le informazioni ricevute da WEnv in messaggi al livello applicativo <span class="blue">appl</span>.</p>
-<p>Quando riceve informazioni realative al <span class="blue">sonar</span>, genera l’evento locale
-<code class="docutils literal notranslate"><span class="pre">sonardata</span></code> .</p>
-</td>
-<td><a class="reference internal image-reference" href="_images/VrobotHLMovesActors23.png"><img alt="_images/VrobotHLMovesActors23.png" class="align-center" src="_images/VrobotHLMovesActors23.png" style="width: 100%;" /></a>
-</td>
-</tr>
-</tbody>
-</table>
+<a class="reference internal image-reference" href="_images/VrobotLLMsgStatocomando24.png"><img alt="_images/VrobotLLMsgStatocomando24.png" class="align-center" src="_images/VrobotLLMsgStatocomando24.png" style="width: 60%;" /></a>
 <p><span class="worktodo">TODO: Problema BoundaryWalk</span></p>
-</section>
 </section>
 <section id="problema-boundarywalk">
 <h2>Problema BoundaryWalk<a class="headerlink" href="#problema-boundarywalk" title="Permalink to this heading">¶</a></h2>
@@ -866,6 +910,7 @@ della stanza rappresentata ne <a class="reference internal" href="#la-scena-di-w
 rileva un ostacolo.</p></li>
 </ul>
 </div></blockquote>
+<p>Si veda <a class="reference internal" href="BoudaryWalk24.html#boundarywalk24"><span class="std std-ref">BoundaryWalk24</span></a>.</p>
 </section>
 </section>
 
@@ -906,6 +951,12 @@ rileva un ostacolo.</p></li>
 </li>
 <li><a class="reference internal" href="#wenv-note-di-implementazione">WEnv - note di implementazione</a><ul>
 <li><a class="reference internal" href="#architettura-di-wenv">Architettura di WEnv</a></li>
+<li><a class="reference internal" href="#wenv-come-immagine-docker">WEnv come immagine docker</a><ul>
+<li><a class="reference internal" href="#dockerfile-e-creazione-dell-immagine">Dockerfile e creazione dell’immagine</a></li>
+<li><a class="reference internal" href="#esecuzione-della-immagine">Esecuzione della immagine</a></li>
+<li><a class="reference internal" href="#modificare-la-scena-nella-immagine">Modificare la scena nella immagine</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a class="reference internal" href="#programmi-naive">Programmi naive</a><ul>
@@ -928,10 +979,7 @@ rileva un ostacolo.</p></li>
 </li>
 </ul>
 </li>
-<li><a class="reference internal" href="#programmi-applicativi-di-uso-del-virtualrobot">Programmi applicativi di uso del VirtualRobot</a><ul>
-<li><a class="reference internal" href="#id1">VrobotHLMovesActors24</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#programmi-applicativi-di-uso-del-virtualrobot">Programmi applicativi di uso del VirtualRobot</a></li>
 <li><a class="reference internal" href="#problema-boundarywalk">Problema BoundaryWalk</a></li>
 </ul>
 </li>
@@ -945,8 +993,8 @@ rileva un ostacolo.</p></li>
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="BasicRobot24.html"
-                          title="next chapter">BasicRobot24</a></p>
+    <p class="topless"><a href="VrobotLLMoves24.html"
+                          title="next chapter">VrobotLLMoves24</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -976,7 +1024,7 @@ rileva un ostacolo.</p></li>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="BasicRobot24.html" title="BasicRobot24"
+          <a href="VrobotLLMoves24.html" title="VrobotLLMoves24"
              >next</a> |</li>
         <li class="right" >
           <a href="QakService24Ask.html" title="QakService24Ask"

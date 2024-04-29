@@ -1,0 +1,55 @@
+System bw24
+/*
+ * bw24analisi0.qak
+ * Modello PRELIMINARE dell'analisi del problema
+ * UNICO CONTESTO
+ * Sonar emettono eventi
+*/
+Event obstacle  : obstacle(D)   "info emessa da sonar24"
+Event    vrinfo : vrinfo(A,B)   "info emessa da vrrobot"
+
+//Linguaggio aril 
+//Dispatch cmd    : cmd( MOVE ) "aril MOVE=w | s | l | r | h"
+
+Context ctxbw24       ip [ host= "localhost"  port= 8230 ]
+//Context ctxsonarqak24 ip [ host= "dontcare"   port= 8128 ]
+//Context ctxrobot      ip [ host= "dontcare"   port= 8125 ]
+//ExternalQActor sonar24   context ctxsonarqak24
+//ExternalQActor vrrobot   context ctxrobot
+
+
+QActor sonar24mock context ctxbw24{
+	State s0 initial{ 
+		println("$name | START") 
+		emit obstacle : obstacle(10)
+	} 
+} 
+QActor virtualrobotmock context ctxbw24{
+	State s0 initial{
+		println("$name | START") 
+		emit vrinfo : vrinfo(10,20)
+	}
+}
+QActor bw24core context ctxbw24 withobj vr using "VrobotHLMovesActors24.create(\"localhost\",myself)"{
+	import "main.resources.robotvirtual.VrobotHLMovesActors24"
+	import "main.resources.gui.*" 
+	State s0 initial{
+		println("$name | START") 	
+		//forward virtualrobotmock -m cmd : cmd(w)
+	}
+	Transition t0
+		whenEvent obstacle -> handleObstacle
+		whenEvent vrinfo   -> handleVrinfo
+		
+    State handleObstacle{
+    	println("$name | handleObstacle") 
+    }
+    State handleVrinfo{
+    	println("$name | handleObstacle") 
+    }    
+}
+
+
+
+
+ 

@@ -1,0 +1,302 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>VrobotLLMoves24 &#8212; iss24 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="BasicRobot24" href="BasicRobot24.html" />
+    <link rel="prev" title="VirtualRobot23" href="VirtualRobot23.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="BasicRobot24.html" title="BasicRobot24"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="VirtualRobot23.html" title="VirtualRobot23"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">VrobotLLMoves24</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="id1">
+<h1>VrobotLLMoves24<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h1>
+<p><span class="slide3">progetto virtualrobotusage</span></p>
+<p>Vogliamo realizzare le interazioni tra un livello applicativo modellato com un
+<a class="reference internal" href="QakActors24.html#qakactors24"><span class="std std-ref">actor</span></a> supportato dalla <a class="reference internal" href="QakActors24.html#qak-infrastructure"><span class="std std-ref">Qak infrastructure</span></a> e il <a class="reference internal" href="VirtualRobot23.html#virtualrobot23"><span class="std std-ref">VirtualRobot23</span></a>.</p>
+<p><span class="slide1">Scopo del componente</span></p>
+<p>L’obiettivo è reralizzare un POJO (<a class="reference external" href="../../../../virtualrobotusage/src/main/resources/robotvirtual/VrobotLLMoves24.java">VrobotLLMoves24</a> anche detto <code class="docutils literal notranslate"><span class="pre">VRHL24</span></code>) che funga da supporto
+per un <a class="reference internal" href="QakActors24.html#qakactors24"><span class="std std-ref">actor qak</span></a>, detto <span class="slide3">owner</span>,  che:</p>
+<ol class="arabic simple">
+<li><p>fornisce metodi con cui <span class="slide3">owner</span> può  inviare <a class="reference internal" href="#vrhl24-comandi-di-movimento"><span class="std std-ref">Comandi di movimento</span></a>
+al <a class="reference internal" href="VirtualRobot23.html#virtualrobot23"><span class="std std-ref">VirtualRobot23</span></a>;</p></li>
+<li><p><a class="reference internal" href="#vrhl24-informazioni-da-wenv-come-eventi"><span class="std std-ref">trasforma in eventi</span></a> le informazioni emesse su
+<em>WebSocket</em> (<span class="slide3">WS</span>)  da <a class="reference internal" href="VirtualRobot23.html#come-interagire-con-wenv"><span class="std std-ref">WEnv</span></a>.</p></li>
+</ol>
+<ul class="simple">
+<li><p>Per realizzare lo scopo, selezionamo il
+modo di <a class="reference internal" href="VirtualRobot23.html#interazione-asincrona"><span class="std std-ref">Interazione asincrona</span></a> con il <a class="reference internal" href="VirtualRobot23.html#virtualrobot23"><span class="std std-ref">VirtualRobot23</span></a>.</p></li>
+<li><p>Così facendo, sarà possibile inviare comandi
+in modo <span class="blue">fire-and-forget</span>, senza precludere la possibilità di ottenere informazioni da WEnv
+(un <a class="reference internal" href="VirtualRobot23.html#messaggio-di-stato"><span class="std std-ref">Messaggio di stato</span></a> inviato da <code class="docutils literal notranslate"><span class="pre">WEnv</span></code>  a tutti i client connessi)
+anche prima della terminazione dell’operazione.</p></li>
+</ul>
+<p>Il progetto <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23"><span class="std std-ref">unibo.basicomm23</span></a> definisce la classe <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-ws-wsconnection"><span class="std std-ref">WsConnection</span></a>,
+che offre all’application designer strumenti e meccanismi utili a gestire questa situazione.</p>
+<section id="vrhl24-informazioni-da-wenv-come-eventi">
+<h2>VRHL24-Informazioni da WEnv come eventi<a class="headerlink" href="#vrhl24-informazioni-da-wenv-come-eventi" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Il POJO <a class="reference external" href="../../../../virtualrobotusage/src/main/resources/robotvirtual/VrobotLLMoves24.java">VrobotLLMoves24</a>:</p>
+<ul>
+<li><p>apre una connessione (<code class="docutils literal notranslate"><span class="pre">wsconn</span></code>)  su WS con <a class="reference internal" href="VirtualRobot23.html#virtualrobot23"><span class="std std-ref">VirtualRobot23</span></a></p></li>
+<li><p>opera come <span class="slide2">observer</span> su <code class="docutils literal notranslate"><span class="pre">wsconn</span></code></p></li>
+<li><p>trasforma le informazioni ricevute su <code class="docutils literal notranslate"><span class="pre">wsconn</span></code> in eventi:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sonardata</span> <span class="p">:</span> <span class="n">sonar</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
+<span class="n">vrinfo</span>    <span class="p">:</span> <span class="n">vrinfo</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</td>
+<td><a class="reference internal image-reference" href="_images/VrobotLLMoves24.png"><img alt="_images/VrobotLLMoves24.png" class="align-center" src="_images/VrobotLLMoves24.png" style="width: 100%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Per operare come <span class="blue">observer</span>, il supporto estende <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-utilsapplabstractobserver"><span class="std std-ref">ApplAbstractObserver</span></a>
+e si registra come osservatore sulla <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-ws-wsconnection"><span class="std std-ref">WsConnection</span></a>.</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">VrobotLLMoves24</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">ApplAbstractObserver</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">IVrobotLLMoves</span><span class="p">{</span>
+</pre></div>
+</div>
+<section id="un-dettaglio-sulla-tecnologia">
+<h3>Un dettaglio sulla tecnologia<a class="headerlink" href="#un-dettaglio-sulla-tecnologia" title="Permalink to this heading">¶</a></h3>
+<p><span class="slide1">Attenzione ai Thread</span></p>
+<p>Il metodo <span class="xref std std-ref">update</span> che <a class="reference external" href="../../../../virtualrobotusage/src/main/resources/robotvirtual/VrobotLLMoves24.java">VrobotLLMoves24</a> deve definire in quanto observer,
+viene eseguito nel Thread (di nome <span class="slide2">Grizzly</span>)
+della libreria di supporto alle WS <strong>tyrus-standalone-client</strong>,
+che promuove l’uso del <span class="remark">metodo annotato onmessage</span> per la elaborazione di un <a class="reference internal" href="VirtualRobot23.html#messaggio-di-stato"><span class="std std-ref">Messaggio di stato</span></a>
+inviato sulla WS.</p>
+<p>In altre parole, la libreria non offre metodi bloccanti per la ricezione di messaggi,
+ma invoca direttamente metodi di callback del livello applicativo.</p>
+<p><span class="slide1">Azioni di callback</span></p>
+<p>Le azioni applicative che operano come <span class="blue">funzioni di callback</span> possono essere eseguite:</p>
+<ol class="arabic simple">
+<li><p>dal supporto <a class="reference external" href="../../../../virtualrobotusage/src/main/resources/robotvirtual/VrobotLLMoves24.java">VrobotLLMoves24</a>,
+in modo simile a quanto fanno framework come <a class="reference external" href="https://nodejs.org/it/">Node.js</a> -&gt;;</p></li>
+<li><p>dall’attore <span class="slide3">owner</span>, una volta che il supporto gli abbia notificato la ricezione dei
+<a class="reference internal" href="#messaggi-statocomando"><span class="std std-ref">messaggi-statocomando</span></a>.</p></li>
+</ol>
+<p><span class="slide1">Relazione supporto-applicazione</span></p>
+<p>La esecuzione di una azione di callback da parte del supporto risulta problematica in quanto
+il metodo <span class="xref std std-ref">update</span> viene eseguito nel Thread <span class="slide2">Grizzly</span>
+della libreria.
+Per non perdere le informazioni applicative di contesto, è opportuno (in pratica indispensabile) che:</p>
+<p><span class="slide2">le callback siano eseguite nel Thread applicativo</span></p>
+<p>La parte di supporto che gira in <span class="slide2">Grizzly</span>, può essere visto come
+<strong>produttore</strong> di informazione che può essere inserita nella coda di ingresso dell’owner,
+in modo che possa essere <strong>consumata</strong> dalll’applicazione nel suo proprio Thread.</p>
+<a class="reference internal image-reference" href="_images/ActorInit24.png"><img alt="_images/ActorInit24.png" class="align-center" src="_images/ActorInit24.png" style="width: 70%;" /></a>
+</section>
+</section>
+<section id="vrhl24-inizializzazione">
+<h2>VRHL24-Inizializzazione<a class="headerlink" href="#vrhl24-inizializzazione" title="Permalink to this heading">¶</a></h2>
+<p>L’inizializzazione del supporto crea la connessione su WS, si registra  come osservatore e definisce la
+struttura del messaggio (<code class="docutils literal notranslate"><span class="pre">toApplMsg</span></code>) da inviare all’applicazione, nel caso in cui l’applicazione
+sia un attore o meno.</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">VrobotLLMoves24</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">ApplAbstractObserver</span><span class="w"> </span><span class="kd">implements</span><span class="w">  </span><span class="n">IVrobotLLMoves</span><span class="p">{</span>
+<span class="w">  </span><span class="kd">protected</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">vitualRobotIp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;localhost&quot;</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">protected</span><span class="w"> </span><span class="n">ActorBasic</span><span class="w"> </span><span class="n">owner</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="n">Interaction</span><span class="w"> </span><span class="n">conn</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">protected</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">toApplMsg</span><span class="p">;</span><span class="w">                 </span><span class="c1">//message to the application</span>
+<span class="w">  </span><span class="kd">protected</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">asynchMoveResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w">   </span><span class="c1">//for observer part</span>
+
+
+<span class="w">  </span><span class="c1">//Factory method</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">VrobotLLMoves24</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">vitualRobotIp</span><span class="p">,</span><span class="w"> </span><span class="n">ActorBasic</span><span class="w"> </span><span class="n">owner</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">VrobotLLMoves24</span><span class="p">(</span><span class="w"> </span><span class="n">vitualRobotIp</span><span class="p">,</span><span class="w"> </span><span class="n">owner</span><span class="w"> </span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="c1">//Constructor</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="nf">VrobotLLMoves24</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">vitualRobotIp</span><span class="p">,</span><span class="w"> </span><span class="n">ActorBasic</span><span class="w"> </span><span class="n">owner</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">connect</span><span class="p">(</span><span class="n">vitualRobotIp</span><span class="p">,</span><span class="w"> </span><span class="n">owner</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="kd">protected</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">connect</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">vitualRobotIp</span><span class="p">,</span><span class="w"> </span><span class="n">ActorBasic</span><span class="w"> </span><span class="n">owner</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="na">vitualRobotIp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vitualRobotIp</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="na">owner</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="n">owner</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="na">conn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConnectionFactory</span><span class="p">.</span><span class="na">createClientSupport</span><span class="p">(</span>
+<span class="w">                      </span><span class="n">ProtocolType</span><span class="p">.</span><span class="na">ws</span><span class="p">,</span><span class="n">vitualRobotIp</span><span class="o">+</span><span class="s">&quot;:8091&quot;</span><span class="p">,</span><span class="s">&quot;&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="p">((</span><span class="n">WsConnection</span><span class="p">)</span><span class="w"> </span><span class="n">conn</span><span class="p">).</span><span class="na">addObserver</span><span class="p">(</span><span class="k">this</span><span class="p">);</span><span class="w">  </span><span class="c1">//DIVENTA OSSERVATORE</span>
+<span class="w">      </span><span class="k">if</span><span class="p">(</span><span class="w"> </span><span class="n">owner</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="p">)</span>
+<span class="w">              </span><span class="n">toApplMsg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;msg(wenvinfo, dispatch, support, RECEIVER, CONTENT, 0)&quot;</span>
+<span class="w">             </span><span class="p">.</span><span class="na">replace</span><span class="p">(</span><span class="s">&quot;RECEIVER&quot;</span><span class="p">,</span><span class="n">owner</span><span class="p">.</span><span class="na">getName</span><span class="p">());</span>
+<span class="w">      </span><span class="k">else</span>
+<span class="w">          </span><span class="n">toApplMsg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;msg(wenvinfo, dispatch, support, RECEIVER, CONTENT, 0)&quot;</span>
+<span class="w">          </span><span class="p">.</span><span class="na">replace</span><span class="p">(</span><span class="s">&quot;RECEIVER&quot;</span><span class="p">,</span><span class="s">&quot;alien&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="vrhl24-comandi-di-movimento">
+<h2>VRHL24-Comandi di movimento<a class="headerlink" href="#vrhl24-comandi-di-movimento" title="Permalink to this heading">¶</a></h2>
+<p>I comandi di movimento messi a disposizione dal supporto
+sono rappresentati dai metodi della seguente interfaccia, ispirata ai
+<a class="reference internal" href="VirtualRobot23.html#comandi-base-per-il-robot-in-cril"><span class="std std-ref">Comandi-base per il robot in cril</span></a>:</p>
+<section id="ivrobotllmoves">
+<h3>IVrobotLLMoves<a class="headerlink" href="#ivrobotllmoves" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-Java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">IVrobotLLMoves</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">//Ispirate da VirtualRobot23</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">turnLeft</span><span class="p">()</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">turnRight</span><span class="p">()</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">time</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">backward</span><span class="p">(</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">time</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">halt</span><span class="p">()</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">//Nuove operazioni</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="n">time</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Le <span class="blue">mosse hanno tutte una durata limitata</span>, ma le interazioni sulla <code class="docutils literal notranslate"><span class="pre">WS</span></code> sono di tipo asincrono
+e per sapere quando una mossa
+è terminata occorre gestire il <a class="reference internal" href="VirtualRobot23.html#messaggio-di-stato"><span class="std std-ref">Messaggio di stato</span></a> inviato sulla <code class="docutils literal notranslate"><span class="pre">WS</span></code> da WEnv.</p>
+</section>
+<section id="messaggi-statocomando">
+<h3>messaggi-statocomando<a class="headerlink" href="#messaggi-statocomando" title="Permalink to this heading">¶</a></h3>
+<p>La forma dei messaggi di stato relativa alla terminazione del comando è:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;endmove&quot;</span><span class="p">:</span><span class="s2">&quot;true&quot;</span><span class="p">,</span> <span class="s2">&quot;move&quot;</span><span class="p">:</span><span class="s2">&quot;moveForward&quot;</span><span class="p">}</span>             <span class="o">//</span><span class="n">SUCESSO</span>
+<span class="p">{</span><span class="s2">&quot;endmove&quot;</span><span class="p">:</span><span class="s2">&quot;false&quot;</span><span class="p">,</span><span class="s2">&quot;move&quot;</span><span class="p">:</span><span class="s2">&quot;moveForward-collision&quot;</span><span class="p">}</span>   <span class="o">//</span><span class="n">FALLIMENTO</span>
+</pre></div>
+</div>
+<p>D’ora in avanti, denomineremo questi messaggi come <span class="remark">messaggi-statocomando</span>.</p>
+<a class="reference internal image-reference" href="_images/VrobotLLMsgStatocomando24.png"><img alt="_images/VrobotLLMsgStatocomando24.png" class="align-center" src="_images/VrobotLLMsgStatocomando24.png" style="width: 60%;" /></a>
+<p>Notiamo che, rispetto ai <a class="reference internal" href="VirtualRobot23.html#comandi-base-per-il-robot-in-cril"><span class="std std-ref">Comandi-base per il robot in cril</span></a>,
+in <a class="reference internal" href="#ivrobotllmoves"><span class="std std-ref">IVrobotLLMoves</span></a>
+è definita la nuova operazione  <a class="reference internal" href="#step"><span class="std std-ref">step</span></a>.</p>
+</section>
+<section id="step">
+<h3>step<a class="headerlink" href="#step" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>muove in avanti il robot per un tempo dato, restituendo il  <em>boolean</em> <code class="docutils literal notranslate"><span class="pre">true</span></code>
+se il movimento termina con successo e <code class="docutils literal notranslate"><span class="pre">false</span></code> nel caso
+il movimento non possa essere completato</p>
+</li>
+</ul>
+<p>il metodo <em>step</em>  esegue una <span class="slide2">richiesta bloccante</span>,
+pur avendo inviato sulla WS un messaggio in modo asincrono.</p>
+</section>
+<section id="chi-e-l-owner">
+<h3>Chi è l’owner?<a class="headerlink" href="#chi-e-l-owner" title="Permalink to this heading">¶</a></h3>
+<a class="reference internal image-reference" href="_images/VrobotLLvrqak.png"><img alt="_images/VrobotLLvrqak.png" class="align-center" src="_images/VrobotLLvrqak.png" style="width: 100%;" /></a>
+<p>Si veda <a class="reference external" href="../../../../boundaryWalk24/src/vrqak.qaktt">vrqak</a>.</p>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">VrobotLLMoves24</a><ul>
+<li><a class="reference internal" href="#vrhl24-informazioni-da-wenv-come-eventi">VRHL24-Informazioni da WEnv come eventi</a><ul>
+<li><a class="reference internal" href="#un-dettaglio-sulla-tecnologia">Un dettaglio sulla tecnologia</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#vrhl24-inizializzazione">VRHL24-Inizializzazione</a></li>
+<li><a class="reference internal" href="#vrhl24-comandi-di-movimento">VRHL24-Comandi di movimento</a><ul>
+<li><a class="reference internal" href="#ivrobotllmoves">IVrobotLLMoves</a></li>
+<li><a class="reference internal" href="#messaggi-statocomando">messaggi-statocomando</a></li>
+<li><a class="reference internal" href="#step">step</a></li>
+<li><a class="reference internal" href="#chi-e-l-owner">Chi è l’owner?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="VirtualRobot23.html"
+                          title="previous chapter">VirtualRobot23</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="BasicRobot24.html"
+                          title="next chapter">BasicRobot24</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/VrobotLLMoves24.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="BasicRobot24.html" title="BasicRobot24"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="VirtualRobot23.html" title="VirtualRobot23"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">VrobotLLMoves24</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>

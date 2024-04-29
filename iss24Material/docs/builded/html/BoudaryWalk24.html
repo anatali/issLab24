@@ -1,0 +1,340 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>BoundaryWalk24 &#8212; iss24 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">BoundaryWalk24</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="boundarywalk24">
+<h1>BoundaryWalk24<a class="headerlink" href="#boundarywalk24" title="Permalink to this heading">¶</a></h1>
+<section id="bw24-rerquirements">
+<h2>BW24-Rerquirements<a class="headerlink" href="#bw24-rerquirements" title="Permalink to this heading">¶</a></h2>
+<p>Costruire un sistema software che induce il <a class="reference internal" href="VirtualRobot23.html#virtualrobot23"><span class="std std-ref">Il VirtualRobot</span></a>:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><span class="blue">BW-Req1</span> : a percorrere (una volta) il bordo perimetrale (libero da ostacoli)
+della stanza rappresentata ne <a class="reference internal" href="VirtualRobot23.html#la-scena-di-wenv"><span class="std std-ref">La scena di WEnv</span></a></p></li>
+<li><p><span class="blue">BW-Req2</span> : a fermarsi di 5 sec quando rilevato da un Sonar della stanza</p></li>
+<li><p><span class="blue">BW-Req3</span> : a fermarsi quando il sonar realizzato nel <a class="reference internal" href="RaspApplCode24.html#progetto-sonarqak24"><span class="std std-ref">Progetto sonarqak24</span></a>
+rileva un ostacolo.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="bw24-requirement-analysis">
+<h2>BW24-Requirement analysis<a class="headerlink" href="#bw24-requirement-analysis" title="Permalink to this heading">¶</a></h2>
+<p><span class="slidekp">Modello della stanza</span></p>
+<p>La stanza è uno spazio piano Euclideo delimitato da bordi.</p>
+<blockquote>
+<div><table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><a class="reference internal image-reference" href="_images/ModelloStanza.png"><img alt="_images/ModelloStanza.png" class="align-center" src="_images/ModelloStanza.png" style="width: 100%;" /></a>
+</td>
+<td><ul class="simple">
+<li><p>Il <span class="blue">Bordo perimetrale</span> ha lunghezza <code class="docutils literal notranslate"><span class="pre">lf+ld+lr+lu</span></code>.</p></li>
+<li><p>Poichè la stanza è rettangolare, si ha <code class="docutils literal notranslate"><span class="pre">lf==lr</span> <span class="pre">&amp;&amp;</span> <span class="pre">ld==lu</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DR=2R</span></code>, essendo <code class="docutils literal notranslate"><span class="pre">R</span></code> il <a class="reference internal" href="VirtualRobot23.html#virtualrobot23"><span class="std std-ref">raggio del cerchio</span></a> in cui può essere racchiuso
+il <a class="reference internal" href="VirtualRobot23.html#virtualrobot23"><span class="std std-ref">Il VirtualRobot</span></a>.</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p><span class="slidekp">La locazione Home</span></p>
+<p>Lo <a class="reference internal" href="VirtualRobot23.html#stato-iniziale-del-virtualrobot"><span class="std std-ref">Stato iniziale del virtualrobot</span></a> è l’angolo superiore sinistro, detto <code class="docutils literal notranslate"><span class="pre">Home</span></code>.</p>
+<p><span class="slidekp">Sonar della stanza</span></p>
+<p>Sono dispositivi che rilevano la distanza dal robot. Attualmente,un sonar è
+posto sul bordo <code class="docutils literal notranslate"><span class="pre">wallUp</span></code>.
+Quando rilevano il robot, i sonar emettono le seguenti informazioni:</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;sonarName&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;sonarName&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;distance&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span><span class="p">,</span> <span class="s2">&quot;axis&quot;</span><span class="p">:</span> <span class="s2">&quot;AXIS&quot;</span> <span class="p">}</span>
+<span class="n">AXIS</span> <span class="o">=</span> <span class="n">x</span> <span class="o">|</span> <span class="n">y</span>  <span class="o">//</span><span class="n">a</span> <span class="n">seconda</span> <span class="n">dell</span><span class="s1">&#39;orientamento del sonar</span>
+
+<span class="o">//</span><span class="n">Esempio</span><span class="p">:</span>
+<span class="p">{</span><span class="s2">&quot;sonarName&quot;</span><span class="p">:</span><span class="s2">&quot;sonar1&quot;</span><span class="p">,</span><span class="s2">&quot;distance&quot;</span><span class="p">:</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span><span class="s2">&quot;axis&quot;</span><span class="p">:</span><span class="s2">&quot;y&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><span class="slidekp">Sonar esterno</span></p>
+<p>Il sonar del <a class="reference internal" href="RaspApplCode24.html#progetto-sonarqak24"><span class="std std-ref">Progetto sonarqak24</span></a> è un dispositivo che emette l’<a class="reference internal" href="unibo.basicomm23.html#tipi-di-messaggi"><span class="std std-ref">evento qak</span></a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Event</span> <span class="n">obstacle</span>  <span class="p">:</span> <span class="n">obstacle</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>rappresentato dalla stringa <code class="docutils literal notranslate"><span class="pre">msg(</span> <span class="pre">obstacle,</span> <span class="pre">event,</span> <span class="pre">sonar24,</span> <span class="pre">ANY,</span> <span class="pre">obstacle(DISTANCE),</span> <span class="pre">SEQNUM</span> <span class="pre">)</span></code></p>
+<section id="bw24-requirement-architecture">
+<h3>BW24-Requirement architecture<a class="headerlink" href="#bw24-requirement-architecture" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><a class="reference internal image-reference" href="_images/bw24reqs.png"><img alt="_images/bw24reqs.png" class="align-center" src="_images/bw24reqs.png" style="width: 100%;" /></a>
+<p><code class="docutils literal notranslate"><span class="pre">obstacle</span></code> come evento è al momento <span class="slide2">solo indicativo</span> e non prescrittivo</p>
+</td>
+<td><p>Il modello <a class="reference external" href="../../../../boundaryWalk24/src/bw24reqs.qaktt">bw24res.qak</a> viene introdotto per indicare (in modo formale) che il sistema è composto da:</p>
+<ul>
+<li><p>il componente esterno <code class="docutils literal notranslate"><span class="pre">sonar24</span></code> che produce (in modo da precisare) informazioni riguardo
+alla rilevazione di un <code class="docutils literal notranslate"><span class="pre">obstacle</span></code></p></li>
+<li><p>il componente esterno <a class="reference internal" href="VirtualRobot23.html#virtualrobot23"><span class="std std-ref">VirtualRobot23</span></a> che rappresenta il robot da gestire
+e un ambiente che include i sonar della stanza che emettono stringhe della forma</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;sonarName&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;sonarName&gt;&quot;</span><span class="p">,</span><span class="s2">&quot;distance&quot;</span><span class="p">:</span><span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span><span class="p">,</span><span class="s2">&quot;axis&quot;</span><span class="p">:</span><span class="s2">&quot;AXIS&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>un componente applicativo denominato <code class="docutils literal notranslate"><span class="pre">bw24core</span></code>, che deve:</p>
+<ul class="simple">
+<li><p>gestire le informazioni riguardo a <code class="docutils literal notranslate"><span class="pre">obstacle</span></code> (al momento rappresentate come eventi).</p></li>
+<li><p>inviare al  <a class="reference internal" href="VirtualRobot23.html#virtualrobot23"><span class="std std-ref">VirtualRobot23</span></a> comandi di movimento in forma di stringhe
+<a class="reference internal" href="VirtualRobot23.html#comandi-base-per-il-robot-in-cril"><span class="std std-ref">cril</span></a></p></li>
+<li><p>percepire i <a class="reference internal" href="VirtualRobot23.html#messaggio-di-stato"><span class="std std-ref">messaggi di stato</span></a> emessi dal robot
+e dai sonar dell’ambiente <a class="reference internal" href="VirtualRobot23.html#la-scena-di-wenv"><span class="std std-ref">WEnv</span></a>.</p></li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="bw24-problem-analysis">
+<h2>BW24-Problem analysis<a class="headerlink" href="#bw24-problem-analysis" title="Permalink to this heading">¶</a></h2>
+<p>Il problema implica la costruzione di un sistema software che:</p>
+<ul class="simple">
+<li><p>presenta funzionamento <span class="slide2">proattivo</span>, legato al movimento autonomo del robot lungo il bordo
+perimetrale della stanza;</p></li>
+<li><p>presenta funzionamento <span class="slide2">reattivo</span>, quando deve reagire agli eventi dei sonar.</p></li>
+</ul>
+<p>Le principali problematiche poste dai requisiti sono riconducibili alle seguenti domande:</p>
+<ul class="simple">
+<li><p><span class="slidekp">BW24-P1</span>: come può il componente <code class="docutils literal notranslate"><span class="pre">bw24core</span></code> reagire agli eventi mentre sta
+eseguendo il suo funzionamento proattivo?</p></li>
+<li><p><span class="slidekp">BW24-P2</span>: come avviene l’invio al robot di comandi <a class="reference internal" href="VirtualRobot23.html#comandi-base-per-il-robot-in-cril"><span class="std std-ref">cril</span></a>
+da parte di <code class="docutils literal notranslate"><span class="pre">bw24core</span></code>? Ricordiamo che:</p>
+<ul>
+<li><p>il virtualrobot può essere comandato inviando stringhe  <a class="reference internal" href="VirtualRobot23.html#comandi-base-per-il-robot-in-cril"><span class="std std-ref">cril</span></a>
+in modo sia <a class="reference internal" href="VirtualRobot23.html#interazione-sincrona"><span class="std std-ref">sincrono</span></a> (via <strong>HTTP</strong>)
+sia <a class="reference internal" href="VirtualRobot23.html#interazione-asincrona"><span class="std std-ref">asincrono</span></a> (via <strong>WS</strong>)</p></li>
+</ul>
+</li>
+<li><p><span class="slidekp">BW24-P3</span>: come avviene la percezione delle informazioni emesse dai sonar da parte
+di <code class="docutils literal notranslate"><span class="pre">bw24core</span></code>? Ricordiamo che:</p>
+<ul>
+<li><p><a class="reference internal" href="VirtualRobot23.html#la-scena-di-wenv"><span class="std std-ref">WEnv</span></a> emette sulla WS un <a class="reference internal" href="VirtualRobot23.html#messaggio-di-stato"><span class="std std-ref">Messaggio di stato</span></a> sulla distanza rilevata da un sonar;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sonar24</span></code> costruisce informazione sulla rilevazione di un <strong>obstacle</strong>,  che può
+essere resa disponibile in vari modi.</p></li>
+</ul>
+</li>
+</ul>
+<p>Ad una prima analisi sembra dunque opportuno:</p>
+<ul class="simple">
+<li><p>avvalersi di <a class="reference internal" href="unibo.basicomm23.html#unibo-basicomm23-interfaces-interaction"><span class="std std-ref">Interaction</span></a> per creare una
+<span class="slide2">connessione HTTP o WS</span> con <a class="reference internal" href="VirtualRobot23.html#virtualrobot23"><span class="std std-ref">VirtualRobot23</span></a>, su cui inviare e ricevere
+informazioni.
+Questo obiettivo viene facilitato dal supporto <a class="reference internal" href="VrobotLLMoves24.html#id1"><span class="std std-ref">VrobotLLMoves24</span></a> che realizza una
+<span class="slide3">connessione WS</span> in modo da poter non solo inviare comandi di movimento al robot,
+ma <span class="slide2">anche ricevere</span> i <a class="reference internal" href="VirtualRobot23.html#messaggio-di-stato"><span class="std std-ref">messaggi di stato</span></a>.</p>
+</li>
+<li><p>avvalersi della <a class="reference internal" href="QakActors24.html#qak-infrastructure"><span class="std std-ref">Qak infrastructure</span></a> per realizzare le interazioni
+con <a class="reference internal" href="RaspApplCode24.html#progetto-sonarqak24"><span class="std std-ref">sonar24</span></a>. Questo accade ovviamente in modo implicito
+impostando un modello qak del sistema.</p></li>
+</ul>
+<p>Partendio da queste ipotesi, affermiamo che:</p>
+<ul class="simple">
+<li><p><span class="slidekp">BW24-P1</span>: è posibile interrompere un movimento in corso con il comando <code class="docutils literal notranslate"><span class="pre">halt</span></code>.</p></li>
+<li><p><span class="slidekp">BW24-P2</span>: i comandi sono inviati su una connessione WS, avvalendosi di un opprotuno supporto,
+ad esempio <a class="reference internal" href="VrobotLLMoves24.html#id1"><span class="std std-ref">VrobotLLMoves24</span></a>.</p></li>
+<li><p><span class="slidekp">BW24-P3</span>: i dati dei sonar della stanza sono convertiti dal supporto <a class="reference internal" href="VrobotLLMoves24.html#id1"><span class="std std-ref">VrobotLLMoves24</span></a> in eventi,
+mentre <span class="slide2">si ritiene possibile intervenire in fase di progettazione</span> sul  <a class="reference internal" href="RaspApplCode24.html#progetto-sonarqak24"><span class="std std-ref">Progetto sonarqak24</span></a> per
+rendere disponibile l’informazione sulla rilevazione di un <strong>obstacle</strong> nel modo ritenuto più
+adeguato alla presente applicazione.</p></li>
+</ul>
+<section id="bw24-un-approccio-naive">
+<h3>BW24 - Un approccio naive<a class="headerlink" href="#bw24-un-approccio-naive" title="Permalink to this heading">¶</a></h3>
+<p>Molto spesso si segue l’impulso di <strong>saltare direttamente alla progettazione
+e alla codifica</strong> senza soffermarsi troppo sulla analisi del problema.
+Ad esempio, una possibile implementazione,
+che interagisce direttamente con il <a class="reference internal" href="VirtualRobot23.html#virtualrobot23"><span class="std std-ref">VirtualRobot23</span></a> potrebbe essere la seguente:</p>
+<p><a class="reference external" href="../../../../virtualrobotusage/src/bw24naive.qaktt">bw24naive.qak</a></p>
+<p>Tuttavia, questo modo di procedere però <span class="slide2">non è conforme ai principi</span> de <a class="reference internal" href="Architetture.html#la-clean-architecture"><span class="std std-ref">La Clean Architecture</span></a>
+e dell’<a class="reference internal" href="Principi.html#dependency-inversion"><span class="std std-ref">Dependency inversion</span></a>.</p>
+<p><span class="slide1">Riflettiamo sulle dipendenze</span></p>
+</section>
+<section id="bw24-dipendenze-legate-alla-interazione">
+<h3>BW24 - Dipendenze legate alla interazione<a class="headerlink" href="#bw24-dipendenze-legate-alla-interazione" title="Permalink to this heading">¶</a></h3>
+<p>Secondo i principi de <a class="reference internal" href="Architetture.html#la-clean-architecture"><span class="std std-ref">La Clean Architecture</span></a>, il livello applicativo (cioè <code class="docutils literal notranslate"><span class="pre">bw24core</span></code>)
+non dovrebbe dipendere dai vincoli d’uso imposti da  <a class="reference internal" href="VirtualRobot23.html#virtualrobot23"><span class="std std-ref">VirtualRobot23</span></a>.</p>
+<p><span class="slide2">Dipendenze dai linguaggi di comunicazione</span></p>
+<p>Poichè  <a class="reference internal" href="VirtualRobot23.html#virtualrobot23"><span class="std std-ref">VirtualRobot23</span></a> non è un POJO, ma un componente con cui si interagisce mediante messaggi,
+le dipendenze sono ora rappresentate dal linguaggio con cui inivare comandi al robot e con cui
+percepire i <a class="reference internal" href="VirtualRobot23.html#messaggio-di-stato"><span class="std std-ref">messaggi di stato</span></a> del robot e dei sonar.</p>
+</section>
+<section id="il-linguaggio-aril">
+<h3>Il linguaggio aril<a class="headerlink" href="#il-linguaggio-aril" title="Permalink to this heading">¶</a></h3>
+<p>Poichè l’uso di un robot virtuale è <strong>solo un passo intermedio</strong> verso un robot fisico,
+che potrebbe avere  un linguaggio di comando diverso,
+può essere opportuno introdurre un linguaggio di comando ‘technology-independent’,
+che  denominiamo <span class="slide3">linguaggio aril</span> (<strong>Abstract Robot Interaction Lanaguage</strong>)
+con cui esprimere i comandi-base di spostamento con la sintassi che segue:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MOVE</span> <span class="o">=</span> <span class="n">w</span> <span class="o">|</span> <span class="n">s</span> <span class="o">|</span> <span class="n">l</span> <span class="o">|</span> <span class="n">r</span> <span class="o">|</span> <span class="n">h</span> <span class="o">|</span> <span class="n">p</span>
+
+<span class="n">Dispatch</span> <span class="n">cmd</span>    <span class="p">:</span> <span class="n">cmd</span><span class="p">(</span> <span class="n">MOVE</span> <span class="p">)</span> <span class="s2">&quot;aril MOVE=w | s | l | r | h | p&quot;</span>
+</pre></div>
+</div>
+<p>Dualmente, si ritiene opportuno mappare i <a class="reference internal" href="VirtualRobot23.html#messaggio-di-stato"><span class="std std-ref">messaggi di stato</span></a> in  eventi:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Event</span>    <span class="n">vrinfo</span> <span class="p">:</span> <span class="n">vrinfo</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">)</span>   <span class="s2">&quot;info emessa da vrrobot&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="verso-un-basicrobot-logico">
+<h3>Verso un basicrobot logico<a class="headerlink" href="#verso-un-basicrobot-logico" title="Permalink to this heading">¶</a></h3>
+<p>La responsabilità di tradurre i comandi da <code class="docutils literal notranslate"><span class="pre">aril</span></code> a <a class="reference internal" href="VirtualRobot23.html#comandi-base-per-il-robot-in-cril"><span class="std std-ref">cril</span></a>
+(o in qualunque altro linguaggio imposto da un robot virtuale o fisico) viene affidata a un nuovo componente,
+denominato <span class="slide3">basicrobot0</span>, che può anche eseguire il mapping dei messaggi di stato
+in eventi.</p>
+</section>
+<section id="bw24-test-plans">
+<h3>BW24-Test Plans<a class="headerlink" href="#bw24-test-plans" title="Permalink to this heading">¶</a></h3>
+</section>
+</section>
+<section id="bw24-logical-architecture">
+<h2>BW24-Logical architecture<a class="headerlink" href="#bw24-logical-architecture" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><img alt="_images/bw24analisi0.png" src="_images/bw24analisi0.png" />
+</td>
+<td><p>Il modello <a class="reference external" href="../../../../virtualrobotusage/src/bw24analisi0.qaktt">bw24analisi0.qak</a> è <span class="slide2">solo indicativo</span> delle informazioni (in forma di eventi)
+che i diversi componenti devono generare e percepire.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Dispatch</span> <span class="n">cmd</span>    <span class="p">:</span> <span class="n">cmd</span><span class="p">(</span> <span class="n">MOVE</span> <span class="p">)</span> <span class="s2">&quot;aril MOVE=w | s | l | r | h&quot;</span>
+<span class="n">Event</span> <span class="n">vrinfo</span>    <span class="p">:</span> <span class="n">vrinfo</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">)</span>  <span class="s2">&quot;info emessa da vrrobot&quot;</span>
+<span class="n">Event</span> <span class="n">sonardata</span> <span class="p">:</span> <span class="n">sonar</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>     <span class="s2">&quot;emesso da WEnv&quot;</span>
+<span class="n">Event</span> <span class="n">obstacle</span>  <span class="p">:</span> <span class="n">obstacle</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>  <span class="s2">&quot;emesso da sonar24&quot;</span>
+</pre></div>
+</div>
+<p>I componenti sono rappresentati come attori in unico contesto, dando al nome il suffisso <code class="docutils literal notranslate"><span class="pre">mock</span></code>
+per indicare che si tratta di un modello provvisorio.</p>
+<p>Gli eventi <code class="docutils literal notranslate"><span class="pre">vrinfo</span></code> e <code class="docutils literal notranslate"><span class="pre">sonardata</span></code> derivano da quanto riportato in <a class="reference internal" href="VrobotLLMoves24.html#id1"><span class="std std-ref">VrobotLLMoves24</span></a>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="bw24-project">
+<h2>BW24-Project<a class="headerlink" href="#bw24-project" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="bw24-testing">
+<h2>BW24-Testing<a class="headerlink" href="#bw24-testing" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="bw24-deployment">
+<h2>BW24-Deployment<a class="headerlink" href="#bw24-deployment" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">BoundaryWalk24</a><ul>
+<li><a class="reference internal" href="#bw24-rerquirements">BW24-Rerquirements</a></li>
+<li><a class="reference internal" href="#bw24-requirement-analysis">BW24-Requirement analysis</a><ul>
+<li><a class="reference internal" href="#bw24-requirement-architecture">BW24-Requirement architecture</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bw24-problem-analysis">BW24-Problem analysis</a><ul>
+<li><a class="reference internal" href="#bw24-un-approccio-naive">BW24 - Un approccio naive</a></li>
+<li><a class="reference internal" href="#bw24-dipendenze-legate-alla-interazione">BW24 - Dipendenze legate alla interazione</a></li>
+<li><a class="reference internal" href="#il-linguaggio-aril">Il linguaggio aril</a></li>
+<li><a class="reference internal" href="#verso-un-basicrobot-logico">Verso un basicrobot logico</a></li>
+<li><a class="reference internal" href="#bw24-test-plans">BW24-Test Plans</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bw24-logical-architecture">BW24-Logical architecture</a></li>
+<li><a class="reference internal" href="#bw24-project">BW24-Project</a></li>
+<li><a class="reference internal" href="#bw24-testing">BW24-Testing</a></li>
+<li><a class="reference internal" href="#bw24-deployment">BW24-Deployment</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/BoudaryWalk24.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">BoundaryWalk24</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>

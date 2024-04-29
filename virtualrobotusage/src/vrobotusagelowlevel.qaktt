@@ -1,0 +1,173 @@
+System vrobotusage
+/*
+ * Propedeutico a basicrobot
+ * Usa VrobotHLMovesActors24
+ * Risponde a 
+ *      Dispatch cmd : cmd(MOVE)
+ *      Request  step
+ */
+Dispatch cmd    : cmd(MOVE)  "MOVE = w|s|a|d|p   mosse del virtual robot"
+Event vrinfo    : vrinfo(A,B)
+Dispatch vrinfo : vrinfo(A,B)
+
+Event  sonardata   : sonar( DISTANCE ) 	   
+Event obstacle     : obstacle(X) 
+
+Dispatch pause     : pause(X) 
+Event    pause     : pause(X) 
+
+
+Dispatch stepok  : stepok(X)	
+Dispatch stepko  : stepko(X)
+
+Context ctxvrobotusage  ip [host="localhost" port=8120]
+
+/*
+ * Accede al virtual robot usando main.resources.robotvirtual.VrobotHLMovesActors24
+ */
+ /* 
+QActor vrclient context ctxvrobotusage withobj vr using "VrobotHLMovesActors24.create()"{
+	import "main.resources.robotvirtual.VrobotHLMovesActors24"
+	import "main.resources.gui.*" 
+	[# var N = 0 #]
+	State s0 initial{
+		println("$name STARTS") color blue
+		[# GuiUtils.showSystemInfo() #]
+		[# //vr.setTrace(true)  
+		   vr.connect("localhost", myself) 
+		#]
+		[# VrobotHLCmdGuiLocal(vr) #] //just to have a console ...
+	}
+	Goto doboundary
+	
+	State doboundary{
+		delay 200
+		[# vr.forward(2400)#]  //a long time, so to hit a wall
+		//[# vr.forward(-1) #]  //forever ...
+	}
+	Transition t0 
+	    whenMsg   vrinfo -> handleVrinfo        
+		whenEvent vrinfo -> handleVrinfo
+	
+	State handleVrinfo{
+		//[# vr.move("h") #]
+		[# N = N + 1 #]
+		//printCurrentMessage color magenta
+		onMsg( vrinfo:vrinfo( A,B ) ){ //vrinfo(moveForward-collision,false)
+			println("$name | ${payloadArg(0)} ${payloadArg(1)} N=$N") color magenta
+			if [# N < 4 #]{				
+				 [# vr.turnLeft(); vr.forward(2400) #]
+			}else{
+				[# vr.turnLeft()   #]
+				[# System.exit(0) #]
+			}
+		}
+	}
+	Transition t0 
+	    whenMsg   vrinfo -> handleVrinfo        
+		whenEvent vrinfo -> handleVrinfo
+}
+*/
+
+QActor vrstepping context ctxvrobotusage withobj vr using "VrobotHLMovesActors24.create()"{
+	import "main.resources.robotvirtual.VrobotHLMovesActors24"
+	import "main.resources.gui.*" 
+	[# var N = 0; 
+	   var Stepresult = false 
+	#]
+	State s0 initial{
+		println("$name STARTS") color blue
+		[# GuiUtils.showSystemInfo() #]
+		[# //vr.setTrace(true)  
+		   vr.connect("localhost", myself) 
+		#]
+		[# VrobotHLCmdGuiLocal(vr) #] //just to have a console ...
+		subscribeTo vrobserver for pause
+	}
+	Goto doboundary
+	
+	State doboundary{		
+		delay 200
+		[# Stepresult = vr.step(350) #]   
+		if [# Stepresult #] {
+			autodispatch stepok : stepok(true)
+		}else{
+			autodispatch stepko : stepko(true)
+		}
+	}
+	Transition t0 
+	    //whenMsg   pause  -> dopause
+	    whenEvent pause  -> dopause
+	    whenMsg   stepok -> doboundary        
+		whenMsg   stepko -> turnleft    
+	
+	//Interrupt like
+	State dopause{
+		printCurrentMessage color blue
+		delay 3000
+	}
+	Transition t0 
+	    whenMsg   stepok -> doboundary        
+		whenMsg   stepko -> turnleft    
+	
+	State turnleft{
+		[# N = N + 1 #]
+		//printCurrentMessage color magenta
+		[# vr.turnLeft()   #]
+	}
+	Goto doboundary if [# N < 4 #] else end
+	
+	State end{
+		println("$name | BYE") color blue
+		[# System.exit(0) #]
+	}
+}
+/*
+ * Gestisce gli eventi emessi dal supporto VrobotHLMovesActors24 
+ */
+
+QActor vrobserver context ctxvrobotusage{
+	State s0 initial{
+		println("$name STARTS") color cyan
+	}
+	Goto observing
+	
+	State observing{
+		
+	}
+	Transition t0 
+	    whenEvent sonardata  -> handleSonar
+		whenEvent obstacle   -> handleObstacle
+		whenEvent vrinfo     -> handleVrinfo
+	
+	State handleVrinfo{
+		printCurrentMessage color cyan
+	}
+	Goto observing  //li perdo?
+
+	State handleObstacle{
+		printCurrentMessage color cyan
+	}
+	Goto observing   
+
+	State handleSonar{
+		printCurrentMessage color cyan
+		emitlocalstream pause : pause(1)  //vengono accodati tutti ??
+		//forward vrstepping -m pause : pause(1)
+		//Non posso mandare msg: verrebbero accodati
+	}
+	Transition t0
+		//whenTime 500         -> observing
+	    whenEvent sonardata  -> ignoreSonarData
+	    
+	State   ignoreSonarData{
+		println("$name | ignoreSonarData ") color cyan
+	}
+	Transition t0
+		whenTime 3100        -> observing       //devo sapere quando riprende ...
+	    whenEvent sonardata  -> ignoreSonarData
+	
+	
+	
+}
+ 

@@ -8,17 +8,17 @@ import java.util.Observer;
 
 import it.unibo.kactor.ActorBasic;
 //import main.resources.robotvirtual.IVrobotMoves;
-import main.resources.robotvirtual.VrobotHLMovesActors24;
+import main.resources.robotvirtual.VrobotLLMoves24;
 
 /*
  */
 
 public class VrobotHLCmdGuiLocal implements  Observer{
 private String[] buttonLabels  = new String[] {"p", "w", "s", "l", "r", "h" };
-	private	VrobotHLMovesActors24 vrsupport ;
+	private	VrobotLLMoves24 vrsupport ;
 	private WsConnection conn;
 
-	public VrobotHLCmdGuiLocal(VrobotHLMovesActors24 vrsupport) {
+	public VrobotHLCmdGuiLocal(VrobotLLMoves24 vrsupport) {
 		this.vrsupport = vrsupport;
 //		GuiUtils.showSystemInfo();
 		ButtonAsGui concreteButton = ButtonAsGui.createButtons( "", buttonLabels );
@@ -66,7 +66,7 @@ private String[] buttonLabels  = new String[] {"p", "w", "s", "l", "r", "h" };
 	}
 	
 	public static void main( String[] args) {
- 		new VrobotHLCmdGuiLocal( VrobotHLMovesActors24.create( )  );
+ 		new VrobotHLCmdGuiLocal( VrobotLLMoves24.create("localhost",null )  );
     }
 }
 

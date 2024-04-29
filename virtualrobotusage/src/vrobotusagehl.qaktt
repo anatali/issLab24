@@ -55,6 +55,9 @@ QActor vrclient context ctxvrobotusage withobj vr using "VrobotHLMovesActors24.c
 }
 */
 
+/*
+ * Usa  basicrobot0
+*/
 QActor vrclienthl context ctxvrobotusage {
 	State s0 initial{
 		println("$name STARTS") color green
