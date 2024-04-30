@@ -1,6 +1,11 @@
 System bw24
 /*
  * bw24naive
+ * Accede al virtual robot usando main.resources.robotvirtual.VrobotLLMoves24
+ * Invia comandi forward con tempo sufficientemente lungo per garantire 
+ * il contatto con la parete di fronte
+ * Una volta percepito il contatto, invia un comando turnLeft e prosegue
+ * con lo stesso schema altre tre volte
  */
 Dispatch cmd    : cmd(MOVE)  "MOVE = w|s|a|d|p   mosse del virtual robot"
 Event vrinfo    : vrinfo(A,B)

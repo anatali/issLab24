@@ -6,7 +6,8 @@ System vrqak
  *      Dispatch cmd : cmd(MOVE)
  *      Request  step
  * 
- * Può essere attivato come risorsa esterna all'applicazione
+ * Può essere attivato come risorsa esterna all'applicazione.
+ * E' un esempio di un primo basicrobot logico.
  */
 //Dispatch cmd    : cmd(MOVE,T)  "MOVE = w|s|a|d|p   mosse del virtual robot"
 

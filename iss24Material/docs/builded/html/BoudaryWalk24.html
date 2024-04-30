@@ -139,7 +139,16 @@ e dai sonar dell’ambiente <a class="reference internal" href="VirtualRobot23.h
 perimetrale della stanza;</p></li>
 <li><p>presenta funzionamento <span class="slide2">reattivo</span>, quando deve reagire agli eventi dei sonar.</p></li>
 </ul>
-<p>Le principali problematiche poste dai requisiti sono riconducibili alle seguenti domande:</p>
+<p>Inoltre osserviamo che:</p>
+<ul class="simple">
+<li><p>l’emissione di un <a class="reference internal" href="VirtualRobot23.html#messaggio-di-stato"><span class="std std-ref">Messaggio di stato</span></a> da parte di <a class="reference internal" href="VirtualRobot23.html#la-scena-di-wenv"><span class="std std-ref">WEnv</span></a> avviene solo
+in relazione ad una mossa che il robot virtuale sta compiendo;</p></li>
+<li><p>l’emissione di un <a class="reference internal" href="VirtualRobot23.html#messaggio-dall-ambiente"><span class="std std-ref">Messaggio dall’ambiente</span></a> avviene anch’esso in relazione al movimento del robot virtuale
+e in modo anche ripetuto;</p></li>
+<li><p>in sistemi reali l’ambiente potrebbe essere sorgente di informazione non legata al movimento del robot, come
+ad esempio già accade con il sonar del <a class="reference internal" href="RaspApplCode24.html#progetto-sonarqak24"><span class="std std-ref">Progetto sonarqak24</span></a>.</p></li>
+</ul>
+<p>Le principali <span class="remark">problematiche</span> poste dai requisiti sono riconducibili alle seguenti domande:</p>
 <ul class="simple">
 <li><p><span class="slidekp">BW24-P1</span>: come può il componente <code class="docutils literal notranslate"><span class="pre">bw24core</span></code> reagire agli eventi mentre sta
 eseguendo il suo funzionamento proattivo?</p></li>
@@ -173,11 +182,11 @@ ma <span class="slide2">anche ricevere</span> i <a class="reference internal" hr
 con <a class="reference internal" href="RaspApplCode24.html#progetto-sonarqak24"><span class="std std-ref">sonar24</span></a>. Questo accade ovviamente in modo implicito
 impostando un modello qak del sistema.</p></li>
 </ul>
-<p>Partendio da queste ipotesi, affermiamo che:</p>
+<p>Partendo da queste ipotesi, affermiamo che, <span class="remark">riguardo alle tecnologie</span>:</p>
 <ul class="simple">
 <li><p><span class="slidekp">BW24-P1</span>: è posibile interrompere un movimento in corso con il comando <code class="docutils literal notranslate"><span class="pre">halt</span></code>.</p></li>
-<li><p><span class="slidekp">BW24-P2</span>: i comandi sono inviati su una connessione WS, avvalendosi di un opprotuno supporto,
-ad esempio <a class="reference internal" href="VrobotLLMoves24.html#id1"><span class="std std-ref">VrobotLLMoves24</span></a>.</p></li>
+<li><p><span class="slidekp">BW24-P2</span>: i comandi possono essere inviati su una connessione WS, avvalendosi di un opprotuno supporto,
+quale ad esempio <a class="reference internal" href="VrobotLLMoves24.html#id1"><span class="std std-ref">VrobotLLMoves24</span></a>.</p></li>
 <li><p><span class="slidekp">BW24-P3</span>: i dati dei sonar della stanza sono convertiti dal supporto <a class="reference internal" href="VrobotLLMoves24.html#id1"><span class="std std-ref">VrobotLLMoves24</span></a> in eventi,
 mentre <span class="slide2">si ritiene possibile intervenire in fase di progettazione</span> sul  <a class="reference internal" href="RaspApplCode24.html#progetto-sonarqak24"><span class="std std-ref">Progetto sonarqak24</span></a> per
 rendere disponibile l’informazione sulla rilevazione di un <strong>obstacle</strong> nel modo ritenuto più
@@ -186,10 +195,17 @@ adeguato alla presente applicazione.</p></li>
 <section id="bw24-un-approccio-naive">
 <h3>BW24 - Un approccio naive<a class="headerlink" href="#bw24-un-approccio-naive" title="Permalink to this heading">¶</a></h3>
 <p>Molto spesso si segue l’impulso di <strong>saltare direttamente alla progettazione
-e alla codifica</strong> senza soffermarsi troppo sulla analisi del problema.
+e alla codifica</strong> a partire dalle tecnologie disponibili, senza soffermarsi troppo sulla analisi del problema.
 Ad esempio, una possibile implementazione,
 che interagisce direttamente con il <a class="reference internal" href="VirtualRobot23.html#virtualrobot23"><span class="std std-ref">VirtualRobot23</span></a> potrebbe essere la seguente:</p>
-<p><a class="reference external" href="../../../../virtualrobotusage/src/bw24naive.qaktt">bw24naive.qak</a></p>
+<p><a class="reference external" href="../../../../virtualrobotusage/src/bw24naive.qaktt">bw24naive.qak</a>  che:</p>
+<ul class="simple">
+<li><p>Accede al virtual robot usando <a class="reference internal" href="VrobotLLMoves24.html#id1"><span class="std std-ref">VrobotLLMoves24</span></a>.</p></li>
+<li><p>Invia un comando <span class="blue">forward</span> con tempo sufficientemente lungo per garantire
+il contatto con la parete di fronte.</p></li>
+<li><p>Una volta percepito il contatto, invia un comando <span class="blue">turnLeft</span> e prosegue
+con lo stesso schema altre tre volte.</p></li>
+</ul>
 <p>Tuttavia, questo modo di procedere però <span class="slide2">non è conforme ai principi</span> de <a class="reference internal" href="Architetture.html#la-clean-architecture"><span class="std std-ref">La Clean Architecture</span></a>
 e dell’<a class="reference internal" href="Principi.html#dependency-inversion"><span class="std std-ref">Dependency inversion</span></a>.</p>
 <p><span class="slide1">Riflettiamo sulle dipendenze</span></p>
@@ -212,27 +228,26 @@ che  denominiamo <span class="slide3">linguaggio aril</span> (<strong>Abstract R
 con cui esprimere i comandi-base di spostamento con la sintassi che segue:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MOVE</span> <span class="o">=</span> <span class="n">w</span> <span class="o">|</span> <span class="n">s</span> <span class="o">|</span> <span class="n">l</span> <span class="o">|</span> <span class="n">r</span> <span class="o">|</span> <span class="n">h</span> <span class="o">|</span> <span class="n">p</span>
 
-<span class="n">Dispatch</span> <span class="n">cmd</span>    <span class="p">:</span> <span class="n">cmd</span><span class="p">(</span> <span class="n">MOVE</span> <span class="p">)</span> <span class="s2">&quot;aril MOVE=w | s | l | r | h | p&quot;</span>
+<span class="n">Dispatch</span> <span class="n">cmd</span> <span class="p">:</span> <span class="n">cmd</span><span class="p">(</span> <span class="n">MOVE</span> <span class="p">)</span> <span class="s2">&quot;aril MOVE=w | s | l | r | h | p&quot;</span>
 </pre></div>
 </div>
-<p>Dualmente, si ritiene opportuno mappare i <a class="reference internal" href="VirtualRobot23.html#messaggio-di-stato"><span class="std std-ref">messaggi di stato</span></a> in  eventi:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Event</span>    <span class="n">vrinfo</span> <span class="p">:</span> <span class="n">vrinfo</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">)</span>   <span class="s2">&quot;info emessa da vrrobot&quot;</span>
-</pre></div>
-</div>
+</section>
+<section id="osservabilita">
+<h3>Osservabilità<a class="headerlink" href="#osservabilita" title="Permalink to this heading">¶</a></h3>
+<p>Dualmente, si ritiene opportuno mappare i <a class="reference internal" href="VirtualRobot23.html#messaggio-di-stato"><span class="std std-ref">messaggi di stato</span></a> in  informazione
+osservabile da componenti esterni</p>
 </section>
 <section id="verso-un-basicrobot-logico">
 <h3>Verso un basicrobot logico<a class="headerlink" href="#verso-un-basicrobot-logico" title="Permalink to this heading">¶</a></h3>
-<p>La responsabilità di tradurre i comandi da <code class="docutils literal notranslate"><span class="pre">aril</span></code> a <a class="reference internal" href="VirtualRobot23.html#comandi-base-per-il-robot-in-cril"><span class="std std-ref">cril</span></a>
-(o in qualunque altro linguaggio imposto da un robot virtuale o fisico) viene affidata a un nuovo componente,
-denominato <span class="slide3">basicrobot0</span>, che può anche eseguire il mapping dei messaggi di stato
-in eventi.</p>
-</section>
-<section id="bw24-test-plans">
-<h3>BW24-Test Plans<a class="headerlink" href="#bw24-test-plans" title="Permalink to this heading">¶</a></h3>
+<p>Le considerazioni precedenti prefigurano l’opportunaità di introdurre un componente (un actor) che possa
+fare da ‘adapter’ tra l’applicazione e i dettagli tecnologici sull’uso di uno specifico robot.</p>
 </section>
 </section>
 <section id="bw24-logical-architecture">
 <h2>BW24-Logical architecture<a class="headerlink" href="#bw24-logical-architecture" title="Permalink to this heading">¶</a></h2>
+<p>Visto l’insieme delle problematiche, l’architettura logica può specificare in modo preciso
+l’insieme iniziale dei componenti, senza indicare in modo preciso le mosalità di interazione,
+che devono essere analizzate, discusse e decise in fase di progettazione.</p>
 <table class="docutils align-default" style="width: 100%">
 <colgroup>
 <col style="width: 40%" />
@@ -256,6 +271,11 @@ per indicare che si tratta di un modello provvisorio.</p>
 </tr>
 </tbody>
 </table>
+<section id="bw24-test-plans">
+<h3>BW24-Test Plans<a class="headerlink" href="#bw24-test-plans" title="Permalink to this heading">¶</a></h3>
+<p>In assenza di indicazioni precise sulla interazioni, la loro specifica formale deve essere rimandata
+alla fase progettazione.</p>
+</section>
 </section>
 <section id="bw24-project">
 <h2>BW24-Project<a class="headerlink" href="#bw24-project" title="Permalink to this heading">¶</a></h2>
@@ -288,11 +308,14 @@ per indicare che si tratta di un modello provvisorio.</p>
 <li><a class="reference internal" href="#bw24-un-approccio-naive">BW24 - Un approccio naive</a></li>
 <li><a class="reference internal" href="#bw24-dipendenze-legate-alla-interazione">BW24 - Dipendenze legate alla interazione</a></li>
 <li><a class="reference internal" href="#il-linguaggio-aril">Il linguaggio aril</a></li>
+<li><a class="reference internal" href="#osservabilita">Osservabilità</a></li>
 <li><a class="reference internal" href="#verso-un-basicrobot-logico">Verso un basicrobot logico</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bw24-logical-architecture">BW24-Logical architecture</a><ul>
 <li><a class="reference internal" href="#bw24-test-plans">BW24-Test Plans</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#bw24-logical-architecture">BW24-Logical architecture</a></li>
 <li><a class="reference internal" href="#bw24-project">BW24-Project</a></li>
 <li><a class="reference internal" href="#bw24-testing">BW24-Testing</a></li>
 <li><a class="reference internal" href="#bw24-deployment">BW24-Deployment</a></li>
