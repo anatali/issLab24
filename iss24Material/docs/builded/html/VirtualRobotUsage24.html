@@ -1,0 +1,217 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>VirtualRobotUsage24 &#8212; iss24 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="VrobotLLMoves24" href="VrobotLLMoves24.html" />
+    <link rel="prev" title="VirtualRobot23" href="VirtualRobot23.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="VrobotLLMoves24.html" title="VrobotLLMoves24"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="VirtualRobot23.html" title="VirtualRobot23"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">VirtualRobotUsage24</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="virtualrobotusage24">
+<h1>VirtualRobotUsage24<a class="headerlink" href="#virtualrobotusage24" title="Permalink to this heading">¶</a></h1>
+<section id="esempi-di-uso-del-virtualrobot">
+<h2>Esempi di uso del VirtualRobot<a class="headerlink" href="#esempi-di-uso-del-virtualrobot" title="Permalink to this heading">¶</a></h2>
+<p><span class="slide3">progetto virtualrobotusage</span></p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><ul class="simple">
+<li><p><a class="reference external" href="../../../../virtualrobotusage/src/bw24analisi0.qaktt">bw24analisi0.qak</a></p></li>
+</ul>
+</td>
+<td><p>Modello PRELIMINARE dell’analisi del problema  <a class="reference internal" href="BoudaryWalk24.html#boundarywalk24"><span class="std std-ref">BoundaryWalk24</span></a>.</p></td>
+</tr>
+<tr class="row-even"><td><ul class="simple">
+<li><p><a class="reference external" href="../../../../virtualrobotusage/src/bw24naive.qaktt">bw24naive.qak</a></p></li>
+</ul>
+</td>
+<td><p>Implementazione di una soluzione al problema  <a class="reference internal" href="BoudaryWalk24.html#boundarywalk24"><span class="std std-ref">BoundaryWalk24</span></a>, che interagisce
+direttamente con il <a class="reference internal" href="VirtualRobot23.html#virtualrobot23"><span class="std std-ref">Il VirtualRobot</span></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><ul class="simple">
+<li><p><a class="reference external" href="../../../../virtualrobotusage/src/main/resources/robotvirtual/VrobotLLMoves24.java">VrobotLLMoves24.java</a></p></li>
+</ul>
+</td>
+<td><p>POJO di supporto per la interazione di un actorqak con <a class="reference internal" href="VirtualRobot23.html#virtualrobot23"><span class="std std-ref">Il VirtualRobot</span></a></p></td>
+</tr>
+<tr class="row-even"><td><ul class="simple">
+<li><p><a class="reference external" href="../../../../virtualrobotusage/src/bw24proto1.qaktt">bw24proto1.qak</a></p></li>
+</ul>
+</td>
+<td><p>Un prototipo che copre i requisiti <strong>BW-Req1 e BW-Req2</strong> del problema <a class="reference internal" href="BoudaryWalk24.html#boundarywalk24"><span class="std std-ref">BoundaryWalk24</span></a> usando <a class="reference internal" href="VrobotLLMoves24.html#id1"><span class="std std-ref">VrobotLLMoves24</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><ul class="simple">
+<li><p><a class="reference external" href="../../../../virtualrobotusage/src/bw24proto1all.qaktt">bw24proto1all.qak</a></p></li>
+</ul>
+</td>
+<td><p>Un prototipo che copre tutti i requisiti  del problema <a class="reference internal" href="BoudaryWalk24.html#boundarywalk24"><span class="std std-ref">BoundaryWalk24</span></a> usando <a class="reference internal" href="VrobotLLMoves24.html#id1"><span class="std std-ref">VrobotLLMoves24</span></a>
+e SIMULANDO il sonar su RaspberryPi</p></td>
+</tr>
+<tr class="row-even"><td><ul class="simple">
+<li><p><a class="reference external" href="../../../../virtualrobotusage/src/bw24sonarwolfmock.qaktt">bw24sonarwolfmock.qak</a></p></li>
+</ul>
+</td>
+<td><p>Un simulatore del sonar su RaspberryPi che emette  via MQTT eventi percepibili da <a class="reference external" href="../../../../virtualrobotusage/src/bw24proto1all.qaktt">bw24proto1all.qak</a>.</p></td>
+</tr>
+<tr class="row-odd"><td><ul class="simple">
+<li><p><a class="reference external" href="../../../../virtualrobotusage/src/vrqak24.qaktt">vrqak24.qak</a></p></li>
+</ul>
+</td>
+<td><p>Un <a class="reference internal" href="Vrqak24.html#vrqak24"><span class="std std-ref">servizio</span></a> per permette l’uso remoto del <a class="reference internal" href="VirtualRobot23.html#virtualrobot23"><span class="std std-ref">VirtualRobot23</span></a></p></td>
+</tr>
+<tr class="row-even"><td><ul class="simple">
+<li><p><a class="reference external" href="../../../../virtualrobotusage/src/vrqak24test.qaktt">vrqak24test.qak</a></p></li>
+</ul>
+</td>
+<td><p>Un test sulle operazioni di <a class="reference internal" href="VrobotLLMoves24.html#id1"><span class="std std-ref">VrobotLLMoves24</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><ul class="simple">
+<li><p><a class="reference external" href="../../../../virtualrobotusage/src/bw24proto2.qaktt">bw24proto2.qak</a></p></li>
+</ul>
+</td>
+<td><p>Un prototipo che copre tutti i requisiti  del problema <a class="reference internal" href="BoudaryWalk24.html#boundarywalk24"><span class="std std-ref">BoundaryWalk24</span></a> usando <a class="reference internal" href="Vrqak24.html#vrqak24"><span class="std std-ref">Vrqak24</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="execution-tasks">
+<h2>Execution tasks<a class="headerlink" href="#execution-tasks" title="Permalink to this heading">¶</a></h2>
+<p>Per eseguire <a class="reference external" href="../../../../virtualrobotusage/src/vrqak24.qaktt">vrqak24.qak</a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">task</span> <span class="n">runVr</span><span class="p">(</span><span class="nb">type</span><span class="p">:</span> <span class="n">JavaExec</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">group</span> <span class="o">=</span> <span class="s2">&quot;Execution&quot;</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Run the main class with JavaExecTask&quot;</span>
+    <span class="n">classpath</span> <span class="o">=</span> <span class="n">sourceSets</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">runtimeClasspath</span>
+    <span class="n">main</span> <span class="o">=</span> <span class="s1">&#39;it.unibo.ctxvrqak.MainCtxvrqakKt&#39;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Per eseguire <a class="reference external" href="../../../../virtualrobotusage/src/bw24sonarwolfmock.qaktt">bw24sonarwolfmock.qak</a> :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">task</span> <span class="n">runWolf</span><span class="p">(</span><span class="nb">type</span><span class="p">:</span> <span class="n">JavaExec</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">group</span> <span class="o">=</span> <span class="s2">&quot;Execution&quot;</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Run the main class with JavaExecTask&quot;</span>
+    <span class="n">classpath</span> <span class="o">=</span> <span class="n">sourceSets</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">runtimeClasspath</span>
+    <span class="n">main</span> <span class="o">=</span> <span class="s1">&#39;it.unibo.ctxwolf.MainCtxwolfKt&#39;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="il-sonar-su-raspberrypi">
+<h2>Il sonar su RaspberryPi<a class="headerlink" href="#il-sonar-su-raspberrypi" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Il simulatore <a class="reference external" href="../../../../virtualrobotusage/src/bw24sonarwolfmock.qaktt">bw24sonarwolfmock.qak</a> fa sistema con a <a class="reference external" href="../../../../virtualrobotusage/src/bw24proto1all.qaktt">bw24proto1all.qak</a>.</p></li>
+<li><p>Il sonar su RaspberryPi che fa sistema con a <a class="reference external" href="../../../../virtualrobotusage/src/bw24proto1all.qaktt">bw24proto1all.qak</a> è <a class="reference external" href="../../../../unibo.sonarqak24/src/sonarbw24.qaktt">sonarbw24</a> che enette l’evento
+<code class="docutils literal notranslate"><span class="pre">Event</span> <span class="pre">wolf:wolf(D)</span></code></p></li>
+</ul>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">VirtualRobotUsage24</a><ul>
+<li><a class="reference internal" href="#esempi-di-uso-del-virtualrobot">Esempi di uso del VirtualRobot</a></li>
+<li><a class="reference internal" href="#execution-tasks">Execution tasks</a></li>
+<li><a class="reference internal" href="#il-sonar-su-raspberrypi">Il sonar su RaspberryPi</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="VirtualRobot23.html"
+                          title="previous chapter">VirtualRobot23</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="VrobotLLMoves24.html"
+                          title="next chapter">VrobotLLMoves24</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/VirtualRobotUsage24.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="VrobotLLMoves24.html" title="VrobotLLMoves24"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="VirtualRobot23.html" title="VirtualRobot23"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">VirtualRobotUsage24</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>

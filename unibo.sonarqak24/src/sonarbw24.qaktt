@@ -1,0 +1,86 @@
+System sonarbw24
+mqttBroker "broker.hivemq.com" : 1883 eventTopic "sonarbw24data"
+
+/*
+ * Sistema che funziona su RaspberryPi
+ * FA PARTE DEL SISTEMA BoundaryWalk24 e 
+ * RICHIEDE la parte ctxbw24  da bw24sonarwolfmock.qak
+ * sonardevice : attiva il sonar
+ *               emitlocalstream sonardata:distance(D)	
+ * datacleaner : subscribeTo sonardevice for sonardata 
+ *               emette l'evento obstacle:obstacle(D) quando D < 12
+ */
+Event sonardata : distance(D)   //emitted  by sonardevice or (better) by datacleaner
+//Event obstacle  : obstacle(D)   //emitted  by datacleaner
+Event  wolf         : wolf(D)   //emitted  by datacleaner
+
+Context ctxsonarbw24 ip [ host= "localhost"      port= 8128 ]
+Context ctxbw24      ip [host="192.168.1.132"    port= 8120 ]  
+ 
+QActor sonardevice context ctxsonarbw24{
+[# 
+	lateinit var reader : java.io.BufferedReader
+    lateinit var p : Process	
+    var Distance = 0
+#]	
+	State s0 initial{
+		println("$name | sonarstart") 
+	 	[#
+			p       = Runtime.getRuntime().exec("python sonar.py")
+			reader  = java.io.BufferedReader(  java.io.InputStreamReader(p.getInputStream() ))	
+		#]		
+	}
+	Goto readSonarData
+	
+	State readSonarData{
+	[# 
+		var data = reader.readLine()
+		CommUtils.outyellow("$name with python: data = $data"   ) 
+		if( data != null ){
+		try{ 
+			val vd = data.toFloat()
+			val v  = vd.toInt()
+			if( v <= 100 ){	//A first filter ...
+				Distance = v				
+			}else Distance = 0
+		}catch(e: Exception){
+				CommUtils.outred("$name readSonarDataERROR: $e "   )
+		}
+		}//if
+		
+	#]	
+		if [# Distance > 0 #] { 
+		    println("$name with python: data = $data"   ) color yellow
+			emitlocalstream sonardata : distance($Distance)			 
+		}
+		//autodispatch doread : doread(1)
+	}
+	Goto readSonarData
+
+
+}//sonardevice
+
+
+QActor datacleaner context ctxsonarbw24 {
+	[# var D = 0; #]
+	State s0 initial {
+		delay 1000
+		subscribeTo sonardevice for sonardata		
+		println("$name subscribed to sonardevice") color blue
+	}
+	Transition t0 whenEvent sonardata -> filter
+	
+	State filter {
+		 println("$name D=$D") color black	
+		onMsg(sonardata : distance(D)) {
+	      	[#  D = payloadArg(0).toInt() #]	      	
+	      	println("$name D=$D") color black	
+	      	if [# D < 12 #] {
+	      		println("$name emit obstacle") color magenta	
+	 			emit wolf : wolf($D)
+	     	}
+     	}
+	}	
+	Transition t0 whenEvent sonardata -> filter
+}
+  
