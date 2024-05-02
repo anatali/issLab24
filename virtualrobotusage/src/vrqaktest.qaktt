@@ -1,0 +1,96 @@
+System bw24
+/*
+ * vrqaktest.qak
+ * prototipo che usa vrqak ma non step asynch
+ */
+Dispatch halt   : halt(X)
+Dispatch move   : move(M)
+
+Request  cmd    : cmd(MOVE,T)  "MOVE = w|s|a|d|p   mosse del virtual robot"
+Reply cmddone   : cmddone(R)          for cmd
+Reply cmdfailed : cmdfailed(T,CAUSE)  for cmd
+
+Request step       : step(TIME)	
+Reply stepdone     : stepdone(V)                 for step
+Reply stepfailed   : stepfailed(DURATION, CAUSE) for step
+ 
+Event  sonardata   : sonar( DISTANCE ) 	   
+Event obstacle     : obstacle(X)  
+
+Dispatch vrinfo    : vrinfo(S,INFO)
+Dispatch pause     : pause(X) 
+Dispatch goon      : goon(N)   //for automsg in turnandgo
+ 
+Context ctxbw24  ip [host="localhost"  port=8120   ]
+Context ctxvrqak ip [host="127.0.0.1"  port=8125   ]
+//Context ctxsonarqak24   ip [host= "dontcare"   port= 8128  ]
+
+ExternalQActor vrqak context ctxvrqak  //Risorsa esterna che permette l'accesso al (virtual)robot
+ 
+/*
+ * Accede al virtual robot usando vrqak
+ */
+ QActor bw24core context ctxbw24  {
+ 	[# var N = 0 #] 
+	State s0 initial{ 
+		println("$name STARTS") color blue 
+		observeResource vrqak msgid vrinfo           
+		delegate vrinfo to bwobserver
+		forward vrqak -m halt : halt(50)  //resetto eventuali not_allowed
+	}
+	Goto boundary
+	
+	State boundary{
+		delay 200
+		request vrqak -m  cmd : cmd(w,2000)
+	} 
+	Transition t0 
+		whenReply cmddone   -> handlecmdok
+	    whenReply cmdfailed -> handlecmdko
+	    
+	State handlecmdok{
+		printCurrentMessage color blue
+	}
+	Goto boundary
+	
+	State handlecmdko{
+		[# N=N+1 #]
+		printCurrentMessage color magenta
+		forward vrqak -m move : move(l)
+	}
+	Goto boundary if [# N < 4 #] else end
+	
+	State end{
+		forward vrqak -m move : move(l)
+		delay 500
+		[# System.exit(0) #]
+	}
+	
+}
+ 
+QActor bwobserver context ctxbw24{
+	State s0 initial{ 
+		println("$name | START") color green
+	}
+	Transition t0
+		whenMsg vrinfo   -> handlevrinfo
+	
+	
+	State handlevrinfo{
+		//printCurrentMessage color green 
+		onMsg( vrinfo : vrinfo(S,INFO) ){
+			[# val source =payloadArg(0); val info = payloadArg(1) #]
+			//println("$name | handlevrinfo $info") color magenta
+			if [# info != "nonews" #]{
+			 	println("$name | handlevrinfo $info") color green
+			}  
+		}		
+	}
+	Transition t0
+		whenMsg vrinfo   -> handlevrinfo
+	
+}
+
+
+
+ 

@@ -12,22 +12,21 @@ System vrqak
 //Dispatch cmd    : cmd(MOVE,T)  "MOVE = w|s|a|d|p   mosse del virtual robot"
 
 Dispatch halt   : halt(X)
-Dispatch cmd    : cmd(M)
+Dispatch move   : move(M)
 
 Request  cmd    : cmd(MOVE,T)  "MOVE = w|s|a|d|p   mosse del virtual robot"
 Reply cmddone   : cmddone(R)          for cmd
 Reply cmdfailed : cmdfailed(T,CAUSE)  for cmd
  
-//Dispatch pause  : pause(X)     //APPLICATIVE!
 Dispatch vrinfo : vrinfo(A,B)
+ 
+Event  sonardata: sonar( DISTANCE ) 	   
 
-Event  sonardata   : sonar( DISTANCE ) 	   
+Request step    : step(TIME)	
+Reply stepdone  : stepdone(V)                 for step
+Reply stepfailed: stepfailed(DURATION, CAUSE) for step
 
-Request step       : step(TIME)	
-Reply stepdone     : stepdone(V)                 for step
-Reply stepfailed   : stepfailed(DURATION, CAUSE) for step
-
-
+ 
 Context ctxvrqak  ip [host="localhost" port=8125]
 
 QActor vrqak context ctxvrqak withobj vr using "VrobotLLMoves24.create(\"localhost\",myself)"{  
@@ -50,8 +49,8 @@ QActor vrqak context ctxvrqak withobj vr using "VrobotLLMoves24.create(\"localho
 	}
 	Transition t0
 	   whenMsg     halt  -> dohalt
-	   whenMsg     cmd  -> handlecmd
-	   whenRequest cmd  -> handlecmdrequest
+	   whenMsg     move  -> domove
+	   whenRequest cmd  -> domoverequest
 	   whenRequest step -> handleAsynchStep
 
     State dohalt{   	
@@ -62,8 +61,8 @@ QActor vrqak context ctxvrqak withobj vr using "VrobotLLMoves24.create(\"localho
 	/*
 	 * Durante un movimento è stato rilveato un segnale dal sonar
 	 */
-
-	State handleSonarData{
+ 
+	State handleSonarData{ 
 		printCurrentMessage color magenta   
 		onMsg( sonardata : sonar(D) ){
 			[# var D = payloadArg(0) #]
@@ -71,26 +70,30 @@ QActor vrqak context ctxvrqak withobj vr using "VrobotLLMoves24.create(\"localho
 			[# val sonarEvent = "sonardata(" +  D + ")" #]
 			println("$name | handleSonarData $sonarEvent") color magenta 
 			updateResource  [# "$sonarEvent" #]      
-			updateResource  [# "nonews" #]     //per evitare che CoAP ripeta il dato
+			updateResource  [# "nonews" #]     //last info: per evitare che CoAP ripeta il dato
 		}
 	} 
-	Transition t0 whenMsg vrinfo -> handleVrinfoMsgReply //altri eventi li volgio perder
+	Transition t0 whenMsg vrinfo -> handleVrinfoMsgReply  
 
-	State handlecmd{
-		println("$name | handlecmd") color blue
-		onMsg( cmd : cmd(M) ){
+	State domove{
+		printCurrentMessage color yellow
+		//println("$name | domove") color yellow
+		onMsg( move : move(M) ){
 			[# val Move = payloadArg(0);  #]
 			if [# Move == "h" #] { [# vr.halt() #]     }
+			if [# Move == "p" #] { [# vr.step(350) #]  }  //synch
 			if [# Move == "a" || Move == "l" #]{ [# vr.turnLeft() #]  }
 			if [# Move == "d" || Move == "r" #]{ [# vr.turnRight() #] }
 		}
 	}
 	Goto work	   
 
-	State handlecmdrequest{
-		println("$name | handlecmdrequest") color blue
+	State domoverequest{
+		printCurrentMessage color blue
+		//
 		onMsg( cmd : cmd(M,T) ){
 			[# val Move = payloadArg(0); val T = payloadArg(1).toInt() #]
+			println("$name | domoverequest $Move $T") color blue
 			if [# Move == "h" #] { [# vr.halt() #]     }
 			if [# Move == "p" #] { [# vr.step(T.toLong()) #]    }  //synch
 			if [# Move == "w" #] { [# vr.forward(T) #] }
@@ -117,8 +120,9 @@ QActor vrqak context ctxvrqak withobj vr using "VrobotLLMoves24.create(\"localho
 				[# doingAsynchStep = false #]
 			} 
 			else {
+				println("$name | reply cmdfailed after $T") color yellow
 				replyTo cmd with cmdfailed : cmdfailed($T,collision)
-				[# doingAsynchStep = false #]
+				//[# doingAsynchStep = false #]
 			}
 		}
 	}	

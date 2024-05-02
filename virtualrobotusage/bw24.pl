@@ -1,17 +1,15 @@
 %====================================================================================
 % bw24 description   
 %====================================================================================
-dispatch( cmd, cmd(MOVE) ). %MOVE = w|s|a|d|p   mosse del virtual robot
+mqttBroker("broker.hivemq.com", "1883", "sonarbw24data").
+dispatch( stepdone, stepdone(X) ).
+dispatch( stepfailed, stepfailed(X) ).
+event( sonardata, sonar(DISTANCE) ).
 event( vrinfo, vrinfo(A,B) ).
 dispatch( vrinfo, vrinfo(A,B) ).
-event( sonardata, sonar(DISTANCE) ).
-event( obstacle, obstacle(X) ).
-dispatch( pause, pause(X) ).
+event( obstacle, obstacle(D) ). %emesso da WEnv
+event( wolf, wolf(D) ). %emesso da sonarmock
 %====================================================================================
 context(ctxbw24, "localhost",  "TCP", "8120").
  qactor( bw24core, ctxbw24, "it.unibo.bw24core.Bw24core").
  static(bw24core).
-  qactor( sonar24mock, ctxbw24, "it.unibo.sonar24mock.Sonar24mock").
- static(sonar24mock).
-  qactor( vrobserver, ctxbw24, "it.unibo.vrobserver.Vrobserver").
- static(vrobserver).

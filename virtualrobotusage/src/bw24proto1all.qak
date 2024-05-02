@@ -1,0 +1,136 @@
+System bw24
+mqttBroker "broker.hivemq.com" : 1883 eventTopic "sonarbw24data"
+/*
+ * bw24proto1all.qak
+ * Un prototipo che copre tutti requisiti  del
+ * problema BoundaryWalk24 usando VrobotLLMoves24
+ * SIMULANDO il sonar su RaspberryPi
+ */
+  
+ 
+Dispatch stepdone   : stepdone(X)
+Dispatch stepfailed : stepfailed(X)
+Event  sonardata    : sonar( DISTANCE ) 	   
+Event vrinfo        : vrinfo(A,B)
+Dispatch vrinfo     : vrinfo(A,B)
+
+Event  obstacle     : obstacle(D) "emesso da WEnv"
+Event  wolf         : wolf(D)	  "emesso da sonarmock"
+
+Context ctxbw24  ip [host="localhost"  port=8120 ]
+
+ 
+/* 
+ * Accede al virtual robot usando vrqak
+ */
+ QActor bw24core context ctxbw24 withobj vr using "VrobotLLMoves24.create(\"localhost\",myself)" {
+ 	import "main.resources.robotvirtual.VrobotLLMoves24"
+ 	[# var RSTEP = false; var N=0 #] 
+	State s0 initial{ 
+		println("$name STARTS") color blue 
+		//[# vr.setTrace( true ) #]
+		[# vr.halt() #]  //per sbloccare eventuali notallowed
+	}
+	Goto doboundary
+	 
+	State doboundary{
+		delay 200
+ 		[# RSTEP = vr.step(350) #]  //se RSTEP = false emette vrinfo(obstacle,unknown) 
+		//println("$name | RSTEP=$RSTEP") color blue
+		if [# RSTEP #]{ autodispatch stepdone : stepdone(1) }	 
+		else{ autodispatch stepfailed : stepfailed(1) }
+	} 
+	Transition t0 
+	    whenEvent sonardata -> handleSonardata
+	    whenMsg stepdone    -> doboundary
+	    whenMsg stepfailed  -> turnAndgo
+        whenEvent wolf      -> handleWolf	
+
+    State handleWolf{
+    	println("$name handleWolf") color magenta
+    	delay 1000 //just to test ... 
+    }
+    //Goto doboundary //NON VA BENE:rimangono msg non gestiti
+	Transition t0 
+	    whenEvent sonardata -> handleSonardata
+	    whenMsg stepdone    -> doboundary
+	    whenMsg stepfailed  -> turnAndgo
+        //whenEvent wolf      -> handleWolf	
+
+	    
+	State turnAndgo{
+		//[# vr.move("h") #] 
+		[# N = N + 1 #]
+ 		[# vr.turnLeft() #]
+		if [# N == 4 #]{
+			[# System.exit(0) #]
+		}  
+	}
+	Goto doboundary
+	    
+	/*
+	 * in questo stato c'è un dispatch 
+	 * stepdone/stepfailed  in coda 
+	 */
+	State handleSonardata{
+		printCurrentMessage color magenta
+		delay 200
+		[# RSTEP = vr.step(350) #]     //mi sposto da sotto il sonar se no vengono TIGENERATI eventi
+		delay 2000  //pause
+	} 
+	Transition t0 
+	    whenMsg stepdone    -> doboundary       //quello in sospeso
+	    whenMsg stepfailed  -> turnAndgo
+}
+/* 
+QActor sonar24mock context ctxbw24{
+	[#var N = 0 #]
+	State s0 initial{ 
+		println("$name | START") color blue
+	}  
+	Goto work
+	
+	State work{
+		delay 6000
+		[# N++ #]
+		println("$name | emit wolf $N")  color blue
+ 		emit wolf : wolf(10)
+	}
+	Goto work if [# N < 2 #] else endwork
+	 
+	State endwork{
+		println("$name | ENDS")  color blue
+	}
+	
+	
+} 
+*/
+/* 
+QActor bwobserver context ctxbw24{
+	State s0 initial{ 
+		println("$name | READY") color black
+	}
+	Transition t0
+		whenEvent vrinfo    -> handleVrinfo
+		whenEvent sonardata -> handleSonardata
+	
+	State handleVrinfo{ 
+		printCurrentMessage color black
+	}	
+//	Goto s0  //PERDE GLI EVENTI
+	Transition t0
+		whenEvent vrinfo    -> handleVrinfo
+		whenEvent sonardata -> handleSonardata
+
+	State handleSonardata{
+		printCurrentMessage color black
+	}	
+//	Goto s0 //PERDE GLI EVENTI
+	Transition t0
+		whenEvent vrinfo    -> handleVrinfo
+		whenEvent sonardata -> handleSonardata
+}
+
+*/
+
+ 

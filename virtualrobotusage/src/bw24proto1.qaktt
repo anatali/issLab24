@@ -1,0 +1,113 @@
+System bw24
+/*
+ * bw24proto1.qak
+ * Un prototipo che copre i requsiti BW-Req1 e BW-Req2 del
+ * problema BoundaryWalk24 usando VrobotLLMoves24
+ */
+ 
+ 
+Dispatch stepdone   : stepdone(X)
+Dispatch stepfailed : stepfailed(X)
+Event  sonardata    : sonar( DISTANCE ) 	   
+Event vrinfo        : vrinfo(A,B)
+Dispatch vrinfo     : vrinfo(A,B)
+
+ 
+Context ctxbw24  ip [host="localhost"  port=8120   ]
+
+ 
+/*
+ * Accede al virtual robot usando vrqak
+ */
+ QActor bw24core context ctxbw24 withobj vr using "VrobotLLMoves24.create(\"localhost\",myself)" {
+ 	import "main.resources.robotvirtual.VrobotLLMoves24"
+ 	[# var RSTEP = false; var N=0 #] 
+	State s0 initial{ 
+		println("$name STARTS") color blue 
+		//[# vr.setTrace( true ) #]
+		[# vr.halt() #]  //per sbloccare eventuali notallowed
+	}
+	Goto doboundary
+	 
+	State doboundary{
+		delay 200
+ 		[# RSTEP = vr.step(350) #]  //se RSTEP = false emette vrinfo(obstacle,unknown) 
+		//println("$name | RSTEP=$RSTEP") color blue
+		if [# RSTEP #]{ autodispatch stepdone : stepdone(1) }	 
+		else{ autodispatch stepfailed : stepfailed(1) }
+	} 
+	Transition t0 
+	    whenEvent sonardata -> handleSonardata
+	    whenMsg stepdone    -> doboundary
+	    whenMsg stepfailed  -> turnAndgo
+//	    whenMsg pause       -> dopause
+	    
+	State turnAndgo{
+		//[# vr.move("h") #] 
+		[# N = N + 1 #]
+ 		[# vr.turnLeft() #]
+		if [# N == 4 #]{
+			[# System.exit(0) #]
+		}  
+	}
+	Goto doboundary
+	    
+	/*
+	 * in questo stato c'è un dispatch 
+	 * stepdone/stepfailed  in coda 
+	 */
+	State handleSonardata{
+		printCurrentMessage color magenta
+		delay 200
+		[# RSTEP = vr.step(350) #]     //mi sposto da sotto il sonar se no vengono TIGENERATI eventi
+		delay 2000  //pause
+	} 
+	Transition t0 
+ 	    //whenEvent sonardata -> ignoreSonardata  
+	    whenMsg stepdone    -> doboundary       //quello in sospeso
+	    whenMsg stepfailed  -> turnAndgo
+  
+	State ignoreSonardata{
+		[# RSTEP = vr.step(350) #]
+		println("$name | ignoreSonardata") color cyan
+	}
+	Transition t0 
+	    whenEvent sonardata -> ignoreSonardata   //stepdone: l'evento rimane
+
+    State goon{
+    	println("$name | goon") color cyan
+    }
+	Transition t0 
+	    whenMsg stepdone    -> doboundary
+	    whenMsg stepfailed  -> turnAndgo
+}
+
+/* 
+QActor bwobserver context ctxbw24{
+	State s0 initial{ 
+		println("$name | READY") color black
+	}
+	Transition t0
+		whenEvent vrinfo    -> handleVrinfo
+		whenEvent sonardata -> handleSonardata
+	
+	State handleVrinfo{ 
+		printCurrentMessage color black
+	}	
+//	Goto s0  //PERDE GLI EVENTI
+	Transition t0
+		whenEvent vrinfo    -> handleVrinfo
+		whenEvent sonardata -> handleSonardata
+
+	State handleSonardata{
+		printCurrentMessage color black
+	}	
+//	Goto s0 //PERDE GLI EVENTI
+	Transition t0
+		whenEvent vrinfo    -> handleVrinfo
+		whenEvent sonardata -> handleSonardata
+}
+
+*/
+
+ 

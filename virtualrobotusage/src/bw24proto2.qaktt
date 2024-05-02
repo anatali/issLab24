@@ -1,0 +1,155 @@
+System bw24
+mqttBroker "broker.hivemq.com" : 1883 eventTopic "sonarbw24data"
+/*
+ * bw24proto2.qak
+ * Un prototipo che copre tutti i requisiti del
+ * problema BoundaryWalk24 interagendo con vrqak
+ */
+    
+Dispatch move       : move(M)  
+ 
+Request  step       : step(T)
+Reply   stepdone    : stepdone(X) for step
+Reply   stepfailed  : stepfailed(X) for step
+
+Event  sonardata    : sonar( DISTANCE ) 
+Event  obstacle     : obstacle(D)	   
+
+Event vrinfo        : vrinfo(S,INFO)
+Dispatch vrinfo     : vrinfo(A,B)
+
+Dispatch stop       : stop(X)
+
+//Gi eventi sonardata emessi da VrobotLLMoves24 non escono da vqak
+//perch' il servizio vrqak NON CONOSCE I CONTSTI APPLICATIVI
+Event  sonardata   : sonar( DISTANCE ) 	 //Just to test event visibility
+ 
+Context ctxbw24       ip [host="localhost"       port=8120  ]
+Context ctxvrqak      ip [host="192.168.1.132"       port=8125  ]
+//Context ctxsonarbw24  ip [host= "192.168.1.40"   port=8128  ]
+
+ExternalQActor vrqak context ctxvrqak  //Risorsa esterna che permette l'accesso al (virtual)robot
+  
+ 
+/*
+ * Accede al virtual robot usando vrqak
+ */
+ QActor bw24core context ctxbw24   {
+ 	[# var N=0 #]  
+	State s0 initial{ 
+		delay 1500
+		println("$name STARTS") color blue 
+		observeResource vrqak msgid vrinfo
+        forward vrqak -m move : move(h)  //resetto eventuali not_allowed	
+     }
+	Goto doboundary
+	 
+	State doboundary{
+		delay 200
+		request vrqak -m step : step(350)
+	} 
+	Transition t0 
+	    whenMsg vrinfo        -> handleVrinfo
+	    whenReply stepdone    -> doboundary
+	    whenReply stepfailed  -> turnAndgo
+        whenMsg stop          -> handleStop   
+         
+	State turnAndgo{
+		[# N = N + 1 #]
+ 		forward vrqak -m move : move(l)
+		if [# N == 4 #]{
+			delay 300
+			[# System.exit(0) #]
+		}  
+	}
+	Goto doboundary
+	    
+	/*
+	 * in questo stato c'è un dispatch 
+	 * stepdone/stepfailed  in coda 
+	 */
+	State handleVrinfo{
+		//printCurrentMessage color yellow
+		onMsg( vrinfo : vrinfo(S,INFO) ){
+			[# val source =payloadArg(0); val info = payloadArg(1) #] 
+			println("$name | handlevrinfo $info") color yellow
+			if [# info.contains("sonardata") #]{
+			 	println("$name | handlevrinfo $info") color magenta
+				delay 2000 //DOING PAUSE!!
+				//request vrqak -m step : step(350)     //mi sposto da sotto il sonar se no vengono TIGENERATI eventi
+				//forward vrqak -m move : move(p)
+				//delay 2000  //DOING PAUSE!!
+			}  
+		}//else {delay 300}		
+	} 
+	Transition t0 
+	    whenMsg vrinfo        -> handleVrinfo
+	    whenReply stepdone    -> doboundary       //quello in sospeso
+	    whenReply stepfailed  -> turnAndgo
+        //whenEvent obstacle    -> handleObstacle  
+        whenMsg stop          -> handleStop 
+ 
+ 	State handleStop{
+		printCurrentMessage color magenta
+		delay 2000 //AVOID TO BLCOK just for testing ...
+	}	
+	Transition t0 
+ 	    whenMsg vrinfo        -> handleVrinfo
+	    whenReply stepdone    -> doboundary       //quello in sospeso
+	    whenReply stepfailed  -> turnAndgo
+        //whenEvent obstacle    -> handleObstacle  
+        whenMsg stop          -> handleStop 
+ 
+ }
+
+  
+QActor bwobserver context ctxbw24{
+	State s0 initial{ 
+		println("$name | READY") color black
+	}
+	Transition t0
+		whenEvent vrinfo    -> handleVrinfo
+		whenEvent sonardata -> handleSonardata
+		whenEvent obstacle  -> handleObstacle
+	
+	State handleObstacle{
+		printCurrentMessage color cyan
+		forward bw24core -m stop : stop(1)
+	}	
+	Transition t0
+//		whenEvent vrinfo    -> handleVrinfo
+//		whenEvent sonardata -> handleSonardata
+        whenTime  2000      -> s0
+		whenEvent obstacle  -> ignoreObstacle
+	
+	State ignoreObstacle{
+		println("$name | ignore obstacle") color cyan
+	}
+	Transition t0
+//		whenEvent vrinfo    -> handleVrinfo
+//		whenEvent sonardata -> handleSonardata
+        whenTime  2000      -> s0
+		whenEvent obstacle  -> ignoreObstacle
+	
+	State handleVrinfo{ 
+		printCurrentMessage color black
+	}	
+//	Goto s0  //PERDE GLI EVENTI
+	Transition t0
+		whenEvent vrinfo    -> handleVrinfo
+		whenEvent sonardata -> handleSonardata
+		whenEvent obstacle  -> handleObstacle
+
+	State handleSonardata{
+		printCurrentMessage color black
+	}	
+//	Goto s0 //PERDE GLI EVENTI
+	Transition t0
+		whenEvent vrinfo    -> handleVrinfo
+		whenEvent sonardata -> handleSonardata
+		whenEvent obstacle  -> handleObstacle
+}
+
+ 
+
+ 

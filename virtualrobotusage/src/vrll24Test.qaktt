@@ -1,0 +1,92 @@
+System bw24
+/*
+ * vrl24Test.qak
+ * Un test sulle operazioni di VrobotLLMoves24
+ */
+Event  sonardata   : sonar( DISTANCE ) 	   
+Event vrinfo    : vrinfo(A,B)
+Dispatch vrinfo : vrinfo(A,B)
+
+Context ctxbw24  ip [host="localhost"  port=8120   ]
+ 
+/*
+ * Accede al virtual robot usando vrqak
+ */
+ QActor bw24core context ctxbw24 withobj vr using "VrobotLLMoves24.create(\"localhost\",myself)" {
+ 	import "main.resources.robotvirtual.VrobotLLMoves24"
+ 	[# var RSTEP = false #] 
+	State s0 initial{ 
+		println("$name STARTS") color blue 
+		//[# vr.setTrace( true ) #]
+	}
+	Goto test
+	 
+	State test{
+		[# vr.halt() #]  //per sbloccare eventuali notallowed
+		println("$name test") color blue 
+		delay 1000  //non posso fare altra richiesta asynch subito
+		//[# vr.forward(2400) #]
+//		[# RSTEP = vr.step(350) #]
+//		println("$name | RSTEP=$RSTEP")
+		[# RSTEP = vr.step(900) #]  //se RSTEP = false emette vrinfo(obstacle,unknown) 
+		println("$name | RSTEP=$RSTEP") color blue
+		[# vr.backward(2400) #]
+	} 
+	Transition t0 
+	    whenMsg   vrinfo    -> handleVrinfo
+	    whenEvent vrinfo    -> handleVrinfo  
+	    whenEvent sonardata -> handleSonardata
+	    
+	State handleVrinfo{
+		printCurrentMessage color blue
+//		onMsg( vrinfo : vrinfo(T,collision) ){  //su collision GENERA  vrinfo(obstacle,unknown)
+//			println("$name | handleVrinfo collision after ${payloadArg(0)}") color blue
+//		}
+		onMsg( vrinfo : vrinfo(obstacle,unknown) ){
+			println("$name | handleVrinfo step failed since obstacle") color blue
+		}
+	}
+	Transition t0 
+	    whenMsg   vrinfo    -> handleVrinfo
+	    whenEvent vrinfo    -> handleVrinfo  
+	    whenEvent sonardata -> handleSonardata
+	
+	State handleSonardata{
+		printCurrentMessage color magenta
+	}
+	Transition t0 
+	    whenMsg   vrinfo    -> handleVrinfo
+	    whenEvent vrinfo    -> handleVrinfo   
+	    whenEvent sonardata -> handleSonardata
+ 
+	
+}
+ 
+QActor bwobserver context ctxbw24{
+	State s0 initial{ 
+		println("$name | READY") color black
+	}
+	Transition t0
+		whenEvent vrinfo    -> handleVrinfo
+		whenEvent sonardata -> handleSonardata
+	
+	State handleVrinfo{ 
+		printCurrentMessage color black
+	}	
+//	Goto s0  //PERDE GLI EVENTI
+	Transition t0
+		whenEvent vrinfo    -> handleVrinfo
+		whenEvent sonardata -> handleSonardata
+
+	State handleSonardata{
+		printCurrentMessage color black
+	}	
+//	Goto s0 //PERDE GLI EVENTI
+	Transition t0
+		whenEvent vrinfo    -> handleVrinfo
+		whenEvent sonardata -> handleSonardata
+}
+
+
+
+ 

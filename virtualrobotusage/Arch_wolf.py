@@ -21,12 +21,11 @@ evattr = {
     'color': 'darkgreen',
     'style': 'dotted'
 }
-with Diagram('bw24Arch', show=False, outformat='png', graph_attr=graphattr) as diag:
+with Diagram('wolfArch', show=False, outformat='png', graph_attr=graphattr) as diag:
   with Cluster('env'):
      sys = Custom('','./qakicons/system.png')
 ### see https://renenyffenegger.ch/notes/tools/Graphviz/attributes/label/HTML-like/index
-     with Cluster('ctxbw24', graph_attr=nodeattr):
-          bw24core=Custom('bw24core','./qakicons/symActorWithobjSmall.png')
-     sys >> Edge( label='sonardata', **evattr, decorate='true', fontcolor='darkgreen') >> bw24core
-     sys >> Edge( label='wolf', **evattr, decorate='true', fontcolor='darkgreen') >> bw24core
+     with Cluster('ctxwolf', graph_attr=nodeattr):
+          sonarwolfmock=Custom('sonarwolfmock','./qakicons/symActorSmall.png')
+     sonarwolfmock >> Edge( label='wolf', **eventedgeattr, decorate='true', fontcolor='red') >> sys
 diag

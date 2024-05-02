@@ -188,6 +188,12 @@ task runVr(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'it.unibo.ctxvrqak.MainCtxvrqakKt'
 }
+task runWolf(type: JavaExec) {
+    group = "Execution"
+    description = "Run the main class with JavaExecTask"
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'it.unibo.ctxwolf.MainCtxwolfKt'
+}
 
 /*
 //TODO
