@@ -1,0 +1,119 @@
+System mapbuild
+/*
+========================================
+mapJavaUsage.qak
+========================================
+*/
+Dispatch stepdone   : stepdone(X)     "automsg"
+Dispatch stepfailed : stepfailed(X)   "automsg"
+Dispatch vrinfo     : vrinfo(A,B)     "from VrobotLLMoves24"
+
+Context ctxmapbuild  ip [host="localhost" port=8720     ]
+
+QActor mapbuilder context ctxmapbuild withobj vr using "VrobotLLMoves24.create(\"localhost\",myself)"{
+	import "main.resources.robotvirtual.VrobotLLMoves24"
+	import "main.resources.map.RoomMap" 
+	import "main.resources.map.RobotDir" 
+	import "main.resources.map.RobotDir.Direction" 
+	[# var N  = 0 
+	   var RobotPosX = 0  
+	   var RobotPosY = 0
+	   var goingDown = true
+	   var goingLeft = false
+	   lateinit var map : RoomMap
+	#] 
+	
+	 
+	State s0 initial{ 
+		println("$name STARTS") color blue
+		//[# GuiUtils.showSystemInfo() #]
+		//[# vr.setTrace(true)  #]
+		[# vr.halt()  #]
+		[# RobotDir.setDir(Direction.DOWN) #]
+	}
+	Goto useMap
+	
+	
+	State useMap{
+		[#  map = RoomMap.loadRoomMap("map") #]
+		[#  map.clear()    #]
+		[#  map.setRobot(RobotPosX,RobotPosY) #]
+		[#  map.showMap()  #]
+		 
+	}
+	Goto boundary  
+	 
+	State boundary{
+		delay 100
+  		[# var RSTEP = vr.step(370) #]  //se RSTEP = false emette vrinfo(obstacle,unknown) 
+		println("$name | boundary ($RobotPosX,$RobotPosY)") color blue
+		if [# RSTEP #]{
+			if [# RobotDir.goingDown() #] { 
+				[# map.setFree(RobotPosX,RobotPosY) #]
+				[# RobotPosX++ #]
+				[# map.setRobot(RobotPosX,RobotPosY) #]
+				[# map.showMap()  #]
+			}
+            if [# RobotDir.goingUp() #] {
+				[# map.setFree(RobotPosX,RobotPosY) #]
+				[# RobotPosX-- #]
+				[# map.setRobot(RobotPosX,RobotPosY) #]
+				[# map.showMap()  #]				
+			}
+			if [# RobotDir.goingLeft() #] {
+				[# map.setFree(RobotPosX,RobotPosY) #]
+				[# RobotPosY-- #]
+				[# map.setRobot(RobotPosX,RobotPosY) #]
+				[# map.showMap()  #]									
+			}
+			if [# RobotDir.goingRight() #] {
+				[# map.setFree(RobotPosX,RobotPosY) #]
+				[# RobotPosY++ #]
+				[# map.setRobot(RobotPosX,RobotPosY) #]
+				[# map.showMap()  #]													
+			}			
+		    autodispatch stepdone : stepdone(1)
+		}	 
+		else{ 
+			//[# map.setObstacle(RobotPosX,RobotPosY) #]
+			autodispatch stepfailed : stepfailed(1)
+		}
+	} 
+	Transition t0 
+	    whenMsg stepdone    -> boundary 
+	    whenMsg stepfailed  -> turnAndgo
+	
+	State turnAndgo{  
+		printCurrentMessage color blue
+		[# N = N + 1 #] 
+		[# vr.turnLeft() #]			 	
+		[# map.setFree(RobotPosX,RobotPosY) #] //cella prima del fallimento
+		//cella con ostacolo ???
+				if [# RobotDir.goingDown() #] { [# RobotPosX++  #] }
+				if [# RobotDir.goingRight() #] { [# RobotPosY++ #] }
+				if [# RobotDir.goingUp()   && RobotPosX > 0  #] { [# RobotPosX-- #] }
+				if [# RobotDir.goingLeft() && RobotPosY > 0  #] { [# RobotPosY-- #] }
+  		//Il robot è nella cella con ostacolo		
+ 		[# map.setRobot(RobotPosX,RobotPosY) #]
+				 
+ 		if [# N==1 #]{ [# RobotDir.setDir(RobotDir.Direction.RIGHT ) #] }
+ 		if [# N==2 #]{ [# RobotDir.setDir(RobotDir.Direction.UP)     #] }
+ 		if [# N==3 #]{ [# RobotDir.setDir(RobotDir.Direction.LEFT)   #] }				
+		[# map.showMap()  #] 
+		println("$name | N=$N") color cyan
+ 		//println("$name | turnAndgo ") color cyan
+		if [# N == 4 #]{
+			[# RobotDir.setDir(RobotDir.Direction.DOWN) #] 
+			[# map.showMap()             #] 
+			[# val MS  = map.toString()  #]
+			[# map.saveRoomMap("mapBorderJava", MS ) #]
+			[# val MP  = map.toProlog()  #] 
+			//println(MP)
+			[# map.saveRoomMapProlog("mapBorderProlog", MP ) #]
+			delay 1000
+			[# System.exit(0) #]
+		}  
+	} 
+	Goto boundary
+	
+}

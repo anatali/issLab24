@@ -1,0 +1,162 @@
+System cleaner24
+/*  
+ * ========================================
+ *  cleaner24Norobot
+ * ========================================
+ */    
+ 
+Dispatch   stepdone   : stepdone(V) "automessaggio"
+Dispatch   stepfail   : stepfail(X) "automessaggio"
+
+Context ctxcleaner24  ip [host="localhost" port=8032]
+
+/* 
+ * ----------------------------------------------------------------
+ * Procede coprendo la stanza secondo la strategia per colonne
+ * Muove il VirtualRobot usando il POJO VrobotLLMoves24  
+ * ----------------------------------------------------------------
+ */
+
+QActor cleaner24 context ctxcleaner24 withobj vr using "VrobotLLMoves24.create(\"localhost\",myself)"{    
+	import "main.resources.robotvirtual.VrobotLLMoves24"
+	import "main.resources.map.RoomMap" 
+	import "main.resources.map.RobotDir" 
+	import "main.resources.map.RobotDir.Direction" 
+	
+[#
+	var GoingDown   = true 
+    lateinit var map : RoomMap
+	var PX = 0   //Robot pos along X
+	var PY = 0   //Robot pos along Y
+#]  
+
+	State activate initial {
+		//printCurrentMessage
+		[#  GoingDown = true #]
+        [#  RobotDir.setDir(Direction.DOWN)  #]
+		[#  map = RoomMap.loadRoomMap("map") #]
+		[#  map.clear()    #]
+ 		[#  map.setCellClean(PX,PY)  #]		//HOME
+		[#  map.setRobot(PX,PY) #]		
+		[#  map.showMap()  #]
+ 	}
+	Goto coverColumn
+ 
+ 
+				   
+	State coverColumn{  		  
+   		//printCurrentMessage
+ 		[# map.setCellClean(PX,PY)  #]		
+   		delay 300 //give some time ...
+   		[# var RSTEP = vr.step(350) #]
+   		if [# RSTEP #]{  //stepColumnDone
+   			[# if(GoingDown) PX++; else PX-- #]
+   			[# map.setCellClean(PX,PY)  #]		
+   			autodispatch stepdone : stepdone(1)
+   		}else{
+   			autodispatch stepfail : stepfail(1)
+   		}
+ 	}
+	Transition t0  whenMsg stepdone -> coverColumn
+ 	               whenMsg stepfail -> turn    
+ 
+	State turn{  		  
+   		//printCurrentMessage
+   		println("turn while GoingDown=$GoingDown")
+   		if[# GoingDown #] { 
+   			[# vr.backward(50)  #]	  //SYNCH TUNING : better stepAsynch !!
+   			[# vr.turnLeft()    #]	
+   		}else{ 
+    			[# vr.turnRight() #]
+   		}
+   		delay 300 //give time to turn
+   		[# var RSTEP = vr.step(350) #]  //passo laterale
+   		if [# RSTEP #]{autodispatch stepdone : stepdone(1)}
+   		else{autodispatch stepfail : stepfail(1)}
+	}	
+	Transition t0  whenMsg stepdone -> stepAfterTurn
+	               whenMsg stepfail -> lastColumn
+ 
+	State stepAfterTurn{
+    	println("stepAfterTurn while GoingDown=$GoingDown") color magenta
+    	[#  PY++; 
+    		map.setCellClean(PX,PY)  
+    	#]   	
+  		if[# GoingDown #] { 
+            [# vr.turnLeft()   #]	             
+   		}else{ 
+   			[# vr.turnRight() #]	
+   		}
+   		delay 300 //give time to turn
+   		[#  GoingDown = ! GoingDown 
+   			if( GoingDown ) RobotDir.setDir(Direction.DOWN) 
+   			else RobotDir.setDir(Direction.UP) 
+   		#]   	 
+   		[# var RSTEP = vr.step(350) #] //continua  
+   		if [# RSTEP #]{
+   			[# if(GoingDown) PX++; else PX-- #]
+   			[# map.setCellClean(PX,PY)  #]		
+   			[# map.showMap()            #]
+   			autodispatch stepdone : stepdone(1)
+    	}else{
+   			autodispatch stepfail : stepfail(1) 
+   		}
+	} 
+ 	Transition t0  whenMsg stepdone -> coverColumn //turnDone
+ 	               whenMsg stepfail -> lastColumn
+ 	
+	State lastColumn{   		  
+   		printCurrentMessage color magenta
+   		[# map.showMap()  #]
+    	[#  PY++; 
+    		map.setCellClean(PX,PY)  
+    	#]   	
+   		if[# GoingDown #] {   			 
+   			[# vr.turnLeft()    #]	
+   		}else{   			 
+   			[# vr.turnRight() #]
+   		}
+   		[# map.showMap()            #]
+   		[#  GoingDown = ! GoingDown 
+   			if( GoingDown ) RobotDir.setDir(Direction.DOWN) 
+   			else RobotDir.setDir(Direction.UP) 
+		#]
+    	[# var RSTEP = vr.step(350) #] //continua in altra direzione 
+   		if [# RSTEP #]{
+   			autodispatch stepdone : stepdone(1)
+   		}else{
+   			autodispatch stepfail : stepfail(1) 
+   		}
+	} 
+ 	Transition t0  whenMsg stepdone -> coverLastColumn  
+ 	               whenMsg stepfail -> endofwork
+ 	               
+ 	State coverLastColumn{  		
+ 		println("coverLastColumn norobot") color yellow  //Just to distinguish from cleaner24
+    	[# if(GoingDown) PX++; else PX-- #]
+    	[# map.setCellClean(PX,PY)  #]
+    	delay 200
+ 		[# var RSTEP = vr.step(350) #]
+    	if [# RSTEP #]{   					
+   			autodispatch stepdone : stepdone(1)
+   		}else{
+   			autodispatch stepfail : stepfail(1) 
+   		}
+ 	}
+ 	Transition t0  whenMsg stepdone -> coverLastColumn  
+ 	               whenMsg stepfail -> endofwork
+ 	 
+ 	State endofwork{
+ 		println("---------------------------") color blue
+ 		[# map.showMap()  #]
+ 		
+	    [# val MS  = map.toString()  #]
+		[# map.saveRoomMap("mapcleaned", MS ) #]
+ 		
+ 		[# System.exit(0) #]
+ 	}
+    		
+	State fatalError{  		  
+   		printCurrentMessage color red
+	}	
+}

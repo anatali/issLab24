@@ -17,7 +17,7 @@
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="BasicRobot24" href="BasicRobot24.html" />
+    <link rel="next" title="MapBuilder24" href="MapBuilder24.html" />
     <link rel="prev" title="Vrqak24" href="Vrqak24.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -27,7 +27,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="BasicRobot24.html" title="BasicRobot24"
+          <a href="MapBuilder24.html" title="MapBuilder24"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="Vrqak24.html" title="Vrqak24"
@@ -44,6 +44,7 @@
             
   <section id="robotcleaner">
 <h1>RobotCleaner<a class="headerlink" href="#robotcleaner" title="Permalink to this heading">¶</a></h1>
+<p><span class="slide3">progetto claner24</span></p>
 <section id="rc24-requisiti">
 <h2>RC24-requisiti<a class="headerlink" href="#rc24-requisiti" title="Permalink to this heading">¶</a></h2>
 <p>Si vuole definire un sistema software capace di muovere un <a class="reference external" href="https://www.youtube.com/watch?v=aE7RQNhwnPQ">DDR Robot</a> -&gt; in modo da coprire
@@ -60,6 +61,197 @@ ma in futuro vorrà usare un robot fisico, del tipo riportato in <a class="refer
 <li><p>Si veda <a class="reference internal" href="VirtualRobot23.html#modificare-la-scena-nella-immagine"><span class="std std-ref">Modificare la scena nella immagine</span></a> e <a class="reference external" href="../../../../it.unibo.virtualRobot2023/node/WEnv/WebGLScene/sceneConfigEmpty.js">sceneConfigEmpty.js</a>.</p></li>
 </ul>
 </section>
+<section id="rc24-analisi-dei-requisiti">
+<h2>RC24-analisi dei requisiti<a class="headerlink" href="#rc24-analisi-dei-requisiti" title="Permalink to this heading">¶</a></h2>
+<p>In questa fase si fa riferimenmto a un <span class="slide3">sistema con VirtualRobot in stanza vuota</span>.</p>
+<p>La <strong>stanza</strong> è uno spazio piano Euclideo delimitato da bordi.</p>
+<blockquote>
+<div><table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><a class="reference internal image-reference" href="_images/ModelloStanza.png"><img alt="_images/ModelloStanza.png" class="align-center" src="_images/ModelloStanza.png" style="width: 100%;" /></a>
+</td>
+<td><ul class="simple">
+<li><p>Il <span class="blue">Bordo perimetrale</span> ha lunghezza <code class="docutils literal notranslate"><span class="pre">lf+ld+lr+lu</span></code>.</p></li>
+<li><p>Poichè la stanza è rettangolare, si ha <code class="docutils literal notranslate"><span class="pre">lf==lr</span> <span class="pre">&amp;&amp;</span> <span class="pre">ld==lu</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DR=2R</span></code>, essendo <code class="docutils literal notranslate"><span class="pre">R</span></code> il <a class="reference internal" href="VirtualRobot23.html#virtualrobot23"><span class="std std-ref">raggio del cerchio</span></a> in cui può essere racchiuso
+il robot (virtuale/fisico).</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>I componenti (inizialmente) necessari per la realizzazione del sistema sono:</p>
+<ul class="simple">
+<li><p>Un actor (cui diamo il nome <code class="docutils literal notranslate"><span class="pre">cleaner24</span></code>)  che realizza l’applicazione</p></li>
+<li><p>Il <a class="reference internal" href="VirtualRobot23.html#virtualrobot23"><span class="std std-ref">VirtualRobot23</span></a> (che viene dato)</p></li>
+<li><p>Un supporto che agevoli la interazione con il robot virtuale o fisico.
+Al momento disponiamo del POJO <a class="reference internal" href="VrobotLLMoves24.html#id1"><span class="std std-ref">VrobotLLMoves24</span></a>, ma è stata anche prospettata la possibilità di
+realizzare e utilizzare un servizio, come <a class="reference internal" href="Vrqak24.html#vrqak24"><span class="std std-ref">Vrqak24</span></a>.</p></li>
+</ul>
+</section>
+<section id="rc24-analisi-del-problema">
+<h2>RC24-analisi del problema<a class="headerlink" href="#rc24-analisi-del-problema" title="Permalink to this heading">¶</a></h2>
+<p>Come analisti, poniamo in evidenza i seguenti punti.</p>
+<section id="rc24-il-cuore-del-problema">
+<h3>RC24-Il cuore del problema<a class="headerlink" href="#rc24-il-cuore-del-problema" title="Permalink to this heading">¶</a></h3>
+<p>Il problema consiste nel definire un controllore <span class="slide2">proattivo</span> in modo che la sua strategia di comandi al robot
+permetta di soddisfare i requisiti <span class="blue">RC24-ReqCopertura</span> e <span class="blue">RC24-ReqVerificabilità</span>.</p>
+</section>
+<section id="rc24-strategia-di-movimento">
+<h3>RC24-Strategia di movimento<a class="headerlink" href="#rc24-strategia-di-movimento" title="Permalink to this heading">¶</a></h3>
+<p>Si possono pensare diverse possibili <strong>strategie di movimento sistematico</strong>
+(<span class="slide2">escludendo quindi a priori strategie di movimento random</span>) che permettono la copertura.
+Ad esempio:</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Movimento per colonne</p>
+<a class="reference internal image-reference" href="_images/columnMove.PNG"><img alt="_images/columnMove.PNG" class="align-left" src="_images/columnMove.PNG" style="width: 80%;" /></a>
+</td>
+<td><p>Movimento a spirale</p>
+<a class="reference internal image-reference" href="_images/spiralmove0.PNG"><img alt="_images/spiralmove0.PNG" class="align-left" src="_images/spiralmove0.PNG" style="width: 80%;" /></a>
+</td>
+<td><p>Movimento a onde</p>
+<a class="reference internal image-reference" href="_images/OndeConcentriche.PNG"><img alt="_images/OndeConcentriche.PNG" class="align-left" src="_images/OndeConcentriche.PNG" style="width: 80%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="rc24-il-passo-del-robot">
+<h3>RC24-Il passo del robot<a class="headerlink" href="#rc24-il-passo-del-robot" title="Permalink to this heading">¶</a></h3>
+<p>Tutte le strategie esaminate si basano su una stessa ipotesi:</p>
+<p><span class="remark">il robot si muove per passi di lunghezza DR</span>, esendo <code class="docutils literal notranslate"><span class="pre">DR</span></code>
+il <cite>diametro del cerchio di raggio minimo che circoscrive il robot</cite></p>
+<section id="il-robot-come-unita-di-misura">
+<h4>Il robot come unità di misura<a class="headerlink" href="#il-robot-come-unita-di-misura" title="Permalink to this heading">¶</a></h4>
+<p>In pratica, <code class="docutils literal notranslate"><span class="pre">DR</span></code> diventa la <strong>unità di misura per le distanze</strong>.
+La stanza stessa può essere pensata come suddivisa in celle quadrate di lato <code class="docutils literal notranslate"><span class="pre">DR</span></code>.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 65%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><a class="reference internal image-reference" href="_images/plant1.PNG"><img alt="_images/plant1.PNG" class="align-center" src="_images/plant1.PNG" style="width: 100%;" /></a>
+</td>
+<td><ul class="simple">
+<li><p>denotimo con <code class="docutils literal notranslate"><span class="pre">X</span></code> il bordo <em>wallLeft</em>  e con <code class="docutils literal notranslate"><span class="pre">Y</span></code> il bordo <em>wallUp</em></p></li>
+<li><p>la stanza lungo l’asse <code class="docutils literal notranslate"><span class="pre">X</span></code> ha lunghezza <code class="docutils literal notranslate"><span class="pre">NR*DR+DX</span></code> con <code class="docutils literal notranslate"><span class="pre">NR&gt;0</span></code></p></li>
+<li><p>la stanza lungo l’asse <code class="docutils literal notranslate"><span class="pre">Y</span></code> ha lunghezza <code class="docutils literal notranslate"><span class="pre">NC*DR+DY</span></code> con <code class="docutils literal notranslate"><span class="pre">NC&gt;0</span></code></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="movimento-per-colonne">
+<h4>Movimento per colonne<a class="headerlink" href="#movimento-per-colonne" title="Permalink to this heading">¶</a></h4>
+<p>Nel caso della figura di sinistra, il robot lavora ‘per colonne’. In particolare:</p>
+<p><span class="slide3">RC24-Strategia</span>: il robot
+procede lungo il muro <code class="docutils literal notranslate"><span class="pre">wallLeft</span></code>  fino a incontrare <code class="docutils literal notranslate"><span class="pre">wallDown</span></code>. Qui gira a sinistra,
+fa un <span class="blue">passo laterale</span>, poi gira di nuovo  a sinistra e procede diritto verso il
+muro <code class="docutils literal notranslate"><span class="pre">wallUp</span></code>; quando lo incontra gira a destra fa un <span class="blue">passo laterale</span>, rigira verso destra e di nuovo
+procede verso <code class="docutils literal notranslate"><span class="pre">wallDown</span></code>.</p>
+<p>Durante un <em>passo laterale</em>, il robot incontrerà di sicuro <code class="docutils literal notranslate"><span class="pre">wallRight</span></code>:
+come ultima mossa procede lungo
+tale muro fino a che non incontra di nuovo un muro (<code class="docutils literal notranslate"><span class="pre">wallUp</span></code> o  <code class="docutils literal notranslate"><span class="pre">wallDown</span></code>) e qui si ferma,
+considerando terminato il lavoro.</p>
+</section>
+<section id="movimento-a-spirale">
+<h4>Movimento a spirale<a class="headerlink" href="#movimento-a-spirale" title="Permalink to this heading">¶</a></h4>
+<p><span class="slide3">RC24-Strategia</span>: il robot procede coprendo aree quadrate di lato <code class="docutils literal notranslate"><span class="pre">DR*N</span></code>, con <code class="docutils literal notranslate"><span class="pre">N=1,2,..,M</span></code>.
+Questa strategia risulta facile da realizzare per stanza quadrate o quasi, ma è più complicata per
+stanza rettangolari con lati di lunghezza diversa tra loro.</p>
+</section>
+<section id="movimento-a-onde">
+<h4>Movimento a onde<a class="headerlink" href="#movimento-a-onde" title="Permalink to this heading">¶</a></h4>
+<p><span class="slide3">RC24-Strategia</span>: il robot segue i bordi della stanza, riducendo via via il lati della stanza di
+DR, lavorando in una ‘stanza virtuale’ di lati <code class="docutils literal notranslate"><span class="pre">DWallDown</span> <span class="pre">-</span> <span class="pre">N*DR</span></code> e <code class="docutils literal notranslate"><span class="pre">DWallLeft</span> <span class="pre">-</span> <span class="pre">N*DR</span></code>, con <code class="docutils literal notranslate"><span class="pre">N=1,2,..,M</span></code>.</p>
+</section>
+</section>
+<section id="rc24-verifica">
+<h3>RC24-Verifica<a class="headerlink" href="#rc24-verifica" title="Permalink to this heading">¶</a></h3>
+<p><span class="slide3">RC24-ReqVerificabilità</span>: Possiamo ragionare come segue:</p>
+<ul class="simple">
+<li><p>è possibile costruire una mappa della stanza</p></li>
+<li><p>la mappa può essere costruita una volta per tutte oppure mano a mano il robot procede</p></li>
+<li><p>durante il movimento a passi del robot, marchiamo le celle della mappa su cui il robot si trova</p></li>
+<li><p>al termine del procedimento verifichiamo che tutte le celle siano state marcate</p></li>
+</ul>
+</section>
+</section>
+<section id="rc24-architettura-logica">
+<h2>RC24-Architettura logica<a class="headerlink" href="#rc24-architettura-logica" title="Permalink to this heading">¶</a></h2>
+<p>Il sistema può essere pensato a un solo componente o a due componenti, come segue:</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Il sistema ha un unico componente proattivo, che ingloba il supporto <a class="reference internal" href="VrobotLLMoves24.html#id1"><span class="std std-ref">VrobotLLMoves24</span></a></p>
+<a class="reference internal image-reference" href="_images/Cleaner24Arch0.PNG"><img alt="_images/Cleaner24Arch0.PNG" class="align-center" src="_images/Cleaner24Arch0.PNG" style="width: 35%;" /></a>
+<p>Si veda <a class="reference external" href="../../../../robotCleaner24/src/cleaner24Norobot.qaktt">cleaner24Norobot.qak</a></p>
+</td>
+<td><p>Il sistema iinclude il robot, ed è questo che ingloba il supporto <a class="reference internal" href="VrobotLLMoves24.html#id1"><span class="std std-ref">VrobotLLMoves24</span></a></p>
+<a class="reference internal image-reference" href="_images/Cleaner24Arch1.PNG"><img alt="_images/Cleaner24Arch1.PNG" class="align-center" src="_images/Cleaner24Arch1.PNG" style="width: 100%;" /></a>
+<p>Si veda <a class="reference external" href="../../../../robotCleaner24/src/cleaner24.qaktt">cleaner24.qak</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="slide1">Occorre discutere i pro/contro dei due approcci.</span></p>
+</section>
+<section id="rc24-workplan">
+<h2>RC24-WorkPlan<a class="headerlink" href="#rc24-workplan" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Realizzazione di una mappa (come fatto ad esempio in <a class="reference external" href="../../../../mapbuilder/src/mapbuild.qaktt">mapbuild.qak</a>)</p></li>
+<li><p>Realizzazione del funzionamento legato alla mappa</p></li>
+<li><p>Componente/sistea/test per la verifica del risultato</p></li>
+</ol>
+</section>
+<section id="rc24-progetto">
+<h2>RC24-progetto<a class="headerlink" href="#rc24-progetto" title="Permalink to this heading">¶</a></h2>
+<p>Il progetto consiste nella realizzazione del’automa a stati finiti che realizza la strategia di movimento scelta.</p>
+<section id="rc24-correlazione-movimenti-mappa">
+<h3>RC24-correlazione movimenti/mappa<a class="headerlink" href="#rc24-correlazione-movimenti-mappa" title="Permalink to this heading">¶</a></h3>
+<p>In generale, sorge la problematica di come <span class="slide2">mantenere correlato</span>
+il movimento del robot con la rappresentazione della mappa.</p>
+<p>Nel caso della strategia di movimento per colonne
+il punto critico si ha quando il robot collide con <code class="docutils literal notranslate"><span class="pre">wallDown</span></code>  e quindi si sposta in una cella non quadrata.</p>
+<p>Per mantenere la correlazione, si può pensare di procedere coem segue:</p>
+<ul class="simple">
+<li><p>si valuta il tempo effettivo <code class="docutils literal notranslate"><span class="pre">TS</span></code> percorso nello step che provoca la collisione</p></li>
+<li><p>a collisione avvenuta si muove il robot all’indietro per un tempo Thread</p></li>
+<li><p>per faciltare lo spostamento all’indietro di un tempo dato, si introduce una nuova mossa <code class="docutils literal notranslate"><span class="pre">backwardSynch</span></code>
+oppure si trasforma la mossa <strong>backward</strong> da asincrona a sincrona.</p></li>
+</ul>
+<p>La valutazione del tempo <code class="docutils literal notranslate"><span class="pre">TS</span></code> può essere fatta  ad hoc,
+considerando che il robot si muove a velocità costante.</p>
+</section>
+</section>
+<section id="lo-step-asincrono">
+<h2>Lo step asincrono<a class="headerlink" href="#lo-step-asincrono" title="Permalink to this heading">¶</a></h2>
+<p>Una alterntiva può essere quelle di introdurre una nuova mossa: lo <strong>step asincrono</strong> che, in caso di fallimento,
+restituisce il tempo effettivo percorso.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Request</span> <span class="n">step</span><span class="p">:</span><span class="n">step</span><span class="p">(</span><span class="n">TIME</span><span class="p">)</span>
+<span class="n">Reply</span> <span class="n">stepdone</span><span class="p">:</span><span class="n">stepdone</span><span class="p">(</span><span class="n">R</span><span class="p">)</span> <span class="k">for</span> <span class="n">step</span>
+<span class="n">Reply</span> <span class="n">stepfailed</span><span class="p">:</span><span class="n">stepfailed</span><span class="p">(</span><span class="n">T</span><span class="p">,</span><span class="n">CAUSE</span><span class="p">)</span> <span class="k">for</span> <span class="n">step</span>
+</pre></div>
+</div>
+<p>Questo obiettivo viene affrontato in relazione alla definizione di un servizio di accesso
+all’uso del robot, desxcritto in <a class="reference internal" href="Vrqak24.html#vrqak24"><span class="std std-ref">Vrqak24</span></a>.</p>
+</section>
 </section>
 
 
@@ -74,6 +266,27 @@ ma in futuro vorrà usare un robot fisico, del tipo riportato in <a class="refer
     <ul>
 <li><a class="reference internal" href="#">RobotCleaner</a><ul>
 <li><a class="reference internal" href="#rc24-requisiti">RC24-requisiti</a></li>
+<li><a class="reference internal" href="#rc24-analisi-dei-requisiti">RC24-analisi dei requisiti</a></li>
+<li><a class="reference internal" href="#rc24-analisi-del-problema">RC24-analisi del problema</a><ul>
+<li><a class="reference internal" href="#rc24-il-cuore-del-problema">RC24-Il cuore del problema</a></li>
+<li><a class="reference internal" href="#rc24-strategia-di-movimento">RC24-Strategia di movimento</a></li>
+<li><a class="reference internal" href="#rc24-il-passo-del-robot">RC24-Il passo del robot</a><ul>
+<li><a class="reference internal" href="#il-robot-come-unita-di-misura">Il robot come unità di misura</a></li>
+<li><a class="reference internal" href="#movimento-per-colonne">Movimento per colonne</a></li>
+<li><a class="reference internal" href="#movimento-a-spirale">Movimento a spirale</a></li>
+<li><a class="reference internal" href="#movimento-a-onde">Movimento a onde</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#rc24-verifica">RC24-Verifica</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#rc24-architettura-logica">RC24-Architettura logica</a></li>
+<li><a class="reference internal" href="#rc24-workplan">RC24-WorkPlan</a></li>
+<li><a class="reference internal" href="#rc24-progetto">RC24-progetto</a><ul>
+<li><a class="reference internal" href="#rc24-correlazione-movimenti-mappa">RC24-correlazione movimenti/mappa</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#lo-step-asincrono">Lo step asincrono</a></li>
 </ul>
 </li>
 </ul>
@@ -86,8 +299,8 @@ ma in futuro vorrà usare un robot fisico, del tipo riportato in <a class="refer
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="BasicRobot24.html"
-                          title="next chapter">BasicRobot24</a></p>
+    <p class="topless"><a href="MapBuilder24.html"
+                          title="next chapter">MapBuilder24</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -117,7 +330,7 @@ ma in futuro vorrà usare un robot fisico, del tipo riportato in <a class="refer
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="BasicRobot24.html" title="BasicRobot24"
+          <a href="MapBuilder24.html" title="MapBuilder24"
              >next</a> |</li>
         <li class="right" >
           <a href="Vrqak24.html" title="Vrqak24"

@@ -575,17 +575,15 @@ elenco degli esempi di uso locale e remoto del <a href="html/VirtualRobot23.html
 Sperimentazione della emissione di eventi usando il protocollo MQTT: 
 <a href="../../../virtualrobotusage/src/bw24sonarwolfmock.qaktt" target="web">bw24sonarwolfmock.qak</a>
 </li><li>
+<a href="html/VirtualRobotUsage24.html#il-sonar-su-raspberrypi" target="web">Il sonar su RaspberryPi</a>:
 Sperimentazione della interazione tra il Sonar su RaspberryPi e una applicazione su PC
-usando prima i contesti e poi il protocollo MQTT:
-<a href="../../../virtualrobotusage/src/bw24proto1all.qaktt" target="web">bw24proto1all.qak</a>
+usando prima i contesti e poi il protocollo MQTT.
+<!-- <a href="../../../virtualrobotusage/src/bw24proto1all.qaktt" target="web">bw24proto1all.qak</a> -->
 </li><li>
-Realizzazione di una soluzione al requisito <b>BW-Req3</b> del problema <a href="html/BoudaryWalk24.html" target="web">BoundaryWalk</a>
+Realizzazione di una soluzione al requisito <b>BW-Req3</b> del problema <a href="html/BoudaryWalk24.html" target="web">BoundaryWalk</a>.
 </li><li>
-Un servizio <a href="html/Vrqak24.html" target="web">Vrqak4</a>  per l'uso remoto del 
-<a href="html/VirtualRobot23.html" target="web">VirtualRobot23.html</a>.
-</li><li>
-<a href="../../../virtualrobotusage/src/bw24proto2.qaktt" target="web">bw24proto2.qak</a>:
- un prototipo che realizza  tutti i requisiti del problema <a href="html/BoudaryWalk24.html" target="web">BoundaryWalk</a>
+Approfondimento del funzionamento del supporto <a href="html/VrobotLLMoves24.html" target="web">VrobotLLMoves24</a>:
+come il supporto comunica con il livello superiore (owner)
 </li>
 </ul> 
 <kc>WORKTODO: RobotCleaner</kc> impostare l'analisi  
@@ -598,17 +596,52 @@ del problema <a href="html/RobotCleaner.html" target="web">RobotCleaner</a>.
     Week 12
 -->
 <tr><td><em>Week 12	</em></td><td></td><td></td></tr>    
-    
+   
 
 
 <tr><td><m>07/05/2024 (9-12)</m></td><td>Lab2</td> 
 
 <td>
+<ul>
+<li>
+Discussione sulla analisi del  problema <a href="html/RobotCleaner.html" target="web">RobotCleaner</a>.
+</li><li>
+Come verificare la copertura della superficie: un progetto per crear una mappa della stanza 
+<a href="html/MapBuilder24.html" target="web">MapBuilder24.html</a>
+</li><li>
+<ul>
+<li>
+Creazione di una 
+<a href="html/MapBuilder24.html#map24-mappa-in-java" target="web">mappa come oggetto Java</a>.
+</li><li>
+Creazione di una 
+<a href="html/MapBuilder24.html#map24-mappa-in-prolog" target="web">mappa come  base di conoscenza Prolog</a>
+</li>
+</ul>
+
+</li><li>
+Regole Prolog per la costruzione di cammini per lo spostamento
+del robot da un punto all'altro di una stanza vuota.
+</li>
+
+</ul> 
 </td>
  
 </tr>
 <tr><td><m>09/05/2024 (15-18)</m></td><td>Lab2</td> 
 <td> 
+<ul>
+<li>
+Un servizio <a href="html/Vrqak24.html" target="web">Vrqak4</a>  per l'uso remoto del 
+<a href="html/VirtualRobot23.html" target="web">VirtualRobot23.html</a>.
+</li><li>
+<a href="../../../virtualrobotusage/src/bw24proto2.qaktt" target="web">bw24proto2.qak</a>:
+ un prototipo che realizza  tutti i requisiti del problema <a href="html/BoudaryWalk24.html" target="web">BoundaryWalk</a>
+ usando il servizio step asincrono di <a href="html/Vrqak24.html" target="web">Vrqak4</a>.
+</li><li>
+</li>
+
+</ul> 
 </td>
 </tr>
 

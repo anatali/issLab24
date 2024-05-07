@@ -1,0 +1,88 @@
+System mapbuild
+
+Dispatch stepdone   : stepdone(X)     "automsg"
+Dispatch stepfailed : stepfailed(X)   "automsg"
+Dispatch vrinfo     : vrinfo(A,B)     "from VrobotLLMoves24"
+
+Context ctxmapbuild  ip [host="localhost" port=8720     ]
+
+QActor mapbuilder context ctxmapbuild withobj vr using "VrobotLLMoves24.create(\"localhost\",myself)"{
+	import "main.resources.robotvirtual.VrobotLLMoves24"
+	import "main.resources.map.RoomMap" 
+	import "main.resources.map.RobotDir" 
+	[# 
+	   
+	   var CurPlan = ""
+	   var CurMove = ""
+	   var RSTEP   = false
+	   var Goon    = true
+	#] 
+	
+	
+	State s0 initial{ 
+		println("$name STARTS") color blue
+		//[# GuiUtils.showSystemInfo() #]
+		//[# vr.setTrace(true)  #]
+		[# vr.halt()  #]
+		[# RobotDir.setDir(RobotDir.Direction.DOWN) #]
+	}
+	Goto useMap
+	
+	
+	State useMap{ 
+		solve( consult("mapProlog.pl")	 )
+		solve( consult("maprules.pl")	 )
+		solve( showCells ) 
+		println("$name | execThePlan SOLVE") color yellow   
+  		solve( path(0,0,2,2,right,P) ) 
+		//println( "$currentSolution" ) color yellow
+ 		[# CurPlan = getCurSol("P").toString().replace("[","").replace("]","").replace(",","") #]
+		println("PATH= $CurPlan") color yellow
+		
+//		delay 1000
+// 		 [# System.exit(0) #]
+	}
+	Goto execThePlan 
+	
+	
+	State execThePlan{
+		println("$name | execThePlan CurPlan=$CurPlan") color yellow
+		if [# CurPlan.length > 0 #]{
+			[# CurMove = ""+CurPlan[0]; CurPlan = CurPlan.drop(1) #]
+		    println("$name | execThePlan CurMove=$CurMove") color yellow		
+		}else{ [# CurMove="" #] }
+	}
+	Goto doMove if [# (CurMove.length > 0) #] else end
+	
+	State doMove{
+		delay 200
+		if [# CurMove == "w" #]{ 
+			[# RSTEP = vr.step(350) #]
+ 			[# Goon = RSTEP #] 
+        } 
+		if [# CurMove == "l" #]{ 
+			[# vr.turnLeft() #]
+ 			//[# Goon = true #] 
+        }
+		if [# CurMove == "r" #]{ 
+			[# vr.turnRight() #]
+ 			//[# Goon = true #] 
+        }
+	}
+	Goto execThePlan if [# Goon #]  else planko
+	
+	State end{
+		println("$name | end with CurMove=$CurMove") color yellow
+		[# System.exit(0) #]
+	}
+	
+	State planko{
+		println("$name | planko with CurPlan=$CurPlan") color magenta
+		[# System.exit(0) #]
+	}	
+ 
+	
+ 	
+	
+	
+}

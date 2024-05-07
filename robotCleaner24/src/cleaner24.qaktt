@@ -1,0 +1,197 @@
+System cleaner24
+/*  
+ * ========================================
+ *  cleaner24
+ * ========================================
+*/ 
+Dispatch   cmd:cmd(MOVE)
+ 
+Request step:step(TIME)
+Reply stepdone:stepdone(R) for step
+Reply stepfailed:stepfailed(T,CAUSE) for step
+
+Context ctxcleaner24  ip [host="localhost" port=8032]   
+
+/* 
+ * -----------------------------------------------------------------
+ * Muove il VirtualRobot usando il POJO VrobotLLMoves24  
+ * -----------------------------------------------------------------
+ */ 
+
+QActor robot context ctxcleaner24  withobj vr using "VrobotLLMoves24.create(\"localhost\",myself)"{
+	import "main.resources.robotvirtual.VrobotLLMoves24"
+	State s0 initial {
+		println("$name | START ") color black
+	}
+	Goto work
+	
+	State work{		
+	}
+	Transition t0 
+	   whenMsg cmd      -> execCmd
+	   whenRequest step -> execStep
+		
+	State execCmd{
+		//printCurrentMessage color black
+		onMsg( cmd : cmd(MOVE) ){
+			[# val M = payloadArg(0) #]
+			[#  if(M=="l") vr.turnLeft() 
+				else  if(M=="r") vr.turnRight() 
+				else  if(M=="s") vr.backward(50) 
+			#]
+		}
+	}
+	Goto work
+	
+    State execStep{
+    	//printCurrentMessage color black
+    	onMsg( step : step(T) ){
+			[#  val T = payloadArg(0).toLong(); 
+				var RSTEP = vr.step(T)   //SYNCH
+			#]
+	   		if [# RSTEP #]{
+	   			replyTo step with stepdone : stepdone(ok)
+	   		}else{
+	   			replyTo step with stepfailed : stepfailed(T,collision)
+	   		}
+   		}
+	}
+	Goto work
+}
+
+
+/* 
+ * --------------------------------------------------------------------
+ * Procede coprendo la stanza secondo la strategia per colonne
+ * Invia comandi al VirtualRobot mediante  l'actor robot
+ * -------------------------------------------------------------------- 
+ */
+QActor cleaner24 context ctxcleaner24 {    
+	import "main.resources.map.RoomMap" 
+	import "main.resources.map.RobotDir" 
+	import "main.resources.map.RobotDir.Direction"
+[#
+	var GoingDown   = true 
+
+    lateinit var map : RoomMap
+	var PX = 0   //Robot pos along X
+	var PY = 0   //Robot pos along Y
+#]  
+
+	State activate initial {
+		//printCurrentMessage
+		[#  
+           GoingDown = true 
+           RobotDir.setDir( Direction.DOWN )
+        #] 
+		println("$name | START ") color blue
+		[#  map = RoomMap.loadRoomMap("map") #]
+		[#  map.clear()    #]
+ 		[#  map.setRobot(PX,PY) #]		
+		[#  map.showMap()     #]
+ 	}
+	Goto coverColumn
+				   
+	State coverColumn{  		  
+   		//printCurrentMessage
+ 		[# map.setCellClean(PX,PY)  #]		 
+   		delay 300 //give some time ...
+   		request robot -m step : step(350)
+ 	}
+	Transition t0  whenReply stepdone   -> stepColumnDone
+ 	               whenReply stepfailed -> turn   
+ 	
+ 	State stepColumnDone{
+   		[# if(GoingDown) PX++; else PX-- #]
+   		[# map.setRobot(PX,PY)      #]
+   		[# map.setCellClean(PX,PY)  #]				
+ 	}
+ 	Goto coverColumn
+ 
+	State turn{  		  
+   		//printCurrentMessage
+   		println("turn while GoingDown=$GoingDown")
+   		if[# GoingDown #] { 
+   			forward robot -m cmd : cmd(s) 
+   			forward robot -m cmd : cmd(l) 
+    	}else{ 
+   			forward robot -m cmd : cmd(r) 
+   		}
+   		delay 300 //give time to turn
+   		request robot -m step : step(350)
+	}	
+	Transition t0  whenReply stepdone   -> doTurn
+	               whenReply stepfailed -> lastColumn
+ 
+	State doTurn{
+    	println("doTurn while GoingDown=$GoingDown") color magenta
+    	[#  PY++; 
+    		map.setCellClean(PX,PY)  
+    	#]   	
+   		if[# GoingDown #] { 
+             forward robot -m cmd : cmd(l)           
+   		}else{ 
+   			forward robot -m cmd : cmd(r)
+   		}
+   		delay 300 //give time to turn
+   		[#  GoingDown = ! GoingDown 
+   			if( GoingDown ) RobotDir.setDir(Direction.DOWN) 
+   			else RobotDir.setDir(Direction.UP) 
+   		#]   	 
+   		request robot -m step : step(350) //continua in altra direzione              
+      }
+ 	  Transition t0  whenReply stepdone   -> continueAfterTurn
+	                 whenReply stepfailed -> lastColumn
+      
+    State continueAfterTurn{
+   		[# if(GoingDown) PX++; else PX-- #]
+   		[# map.setCellClean(PX,PY)  #]		
+   		[# map.showMap()  #]
+	} 
+	Goto coverColumn
+ 	
+	State lastColumn{   		  
+   		printCurrentMessage color magenta
+    	[#  PY++; 
+    		map.setCellClean(PX,PY)  
+    	#]   	
+   		if[# GoingDown #] {   			 
+   			forward robot -m cmd : cmd(l)
+   		}else{   			 
+   			forward robot -m cmd : cmd(r)
+   		}
+   		[# map.showMap()  #]
+   		delay 200
+   		[#  GoingDown = ! GoingDown   	 
+   			if( GoingDown ) RobotDir.setDir(Direction.DOWN) 
+   			else RobotDir.setDir(Direction.UP) 
+   		#]   	 
+   		request robot -m step : step(350) 
+	} 
+ 	Transition t0  whenReply stepdone   -> coverLastColumn  
+ 	               whenReply stepfailed -> endofwork
+ 	               
+ 	State coverLastColumn{  		
+ 		//println("coverLastColumn") color blue
+    	[# if(GoingDown) PX++; else PX-- #]
+   		[# map.setCellClean(PX,PY)  #]				
+ 		delay 200
+ 		request robot -m step : step(350)
+  	} 
+ 	Transition t0  whenReply stepdone   -> coverLastColumn  
+ 	               whenReply stepfailed -> endofwork
+ 	 
+ 	State endofwork{
+ 		println("---------------------------") color blue
+ 		[# map.showMap()  #]
+ 		
+	    [# val MS  = map.toProlog()  #]
+		[# map.saveRoomMapProlog("mapcleanedkb", MS ) #]
+		
+ 		[# System.exit(0) #]
+ 	}
+ 	
+	State fatalError{  		  
+   		printCurrentMessage color red
+	}	
+}

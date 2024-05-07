@@ -1,0 +1,72 @@
+System mapbuild
+
+Dispatch stepdone   : stepdone(X)     "automsg"
+Dispatch stepfailed : stepfailed(X)   "automsg"
+Dispatch vrinfo     : vrinfo(A,B)     "from VrobotLLMoves24"
+
+Context ctxmapbuild  ip [host="localhost" port=8720     ]
+
+QActor mapbuilder context ctxmapbuild withobj vr using "VrobotLLMoves24.create(\"localhost\",myself)"{
+	import "main.resources.robotvirtual.VrobotLLMoves24"
+	import "main.resources.map.RoomMap" 
+	[# var N  = 0 
+	   var NR = 1
+	   var NC = 1
+	   var firstcolumn  = true
+	   var firstrow     = false
+	#] 
+	
+	
+	State s0 initial{ 
+		println("$name STARTS") color blue
+		//[# GuiUtils.showSystemInfo() #]
+		//[# vr.setTrace(true)  #]
+		[# vr.halt()  #]
+	}
+	Goto doMap
+	
+	State doMap{
+		delay 200
+  		[# var RSTEP = vr.step(370) #]  //se RSTEP = false emette vrinfo(obstacle,unknown) 
+		//println("$name | RSTEP=$RSTEP") color blue
+		if [# RSTEP #]{ 
+			if [# firstcolumn #]{ [# NR++ #] }
+			if [# firstrow #]{    [# NC++ #] }
+			autodispatch stepdone : stepdone(1)
+		}	 
+		else{ autodispatch stepfailed : stepfailed(1) }
+	} 
+	Transition t0 
+	    whenMsg stepdone    -> doMap 
+	    whenMsg stepfailed  -> turnAndgo
+   
+ 
+	State turnAndgo{ 
+		if [# ! firstcolumn #]{ [# NR++ #] }
+		if [# ! firstrow #]{ [# NC++ #] }
+		println("$name | N=$N, NC=$NC, NR=$NR") color cyan
+		if [# ! firstrow #]{ [# firstrow = true #] }
+		[# firstcolumn = false #] 
+		[# N = N + 1 #]
+ 		[# vr.turnLeft() #]
+ 		println("$name | N=$N, NC=$NC, NR=$NR") color cyan
+		if [# N == 2 #]{
+			println("$name | N=$N, NC=$NC, NR=$NR") color yellow
+			[# val map = RoomMap(NR,NC) #]
+			[# map.setRobot( NR-1,NC-1 ) #]
+			[# val MS  = map.toString()  #]
+			[# map.saveRoomMap("map", MS ) #]
+			println("$name | MAP: ") color yellow
+			println("$MS ") color yellow
+			delay 1000
+			[# System.exit(0) #]
+		}  
+	} 
+//	Transition t0 
+//	    whenMsg stepdone    -> doMap 
+//	    whenMsg stepfailed  -> turnAndgo
+	Goto doMap 
+	
+	  
+	
+}
