@@ -142,12 +142,12 @@ La stanza stessa può essere pensata come suddivisa in celle quadrate di lato <c
 <col style="width: 65%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><a class="reference internal image-reference" href="_images/plant1.PNG"><img alt="_images/plant1.PNG" class="align-center" src="_images/plant1.PNG" style="width: 100%;" /></a>
+<tr class="row-odd"><td><a class="reference internal image-reference" href="_images/plant2.PNG"><img alt="_images/plant2.PNG" class="align-center" src="_images/plant2.PNG" style="width: 100%;" /></a>
 </td>
 <td><ul class="simple">
-<li><p>denotimo con <code class="docutils literal notranslate"><span class="pre">X</span></code> il bordo <em>wallLeft</em>  e con <code class="docutils literal notranslate"><span class="pre">Y</span></code> il bordo <em>wallUp</em></p></li>
-<li><p>la stanza lungo l’asse <code class="docutils literal notranslate"><span class="pre">X</span></code> ha lunghezza <code class="docutils literal notranslate"><span class="pre">NR*DR+DX</span></code> con <code class="docutils literal notranslate"><span class="pre">NR&gt;0</span></code></p></li>
-<li><p>la stanza lungo l’asse <code class="docutils literal notranslate"><span class="pre">Y</span></code> ha lunghezza <code class="docutils literal notranslate"><span class="pre">NC*DR+DY</span></code> con <code class="docutils literal notranslate"><span class="pre">NC&gt;0</span></code></p></li>
+<li><p>denotiamo con <code class="docutils literal notranslate"><span class="pre">Y</span></code> il bordo <em>wallLeft</em>  e con <code class="docutils literal notranslate"><span class="pre">X</span></code> il bordo <em>wallUp</em></p></li>
+<li><p>la stanza lungo l’asse <code class="docutils literal notranslate"><span class="pre">Y</span></code> ha lunghezza <code class="docutils literal notranslate"><span class="pre">NR*DR+DX</span></code> con <code class="docutils literal notranslate"><span class="pre">NR&gt;0</span></code></p></li>
+<li><p>la stanza lungo l’asse <code class="docutils literal notranslate"><span class="pre">X</span></code> ha lunghezza <code class="docutils literal notranslate"><span class="pre">NC*DR+DY</span></code> con <code class="docutils literal notranslate"><span class="pre">NC&gt;0</span></code></p></li>
 </ul>
 </td>
 </tr>
@@ -212,6 +212,36 @@ DR, lavorando in una ‘stanza virtuale’ di lati <code class="docutils literal
 </table>
 <p><span class="slide1">Occorre discutere i pro/contro dei due approcci.</span></p>
 </section>
+<section id="rc24-discussione">
+<h2>RC24-Discussione<a class="headerlink" href="#rc24-discussione" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><a class="reference internal image-reference" href="_images/Cleaner24Arch0Plus.PNG"><img alt="_images/Cleaner24Arch0Plus.PNG" class="align-center" src="_images/Cleaner24Arch0Plus.PNG" style="width: 100%;" /></a>
+</td>
+<td><ul class="simple">
+<li><p>Il componente <code class="docutils literal notranslate"><span class="pre">cleaner24</span></code> ‘parla’ in modo nativo con componenti remoti qak via TCP (e CoAP) ma non è capace di
+comunicare con il robot  (usando WebSocket)</p></li>
+<li><p>Per poter comunicare con il robot, USA internamente un POJO-traduttore/trasmettore di comandi</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><p>Nel caso si voglia cambiare il robot, potrebbe rendersi necessario cambiare il POJO.</p></li>
+<li><p>Il cambiamento del POJO potrebbe essere evitato con un POJO-configurabile che
+legge da un file di configurazione il tipo di robot con cui comunicare, usando a sua volta un supporto ad-hoc
+che risulta invisibile al codice di livello applicativo.</p></li>
+<li><p>In questo ultimo caso, il livello applicativo è protetto dai cambiamenti relativi ai diversi linguaggi
+concreti dei robot. Tutto va come se si fosse applicato il citerio della <strong>inversione delle dipendenze</strong>.</p></li>
+</ul>
+<p>Lo schema architetturale che introduce il ‘servizio qak’ denominato <code class="docutils literal notranslate"><span class="pre">robot</span></code> , trasferisce a questo servizio
+l’onere della configurazione dei supporti, liberando il componente <code class="docutils literal notranslate"><span class="pre">cleaner24</span></code> da questo genere di dettagli.</p>
+</section>
 <section id="rc24-workplan">
 <h2>RC24-WorkPlan<a class="headerlink" href="#rc24-workplan" title="Permalink to this heading">¶</a></h2>
 <ol class="arabic simple">
@@ -219,6 +249,15 @@ DR, lavorando in una ‘stanza virtuale’ di lati <code class="docutils literal
 <li><p>Realizzazione del funzionamento legato alla mappa</p></li>
 <li><p>Componente/sistea/test per la verifica del risultato</p></li>
 </ol>
+<section id="verso-un-robot-service">
+<h3>Verso un robot service<a class="headerlink" href="#verso-un-robot-service" title="Permalink to this heading">¶</a></h3>
+<p>Tenenendo conto di quanto detto in <a class="reference internal" href="#rc24-discussione"><span class="std std-ref">RC24-Discussione</span></a>, si può  pensare anche di pianificare lavoro per passare
+da un supporto come <a class="reference internal" href="Vrqak24.html#vrqak24"><span class="std std-ref">Vrqak24</span></a> a un vero e proprio
+<a class="reference internal" href="BasicRobot24.html#basicrobot24"><span class="std std-ref">basicrobot</span></a> inteso come servizio.</p>
+<blockquote>
+<div><a class="reference internal image-reference" href="_images/basicrobotproject.PNG"><img alt="_images/basicrobotproject.PNG" class="align-center" src="_images/basicrobotproject.PNG" style="width: 50%;" /></a>
+</div></blockquote>
+</section>
 </section>
 <section id="rc24-progetto">
 <h2>RC24-progetto<a class="headerlink" href="#rc24-progetto" title="Permalink to this heading">¶</a></h2>
@@ -250,7 +289,7 @@ restituisce il tempo effettivo percorso.</p>
 </pre></div>
 </div>
 <p>Questo obiettivo viene affrontato in relazione alla definizione di un servizio di accesso
-all’uso del robot, desxcritto in <a class="reference internal" href="Vrqak24.html#vrqak24"><span class="std std-ref">Vrqak24</span></a>.</p>
+all’uso del robot, descritto in <a class="reference internal" href="Vrqak24.html#vrqak24"><span class="std std-ref">Vrqak24</span></a>.</p>
 </section>
 </section>
 
@@ -281,7 +320,11 @@ all’uso del robot, desxcritto in <a class="reference internal" href="Vrqak24.h
 </ul>
 </li>
 <li><a class="reference internal" href="#rc24-architettura-logica">RC24-Architettura logica</a></li>
-<li><a class="reference internal" href="#rc24-workplan">RC24-WorkPlan</a></li>
+<li><a class="reference internal" href="#rc24-discussione">RC24-Discussione</a></li>
+<li><a class="reference internal" href="#rc24-workplan">RC24-WorkPlan</a><ul>
+<li><a class="reference internal" href="#verso-un-robot-service">Verso un robot service</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#rc24-progetto">RC24-progetto</a><ul>
 <li><a class="reference internal" href="#rc24-correlazione-movimenti-mappa">RC24-correlazione movimenti/mappa</a></li>
 </ul>

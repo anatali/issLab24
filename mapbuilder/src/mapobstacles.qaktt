@@ -1,0 +1,151 @@
+System mapbuild //-msglog 
+/*
+========================================
+mapobstacles.qak
+========================================
+*/
+/*
+ * Percorro una colonna tenendo conto del numero di stepok
+ * Al primo ostacolo mi giro e torno su di stepok passi
+ * 
+ * docker cp sceneConfig.js 87c9eb2e0989:/home/node/WEnv/WebGLScene/sceneConfig.js
+ */
+Dispatch cmd       : cmd(MOVE)     
+
+Request engage        : engage(ARG,STEPTIME)	
+Reply   engagedone    : engagedone(ARG)
+Reply   engagerefused : engagerefused(ARG)
+Dispatch disengage    : disengage(ARG)
+
+Request step       : step( TIME )	
+Reply stepdone     : stepdone(V)  for step
+Reply stepfailed   : stepfailed(DURATION, CAUSE) for step
+
+Event alarm        : alarm(X)
+
+Request  doplan   : doplan( PATH, OWNER )
+Reply doplandone  : doplandone( ARG )    for doplan
+Reply doplanfail  : doplanfail( ARG )    for doplan
+
+Context ctxmapbuild    ip [host="localhost" port=8032]
+Context ctxbasicrobot  ip [host="127.0.0.1" port=8020]   
+
+ExternalQActor basicrobot context ctxbasicrobot  
+
+/*   
+ * ------------------------------------------------------------------
+ * mapqak22
+ * ASSUNZIONE: bordo superiore libero
+ * ------------------------------------------------------------------
+*/     
+QActor mapbuilder  context ctxmapbuild{   
+	import  "unibo.planner23.*"
+[#
+val MaxNumStep  = 6
+var NumStep     = 0
+var stepok      = 0
+val planner     = Planner23Util()
+#]   
+
+	State activate initial {
+		//printCurrentMessage
+		[# NumStep     = 0;
+           planner.initAI()
+        #]  
+		request basicrobot -m engage : engage($MyName,350) 
+	} 
+//	Goto coverNextColumn
+	Transition t0 //whenTime 2000           -> work
+	              whenReply engagedone    -> coverNextColumn
+	              whenReply engagerefused -> waittoengage
+
+	State waittoengage {
+		printCurrentMessage color red
+	}
+
+	State coverNextColumn{  
+		println("$name | coverNextColumn")	color blue	  
+   		request basicrobot -m step : step(350)	
+	}
+	Transition t0  whenReply stepdone -> coverColumn   
+				   whenReply stepfailed -> backHome
+	  			   
+	State coverColumn{  		   
+   		//printCurrentMessage
+   		[# stepok = stepok + 1
+   		   planner.updateMap(  "w", "" ) 		
+   		#]
+   		println("coverColumn stepok=$stepok NumStep=$NumStep")
+     	delay 300 
+   		request basicrobot -m step : step(340)
+ 	}
+	Transition t0  whenReply stepdone -> coverColumn
+ 	               whenReply stepfailed -> backHome // and [# NumStep <  MaxNumStep #] 
+ 
+	State backHome{  	
+		printCurrentMessage	   color blue
+		[#  planner.updateMapObstacleOnCurrentDirection()
+ 		#]   		
+		println("backHome")
+   			forward basicrobot -m cmd : cmd(l)
+			[#  planner.updateMap(  "l", "" )  #]   			
+   			delay 300 
+   			forward basicrobot -m cmd : cmd(l)
+			[#  planner.updateMap(  "l", "" )  #]   			
+   			delay 300  
+    			
+    		[# planner.showCurrentRobotState() #]
+    		request basicrobot -m step : step(340)   
+	}	
+   	Transition t0  whenReply stepdone -> gotoHome
+ 	               whenReply stepfailed -> turnAndStep //endOfWork
+
+/*
+ * Il ritorno a home puo' provocare un hit su wallup
+ */ 
+ 	State gotoHome{
+ 		[# planner.updateMap(  "w", "" ) 
+ 		   stepok = stepok - 1 
+ 		#]
+ 		println("gotoHome stepok=$stepok")	
+ 		delay 300 
+ 		request basicrobot -m step : step(340)  
+ 	}
+// 	Goto gotoHome if [# stepok > 0 #] else turnAndStep  //WRONG
+  	Transition t0  whenReply stepdone and [# stepok > 0 #]  -> gotoHome
+  	               whenReply stepdone and [# stepok == 0 #] -> turnAndStep
+  				   whenReply stepfailed -> turnAndStep
+
+ 	
+ 	State turnAndStep{
+   		forward basicrobot -m cmd : cmd(r)
+		[#  planner.updateMap(  "r", "" )  #]   			
+   		delay 300 			
+   		request basicrobot -m step : step(340)  //step laterale
+ 	}
+  	Transition t0  whenReply stepdone -> posForNextColumn
+  				   whenReply stepfailed -> endOfWork
+ 	
+ 	State posForNextColumn{
+ 		[# planner.updateMap(  "w", "" ) #]
+   		forward basicrobot -m cmd : cmd(r)
+		[#  planner.updateMap(  "r", "" )  #]   	
+		println("posForNextColumn stepok=$stepok")		
+   		[# planner.showCurrentRobotState() #]		
+ 		//[# unibo.actor22comm.utils.CommUtils.waitTheUser("posForNextColumn")	 #]
+   		delay 1300 		 
+	}
+ 	Goto coverNextColumn
+ 	
+ 	
+	State endOfWork{  		  
+   		printCurrentMessage
+   		[#  //planner.updateMapObstacleOnCurrentDirection() 
+   			planner.showMap()
+   			planner.saveRoomMap("map2019")
+   		#]
+	}	
+}
+
+
+ 

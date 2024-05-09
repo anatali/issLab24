@@ -1,0 +1,184 @@
+System mapbuild //-msglog 
+/*
+========================================
+mapobstacles24.qak
+========================================
+*/
+/*
+ * 
+ * docker cp sceneConfig.js 87c9eb2e0989:/home/node/WEnv/WebGLScene/sceneConfig.js
+ */
+Dispatch cmd       : cmd(MOVE)     
+
+
+Request step       : step( TIME )	
+Reply stepdone     : stepdone(V)  for step
+Reply stepfailed   : stepfailed(DURATION, CAUSE) for step
+
+
+Context ctxmapbuild    ip [host="localhost" port=8032]
+Context ctxvrqak       ip [host="127.0.0.1" port=8125]   
+
+ExternalQActor vrqak context ctxvrqak  
+
+/*   
+ * ------------------------------------------------------------------
+ * mapqak22
+ * ASSUNZIONE: bordo superiore libero
+ * ------------------------------------------------------------------
+*/     
+QActor mapbuilder  context ctxmapbuild{   
+	import "main.resources.map.RoomMap" 
+	import "main.resources.map.RobotDir" 
+	import "main.resources.map.RobotDir.Direction" 
+
+[#
+val MaxNumStep  = 6
+var NumStep     = 0
+var stepok      = 0
+lateinit var map : RoomMap
+
+	   var RobotPosX = 0  
+	   var RobotPosY = 0
+	   var goingDown = true
+	   var goingLeft = false
+#]   
+
+	State activate initial {
+		//printCurrentMessage
+		[# NumStep     = 0;
+           RobotDir.setDir(Direction.DOWN)    
+        #]  
+		[#  map = RoomMap.loadRoomMap("map") #]
+		[#  map.clear()    #]
+		[#  map.setRobot(RobotPosX,RobotPosY) #]
+		[#  map.showMap()  #]
+	} 
+ 	Goto coverNextColumn
+ 
+	State coverNextColumn{  
+		println("$name | coverNextColumn")	color blue	  
+   		request vrqak -m step : step(350)	
+	}
+	Transition t0  whenReply stepdone -> coverColumn   
+				   whenReply stepfailed -> backHome
+	  			   
+	State coverColumn{  		   
+   		//printCurrentMessage
+//   		[# stepok = stepok + 1
+//   		   planner.updateMap(  "w", "" ) 		
+//   		#]
+ 			if [# RobotDir.goingDown() #] { 
+				[# map.setFree(RobotPosX,RobotPosY) #]
+				[# RobotPosX++ #]
+				[# map.setRobot(RobotPosX,RobotPosY) #]
+				[# map.showMap()  #]
+			}
+            if [# RobotDir.goingUp() #] {
+				[# map.setFree(RobotPosX,RobotPosY) #]
+				[# RobotPosX-- #]
+				[# map.setRobot(RobotPosX,RobotPosY) #]
+				[# map.showMap()  #]				 
+			}
+			if [# RobotDir.goingLeft() #] {
+				[# map.setFree(RobotPosX,RobotPosY) #]
+				[# RobotPosY-- #]
+				[# map.setRobot(RobotPosX,RobotPosY) #]
+				[# map.showMap()  #]									
+			}
+			if [# RobotDir.goingRight() #] {
+				[# map.setFree(RobotPosX,RobotPosY) #]
+				[# RobotPosY++ #]
+				[# map.setRobot(RobotPosX,RobotPosY) #]
+				[# map.showMap()  #]													
+			}			
+ 	    	println("coverColumn stepok=$stepok NumStep=$NumStep")
+     	delay 300 
+   		request vrqak -m step : step(350)
+ 	}   
+	Transition t0  whenReply stepdone -> coverColumn
+ 	               whenReply stepfailed -> backHome // and [# NumStep <  MaxNumStep #] 
+ 
+	State backHome{  	
+		//printCurrentMessage	 color yellow
+		
+		//[#  planner.updateMapObstacleOnCurrentDirection() #]   		
+		println("$name | backHome $RobotPosX,$RobotPosY")  color yellow
+   			forward vrqak -m cmd : cmd(l)
+			//[#  planner.updateMap(  "l", "" )  #]   			
+		[# map.setFree(RobotPosX,RobotPosY) #] //cella prima del fallimento
+		//cella con ostacolo ???
+				if [# RobotDir.goingDown() #] { [# RobotPosX++  #] }
+				if [# RobotDir.goingRight() #] { [# RobotPosY++ #] }
+				if [# RobotDir.goingUp()   && RobotPosX > 0  #] { [# RobotPosX-- #] }
+				if [# RobotDir.goingLeft() && RobotPosY > 0  #] { [# RobotPosY-- #] }
+  		//Il robot è nella cella con ostacolo		
+ 		[# map.setRobot(RobotPosX,RobotPosY) #]
+   			delay 300 
+   			forward vrqak -m cmd : cmd(l)
+			//[#  planner.updateMap(  "l", "" )  #]   			
+		[# map.setFree(RobotPosX,RobotPosY) #] //cella prima del fallimento
+		//cella con ostacolo ???
+				if [# RobotDir.goingDown() #] { [# RobotPosX++  #] }
+				if [# RobotDir.goingRight() #] { [# RobotPosY++ #] }
+				if [# RobotDir.goingUp()   && RobotPosX > 0  #] { [# RobotPosX-- #] }
+				if [# RobotDir.goingLeft() && RobotPosY > 0  #] { [# RobotPosY-- #] }
+  		//Il robot è nella cella con ostacolo		
+ 		[# map.setRobot(RobotPosX,RobotPosY) #]
+   			delay 300  
+    			
+    		//[# planner.showCurrentRobotState() #]
+    		request vrqak -m step : step(350)   
+	}	
+   	Transition t0  whenReply stepdone -> gotoHome
+ 	               whenReply stepfailed -> turnAndStep //endOfWork
+
+/*
+ * Il ritorno a home puo' provocare un hit su wallup
+ */ 
+ 	State gotoHome{
+ 		[# //planner.updateMap(  "w", "" ) 
+ 		   stepok = stepok - 1 
+ 		#]
+ 		println("gotoHome stepok=$stepok")	
+ 		delay 300 
+ 		request vrqak -m step : step(350)  
+ 	}
+// 	Goto gotoHome if [# stepok > 0 #] else turnAndStep  //WRONG
+  	Transition t0  whenReply stepdone and [# stepok > 0 #]  -> gotoHome
+  	               whenReply stepdone and [# stepok == 0 #] -> turnAndStep
+  				   whenReply stepfailed -> turnAndStep
+
+ 	
+ 	State turnAndStep{
+   		forward vrqak -m cmd : cmd(r)
+		//[#  planner.updateMap(  "r", "" )  #]   			
+   		delay 300 			
+   		request vrqak -m step : step(350)  //step laterale
+ 	}
+  	Transition t0  whenReply stepdone -> posForNextColumn
+  				   whenReply stepfailed -> endOfWork
+ 	
+ 	State posForNextColumn{
+ 		//[# planner.updateMap(  "w", "" ) #]
+   		forward vrqak -m cmd : cmd(r)
+		//[#  planner.updateMap(  "r", "" )  #]   	
+		println("posForNextColumn stepok=$stepok")		
+   		//[# planner.showCurrentRobotState() #]		
+ 		//[# unibo.actor22comm.utils.CommUtils.waitTheUser("posForNextColumn")	 #]
+   		delay 1300 		 
+	}
+ 	Goto coverNextColumn
+ 	
+ 	
+	State endOfWork{  		  
+   		printCurrentMessage
+   		[#  //planner.updateMapObstacleOnCurrentDirection() 
+   			//planner.showMap()
+   			//planner.saveRoomMap("map2019")
+   		#]
+	}	
+}
+
+
+ 

@@ -26,5 +26,9 @@ with Diagram('mapbuildArch', show=False, outformat='png', graph_attr=graphattr) 
      sys = Custom('','./qakicons/system.png')
 ### see https://renenyffenegger.ch/notes/tools/Graphviz/attributes/label/HTML-like/index
      with Cluster('ctxmapbuild', graph_attr=nodeattr):
-          mapbuilder=Custom('mapbuilder','./qakicons/symActorWithobjSmall.png')
+          mapbuilder=Custom('mapbuilder','./qakicons/symActorSmall.png')
+     with Cluster('ctxvrqak', graph_attr=nodeattr):
+          vrqak=Custom('vrqak(ext)','./qakicons/externalQActor.png')
+     mapbuilder >> Edge(color='magenta', style='solid', decorate='true', label='<step<font color="darkgreen"> stepdone stepfailed</font> &nbsp; >',  fontcolor='magenta') >> vrqak
+     mapbuilder >> Edge(color='blue', style='solid',  decorate='true', label='<move &nbsp; >',  fontcolor='blue') >> vrqak
 diag

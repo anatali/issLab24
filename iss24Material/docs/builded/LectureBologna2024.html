@@ -604,9 +604,11 @@ del problema <a href="html/RobotCleaner.html" target="web">RobotCleaner</a>.
 <td>
 <ul>
 <li>
-Discussione sulla analisi del  problema <a href="html/RobotCleaner.html" target="web">RobotCleaner</a>.
+
+Discussione sulla analisi del  problema <a href="html/RobotCleaner.html" target="web">RobotCleaner</a>,
+e su due schemi di <a href="html/RobotCleaner.html#rc24-Discussione" target="web">Architettura logica del sistema</a>.
 </li><li>
-Come verificare la copertura della superficie: un progetto per crear una mappa della stanza 
+Come verificare la copertura della superficie: un progetto per creare una mappa della stanza 
 <a href="html/MapBuilder24.html" target="web">MapBuilder24.html</a>
 </li><li>
 <ul>
@@ -619,10 +621,6 @@ Creazione di una
 </li>
 </ul>
 
-</li><li>
-Regole Prolog per la costruzione di cammini per lo spostamento
-del robot da un punto all'altro di una stanza vuota.
-</li>
 
 </ul> 
 </td>
@@ -630,18 +628,51 @@ del robot da un punto all'altro di una stanza vuota.
 </tr>
 <tr><td><m>09/05/2024 (15-18)</m></td><td>Lab2</td> 
 <td> 
-<ul>
+<ol>
 <li>
+Sintesi della  
+<a href="html/RobotCleaner.html#rc24-discussione" target="web">discussione</a> sulla Architettura logica del robotCleaner:
+<a href="html/RobotCleaner.html#verso-un-robot-service" target="web">Verso un robot service</a> 
+</li><li>
+Progetto <a href="html/MapBuilder24.html#map24-regole-per-il-piano" target="web">MapBuilder</a>:
+<a href="../../../mapbuilder/src/mapPrologUsage.qaktt" target="web">mapPrologUsage.qak</a>:
+uso di una mappa rappresentata come 
+<a href="html/MapBuilder24.html#map24-mappa-in-prolog" target="web">base di conoscenza in Prolog</a> per la costruzione 
+con <a href="../../../mapbuilder/maprules.pl" target="web">regole Prolog</a> di un
+piano di spostamento del robot da un punto all'altro di una stanza vuota
+</li><li>
+Lo stesso comportamento precedente usando il servizio <a href="html/Vrqak24.html" target="web">Vrqak4</a>:
+<a href="../../../mapbuilder/src/mapProogUsageWithRobot.qaktt" target="web">mapProogUsageWithRobot.qak</a>.
+Confronto tra le strutture dei due codici.
+</li><li>
+Sperimentazione in Lab del <a href="html/RobotCleaner.html" target="web">RobotCleaner</a> che fa una pausa in caso di ostacolo 
+rilevato dal sonar su RaspberryPi realizzato nel progetto <a href="html/RaspApplCode24.html#progetto-sonarqak24" target="web">
+Progetto sonarqak24</a>: uso della primitiva qak
+<a href="html/QakActors24.html#wheninterrupt" target="web">whenInterrupt</a>.
+
+<!-- <a href="html/MapBuilder24.html#map24-regole-per-il-piano" target="web">regole Prolog</a> -->
+
+</li><li>
+Verso la creazione di una <a href="html/MapBuilder24.html#mappa-di-una-stanza-con-ostacoli-fissi" target="web">
+mappa di stanza con ostacoli fissi</a> 
+
+<!-- Il Problema <a href="html/RobotPos.html" target="web">RobotPos</a>  -->
+<hr/>
+<!-- </li><li>
+<a href="html/RobotPosWeb.html" target="web">RobotPosWeb</a> -->
+</li><li>
 Un servizio <a href="html/Vrqak24.html" target="web">Vrqak4</a>  per l'uso remoto del 
 <a href="html/VirtualRobot23.html" target="web">VirtualRobot23.html</a>.
+
 </li><li>
 <a href="../../../virtualrobotusage/src/bw24proto2.qaktt" target="web">bw24proto2.qak</a>:
  un prototipo che realizza  tutti i requisiti del problema <a href="html/BoudaryWalk24.html" target="web">BoundaryWalk</a>
  usando il servizio step asincrono di <a href="html/Vrqak24.html" target="web">Vrqak4</a>.
 </li><li>
-</li>
+<a href="html/BasicRobot24.html" target="web">BasicRobot24.html</a>.
+</li> 
 
-</ul> 
+</ol> 
 </td>
 </tr>
 
@@ -654,7 +685,18 @@ Un servizio <a href="html/Vrqak24.html" target="web">Vrqak4</a>  per l'uso remot
 
 <tr><td><m>14/05/2024 (9-12)</m></td><td>Lab2</td> 
 <td>
+<ul>
+<li>
+Introduzione all'uso di un  <a href="html/Planner.html" target="web">Planner</a>
+<!--
+</li><li>
+Costruzione con bsicrobot e planner della 
+<a href="html/MapBuilder24.html#mappa-di-una-stanza-con-ostacoli fissi" target="web">mappa di una stanza con ostacoli</a>
+-->
 
+</li><li>
+</li>
+</ul>
 </tr>
 
 <tr><td><m>16/05/2024 (15-18)</m></td><td>Lab2</td> 

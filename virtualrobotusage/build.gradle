@@ -150,7 +150,8 @@ eclipse {
 
 application {
     //Define the main class for the application.
-    mainClassName    = 'it.unibo.ctxbw24.MainCtxbw24Kt'
+    //mainClassName    = 'it.unibo.ctxbw24.MainCtxbw24Kt'
+    mainClassName    = 'it.unibo.ctxvrqak.MainCtxvrqakKt'
 }
  
  jar {

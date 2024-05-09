@@ -13,14 +13,14 @@ System vrqak
 
 Dispatch halt   : halt(X)
 Dispatch move   : move(M)
-
+ 
 Request  cmd    : cmd(MOVE,T)  "MOVE = w|s|a|d|p   mosse del virtual robot"
 Reply cmddone   : cmddone(R)          for cmd
 Reply cmdfailed : cmdfailed(T,CAUSE)  for cmd
  
 Dispatch vrinfo : vrinfo(A,B)
  
-Event  sonardata: sonar( DISTANCE ) 	   
+Event  sonardata: sonar( DISTANCE ) 	    
 
 Request step    : step(TIME)	
 Reply stepdone  : stepdone(V)                 for step
@@ -110,7 +110,10 @@ QActor vrqak context ctxvrqak withobj vr using "VrobotLLMoves24.create(\"localho
 	State handleVrinfoMsgReply{
 		println("$name | handleVrinfoMsgReply $currentMsg") color yellow
 		onMsg( vrinfo : vrinfo(M,elapsed)){
-			if [# doingAsynchStep #]{  replyTo step with stepdone : stepdone(ok)} 
+			if [# doingAsynchStep #]{  
+				replyTo step with stepdone : stepdone(ok)
+				[# doingAsynchStep = false #]
+			} 
 			else {replyTo cmd with cmddone : cmddone(elapsed)}
 		}
 		onMsg( vrinfo : vrinfo(T,collision)){
@@ -122,7 +125,6 @@ QActor vrqak context ctxvrqak withobj vr using "VrobotLLMoves24.create(\"localho
 			else {
 				println("$name | reply cmdfailed after $T") color yellow
 				replyTo cmd with cmdfailed : cmdfailed($T,collision)
-				//[# doingAsynchStep = false #]
 			}
 		}
 	}	

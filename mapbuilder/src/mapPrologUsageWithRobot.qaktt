@@ -2,17 +2,21 @@ System mapbuild
  
 /*
 ========================================
-mapProogUsage.qak
+mapProogUsageWithRobot.qak
 ========================================
 */
-Dispatch stepdone   : stepdone(X)     "automsg"
-Dispatch stepfailed : stepfailed(X)   "automsg"
-Dispatch vrinfo     : vrinfo(A,B)     "from VrobotLLMoves24"
+Dispatch move       : move(M)  
+ 
+Request  step       : step(T)
+Reply   stepdone    : stepdone(X)   for step
+Reply   stepfailed  : stepfailed(X) for step
 
-Context ctxmapbuild  ip [host="localhost" port=8720     ]
+Context ctxmapbuild  ip [host="localhost"      port=8720  ]
+Context ctxvrqak     ip [host="127.0.0.1"      port=8125  ]
 
-QActor mapbuilder context ctxmapbuild withobj vr using "VrobotLLMoves24.create(\"localhost\",myself)"{
-	import "main.resources.robotvirtual.VrobotLLMoves24"
+ExternalQActor vrqak context ctxvrqak  //Servizio di ccesso al (virtual)robot
+
+QActor mapbuilder context ctxmapbuild {
 	import "main.resources.map.RoomMap" 
 	import "main.resources.map.RobotDir" 
 	[# 
@@ -25,11 +29,10 @@ QActor mapbuilder context ctxmapbuild withobj vr using "VrobotLLMoves24.create(\
 	
 	
 	State s0 initial{ 
-		println("$name STARTS") color blue
-		//[# GuiUtils.showSystemInfo() #]
-		//[# vr.setTrace(true)  #]
-		[# vr.halt()  #]
+		forward vrqak -m move : move(h)
 		[# RobotDir.setDir(RobotDir.Direction.DOWN) #]
+		delay 1000
+		println("$name STARTS") color blue
 	}
 	Goto useMap
 	 
@@ -40,12 +43,10 @@ QActor mapbuilder context ctxmapbuild withobj vr using "VrobotLLMoves24.create(\
 		solve( showCells ) 
 		println("$name | execThePlan SOLVE") color yellow   
    		//solve( test(P) )
-  		solve( plan(0,0,2,3,down,P) ) 
+  		solve( plan(0,0,2,4,down,P) ) 
 		println( "$currentSolution" ) color yellow
  		[# CurPlan = getCurSol("P").toString().replace("[","").replace("]","").replace(",","") #]
 		println("PATH= $CurPlan") color yellow		
-//		delay 1000
-// 		 [# System.exit(0) #]
 	}
 	Goto execThePlan 
 	
@@ -54,7 +55,7 @@ QActor mapbuilder context ctxmapbuild withobj vr using "VrobotLLMoves24.create(\
 		//println("$name | execThePlan CurPlan=$CurPlan") color yellow
 		if [# CurPlan.length > 0 #]{
 			[# CurMove = ""+CurPlan[0]; 
-				CurPlan = CurPlan.drop(1) 
+			   CurPlan = CurPlan.drop(1) 
 			#]
 		    println("$name | execThePlan CurMove=$CurMove") color blue		
 		}else{ [# CurMove="" #] }
@@ -62,26 +63,27 @@ QActor mapbuilder context ctxmapbuild withobj vr using "VrobotLLMoves24.create(\
 	Goto doMove if [# (CurMove.length > 0) #] else end
 	
 	State doMove{
-		delay 200
 		if [# CurMove == "w" #]{ 
-			[# RSTEP = vr.step(350) #]
- 			[# Goon = RSTEP #] 
+			delay 200
+			request vrqak -m step : step(350)
         } 
 		if [# CurMove == "l" #]{ 
-			[# vr.turnLeft() #]
+			forward vrqak -m move : move(l)
         }
 		if [# CurMove == "r" #]{ 
-			[# vr.turnRight() #]
+			forward vrqak -m move : move(r)
         }
 	}
-	Goto execThePlan if [# Goon #]  else planko
-	
+	Transition t0
+		whenTime 500         -> execThePlan
+		whenReply stepdone   -> execThePlan
+		whenReply stepfailed -> planko
+
 	State end{
 		println("$name | end with CurMove=$CurMove") color yellow
 		println("")
 		[# System.exit(0) #]
 	}
-
 	
 	State planko{
 		println("$name | planko with CurPlan=$CurPlan") color magenta

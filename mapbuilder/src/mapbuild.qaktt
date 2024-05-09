@@ -53,15 +53,15 @@ QActor mapbuilder context ctxmapbuild withobj vr using "VrobotLLMoves24.create(\
 		if [# ! firstrow #]{ [# firstrow = true #] }
 		[# firstcolumn = false #] 
 		[# N = N + 1 #]
- 		[# vr.turnLeft() #]
+ 		[# vr.turnLeft() #] 
  		println("$name | N=$N, NC=$NC, NR=$NR") color cyan
 		if [# N == 2 #]{
 			println("$name | N=$N, NC=$NC, NR=$NR") color yellow
 			[# val map = RoomMap(NR,NC)    #]
 			[# map.setRobot( NR-1,NC-1 )   #]
 			[# val MS  = map.toString()    #]
-			[# map.saveRoomMap("map", MS ) #] 
-			[# val MP  = map.toProlog()    #] 
+			[# map.saveRoomMap("map", MS ) #]  
+			[# val MP  = map.toProlog()    #]  
 			//println(MP)
 			[# map.saveRoomMapProlog("mapProlog", MP) #]
 			println("$name | MAP: ") color yellow

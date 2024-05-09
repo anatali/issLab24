@@ -120,6 +120,7 @@ dependencies {
     implementation name: '2p301'
 	implementation name: 'unibo.qakactor23-5.0'
     implementation name: 'unibo.basicomm23-1.0'
+    implementation name: 'unibo.planner23-1.0'
 
 
     

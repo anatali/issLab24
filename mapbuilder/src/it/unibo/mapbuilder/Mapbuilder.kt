@@ -13,7 +13,6 @@ import kotlinx.coroutines.runBlocking
 import it.unibo.kactor.sysUtil.createActor   //Sept2023
 
 //User imports JAN2024
-import main.resources.robotvirtual.VrobotLLMoves24
 import main.resources.map.RoomMap
 import main.resources.map.RobotDir
 
@@ -24,7 +23,6 @@ class Mapbuilder ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
-		 val vr = VrobotLLMoves24.create("localhost",myself)
 		 
 			   
 			   var CurPlan = ""
@@ -34,9 +32,10 @@ class Mapbuilder ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						CommUtils.outblue("$name STARTS")
-						 vr.halt()   
+						forward("move", "move(h)" ,"vrqak" ) 
 						 RobotDir.setDir(RobotDir.Direction.DOWN)  
+						delay(1000) 
+						CommUtils.outblue("$name STARTS")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -50,7 +49,7 @@ class Mapbuilder ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 						solve("consult('maprules.pl')","") //set resVar	
 						solve("showCells","") //set resVar	
 						CommUtils.outyellow("$name | execThePlan SOLVE")
-						solve("plan(0,0,2,2,down,P)","") //set resVar	
+						solve("plan(0,0,2,4,down,P)","") //set resVar	
 						CommUtils.outyellow("$currentSolution")
 						 CurPlan = getCurSol("P").toString().replace("[","").replace("]","").replace(",","")  
 						CommUtils.outyellow("PATH= $CurPlan")
@@ -65,7 +64,7 @@ class Mapbuilder ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 					action { //it:State
 						if(  CurPlan.length > 0  
 						 ){ CurMove = ""+CurPlan[0]; 
-										CurPlan = CurPlan.drop(1) 
+									   CurPlan = CurPlan.drop(1) 
 						CommUtils.outblue("$name | execThePlan CurMove=$CurMove")
 						}
 						else
@@ -83,26 +82,26 @@ class Mapbuilder ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 				}	 
 				state("doMove") { //this:State
 					action { //it:State
-						delay(200) 
 						if(  CurMove == "w"  
-						 ){ RSTEP = vr.step(350)  
-						 Goon = RSTEP  
+						 ){delay(200) 
+						request("step", "step(350)" ,"vrqak" )  
 						}
 						if(  CurMove == "l"  
-						 ){ vr.turnLeft()  
+						 ){forward("move", "move(l)" ,"vrqak" ) 
 						}
 						if(  CurMove == "r"  
-						 ){ vr.turnRight()  
+						 ){forward("move", "move(r)" ,"vrqak" ) 
 						}
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
+				 	 		stateTimer = TimerActor("timer_doMove", 
+				 	 					  scope, context!!, "local_tout_"+name+"_doMove", 500.toLong() )  //OCT2023
 					}	 	 
-					 transition( edgeName="goto",targetState="execThePlan", cond=doswitchGuarded({ Goon  
-					}) )
-					transition( edgeName="goto",targetState="planko", cond=doswitchGuarded({! ( Goon  
-					) }) )
+					 transition(edgeName="t00",targetState="execThePlan",cond=whenTimeout("local_tout_"+name+"_doMove"))   
+					transition(edgeName="t01",targetState="execThePlan",cond=whenReply("stepdone"))
+					transition(edgeName="t02",targetState="planko",cond=whenReply("stepfailed"))
 				}	 
 				state("end") { //this:State
 					action { //it:State
