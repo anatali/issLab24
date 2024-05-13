@@ -12,6 +12,6 @@ request( step, step(TIME) ).
 reply( stepdone, stepdone(V) ).  %%for step
 reply( stepfailed, stepfailed(DURATION,CAUSE) ).  %%for step
 %====================================================================================
-context(ctxvrqak, "localhost",  "TCP", "8125").
+context(ctxvrqak, "localhost",  "TCP", "8020").
  qactor( vrqak, ctxvrqak, "it.unibo.vrqak.Vrqak").
  static(vrqak).

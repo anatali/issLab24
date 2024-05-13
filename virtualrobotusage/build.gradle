@@ -150,8 +150,8 @@ eclipse {
 
 application {
     //Define the main class for the application.
-    //mainClassName    = 'it.unibo.ctxbw24.MainCtxbw24Kt'
-    mainClassName    = 'it.unibo.ctxvrqak.MainCtxvrqakKt'
+    mainClassName    = 'it.unibo.ctxbw24.MainCtxbw24Kt'
+    //mainClassName    = 'it.unibo.ctxvrqak.MainCtxvrqakKt'
 }
  
  jar {
@@ -188,6 +188,12 @@ task runVr(type: JavaExec) {
     description = "Run the main class with JavaExecTask"
     classpath = sourceSets.main.runtimeClasspath
     main = 'it.unibo.ctxvrqak.MainCtxvrqakKt'
+}
+task runBasicrobot(type: JavaExec) {
+    group = "Execution"
+    description = "Run the main class with JavaExecTask"
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'it.unibo.ctxbasicrobot.MainCtxbasicrobotKt'
 }
 task runWolf(type: JavaExec) {
     group = "Execution"

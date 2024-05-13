@@ -3,14 +3,13 @@ System vrqak
  * PROPEDEUTICO a basicrobot
  * Usa VrobotLLMoves24
  * Risponde a 
- *      Dispatch cmd : cmd(MOVE)
+ *      Dispatch move : move(MOVE)
  *      Request  step
  * 
  * Può essere attivato come risorsa esterna all'applicazione.
  * E' un esempio di un primo basicrobot logico.
  */
-//Dispatch cmd    : cmd(MOVE,T)  "MOVE = w|s|a|d|p   mosse del virtual robot"
-
+ 
 Dispatch halt   : halt(X)
 Dispatch move   : move(M)
  
@@ -81,6 +80,7 @@ QActor vrqak context ctxvrqak withobj vr using "VrobotLLMoves24.create(\"localho
 		onMsg( move : move(M) ){
 			[# val Move = payloadArg(0);  #]
 			if [# Move == "h" #] { [# vr.halt() #]     }
+			if [# Move == "w" #] { [# vr.step(150) #]  }
 			if [# Move == "p" #] { [# vr.step(350) #]  }  //synch
 			if [# Move == "a" || Move == "l" #]{ [# vr.turnLeft() #]  }
 			if [# Move == "d" || Move == "r" #]{ [# vr.turnRight() #] }
@@ -141,6 +141,7 @@ QActor vrqak context ctxvrqak withobj vr using "VrobotLLMoves24.create(\"localho
 	Transition t0
 	    whenEvent sonardata  -> handleSonarData  
 	    whenMsg   vrinfo     -> handleVrinfoMsgReply
+	    whenMsg halt         -> dohalt  //inviato per resettare
 
 	
  }

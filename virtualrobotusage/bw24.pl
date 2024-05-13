@@ -1,18 +1,22 @@
 %====================================================================================
 % bw24 description   
 %====================================================================================
-dispatch( stepdone, stepdone(X) ).
-dispatch( stepfailed, stepfailed(X) ).
+mqttBroker("broker.hivemq.com", "1883", "sonarbw24data").
+dispatch( move, move(M) ).
+request( step, step(T) ).
+reply( stepdone, stepdone(X) ).  %%for step
+reply( stepfailed, stepfailed(X) ).  %%for step
 event( sonardata, sonar(DISTANCE) ).
-event( vrinfo, vrinfo(A,B) ).
+event( obstacle, obstacle(D) ).
+event( vrinfo, vrinfo(S,INFO) ).
 dispatch( vrinfo, vrinfo(A,B) ).
-event( obstacle, obstacle(D) ). %emesso da WEnv
-event( wolf, wolf(D) ). %emesso da sonarmock
+dispatch( stop, stop(X) ).
+event( sonardata, sonar(DISTANCE) ).
 %====================================================================================
 context(ctxbw24, "localhost",  "TCP", "8120").
- qactor( bw24core, ctxbw24, "it.unibo.bw24core.Bw24core").
+context(ctxvrqak, "127.0.0.1",  "TCP", "8125").
+ qactor( vrqak, ctxvrqak, "external").
+  qactor( bw24core, ctxbw24, "it.unibo.bw24core.Bw24core").
  static(bw24core).
-  qactor( sonar24mock, ctxbw24, "it.unibo.sonar24mock.Sonar24mock").
- static(sonar24mock).
   qactor( bwobserver, ctxbw24, "it.unibo.bwobserver.Bwobserver").
  static(bwobserver).

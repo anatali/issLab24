@@ -1,0 +1,212 @@
+System planusage//-msglog 
+/*
+========================================
+mapobstaclesvrqak.qak
+
+Utilizza vrqak
+========================================
+*/
+/*
+ * Percorro una colonna  
+ * Al primo ostacolo mi giro e torno su di stepok passi
+ * 
+ * docker cp sceneConfig.js 87c9eb2e0989:/home/node/WEnv/WebGLScene/sceneConfig.js
+ */
+Dispatch move      : move( MOVE )     
+
+Dispatch halt      : halt(X) 
+
+Request step       : step( TIME )	
+Reply stepdone     : stepdone(V)  for step
+Reply stepfailed   : stepfailed(DURATION, CAUSE) for step
+
+Event alarm        : alarm(X)
+
+Request  doplan   : doplan( PATH, OWNER )
+Reply doplandone  : doplandone( ARG )    for doplan
+Reply doplanfail  : doplanfail( ARG )    for doplan
+
+Context ctxmapbuild ip [host="localhost" port=8032]
+Context ctxvrqak    ip [host="127.0.0.1"  port=8125   ]
+
+ExternalQActor vrqak context ctxvrqak
+
+/*   
+ * ------------------------------------------------------------------
+ * ASSUNZIONE: bordo superiore libero
+ * ------------------------------------------------------------------
+*/     
+QActor mapbuilder  context ctxmapbuild{   
+	import  "unibo.planner23.*"
+[#
+ 
+val planner      = Planner23Util()
+var PlanToHome   = ""
+var StepInPlan = false
+var CurMove    = ""
+#]   
+
+	State activate initial {
+		//printCurrentMessage
+		[#  
+           planner.initAI()
+        #]  
+ 		forward vrqak -m halt : halt(1)
+ 		delay 300
+	} 
+	Goto coverNextColumn
+
+
+	State coverNextColumn{  
+		println("$name | coverNextColumn")	color blue	  
+   		request vrqak -m step : step(350)	
+	}
+	Transition t0  whenReply stepdone -> coverColumn   
+				   whenReply stepfailed -> backHome
+	  			   
+	State coverColumn{  		   
+   		//printCurrentMessage
+   		[# //stepok = stepok + 1
+   		   planner.updateMap(  "w", "" ) 		
+   		#]
+   		println("$name | coverColumn  ") //NumStep=$NumStep
+     	delay 300 
+   		request vrqak -m step : step(340)
+ 	}
+	Transition t0  whenReply stepdone -> coverColumn
+ 	               whenReply stepfailed -> backHome // and [# NumStep <  MaxNumStep #] 
+ 
+	State backHome{  	
+		printCurrentMessage	   color blue
+		[#  planner.updateMapObstacleOnCurrentDirection()
+ 		#]   		
+ 		forward vrqak -m halt : halt(1)
+ 		delay 300
+		println("$name | backHome after h")  color blue
+   			forward vrqak -m move : move( l )  //T non usato
+			[#  planner.updateMap(  "l", "" )  #]   			
+   			delay 300 
+   			forward vrqak -m move : move( l )
+			[#  planner.updateMap(  "l", "" )  #]   			
+   			delay 300  
+    			
+    		[# planner.showCurrentRobotState() #]
+    		request vrqak -m step : step(340)   
+	}	
+   	Transition t0  whenReply stepdone   -> gotoHome //gotoHome
+ 	               whenReply stepfailed -> turnAndStep //foundwallright
+
+/*
+ * Il ritorno a home puo' provocare un hit su wallup
+ */ 
+ 	State gotoHome{
+ 		[# planner.updateMap(  "w", "" ) 
+ 		   //stepok = stepok - 1 
+ 		#]
+ 		println("$name |  gotoHome")	
+ 		delay 300 
+ 		request vrqak -m step : step(340)  
+ 	}
+// 	Goto gotoHome if [# stepok > 0 #] else turnAndStep  //WRONG
+  	Transition t0  whenReply stepdone   -> gotoHome 	                
+  				   whenReply stepfailed -> turnAndStep
+//  	Transition t0  whenReply stepdone and [# stepok > 0 #]  -> gotoHome
+//  	               whenReply stepdone and [# stepok == 0 #] -> turnAndStep
+//  				   whenReply stepfailed -> turnAndStep
+
+ 	
+ 	State turnAndStep{
+ 		forward vrqak -m move : move(h)
+ 		delay 300
+ 		println("$name | turnAndStep r")	
+   		forward vrqak -m move : move( r )   
+		[#  planner.updateMap(  "r", "" )  #]   			
+   		delay 300 			
+   		request vrqak -m step : step(340)  //step laterale
+ 	}
+  	Transition t0  whenReply stepdone -> posForNextColumn
+  				   whenReply stepfailed -> foundwallright
+ 	
+ 	State posForNextColumn{
+ 		[# planner.updateMap(  "w", "" ) #]
+   		forward vrqak -m move : move( r )   
+		[#  planner.updateMap(  "r", "" )  #]   	
+		println("$name | posForNextColumn  ")		
+   		[# planner.showCurrentRobotState() #]		
+ 		//[# CommUtils.waitTheUser("posForNextColumn")	 #]
+   		//delay 1300 		 
+	}
+ 	Goto coverNextColumn
+ 	
+ 	
+	State foundwallright{  		  
+   		printCurrentMessage
+   		[#   
+   			planner.showMap()
+   			planner.setGoal(0,0)
+   			PlanToHome = planner.doPlanCompact()
+   			
+   		#]
+	}	
+	Goto execThePlan
+	
+	State execThePlan{
+		println("$name | execThePlan PlanToHome=$PlanToHome") color yellow
+		if [# PlanToHome.length > 0 #]{
+			[#  CurMove    = ""+PlanToHome[0]; 
+				PlanToHome = PlanToHome.drop(1) 
+			#]
+		    println("$name | execThePlan CurMove=$CurMove") color blue		
+		}else{ [# CurMove="" #] }
+	}
+	Goto doMove if [# (CurMove.length > 0) #] else end
+	
+	State doMove{
+		delay 200
+		if [# CurMove == "w" #]{ 
+ 			[# StepInPlan = true  #]
+        } 
+		if [# CurMove == "l" #]{ 
+			forward vrqak -m move : move( l )
+			[#  planner.updateMap(  "l", "" )  #] 
+			[# StepInPlan = false #]
+        }
+		if [# CurMove == "r" #]{ 
+			forward vrqak -m move : move( r )
+			[#  planner.updateMap(  "r", "" )  #] 
+			[# StepInPlan = false  #]
+        }
+        
+	}
+	Goto dostep if [# StepInPlan #] else execThePlan 
+ 
+    State dostep{
+ 		request vrqak -m step : step(340)    
+    }
+	Transition t0  
+ 		whenReply stepdone   -> stepcompleted   
+	    whenReply stepfailed -> planko
+
+	State stepcompleted{ //Per aggiornare la mappa
+	    //Sarebbe bene che fosse vrqak aad ggiornasse la mappa ...
+ 		[# planner.updateMap(  "w", "" ) #] //OPTIMISTIC			
+	}
+	Goto execThePlan
+	
+	State end{
+		println("$name | end with CurMove=$CurMove") color yellow
+		[# planner.showCurrentRobotState() #]
+		[# planner.saveRoomMap("map2024")  #]
+		[# System.exit(0) #]
+	}
+
+	
+	State planko{
+		println("$name | planko with PlanToHome=$PlanToHome") color magenta
+		[# planner.showCurrentRobotState() #]
+		[# System.exit(0) #]
+	}
+}
+
+
+ 

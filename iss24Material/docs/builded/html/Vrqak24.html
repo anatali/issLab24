@@ -1,0 +1,302 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Vrqak24 &#8212; iss24 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="RobotCleaner" href="RobotCleaner.html" />
+    <link rel="prev" title="VrobotLLMoves24" href="VrobotLLMoves24.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="RobotCleaner.html" title="RobotCleaner"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="VrobotLLMoves24.html" title="VrobotLLMoves24"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Vrqak24</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="vrqak24">
+<h1>Vrqak24<a class="headerlink" href="#vrqak24" title="Permalink to this heading">¶</a></h1>
+<p><span class="slide3">progetto virtualrobotusage</span> in <a class="reference internal" href="VirtualRobotUsage24.html#virtualrobotusage24"><span class="std std-ref">VirtualRobotUsage24</span></a></p>
+<p>Vogliamo realizzare un actor che funga da <span class="slide2">servizio di accesso</span> all’uso di un virtual robot.</p>
+<p>A differenza di <a class="reference internal" href="VrobotLLMoves24.html#id1"><span class="std std-ref">VrobotLLMoves24</span></a> (che è un POJO) il componente <a class="reference external" href="../../../../virtualrobotusage/src/vrqak24.qaktt">vrqak24.qak</a> permette l’uso remoto
+del <a class="reference internal" href="VirtualRobot23.html#virtualrobot23"><span class="std std-ref">VirtualRobot23</span></a> attraverso l’invio di messaggi.</p>
+<ul class="simple">
+<li><p>Per possibili <span class="slide2">motivazioni sulla opportunità di questa evoluzione</span>, <a class="reference internal" href="UsiamoChatGPT.html#microservizi-vs-pojo"><span class="std std-ref">chiediamo a ChatGpt</span></a>,
+ma chiediamogli anche la <a class="reference internal" href="UsiamoChatGPT.html#da-un-supporto-pojo-a-un-microservizio"><span class="std std-ref">sua opinione specifica in merito</span></a>.</p></li>
+<li><p>Osserviamo inoltre che potremmo introdurre una evoluzione del POJO stesso, introducendo le nuove funzionalità qui soddisfatto
+riportate,  come fatto in <a class="reference external" href="../../../../virtualrobotusage/src/main/resources/robotvirtual/VrobotHLMoves24.java">VrobotHLMoves24</a> (per un esempio d’uso si veda <a class="reference external" href="../../../../virtualrobotusage/src/vrobotusagehl.qaktt">vrobotusagehl.qak</a>).</p></li>
+</ul>
+<section id="vrqak24-comandi">
+<h2>Vrqak24-comandi<a class="headerlink" href="#vrqak24-comandi" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Dispatch</span> <span class="pre">halt:halt(X)</span></code></p></li>
+</ul>
+</td>
+<td><p>Ferma il robot</p></td>
+</tr>
+<tr class="row-even"><td><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Request</span> <span class="pre">cmd:cmd(MOVE,T)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Reply</span> <span class="pre">cmddone:cmddone(R)</span> <span class="pre">for</span> <span class="pre">cmd</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Reply</span> <span class="pre">cmdfailed:cmdfailed(T,CAUSE)</span> <span class="pre">for</span> <span class="pre">cmd</span></code></p></li>
+</ul>
+</td>
+<td><p>Richiesta di movimento al robot con <a class="reference internal" href="BoudaryWalk24.html#il-linguaggio-aril"><span class="std std-ref">Il linguaggio aril</span></a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MOVE</span> <span class="o">=</span> <span class="n">w</span> <span class="o">|</span> <span class="n">s</span> <span class="o">|</span> <span class="n">l</span> <span class="o">|</span> <span class="n">r</span> <span class="o">|</span> <span class="n">h</span> <span class="o">|</span> <span class="n">p</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Request</span> <span class="pre">step:step(TIME)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Reply</span> <span class="pre">stepdone:stepdone(R)</span> <span class="pre">for</span> <span class="pre">step</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Reply</span> <span class="pre">stepfailed:stepfailed(T,CAUSE)</span> <span class="pre">for</span> <span class="pre">step</span></code></p></li>
+</ul>
+</td>
+<td><p>Richiesta di un movimeno <span class="remark">step asincrono</span></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vrqak24-step">
+<h2>Vrqak24-step<a class="headerlink" href="#vrqak24-step" title="Permalink to this heading">¶</a></h2>
+<p>Lo step asincrono viene gestito come segue:</p>
+<ol class="arabic simple">
+<li><p>si tiene traccia della rchiesta ponendo la variabile <code class="docutils literal notranslate"><span class="pre">doingAsynchStep</span> <span class="pre">=</span> <span class="pre">true</span></code></p></li>
+<li><p>si invia al robot un comando di movimento in avanti per il tempo specificato</p></li>
+<li><p>si analizza il messaggio inviato dal supporto per capire l’esito del comando asincorno</p></li>
+</ol>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><ol class="arabic simple">
+<li><p>Gestione di una richesta step</p></li>
+<li><p>Attesa delle informazioni emesse dal supporto</p></li>
+<li><p>Invio della risposta in caso di step eseguito con successo</p></li>
+<li><p>Invio della risposta in caso di step fallito</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>/*1*/State handleAsynchStep{
+    [# doingAsynchStep = true #]
+onMsg( step:step(T)){
+        [# vr.forward(payloadArg(0).toInt()) #]
+    }
+}
+Transition t0
+/*2*/whenMsg  vrinfo -&gt; handleVrinfoMsgReply
+
+State handleVrinfoMsgReply{
+     onMsg( vrinfo : vrinfo(M,elapsed)){
+        if [# doingAsynchStep #]{
+/*3*/      replyTo step with stepdone:stepdone(ok)
+           [# doingAsynchStep = false #]
+        }
+        else {replyTo cmd with cmddone:cmddone(elapsed)}
+    }
+    onMsg( vrinfo : vrinfo(T,collision)){
+        [# val T = payloadArg(0) #]
+        if [# doingAsynchStep #]{
+/*4*/     replyTo step with stepfailed:stepfailed($T,collision)
+          [# doingAsynchStep = false #]
+        }
+        else {
+            replyTo cmd with cmdfailed : cmdfailed($T,collision)
+        }
+    }
+}
+Goto work
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vrqak24-percezioni">
+<h2>Vrqak24-percezioni<a class="headerlink" href="#vrqak24-percezioni" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><a class="reference internal image-reference" href="_images/vrqak.png"><img alt="_images/vrqak.png" class="align-center" src="_images/vrqak.png" style="width: 100%;" /></a>
+</td>
+<td><p>Il servizio utilizza il supporto <a class="reference internal" href="VrobotLLMoves24.html#id1"><span class="std std-ref">VrobotLLMoves24</span></a>, di cui gestisce i seguenti messaggi:</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Dispatch</span> <span class="pre">vrinfo:vrinfo(A,B)</span></code></p></td>
+<td><p>esito di una mossa</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Event</span> <span class="pre">sonardata:sonar(D)</span></code></p></td>
+<td><p>dati dei sonar di WEnv</p></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Osserviamo che il servizio <span class="blue">vrqak</span> percepisce gli eventi emessi da <a class="reference internal" href="VrobotLLMoves24.html#id1"><span class="std std-ref">VrobotLLMoves24</span></a>, ma questi eventi
+<span class="slide2">non vengono propagati</span> ai clienti del servizio, in quanto i contesti-qak di tali clienti (ammesso che ci siano)
+non sono noti al servizio stesso.</p>
+<p>Perchè i clienti possano ricevere infromazioni demesse dai sonar dell’anìbiente WEnv, occorre
+<span class="slide2">renedere osservabili tali informazioni</span>.</p>
+</section>
+<section id="vrqak24-osservabilita">
+<h2>Vrqak24-osservabilità<a class="headerlink" href="#vrqak24-osservabilita" title="Permalink to this heading">¶</a></h2>
+<p>Il servizio costituisce una <span class="slide2">risorsa osservabile</span> rispetto agli eventi  <code class="docutils literal notranslate"><span class="pre">sonardata</span></code>.
+Quando percepisce uno di tali eventi, emette (usando <a class="reference internal" href="QakActors24.html#operazioni-relative-alla-osservabilita"><span class="std std-ref">updateresource</span></a>)
+una stringa della forma:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sonardata</span><span class="p">(</span><span class="n">DISTANCE</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Questi compito viene eseguito dallo stato <code class="docutils literal notranslate"><span class="pre">handleSonarData</span></code> come segue:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="n">State</span> <span class="n">handleSonarData</span><span class="p">{</span>
+   <span class="n">onMsg</span><span class="p">(</span> <span class="n">sonardata</span> <span class="p">:</span> <span class="n">sonar</span><span class="p">(</span><span class="n">D</span><span class="p">)</span> <span class="p">){</span>
+     <span class="p">[</span><span class="c1"># var D = payloadArg(0) #]</span>
+     <span class="p">[</span><span class="c1"># val sonarEvent = &quot;sonardata(&quot; +  D + &quot;)&quot; #]</span>
+     <span class="n">updateResource</span>  <span class="p">[</span><span class="c1"># &quot;$sonarEvent&quot; #]</span>
+     <span class="n">updateResource</span>  <span class="p">[</span><span class="c1"># &quot;nonews&quot; #]     //per evitare che CoAP ripeta il dato</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+<span class="n">Transition</span> <span class="n">t0</span> <span class="n">whenMsg</span> <span class="n">vrinfo</span> <span class="o">-&gt;</span> <span class="n">handleVrinfoMsgReply</span>
+</pre></div>
+</div>
+<p>Si noti che, per ogni evento <code class="docutils literal notranslate"><span class="pre">sonardata</span></code> percepito, la stringa che riporta la distanza rilevata
+viene emessa solo una volta, in quanto seguita poi dalla emissione della stringa <code class="docutils literal notranslate"><span class="pre">nonews</span></code>
+che un osservatore ignorerà.</p>
+</section>
+<section id="vrqak24-applicazioni">
+<h2>Vrqak24-applicazioni<a class="headerlink" href="#vrqak24-applicazioni" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Si veda <a class="reference external" href="../../../../virtualrobotusage/src/bw24proto2.qaktt">bw24proto2.qak</a></p></li>
+<li><p>Si veda <a class="reference external" href="../../../../unibo.sonarqak24/src/sonarbw24.qaktt">sonarbw24.qak</a></p></li>
+</ul>
+<p><span class="slide">Oltre il servizio vrqak24</span></p>
+</section>
+<section id="vrqak24-verso-basicrobot">
+<h2>Vrqak24-verso basicrobot<a class="headerlink" href="#vrqak24-verso-basicrobot" title="Permalink to this heading">¶</a></h2>
+<p>Il servizio può costituire il punto di partenza per la realizzazione di un servizio più esteso,
+che includa anche la gestione di uno specifico robot fisico.
+(d’ora in poi denominato <span class="slide3">basicrobot</span>).</p>
+<p>In via preliminare, questo nuovo servizio si può impostare come mostrato
+nel modello <a class="reference external" href="../../../../virtualrobotusage/src/basicrobot.qaktt">basicrobot.qak</a>.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Vrqak24</a><ul>
+<li><a class="reference internal" href="#vrqak24-comandi">Vrqak24-comandi</a></li>
+<li><a class="reference internal" href="#vrqak24-step">Vrqak24-step</a></li>
+<li><a class="reference internal" href="#vrqak24-percezioni">Vrqak24-percezioni</a></li>
+<li><a class="reference internal" href="#vrqak24-osservabilita">Vrqak24-osservabilità</a></li>
+<li><a class="reference internal" href="#vrqak24-applicazioni">Vrqak24-applicazioni</a></li>
+<li><a class="reference internal" href="#vrqak24-verso-basicrobot">Vrqak24-verso basicrobot</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="VrobotLLMoves24.html"
+                          title="previous chapter">VrobotLLMoves24</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="RobotCleaner.html"
+                          title="next chapter">RobotCleaner</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Vrqak24.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="RobotCleaner.html" title="RobotCleaner"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="VrobotLLMoves24.html" title="VrobotLLMoves24"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Vrqak24</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>

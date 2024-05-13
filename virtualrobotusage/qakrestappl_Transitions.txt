@@ -1,0 +1,6 @@
+{"actor":"basicrobot", "msgType":"dispatch", "curstate":"work", "nextstate":"dohalt", "msgId":"halt"}
+{"actor":"basicrobot", "msgType":"dispatch", "curstate":"work", "nextstate":"domove", "msgId":"move"}
+{"actor":"basicrobot", "msgType":"dispatch", "curstate":"handleSonarData", "nextstate":"handleVrinfoMsgReply", "msgId":"vrinfo"}
+{"actor":"basicrobot", "msgType":"dispatch", "curstate":"domoverequest", "nextstate":"handleVrinfoMsgReply", "msgId":"vrinfo"}
+{"actor":"basicrobot", "msgType":"dispatch", "curstate":"handleAsynchStep", "nextstate":"handleVrinfoMsgReply", "msgId":"vrinfo"}
+{"actor":"basicrobot", "msgType":"dispatch", "curstate":"handleAsynchStep", "nextstate":"dohalt", "msgId":"halt"}

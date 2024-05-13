@@ -620,9 +620,14 @@ Creazione di una
 <a href="html/MapBuilder24.html#map24-mappa-in-prolog" target="web">mappa come  base di conoscenza Prolog</a>
 </li>
 </ul>
+</ul>
+<kc>WORKTODO: RobotCleaner con pausa</kc> fare in modo che 
+il <a href="html/RobotCleaner.html" target="web">RobotCleaner</a> faccai una pausa quando 
+il sonar su RaspberryPi realizzato nel progetto <a href="html/RaspApplCode24.html#progetto-sonarqak24" target="web">
+rileva un ostacolo.
 
 
-</ul> 
+ 
 </td>
  
 </tr>
@@ -642,7 +647,7 @@ con <a href="../../../mapbuilder/maprules.pl" target="web">regole Prolog</a> di 
 piano di spostamento del robot da un punto all'altro di una stanza vuota
 </li><li>
 Lo stesso comportamento precedente usando il servizio <a href="html/Vrqak24.html" target="web">Vrqak4</a>:
-<a href="../../../mapbuilder/src/mapProogUsageWithRobot.qaktt" target="web">mapProogUsageWithRobot.qak</a>.
+<a href="../../../mapbuilder/src/mapPrologUsageWithRobot.qaktt" target="web">mapProogUsageWithRobot.qak</a>.
 Confronto tra le strutture dei due codici.
 </li><li>
 Sperimentazione in Lab del <a href="html/RobotCleaner.html" target="web">RobotCleaner</a> che fa una pausa in caso di ostacolo 
@@ -650,16 +655,17 @@ rilevato dal sonar su RaspberryPi realizzato nel progetto <a href="html/RaspAppl
 Progetto sonarqak24</a>: uso della primitiva qak
 <a href="html/QakActors24.html#wheninterrupt" target="web">whenInterrupt</a>.
 
-<!-- <a href="html/MapBuilder24.html#map24-regole-per-il-piano" target="web">regole Prolog</a> -->
+<!-- <a href="html/MapBuilder24.html#map24-regole-per-il-piano" target="web">regole Prolog</a> 
 
 </li><li>
+<!--
 Verso la creazione di una <a href="html/MapBuilder24.html#mappa-di-una-stanza-con-ostacoli-fissi" target="web">
 mappa di stanza con ostacoli fissi</a> 
 
-<!-- Il Problema <a href="html/RobotPos.html" target="web">RobotPos</a>  -->
+ -- Il Problema <a href="html/RobotPos.html" target="web">RobotPos</a>  -- 
 <hr/>
-<!-- </li><li>
-<a href="html/RobotPosWeb.html" target="web">RobotPosWeb</a> -->
+-- </li><li>
+<a href="html/RobotPosWeb.html" target="web">RobotPosWeb</a> --
 </li><li>
 Un servizio <a href="html/Vrqak24.html" target="web">Vrqak4</a>  per l'uso remoto del 
 <a href="html/VirtualRobot23.html" target="web">VirtualRobot23.html</a>.
@@ -670,9 +676,14 @@ Un servizio <a href="html/Vrqak24.html" target="web">Vrqak4</a>  per l'uso remot
  usando il servizio step asincrono di <a href="html/Vrqak24.html" target="web">Vrqak4</a>.
 </li><li>
 <a href="html/BasicRobot24.html" target="web">BasicRobot24.html</a>.
+-->
 </li> 
 
 </ol> 
+<kc>WORKTODO: Mosse e mappe</kc> estendere il supporto  <a href="html/VrobotLLMoves24.html" target="web">VrobotLLMoves24</a>
+in modo che ogni mossa del robot produca anche un modifica della posizione/direzione del robot 
+sulla mappa della stanza.
+
 </td>
 </tr>
 
@@ -687,20 +698,42 @@ Un servizio <a href="html/Vrqak24.html" target="web">Vrqak4</a>  per l'uso remot
 <td>
 <ul>
 <li>
-Introduzione all'uso di un  <a href="html/Planner.html" target="web">Planner</a>
-<!--
+Oltre il <a href="html/MapBuilder24.html" target="web">MapBuilder</a>: 
+introduzione all'uso di un  <a href="html/Planner.html" target="web">Planner</a>
+ 
 </li><li>
-Costruzione con bsicrobot e planner della 
-<a href="html/MapBuilder24.html#mappa-di-una-stanza-con-ostacoli fissi" target="web">mappa di una stanza con ostacoli</a>
--->
+
+Oltre <a href="html/Vrqak24.html" target="web">Vrqak4</a>: verso un servizio  
+(<a href="html//VirtualRobotUsage24.html#basicrobot" target="web">basicrobot</a>) 
+per l'uso di robot ddr con servizi evoluti.
+
+ </li><li>
+Costruzione (usando 
+<a href="../../../virtualrobotusage/src/basicrobot.qaktt" target="web">basicrobot.qak</a> e  <a href="html/Planner.html" target="web">Planner</a>)
+della 
+<a href="html/MapBuilder24.html#mappa-di-una-stanza-con-ostacoli-fissi" target="web">mappa di una stanza con ostacoli</a>
+</li><li> 
+Visulizzazione in tempo reale della mappa su una pagina HTML
+<a href="../../../planusage24/src/main/resources/MapGui.html" target="web">MapGui.html</a>
+
+
+ 
+<!--
+e  <a href="html/SpringDataRest.html" target="web">SpringDataRest</a>,
+<a href="html/SpringBootWebSocket.html" target="web">SpringBootWebSocket</a>
 
 </li><li>
+<a href="html/Facade24.html" target="web">Facade24</a>-->
 </li>
 </ul>
+<kc>WORKTODO: Introduzione all'uso di SpringBoot</kc>: 
+<a href="html/SpringBootIntro.html#primi-passi-con-springboot" target="web">Primi passi con SpringBoot</a>
+
 </tr>
 
 <tr><td><m>16/05/2024 (15-18)</m></td><td>Lab2</td> 
 <td>
+<!-- Verso un basicrobot che include ... -->
 </td>
 </tr> 
 

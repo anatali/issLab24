@@ -25,12 +25,12 @@ Dispatch stop       : stop(X)
 Event  sonardata   : sonar( DISTANCE ) 	 //Just to test event visibility
  
 Context ctxbw24       ip [host="localhost"       port=8120  ]
-Context ctxvrqak      ip [host="192.168.1.132"       port=8125  ]
+Context ctxvrqak      ip [host="127.0.0.1"       port=8125  ]
 //Context ctxsonarbw24  ip [host= "192.168.1.40"   port=8128  ]
 
 ExternalQActor vrqak context ctxvrqak  //Risorsa esterna che permette l'accesso al (virtual)robot
   
- 
+  
 /*
  * Accede al virtual robot usando vrqak
  */
