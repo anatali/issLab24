@@ -44,6 +44,7 @@
             
   <section id="virtualrobotusage24">
 <h1>VirtualRobotUsage24<a class="headerlink" href="#virtualrobotusage24" title="Permalink to this heading">¶</a></h1>
+<p><a class="reference internal" href="#il-sonar-su-raspberrypi"><span class="std std-ref">Il sonar su RaspberryPi</span></a></p>
 <section id="esempi-di-uso-del-virtualrobot">
 <h2>Esempi di uso del VirtualRobot<a class="headerlink" href="#esempi-di-uso-del-virtualrobot" title="Permalink to this heading">¶</a></h2>
 <p><span class="slide3">progetto virtualrobotusage</span></p>
@@ -79,31 +80,24 @@ direttamente con il <a class="reference internal" href="VirtualRobot23.html#virt
 <td><p>Un prototipo che copre i requisiti <strong>BW-Req1 e BW-Req2</strong> del problema <a class="reference internal" href="BoudaryWalk24.html#boundarywalk24"><span class="std std-ref">BoundaryWalk24</span></a> usando <a class="reference internal" href="VrobotLLMoves24.html#id1"><span class="std std-ref">VrobotLLMoves24</span></a></p></td>
 </tr>
 <tr class="row-odd"><td><ul class="simple">
-<li><p><a class="reference external" href="../../../../virtualrobotusage/src/bw24proto1all.qaktt">bw24proto1all.qak</a></p></li>
-</ul>
-</td>
-<td><p>Un prototipo che copre tutti i requisiti  del problema <a class="reference internal" href="BoudaryWalk24.html#boundarywalk24"><span class="std std-ref">BoundaryWalk24</span></a> usando <a class="reference internal" href="VrobotLLMoves24.html#id1"><span class="std std-ref">VrobotLLMoves24</span></a>
-e SIMULANDO il sonar su RaspberryPi</p></td>
-</tr>
-<tr class="row-even"><td><ul class="simple">
 <li><p><a class="reference external" href="../../../../virtualrobotusage/src/bw24sonarwolfmock.qaktt">bw24sonarwolfmock.qak</a></p></li>
 </ul>
 </td>
 <td><p>Un simulatore del sonar su RaspberryPi che emette  via MQTT eventi percepibili da <a class="reference external" href="../../../../virtualrobotusage/src/bw24proto1all.qaktt">bw24proto1all.qak</a>.</p></td>
 </tr>
-<tr class="row-odd"><td><ul class="simple">
+<tr class="row-even"><td><ul class="simple">
 <li><p><a class="reference external" href="../../../../virtualrobotusage/src/vrqak24.qaktt">vrqak24.qak</a></p></li>
 </ul>
 </td>
 <td><p>Un <a class="reference internal" href="Vrqak24.html#vrqak24"><span class="std std-ref">servizio</span></a> per permette l’uso remoto del <a class="reference internal" href="VirtualRobot23.html#virtualrobot23"><span class="std std-ref">VirtualRobot23</span></a></p></td>
 </tr>
-<tr class="row-even"><td><ul class="simple">
-<li><p><a class="reference external" href="../../../../virtualrobotusage/src/vrqak24test.qaktt">vrqak24test.qak</a></p></li>
+<tr class="row-odd"><td><ul class="simple">
+<li><p><a class="reference external" href="../../../../virtualrobotusage/src/vrqaktest.qaktt">vrqaktest.qak</a></p></li>
 </ul>
 </td>
 <td><p>Un test sulle operazioni di <a class="reference internal" href="VrobotLLMoves24.html#id1"><span class="std std-ref">VrobotLLMoves24</span></a></p></td>
 </tr>
-<tr class="row-odd"><td><ul class="simple">
+<tr class="row-even"><td><ul class="simple">
 <li><p><a class="reference external" href="../../../../virtualrobotusage/src/bw24proto2.qaktt">bw24proto2.qak</a></p></li>
 </ul>
 </td>
@@ -137,9 +131,19 @@ e SIMULANDO il sonar su RaspberryPi</p></td>
 <h2>Il sonar su RaspberryPi<a class="headerlink" href="#il-sonar-su-raspberrypi" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Il simulatore <a class="reference external" href="../../../../virtualrobotusage/src/bw24sonarwolfmock.qaktt">bw24sonarwolfmock.qak</a> fa sistema con a <a class="reference external" href="../../../../virtualrobotusage/src/bw24proto1all.qaktt">bw24proto1all.qak</a>.</p></li>
-<li><p>Il sonar su RaspberryPi che fa sistema con a <a class="reference external" href="../../../../virtualrobotusage/src/bw24proto1all.qaktt">bw24proto1all.qak</a> è <a class="reference external" href="../../../../unibo.sonarqak24/src/sonarbw24.qaktt">sonarbw24</a> che enette l’evento
+<li><p>Il sonar su RaspberryPi che fa sistema con a <a class="reference external" href="../../../../virtualrobotusage/src/bw24proto1all.qaktt">bw24proto1all.qak</a> è <a class="reference external" href="../../../../unibo.sonarqak24/src/sonarbw24.qaktt">sonarbw24</a> che emette l’evento
 <code class="docutils literal notranslate"><span class="pre">Event</span> <span class="pre">wolf:wolf(D)</span></code></p></li>
 </ul>
+<p><span class="slide">Oltre il servizio vrqak24</span></p>
+</section>
+<section id="basicrobot">
+<h2>basicrobot<a class="headerlink" href="#basicrobot" title="Permalink to this heading">¶</a></h2>
+<p>Il servizio <a class="reference internal" href="Vrqak24.html#vrqak24"><span class="std std-ref">Vrqak24</span></a> è stato introdotto  per permettere l’uso remoto del <a class="reference internal" href="VirtualRobot23.html#virtualrobot23"><span class="std std-ref">VirtualRobot23</span></a>.</p>
+<p>Questo servizio può costituire il punto di partenza per la realizzazione di un servizio più esteso,
+che includa anche la gestione di uno specifico robot fisico.
+(d’ora in poi denominato <span class="slide3">basicrobot</span>)</p>
+<p>In via preliminare, questo nuovo servizio si può impostare come mostrato
+nel modello <a class="reference external" href="../../../../virtualrobotusage/src/basicrobot.qaktt">basicrobot.qak</a>.</p>
 </section>
 </section>
 
@@ -157,6 +161,7 @@ e SIMULANDO il sonar su RaspberryPi</p></td>
 <li><a class="reference internal" href="#esempi-di-uso-del-virtualrobot">Esempi di uso del VirtualRobot</a></li>
 <li><a class="reference internal" href="#execution-tasks">Execution tasks</a></li>
 <li><a class="reference internal" href="#il-sonar-su-raspberrypi">Il sonar su RaspberryPi</a></li>
+<li><a class="reference internal" href="#basicrobot">basicrobot</a></li>
 </ul>
 </li>
 </ul>

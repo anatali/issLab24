@@ -1,0 +1,6 @@
+{"actor":"bw24core", "msgType":"dispatch", "curstate":"doboundary", "nextstate":"doboundary", "msgId":"stepdone"}
+{"actor":"bw24core", "msgType":"dispatch", "curstate":"doboundary", "nextstate":"turnAndgo", "msgId":"stepfailed"}
+{"actor":"bw24core", "msgType":"dispatch", "curstate":"handleWolf", "nextstate":"doboundary", "msgId":"stepdone"}
+{"actor":"bw24core", "msgType":"dispatch", "curstate":"handleWolf", "nextstate":"turnAndgo", "msgId":"stepfailed"}
+{"actor":"bw24core", "msgType":"dispatch", "curstate":"handleSonardata", "nextstate":"doboundary", "msgId":"stepdone"}
+{"actor":"bw24core", "msgType":"dispatch", "curstate":"handleSonardata", "nextstate":"turnAndgo", "msgId":"stepfailed"}

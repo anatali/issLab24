@@ -1,0 +1,197 @@
+System planusage//-msglog  
+/* 
+========================================
+completemapobstacles.qak in planusage
+
+Utilizza vrqak
+========================================
+*/
+/*
+ * docker cp sceneConfig.js 87c9eb2e0989:/home/node/WEnv/WebGLScene/sceneConfig.js
+ */
+Dispatch move      : move( MOVE )     
+Dispatch halt      : halt(X) 
+
+Request step       : step( TIME )	
+Reply stepdone     : stepdone(V)  for step
+Reply stepfailed   : stepfailed(DURATION, CAUSE) for step
+
+Event alarm        : alarm(X)
+
+Request  doplan   : doplan( PATH, OWNER )
+Reply doplandone  : doplandone( ARG )    for doplan
+Reply doplanfail  : doplanfail( ARG )    for doplan
+
+Context ctxmapbuild ip [host="localhost" port=8032]
+Context ctxvrqak    ip [host="127.0.0.1"  port=8125   ]
+
+ExternalQActor vrqak context ctxvrqak
+
+/*   
+ * ------------------------------------------------------------------
+ * 
+ * ------------------------------------------------------------------
+*/     
+QActor mapbuilder  context ctxmapbuild{   
+	import  "unibo.planner23.*"
+[#
+ 
+val planner   = Planner23Util()
+var CurPlan   = ""
+var StepInPlan = false
+var CurMove    = ""
+var Athome     = false 
+var PlanForHome=false
+
+var PosRobotX = 0
+var PosRobotY = 0
+#]   
+ 
+	State s0 initial {
+		[#  planner.initAI() #]  
+ 		forward vrqak -m halt : halt(1)
+ 		delay 300 
+	} 
+	Goto start
+	
+	State start{
+		[# planner.loadRoomMap("map2024ok") #]
+		[# planner.setRobotState("0","0","d")    #]
+		[# planner.showCurrentRobotState()   #]
+	}
+	Goto work
+	
+	
+	State work{
+ 		[# planner.setGoal(5,2); PlanForHome = false #] 		
+ 		[# CurPlan = planner.doPlanCompact() #]		
+	}
+	Goto execThePlan if [# CurPlan.length>0 #] else workdone
+	
+	State workdone{
+		println("$name | workdone ") color blue
+		[# planner.showCurrentRobotState() #]
+		[# planner.saveRoomMap("map2024ok")  #]
+	}
+
+	State execThePlan{
+		//println("$name | execThePlan CurPlan=$CurPlan") color yellow
+		if [# CurPlan.length > 0 #]{
+			[#  CurMove = ""+CurPlan[0]; 
+				CurPlan = CurPlan.drop(1) 
+			#]
+		    //println("$name | execThePlan CurMove=$CurMove") color blue		
+		}else{ [# CurMove="" #] }
+	}
+	Goto doMove if [# (CurMove.length > 0) #] else endOfPlan
+	
+	State doMove{
+		delay 100
+		if [# CurMove == "w" #]{ 
+ 			[# StepInPlan = true  #]
+        } 
+		if [# CurMove == "l" #]{ 
+			forward vrqak -m move : move( l )
+			[#  planner.updateMap(  "l", "" )  #] 
+			[# StepInPlan = false #]
+        }
+		if [# CurMove == "r" #]{ 
+			forward vrqak -m move : move( r )
+			[#  planner.updateMap(  "r", "" )  #] 
+			[# StepInPlan = false  #]
+        }        
+	}
+	Goto dostep if [# StepInPlan #] else execThePlan 
+ 
+    State dostep{
+ 		request vrqak -m step : step(340)    
+    }
+	Transition t0  
+ 		whenReply stepdone   -> stepcompleted   
+	    whenReply stepfailed -> planko
+
+	State stepcompleted{ //Per aggiornare la mappa
+	    //Sarebbe bene che fosse vrqak aad ggiornasse la mappa ...
+ 		[# planner.updateMap(  "w", "" ) #]  	
+	}
+	Goto execThePlan
+	
+	State endOfPlan{
+//		[# planner.showCurrentRobotState() #]
+		[# Athome = planner.atHome() #]
+		println("$name | endOfPlan with Athome=$Athome ") color magenta
+	}
+	Goto work if [# !Athome #] else tuneAtHome
+ 
+    State tuneAtHome{
+    	delay 500
+    	[# Athome  = false #]
+    	[# val Dir = planner.getDirection() #]
+    	println("$name | tuneAtHome Dir=$Dir") color magenta
+    	if [# Dir == "upDir" #]{
+    		//forward vrqak -m move : move( w )
+    		forward vrqak -m move : move( l )
+    		forward vrqak -m move : move( w )
+    		forward vrqak -m move : move( r )
+    		forward vrqak -m move : move( w )
+    	}
+    	if [# Dir == "leftDir" #]{
+    		forward vrqak -m move : move( w )
+    		forward vrqak -m move : move( r )
+    		forward vrqak -m move : move( w )
+    		forward vrqak -m move : move( l )
+    	}
+    	[# planner.showCurrentRobotState() #]
+    	delay 1000
+     }
+     Goto work
+	
+	State planko{
+		println("$name | planko with CurPlan=$CurPlan PlanForHome=$PlanForHome") color magenta
+		
+		[# planner.showCurrentRobotState() #]
+		if [# PlanForHome #] {
+			[# planner.updateMap(  "w", "" ) #]      //ignoro la collision
+			println("$name | Ignore collision while goingback to HOME") color red
+			[# planner.saveRoomMap("map2024fatal")  #]
+			//delay 3000
+			//[# System.exit(0) #]	
+		}
+		else{
+			[# planner.updateMapObstacleOnCurrentDirection() #]  
+		}	
+		 
+	}
+	Goto execThePlan if [# PlanForHome #] else backToHome  //ignoro una collision mentre  backToHome
+
+	State backToHome{  		
+		println("$name | ++++ going backToHome ++++ ")   color magenta
+   		[#   
+   			planner.setGoal(0,0)
+   			PlanForHome = true
+   			CurPlan = planner.doPlanCompact()  			
+   		#]
+   		 
+	}	
+	Goto execThePlan
+	
+}//mapbuilder
+
+
+/*
+ *  
+=================================================== |
+Planner23Util doPlan NO MOVES !!! []
+mapbuilder | workdone
+| ===================================================
+|r, 1, 1, 1, 1, 1, 1, X,
+|1, 1, 1, 1, X, X, 1, X,
+|1, 1, 1, 1, X, 0, 1, X,
+|1, 1, X, 1, 1, 1, 1, X,
+|1, 1, 1, 1, 1, 1, 1, X,
+|X, X, X, X, X, X, X, 0,
+
+RobotPos=(0,0) direction=LEFT
+ =================================================== |
+saveMap in map2024ok 
+*/
