@@ -69,6 +69,16 @@ riportate,  come fatto in <a class="reference external" href="../../../../virtua
 <td><p>Ferma il robot</p></td>
 </tr>
 <tr class="row-even"><td><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Dispatch</span> <span class="pre">move:move(M)</span></code></p></li>
+</ul>
+</td>
+<td><p>Comando al robot di eseguire (in modo sincrono) una mossa</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">M</span> <span class="o">=</span> <span class="n">w</span> <span class="o">|</span> <span class="n">a</span> <span class="o">|</span> <span class="n">d</span> <span class="o">|</span> <span class="n">h</span> <span class="o">|</span> <span class="n">p</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">Request</span> <span class="pre">cmd:cmd(MOVE,T)</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Reply</span> <span class="pre">cmddone:cmddone(R)</span> <span class="pre">for</span> <span class="pre">cmd</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Reply</span> <span class="pre">cmdfailed:cmdfailed(T,CAUSE)</span> <span class="pre">for</span> <span class="pre">cmd</span></code></p></li>
@@ -80,7 +90,7 @@ riportate,  come fatto in <a class="reference external" href="../../../../virtua
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><ul class="simple">
+<tr class="row-even"><td><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">Request</span> <span class="pre">step:step(TIME)</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Reply</span> <span class="pre">stepdone:stepdone(R)</span> <span class="pre">for</span> <span class="pre">step</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Reply</span> <span class="pre">stepfailed:stepfailed(T,CAUSE)</span> <span class="pre">for</span> <span class="pre">step</span></code></p></li>
