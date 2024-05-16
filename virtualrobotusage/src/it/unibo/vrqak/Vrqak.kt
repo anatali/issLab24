@@ -94,6 +94,9 @@ class Vrqak ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) 
 								if(  Move == "h"  
 								 ){ vr.halt()  
 								}
+								if(  Move == "w"  
+								 ){ vr.step(150)  
+								}
 								if(  Move == "p"  
 								 ){ vr.step(350)  
 								}
@@ -193,6 +196,7 @@ class Vrqak ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) 
 					}	 	 
 					 transition(edgeName="t07",targetState="handleSonarData",cond=whenEvent("sonardata"))
 					transition(edgeName="t08",targetState="handleVrinfoMsgReply",cond=whenDispatch("vrinfo"))
+					transition(edgeName="t09",targetState="dohalt",cond=whenDispatch("halt"))
 				}	 
 			}
 		}

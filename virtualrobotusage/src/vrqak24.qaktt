@@ -5,10 +5,11 @@ System vrqak
  * Risponde a 
  *      Dispatch move : move(MOVE)
  *      Request  step
+ *      Request cmd
  * 
  * Può essere attivato come risorsa esterna all'applicazione.
  * E' un esempio di un primo basicrobot logico.
- */
+ */  
  
 Dispatch halt   : halt(X)
 Dispatch move   : move(M)

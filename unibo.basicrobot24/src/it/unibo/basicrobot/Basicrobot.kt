@@ -38,6 +38,7 @@ class Basicrobot ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 				state("ss0") { //this:State
 					action { //it:State
 						discardMessages = true
+						delay(2000) 
 						delegate("engage", "engager") 
 						delegate("disengage", "engager") 
 						delegate("doplan", "planexec") 

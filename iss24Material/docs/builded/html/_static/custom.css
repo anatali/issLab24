@@ -34,6 +34,12 @@ h3{
     text-decoration: underline !important;
 }
 
+h4{
+  background-color: #a7f66fa4 !important;
+  color: rgb(39, 7, 164) !important;
+  border-radius: 25px !important;
+}
+
   .pre{
     font-family: Arial;
     font-weight: bold;
@@ -98,8 +104,9 @@ h3{
 
   .high{
     background-color: hsl(62, 100%, 75%);
+    border: 1px solid green;
     font-size: 16px; 
-    line-height: 1.5;
+    line-height: 1.5; 
     padding: 3px
   }  
 

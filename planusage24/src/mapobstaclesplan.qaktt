@@ -23,11 +23,11 @@ Request  doplan   : doplan( PATH, OWNER )
 Reply doplandone  : doplandone( ARG )    for doplan
 Reply doplanfail  : doplanfail( ARG )    for doplan
 
-Context ctxmapbuild ip [host="localhost"       port=8032  ]
-Context ctxbasicrobot    ip [host="127.0.0.1"  port=8020  ]
+Context ctxmapbuild    ip [host="localhost"       port=8032  ]
+Context ctxbasicrobot  ip [host="127.0.0.1"  port=8020  ]
 
 ExternalQActor basicrobot context ctxbasicrobot
-
+ 
 /*   
  * ------------------------------------------------------------------
  * Cerca di raggiungere una posizioe esterna alla mappa
@@ -95,7 +95,7 @@ var PlanForHome=false
 			forward basicrobot -m move : move( r )
 			[#  planner.updateMap(  "r", "" )  #] 
 			[# StepInPlan = false  #]
-        }        
+        }         
         [# val MAP = planner.getMapOneLine() #]
         publish "unibodisiplan" -m mapinfo : mapinfo($MAP)
 	}

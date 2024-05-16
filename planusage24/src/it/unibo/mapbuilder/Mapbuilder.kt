@@ -47,6 +47,7 @@ class Mapbuilder ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 				}	 
 				state("explore") { //this:State
 					action { //it:State
+						CommUtils.outblue("$name | explore (7,5) ")
 						 planner.setGoal(7,5); PlanForHome = false  
 						 CurPlan = planner.doPlanCompact()  
 						//genTimer( actor, state )
@@ -72,6 +73,7 @@ class Mapbuilder ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 				}	 
 				state("execThePlan") { //this:State
 					action { //it:State
+						CommUtils.outyellow("$name | execThePlan CurPlan=$CurPlan")
 						if(  CurPlan.length > 0  
 						 ){  CurMove = ""+CurPlan[0]; 
 										CurPlan = CurPlan.drop(1) 
@@ -91,6 +93,7 @@ class Mapbuilder ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 				}	 
 				state("doMove") { //this:State
 					action { //it:State
+						CommUtils.outblue("$name | doMove CurMove=$CurMove")
 						delay(100) 
 						if(  CurMove == "w"  
 						 ){ StepInPlan = true   
@@ -106,8 +109,6 @@ class Mapbuilder ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 						 StepInPlan = false   
 						}
 						 val MAP = planner.getMapOneLine()  
-						//val m = MsgUtil.buildEvent(name, "mapinfo", "mapinfo($MAP)" ) 
-						publish(MsgUtil.buildEvent(name,"mapinfo","mapinfo($MAP)").toString(), "unibodisiplan" )   
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -120,6 +121,7 @@ class Mapbuilder ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 				}	 
 				state("dostep") { //this:State
 					action { //it:State
+						CommUtils.outblue("$name | dostep ")
 						request("step", "step(340)" ,"basicrobot" )  
 						//genTimer( actor, state )
 					}

@@ -1,13 +1,13 @@
 /* 
  * ================================================================================
- * unibo.basicrobot23
+ * unibo.basicrobot24
  * ================================================================================
  */  
    
-System /* -trace -msglog  */ basicrobot23    
+System /* -trace -msglog  */ basicrobot24     
    
-Dispatch cmd       	: cmd(MOVE)      
-Dispatch end       	: end(ARG)    
+Dispatch cmd       	: cmd(MOVE)        
+Dispatch end       	: end(ARG)     
 
 Request step       : step(TIME)	
 Reply stepdone     : stepdone(V)                 for step
@@ -41,21 +41,21 @@ Dispatch nomoremove   : nomoremove(M)
 
 Dispatch setdirection : dir( D )  //D =up|down!left|right
 
-//Endosimbiosi di robotpos
+//Inglobamento endosimbitico di robotpos
 Request moverobot    :  moverobot(TARGETX, TARGETY)  
 Reply moverobotdone  :  moverobotok(ARG)                    for moverobot
 Reply moverobotfailed:  moverobotfailed(PLANDONE, PLANTODO) for moverobot
-
-
+ 
+ 
 //Richieste di info 
 Request getrobotstate : getrobotstate(ARG)
 Reply robotstate      : robotstate(POS,DIR)  for getrobotstate
 
 Context ctxbasicrobot ip [host="localhost" port=8020]  
 
-CodedQActor datacleaner    context ctxbasicrobot className "rx.dataCleaner"    //riceve l'evento sonarRobot
-CodedQActor distancefilter context ctxbasicrobot className "rx.distanceFilter" //genera l'evento  obstacle e sonardata
-  
+//CodedQActor datacleaner    context ctxbasicrobot className "rx.dataCleaner"    //riceve l'evento sonarRobot
+//CodedQActor distancefilter context ctxbasicrobot className "rx.distanceFilter" //genera l'evento  obstacle e sonardata
+   
 /*   
  * ------------------------------
  * engager 
@@ -171,6 +171,7 @@ QActor basicrobot context ctxbasicrobot{
  		//printCurrentMessage       
  		discardMsg On  //In the intial phase ...
  		
+ 		delay 2000 //attende creazione attori locali
  		delegate engage to engager
  		delegate disengage to engager
  		delegate doplan to planexec
@@ -704,7 +705,12 @@ QActor robotpos context ctxbasicrobot{
 	}
 	Goto waitclientrequest
  
-}
+} 
+
+//Facade f port 8088 usingactor basicrobot inctx ctxbasicrobot  
+//                   appl "unibo.servicefacade24.Servicefacade24Application" 
+//                   UserLibs -f "servicefacade24-1.0" -f "servicefacade24-1.0-plain"
+
 
 /*
  * ------------------------------

@@ -181,7 +181,7 @@ public class VrobotLLMoves24 extends ApplAbstractObserver implements IVrobotLLMo
          try {            
             JSONObject jsonObj = CommUtils.parseForJson(info);
             
-            if( tracing )              
+            //if( tracing )              
             CommUtils.outgreen(
                 "     VRLL24 | update:" + info
                         + " jsonObj=" + jsonObj + " doingStep=" + doingStepSynch

@@ -170,9 +170,9 @@ task dovesiamo {
 
 distributions {
     main {
-        distributionBaseName = 'basicrobot23'
+        distributionBaseName = 'basicrobot24'
         contents { 
-             from './basicrobot23.pl'
+             from './basicrobot24.pl'
              from './sysRules.pl'
              from './facadeConfig.json'
         }

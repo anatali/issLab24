@@ -108,6 +108,8 @@ class Basicrobot ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 								if(  Move == "d" || Move == "r"  
 								 ){ vr.turnRight()  
 								}
+								//val m = MsgUtil.buildEvent(name, "info", "info(done($Move))" ) 
+								publish(MsgUtil.buildEvent(name,"info","info(done($Move))").toString(), "unibodisi" )   
 						}
 						//genTimer( actor, state )
 					}
