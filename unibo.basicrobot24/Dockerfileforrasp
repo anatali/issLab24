@@ -1,0 +1,33 @@
+## ----------------------------------------------------------
+## Dockerfilebasicrobotforrasp for it.unibo.qak21.basicrobot
+## This file should be copied on Rasp together with the
+## required resources and executed there
+## ----------------------------------------------------------
+
+FROM hypriot/rpi-java
+EXPOSE 8020
+## ADD extracts the tar
+ADD ./unibo.basicrobot23-2.0.tar /
+WORKDIR /unibo.basicrobot23-2.0/bin
+COPY ./*.pl ./
+COPY ./*.json ./
+COPY ./*.py ./
+COPY ./*.c ./
+COPY ./map*.bin ./
+COPY ./map*.txt ./
+COPY ./*.sh ./
+
+#RUN apt-get update -y
+RUN apt-get install -y wiringpi
+RUN sudo apt-get install -y python
+
+CMD ["bash", "unibo.basicrobot23"]
+
+##  gradle build  distZip
+##  sudo docker build -t basicrobot23:1.0 .
+##  docker run -it --rm --name basicrobot23 -p8020:8020/tcp --privileged basicrobot23:1.0  /bin/bash
+
+
+
+## https://hub.docker.com/r/arm32v7/python/
+## docker run -d -p 80:80 hypriot/rpi-busybox-httpd		##works, but ???
