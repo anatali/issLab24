@@ -736,28 +736,27 @@ e  <a href="html/SpringDataRest.html" target="web">SpringDataRest</a>,
 
 <tr><td><m>16/05/2024 (15-18)</m></td><td>Lab2</td> 
 <td>
-
 <ul><li>
- <a href="html/MapBuilder24.html" target="web">MapBuilder24.html</a>: <tt>mapbuild.qak </tt>(stanza vuota usa POJO)
- e <tt>mapobstacles.qak</tt> (usa basic robot con engager)
- </li><li> 
-Oltre <a href="html/Vrqak24.html" target="web">Vrqak4</a>: verso un servizio  
-(<a href="html//BasicRobot24.html" target="web">basicrobot</a>) 
-che offre servizi evoluti per l'uso di DDR robot.
 
+Richiami sulla sintassi e sulla semantica dei linguaggi e la relazione con il metamodello qak.
+Verso un modello dei requisiti del <a href="html/TemaFinale23.html" target="web">TemaFinale23</a>.
+Impostazione top down (approccio olistico) oppure bottomup (approccio riduzionistico).
+Impostazione di un primo modello partendo dal sistema.
+<br/>
+<kc>WORKTODO: Completare il modello iniziato in laboratorio</kc>. 
+<br/>
+<kc>WORKTODO: Fare un modello qak di un <tt>NOR</tt> e di un <tt>FlipFlop SR</tt></kc>. 
  </li><li>
-
-Costruzione (usando 
-<a href="../../../virtualrobotusage/src/basicrobot.qaktt" target="web">basicrobot.qak</a> e  <a href="html/Planner.html" target="web">Planner</a>)
-della 
-<a href="html/MapBuilder24.html#mappa-di-una-stanza-con-ostacoli-fissi" target="web">mappa di una stanza con ostacoli</a>
-</li><li> 
-Visulizzazione in tempo reale della mappa su una pagina HTML
-<a href="../../../planusage24/src/main/resources/MapGui.html" target="web">MapGui.html</a>
+<a href="html/MapBuilder24.html" target="web">MapBuilder24.html</a>:
+strategie per la costruzione della mappa della stanza.
+<tt>mapbuild.qak </tt> (stanza vuota con uso di un adapter-POJO)
+ e <tt>mapobstacles.qak</tt> (movimenti per colonne usando <a href="html//BasicRobot24.html" target="web">basicrobot</a>.
+ </li><li> 
+Il servizio <a href="html//BasicRobot24.html" target="web">basicrobot24</a> come evoluzione
+del modello <a href="html/Vrqak24.html" target="web">Vrqak4</a>: in modo   
+da offrire servizi evoluti per l'uso di DDR robot, tra cui l'engagement.
+ </li> 
 </ul>
-<!-- Verso un basicrobot che include ... -->
-<kc>WORKTODO: Introduzione all'uso di SpringBoot</kc>: 
-<a href="html/SpringBootIntro.html#primi-passi-con-springboot" target="web">Primi passi con SpringBoot</a>
 </td>
 </tr> 
 
@@ -770,6 +769,33 @@ Visulizzazione in tempo reale della mappa su una pagina HTML
 
 <tr><td><m>21/05/2024 (9-12)</m></td><td>Lab2</td> 
 <td>
+<ul>
+<li>
+Costruzione (usando il modello
+<a href="../../../virtualrobotusage/src/basicrobot.qaktt" target="web">basicrobot.qak</a>
+di <a href="html//BasicRobot24.html" target="web">basicrobot24</a>
+e  <a href="html/Planner.html" target="web">Planner</a>)
+della 
+<a href="html/MapBuilder24.html#mappa-di-una-stanza-con-ostacoli-fissi" target="web">mappa di una stanza con ostacoli</a>
+</li><li> 
+Visualizzazione in tempo reale della mappa su una pagina HTML
+<a href="../../../planusage24/src/main/resources/MapGui.html" target="web">MapGui.html</a>.
+</li><li> 
+Una pagina HTML <a href="../../../unibo.basicrobot24/src/main/resources/gui/RobotGui.html" target="web">RobotGui.html</a>
+per la interazione con  <a href="html//BasicRobot24.html" target="web">basicrobot24</a>.
+<br/>
+I limiti sulle interazioni posti dai browser attuali.
+</li><li>
+Verso la costruzione di un servizio Web per il <a href="html//BasicRobot24.html" target="web">basicrobot24</a>:
+
+</li><li>
+Introduzione all'uso di SpringBoot</kc>: 
+<a href="html/SpringBootIntro.html#primi-passi-con-springboot" target="web">Primi passi con SpringBoot</a>.
+</ul>
+<!-- Verso un basicrobot che include ... -->
+ 
+</li>
+</ul>
 </td>
 </tr>
 

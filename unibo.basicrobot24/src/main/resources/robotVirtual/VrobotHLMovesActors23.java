@@ -116,12 +116,12 @@ public class VrobotHLMovesActors23 extends ApplAbstractObserver implements IVrob
          try {
             elapsed = getDuration();
             //if( tracing )
-                /*
+                
                 CommUtils.outcyan(
                     "     VrobotHLMovesActors23 | update:" + info
                             + " elapsed=" + elapsed + " doingStep=" + doingStep
                             + " " + Thread.currentThread().getName());
-                */
+                 
              JSONObject jsonObj = CommUtils.parseForJson(info);
             if (jsonObj == null) {
                 CommUtils.outred("     VrobotHLMovesActors23 | update ERROR Json:" + info);

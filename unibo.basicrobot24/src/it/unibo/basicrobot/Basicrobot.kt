@@ -48,7 +48,9 @@ class Basicrobot ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 						delegate("setdirection", "robotpos") 
 						 uniborobots.robotSupport.create(myself,"basicrobotConfig.json")  
 						 RobotType = uniborobots.robotSupport.robotKind  
-						CommUtils.outmagenta("basicrobot | CREATED ... ")
+						connectToMqttBroker( "wss://test.mosquitto.org:8081" )
+						CommUtils.outmagenta("basicrobot | CREATED  (and connected to mosquitto) ... ")
+						subscribe(  "unibodisi" ) //mqtt.subscribe(this,topic)
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -91,6 +93,8 @@ class Basicrobot ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 								uniborobots.robotSupport.move( payloadArg(0)  )
 								updateResourceRep( "moveactivated(${payloadArg(0)})"  
 								)
+								//val m = MsgUtil.buildEvent(name, "info", "info(done($CurrentMove))" ) 
+								publish(MsgUtil.buildEvent(name,"info","info(done($CurrentMove))").toString(), "unibodisi" )   
 						}
 						}
 						//genTimer( actor, state )

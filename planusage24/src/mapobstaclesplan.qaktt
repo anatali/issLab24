@@ -3,7 +3,7 @@ System planusage//-msglog
 ========================================
 mapobstaclesplan.qak in planusage
 
-Utilizza basicrobot
+Utilizza basicrobot (vrqak)
 ========================================
 */
 /*
@@ -32,7 +32,7 @@ ExternalQActor basicrobot context ctxbasicrobot
  * ------------------------------------------------------------------
  * Cerca di raggiungere una posizioe esterna alla mappa
  * Torna in HOME tutte le volte che trova un ostacolo
- * Termina quando il piano proposto ha lnughezza 0
+ * Termina quando il piano proposto ha lunghezza 0
  * ------------------------------------------------------------------
 */     
 QActor mapbuilder  context ctxmapbuild{   

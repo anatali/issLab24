@@ -16,7 +16,9 @@
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="SpringBootIntro" href="SpringBootIntro.html" />
+    <link rel="prev" title="MapBuilder24" href="MapBuilder24.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -24,6 +26,12 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="SpringBootIntro.html" title="SpringBootIntro"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="MapBuilder24.html" title="MapBuilder24"
+             accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Planner</a></li> 
       </ul>
@@ -36,13 +44,13 @@
             
   <section id="planner">
 <h1>Planner<a class="headerlink" href="#planner" title="Permalink to this heading">¶</a></h1>
-<p><span class="slide3">progetto unibo.planner23</span>  <a class="reference external" href="../../../../unibo.planner23">unibo.planner23</a></p>
+<p><span class="slide3">progetto unibo.planner23</span>  <a class="reference external" href="../../../../../unibo.planner23">unibo.planner23</a></p>
 <p>La parte proattiva di un robot consiste spesso nella esecuzione di una sequenza di movimenti che portano il robot
 in un posizione voluta dello spazio di lavoro.</p>
 <p>La sequenza di movimenti può venire ‘cablata’ nel codice di controllo del robot o può essere
 costruita dinamicamente, per tenere conto dello stato del robot e dell’ambiente circostante.</p>
 <p>Pensiamo al caso del <a class="reference internal" href="RobotCleaner.html#robotcleaner"><span class="std std-ref">RobotCleaner</span></a> che deve interrompere la sua parte proattiva per eseguire
-un comando diverso dal un semplice <span class="xref std std-ref">stop/resume</span>,
+un comando diverso dal un semplice : <code class="docutils literal notranslate"><span class="pre">stop/resume</span></code>,
 quale, ad esempio,  un comando di <code class="docutils literal notranslate"><span class="pre">BacktoToHome</span></code>.</p>
 <p>Un modo per costruire dinamicamente una sequenza di mosse con cui il robot può muoversi dalla posizione
 corrente <strong>r</strong> a un’altra posizione (libera) sulla mappa, consiste
@@ -72,7 +80,7 @@ Ad esempio:</p>
 </ul>
 <section id="id1">
 <h3>Planner23Util<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
-<p>Il progetto   <a class="reference external" href="../../../../unibo.planner23">unibo.planner23</a>,  fornisce la classe  <a class="reference external" href="../../../../unibo.planner23/src/unibo/planner23/Planner23Util.java">Planner23Util</a> che realizza
+<p>Il progetto   <a class="reference external" href="../../../../../unibo.planner23">unibo.planner23</a>,  fornisce la classe  <a class="reference external" href="../../../../../unibo.planner23/src/unibo/planner23/Planner23Util.java">Planner23Util</a> che realizza
 le operazioni-base descritte in <a class="reference external" href="./_static/LabPlanner.html">Planning</a> e varie altre utlità.</p>
 <table class="docutils align-default" style="width: 100%">
 <colgroup>
@@ -81,7 +89,7 @@ le operazioni-base descritte in <a class="reference external" href="./_static/La
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p>Codice della mappa</p></td>
-<td><p><a class="reference external" href="../../../../unibo.planner23/src/unibo/planner23/model/RoomMap.java">RoomMap</a></p></td>
+<td><p><a class="reference external" href="../../../../../unibo.planner23/src/unibo/planner23/model/RoomMap.java">RoomMap</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -93,7 +101,7 @@ in <strong>forma compatta</strong>  (ad esempio <code class="docutils literal no
 </section>
 <section id="operazioni-di-pianificazione">
 <h3>Operazioni di pianificazione<a class="headerlink" href="#operazioni-di-pianificazione" title="Permalink to this heading">¶</a></h3>
-<p>Tra le operazioni offerte dal <a class="reference internal" href="#planner">Planner</a>  del progetto  <a class="reference external" href="../../../../unibo.planner23">unibo.planner23</a>   vi sono le seguenti:</p>
+<p>Tra le operazioni offerte dal <a class="reference internal" href="#planner">Planner</a>  del progetto  <a class="reference external" href="../../../../../unibo.planner23">unibo.planner23</a>   vi sono le seguenti:</p>
 <table class="docutils align-default" style="width: 100%">
 <colgroup>
 <col style="width: 40%" />
@@ -174,21 +182,21 @@ La rappresentazione in forma di <code class="docutils literal notranslate"><span
 </section>
 <section id="id2">
 <h3>MainPlannerdemo.java<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
-<p>Il programma <a class="reference external" href="../../../../planusage24/src/main/java/MainPlannerDemo.java">MainPlannerdemo.java</a> cotrustisce una <span class="slide2">‘mappa puramente mentale’</span> di una stanza senza ostacoli fissi
+<p>Il programma <a class="reference external" href="../../../../../planusage24/src/main/java/MainPlannerDemo.java">MainPlannerdemo.java</a> cotrustisce una <span class="slide2">‘mappa puramente mentale’</span> di una stanza senza ostacoli fissi
 e <span class="slide2">‘muove mentalmente’</span> il robot nella posizione <code class="docutils literal notranslate"><span class="pre">(2,3)</span></code>.</p>
 </section>
 </section>
 <section id="robot-che-crea-una-mappa-con-ostacoli">
 <h2>Robot che crea una mappa con ostacoli<a class="headerlink" href="#robot-che-crea-una-mappa-con-ostacoli" title="Permalink to this heading">¶</a></h2>
-<p><span class="slide3">progetto planusage24</span>  <a class="reference external" href="../../../../planusage24">planusage24</a></p>
+<p><span class="slide3">progetto planusage24</span>  <a class="reference external" href="../../../../../planusage24">planusage24</a></p>
 <section id="id3">
 <h3>mapobstaclesvrqak.qak<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h3>
-<p>Il modello <a class="reference external" href="../../../../planusage24/src/mapobstaclesvrqak.qaktt">mapobstaclesvrqak.qak</a> ha come scopo
-la ostruzione di una mappa della stanza con ostacoli fissi.
+<p>Il modello <a class="reference external" href="../../../../../planusage24/src/mapobstaclesvrqak.qaktt">mapobstaclesvrqak.qak</a> ha come scopo
+la costruzione di una mappa della stanza con ostacoli fissi.
 Esso utilizza:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="Vrqak24.html#vrqak24"><span class="std std-ref">Vrqak24</span></a> per comunicare con il virtual robot</p></li>
-<li><p><a class="reference external" href="../../../../unibo.planner23/src/unibo/planner23/Planner23Util.java">Planner23Util</a> per agiornare la mappa</p></li>
+<li><p><a class="reference external" href="../../../../../unibo.planner23/src/unibo/planner23/Planner23Util.java">Planner23Util</a> per agiornare la mappa</p></li>
 </ul>
 <p>Il modello parte dalla <span class="slide2">assunzione</span> che il <strong>bordo superiore della stanza sia privo di ostacoli</strong> e procede
 esplorando lungo linee verticali, procedendo da <em>wallUp</em> a <em>wallDown</em>.</p>
@@ -197,13 +205,13 @@ per prosguire poi ad esplorare la colonna più a destra.</p>
 <p>Il procedimento termina quando il robot non è più in grado di esplorare una colonna a destra.</p>
 </section>
 <section id="id4">
-<h3>mapobstaclesplan.qak<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h3>
-<p>Il modello <a class="reference external" href="../../../../planusage24/src/mapobstaclesplan.qaktt">mapobstaclesplan.qak</a> ha come scopo
+<h3>mapobstaclesrobot.qak<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h3>
+<p>Il modello <a class="reference external" href="../../../../../planusage24/src/mapobstaclesrobot.qaktt">mapobstaclesrobot.qak</a> ha come scopo
 la ostruzione di una mappa della stanza con ostacoli fissi.
 Esso utilizza:</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="Vrqak24.html#vrqak24"><span class="std std-ref">Vrqak24</span></a> per comunicare con il virtual robot</p></li>
-<li><p><a class="reference external" href="../../../../unibo.planner23/src/unibo/planner23/Planner23Util.java">Planner23Util</a> per la impostazione di una strategia di movimento del robot che mira ad eseguire piani
+<li><p><a class="reference internal" href="BasicRobot24.html#basicrobot24"><span class="std std-ref">BasicRobot24</span></a> per comunicare con il virtual robot</p></li>
+<li><p><a class="reference external" href="../../../../../unibo.planner23/src/unibo/planner23/Planner23Util.java">Planner23Util</a> per la impostazione di una strategia di movimento del robot che mira ad eseguire piani
 (sequenze di mosse) il cui goal è raggiungere una cella al di fuori della stanza.</p></li>
 </ul>
 <p>Quando incontra un ostacolo, il robot esegue un piano per tornare  nella posizione iniziale HOME.</p>
@@ -220,8 +228,8 @@ cha vanno esplorate in una fase successiva.</p>
 o, preferibilmente, su una pagina web.</p>
 </section>
 </section>
-<section id="robotmapperboundary-on-web">
-<h2>RobotMapperBoundary on Web<a class="headerlink" href="#robotmapperboundary-on-web" title="Permalink to this heading">¶</a></h2>
+<section id="todo-robotmapperboundary-on-web">
+<h2>TODO RobotMapperBoundary on Web<a class="headerlink" href="#todo-robotmapperboundary-on-web" title="Permalink to this heading">¶</a></h2>
 <p>Progetto: <strong>webForActors</strong>  <em>unibo.Robots.mapper.RobotMapperBoundary</em>.</p>
 <p>Porta il costruttore della mappa <span class="xref std std-ref">RobotMapperBoundary</span>
 entro la <span class="xref std std-ref">WebApplication con SpringBoot</span> e visualizza la mappa sulla pagina web</p>
@@ -259,14 +267,24 @@ le guardie ‘versione Lenzi’</p></li>
 </li>
 <li><a class="reference internal" href="#robot-che-crea-una-mappa-con-ostacoli">Robot che crea una mappa con ostacoli</a><ul>
 <li><a class="reference internal" href="#id3">mapobstaclesvrqak.qak</a></li>
-<li><a class="reference internal" href="#id4">mapobstaclesplan.qak</a></li>
+<li><a class="reference internal" href="#id4">mapobstaclesrobot.qak</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#robotmapperboundary-on-web">RobotMapperBoundary on Web</a></li>
+<li><a class="reference internal" href="#todo-robotmapperboundary-on-web">TODO RobotMapperBoundary on Web</a></li>
 </ul>
 </li>
 </ul>
 
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="MapBuilder24.html"
+                          title="previous chapter">MapBuilder24</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="SpringBootIntro.html"
+                          title="next chapter">SpringBootIntro</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -295,6 +313,12 @@ le guardie ‘versione Lenzi’</p></li>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="SpringBootIntro.html" title="SpringBootIntro"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="MapBuilder24.html" title="MapBuilder24"
+             >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Planner</a></li> 
       </ul>

@@ -18,205 +18,152 @@ import unibo.planner23.*
 class Mapbuilder ( name: String, scope: CoroutineScope, isconfined: Boolean=false  ) : ActorBasicFsm( name, scope, confined=isconfined ){
 
 	override fun getInitialState() : String{
-		return "s0"
+		return "activate"
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
 		
-		 
-		val planner      = Planner23Util()
-		var CurPlan   = ""
-		var StepInPlan = false
-		var CurMove    = ""
-		var Athome     = false 
-		var PlanForHome=false
+		val MaxNumStep  = 6
+		var NumStep     = 0
+		var stepok      = 0
+		val planner     = Planner23Util()
 		return { //this:ActionBasciFsm
-				state("s0") { //this:State
+				state("activate") { //this:State
 					action { //it:State
-						  planner.initAI()  
+						 NumStep     = 0;
+						           planner.initAI()
+						           
 						connectToMqttBroker( "wss://test.mosquitto.org:8081" )
-						subscribe(  "unibodisiplan" ) //mqtt.subscribe(this,topic)
-						forward("halt", "halt(1)" ,"basicrobot" ) 
+						request("engage", "engage($MyName,350)" ,"basicrobot" )  
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition(edgeName="t00",targetState="coverNextColumn",cond=whenReply("engagedone"))
+					transition(edgeName="t01",targetState="waittoengage",cond=whenReply("engagerefused"))
+				}	 
+				state("waittoengage") { //this:State
+					action { //it:State
+						CommUtils.outred("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						 	   
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+				}	 
+				state("coverNextColumn") { //this:State
+					action { //it:State
+						CommUtils.outblue("$name | coverNextColumn")
+						request("step", "step(350)" ,"basicrobot" )  
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition(edgeName="t02",targetState="coverColumn",cond=whenReply("stepdone"))
+					transition(edgeName="t03",targetState="backHome",cond=whenReply("stepfailed"))
+				}	 
+				state("coverColumn") { //this:State
+					action { //it:State
+						 stepok = stepok + 1
+						   		   planner.updateMap(  "w", "" ) 		
+						CommUtils.outblack("coverColumn stepok=$stepok NumStep=$NumStep")
 						delay(300) 
-						//genTimer( actor, state )
-					}
-					//After Lenzi Aug2002
-					sysaction { //it:State
-					}	 	 
-					 transition( edgeName="goto",targetState="explore", cond=doswitch() )
-				}	 
-				state("explore") { //this:State
-					action { //it:State
-						CommUtils.outblue("$name | explore (7,5) ")
-						 planner.setGoal(7,5); PlanForHome = false  
-						 CurPlan = planner.doPlanCompact()  
-						//genTimer( actor, state )
-					}
-					//After Lenzi Aug2002
-					sysaction { //it:State
-					}	 	 
-					 transition( edgeName="goto",targetState="execThePlan", cond=doswitchGuarded({ CurPlan.length>0  
-					}) )
-					transition( edgeName="goto",targetState="workdone", cond=doswitchGuarded({! ( CurPlan.length>0  
-					) }) )
-				}	 
-				state("workdone") { //this:State
-					action { //it:State
-						CommUtils.outblue("$name | workdone ")
-						 planner.showCurrentRobotState()  
-						 planner.saveRoomMap("map2024ok")   
-						//genTimer( actor, state )
-					}
-					//After Lenzi Aug2002
-					sysaction { //it:State
-					}	 	 
-				}	 
-				state("execThePlan") { //this:State
-					action { //it:State
-						CommUtils.outyellow("$name | execThePlan CurPlan=$CurPlan")
-						if(  CurPlan.length > 0  
-						 ){  CurMove = ""+CurPlan[0]; 
-										CurPlan = CurPlan.drop(1) 
-						}
-						else
-						 { CurMove=""  
-						 }
-						//genTimer( actor, state )
-					}
-					//After Lenzi Aug2002
-					sysaction { //it:State
-					}	 	 
-					 transition( edgeName="goto",targetState="doMove", cond=doswitchGuarded({ (CurMove.length > 0)  
-					}) )
-					transition( edgeName="goto",targetState="endOfPlan", cond=doswitchGuarded({! ( (CurMove.length > 0)  
-					) }) )
-				}	 
-				state("doMove") { //this:State
-					action { //it:State
-						CommUtils.outblue("$name | doMove CurMove=$CurMove")
-						delay(100) 
-						if(  CurMove == "w"  
-						 ){ StepInPlan = true   
-						}
-						if(  CurMove == "l"  
-						 ){forward("move", "move(l)" ,"basicrobot" ) 
-						  planner.updateMap(  "l", "" )   
-						 StepInPlan = false  
-						}
-						if(  CurMove == "r"  
-						 ){forward("move", "move(r)" ,"basicrobot" ) 
-						  planner.updateMap(  "r", "" )   
-						 StepInPlan = false   
-						}
-						 val MAP = planner.getMapOneLine()  
-						//genTimer( actor, state )
-					}
-					//After Lenzi Aug2002
-					sysaction { //it:State
-					}	 	 
-					 transition( edgeName="goto",targetState="dostep", cond=doswitchGuarded({ StepInPlan  
-					}) )
-					transition( edgeName="goto",targetState="execThePlan", cond=doswitchGuarded({! ( StepInPlan  
-					) }) )
-				}	 
-				state("dostep") { //this:State
-					action { //it:State
-						CommUtils.outblue("$name | dostep ")
 						request("step", "step(340)" ,"basicrobot" )  
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t00",targetState="stepcompleted",cond=whenReply("stepdone"))
-					transition(edgeName="t01",targetState="planko",cond=whenReply("stepfailed"))
+					 transition(edgeName="t04",targetState="coverColumn",cond=whenReply("stepdone"))
+					transition(edgeName="t05",targetState="backHome",cond=whenReply("stepfailed"))
 				}	 
-				state("stepcompleted") { //this:State
+				state("backHome") { //this:State
+					action { //it:State
+						CommUtils.outblue("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						 	   
+						  planner.updateMapObstacleOnCurrentDirection()
+						CommUtils.outblack("backHome")
+						forward("cmd", "cmd(l)" ,"basicrobot" ) 
+						  planner.updateMap(  "l", "" )   
+						delay(300) 
+						forward("cmd", "cmd(l)" ,"basicrobot" ) 
+						  planner.updateMap(  "l", "" )   
+						delay(300) 
+						 planner.showCurrentRobotState()  
+						 val MAP = planner.getMapOneLine()  
+						//val m = MsgUtil.buildEvent(name, "mapinfo", "mapinfo($MAP)" ) 
+						publish(MsgUtil.buildEvent(name,"mapinfo","mapinfo($MAP)").toString(), "unibodisiplan" )   
+						request("step", "step(340)" ,"basicrobot" )  
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition(edgeName="t06",targetState="gotoHome",cond=whenReply("stepdone"))
+					transition(edgeName="t07",targetState="turnAndStep",cond=whenReply("stepfailed"))
+				}	 
+				state("gotoHome") { //this:State
+					action { //it:State
+						 planner.updateMap(  "w", "" ) 
+						 		   stepok = stepok - 1 
+						CommUtils.outblack("gotoHome stepok=$stepok")
+						delay(300) 
+						request("step", "step(340)" ,"basicrobot" )  
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition(edgeName="t08",targetState="gotoHome",cond=whenReplyGuarded("stepdone",{ stepok > 0  
+					}))
+					transition(edgeName="t09",targetState="turnAndStep",cond=whenReplyGuarded("stepdone",{ stepok == 0  
+					}))
+					transition(edgeName="t010",targetState="turnAndStep",cond=whenReply("stepfailed"))
+				}	 
+				state("turnAndStep") { //this:State
+					action { //it:State
+						forward("cmd", "cmd(r)" ,"basicrobot" ) 
+						  planner.updateMap(  "r", "" )   
+						delay(300) 
+						request("step", "step(340)" ,"basicrobot" )  
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition(edgeName="t011",targetState="posForNextColumn",cond=whenReply("stepdone"))
+					transition(edgeName="t012",targetState="endOfWork",cond=whenReply("stepfailed"))
+				}	 
+				state("posForNextColumn") { //this:State
 					action { //it:State
 						 planner.updateMap(  "w", "" )  
-						//genTimer( actor, state )
-					}
-					//After Lenzi Aug2002
-					sysaction { //it:State
-					}	 	 
-					 transition( edgeName="goto",targetState="execThePlan", cond=doswitch() )
-				}	 
-				state("endOfPlan") { //this:State
-					action { //it:State
-						 Athome = planner.atHome()  
-						CommUtils.outmagenta("$name | endOfPlan with Athome=$Athome ")
-						//genTimer( actor, state )
-					}
-					//After Lenzi Aug2002
-					sysaction { //it:State
-					}	 	 
-					 transition( edgeName="goto",targetState="explore", cond=doswitchGuarded({ !Athome  
-					}) )
-					transition( edgeName="goto",targetState="tuneAtHome", cond=doswitchGuarded({! ( !Athome  
-					) }) )
-				}	 
-				state("tuneAtHome") { //this:State
-					action { //it:State
-						delay(500) 
-						 Athome  = false  
-						 val Dir = planner.getDirection()  
-						CommUtils.outmagenta("$name | tuneAtHome Dir=$Dir")
-						if(  Dir == "upDir"  
-						 ){forward("move", "move(l)" ,"basicrobot" ) 
-						forward("move", "move(w)" ,"basicrobot" ) 
-						forward("move", "move(r)" ,"basicrobot" ) 
-						forward("move", "move(w)" ,"basicrobot" ) 
-						}
-						if(  Dir == "leftDir"  
-						 ){forward("move", "move(w)" ,"basicrobot" ) 
-						forward("move", "move(r)" ,"basicrobot" ) 
-						forward("move", "move(w)" ,"basicrobot" ) 
-						forward("move", "move(l)" ,"basicrobot" ) 
-						}
+						forward("cmd", "cmd(r)" ,"basicrobot" ) 
+						  planner.updateMap(  "r", "" )   
+						CommUtils.outblack("posForNextColumn stepok=$stepok")
 						 planner.showCurrentRobotState()  
-						delay(1000) 
+						delay(1300) 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition( edgeName="goto",targetState="explore", cond=doswitch() )
+					 transition( edgeName="goto",targetState="coverNextColumn", cond=doswitch() )
 				}	 
-				state("planko") { //this:State
+				state("endOfWork") { //this:State
 					action { //it:State
-						CommUtils.outmagenta("$name | planko with CurPlan=$CurPlan PlanForHome=$PlanForHome")
-						 planner.showCurrentRobotState()  
-						if(  PlanForHome  
-						 ){ planner.updateMap(  "w", "" )  
-						CommUtils.outred("$name | Ignore collision while goingback to HOME")
-						 planner.saveRoomMap("map2024fatal")   
-						}
-						else
-						 { planner.updateMapObstacleOnCurrentDirection()  
-						 }
+						CommUtils.outcyan("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						 	   
+						  //planner.updateMapObstacleOnCurrentDirection() 
+						   			planner.showMap()
+						   			planner.saveRoomMap("map2019")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition( edgeName="goto",targetState="execThePlan", cond=doswitchGuarded({ PlanForHome  
-					}) )
-					transition( edgeName="goto",targetState="backToHome", cond=doswitchGuarded({! ( PlanForHome  
-					) }) )
-				}	 
-				state("backToHome") { //this:State
-					action { //it:State
-						CommUtils.outmagenta("$name | ++++ going backToHome ++++ ")
-						   
-						   			planner.setGoal(0,0)
-						   			PlanForHome = true
-						   			CurPlan = planner.doPlanCompact()  			
-						//genTimer( actor, state )
-					}
-					//After Lenzi Aug2002
-					sysaction { //it:State
-					}	 	 
-					 transition( edgeName="goto",targetState="execThePlan", cond=doswitch() )
 				}	 
 			}
 		}

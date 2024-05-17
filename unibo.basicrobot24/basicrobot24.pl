@@ -8,6 +8,7 @@ reply( stepdone, stepdone(V) ).  %%for step
 reply( stepfailed, stepfailed(DURATION,CAUSE) ).  %%for step
 event( sonardata, sonar(DISTANCE) ).
 event( obstacle, obstacle(X) ).
+event( info, info(X) ).
 request( doplan, doplan(PATH,STEPTIME) ).
 reply( doplandone, doplandone(ARG) ).  %%for doplan
 reply( doplanfailed, doplanfailed(ARG) ).  %%for doplan

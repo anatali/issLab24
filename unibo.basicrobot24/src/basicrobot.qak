@@ -8,6 +8,7 @@ System /* -trace -msglog  */ basicrobot24
    
 Dispatch cmd       	: cmd(MOVE)        
 Dispatch end       	: end(ARG)     
+//Dispatch move       : move(M)
 
 Request step       : step(TIME)	
 Reply stepdone     : stepdone(V)                 for step
@@ -15,6 +16,8 @@ Reply stepfailed   : stepfailed(DURATION, CAUSE) for step
 
 Event  sonardata   : sonar( DISTANCE ) 	   
 Event obstacle     : obstacle(X) 
+
+Event info         : info(X)    
 
 Request  doplan     : doplan( PATH, STEPTIME )
 Reply doplandone    : doplandone( ARG )    for doplan
@@ -28,8 +31,6 @@ Reply   engagedone    : engagedone(ARG)    for engage
 Reply   engagerefused : engagerefused(ARG) for engage
 
 Dispatch disengage    : disengage(ARG)
-//Dispatch engaged      : engaged(ARG)
-//Dispatch disengaged   : disengage(ARG)
 
 Request checkowner    : checkowner(CALLER)
 Reply checkownerok    : checkownerok(ARG)      for checkowner
@@ -186,7 +187,9 @@ QActor basicrobot context ctxbasicrobot{
  		//qrun uniborobots.robotSupport.create(myself,"basicrobotConfig.json")	 		
  		[# uniborobots.robotSupport.create(myself,"basicrobotConfig.json") #]
  		[# RobotType = uniborobots.robotSupport.robotKind #]  
- 		println("basicrobot | CREATED ... ") color magenta
+ 		connectToMqttBroker "wss://test.mosquitto.org:8081"
+ 		println("basicrobot | CREATED  (and connected to mosquitto) ... ") color magenta
+  		subscribe "unibodisi"
  		/*  
  		println("basicrobot | STARTING ... ") color magenta
  		//realsonar creato da uniborobots.robotsupport come sonarHCSR04SupportActor
@@ -197,7 +200,7 @@ QActor basicrobot context ctxbasicrobot{
   	    [#  subscribeTo("distancefilter","realsonar")
   	    	subscribeToLocalActor("distancefilter")
   	    #]
-  	      
+  	       
   		run uniborobots.robotSupport.move( "a" )    //synch 
  		run uniborobots.robotSupport.move( "d" )	//synch
   		//delay 2000 //per inserzione in docker
@@ -238,6 +241,7 @@ QActor basicrobot context ctxbasicrobot{
 	  			[# CurrentMove = payloadArg(0) #] 
 				run uniborobots.robotSupport.move( payloadArg(0 ) )
 				updateResource [# "moveactivated(${payloadArg(0)})" #]
+				publish "unibodisi" -m info : info(done($CurrentMove))
 			}
 		}
 	 }

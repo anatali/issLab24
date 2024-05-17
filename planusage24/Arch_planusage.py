@@ -29,6 +29,6 @@ with Diagram('planusageArch', show=False, outformat='png', graph_attr=graphattr)
           mapbuilder=Custom('mapbuilder','./qakicons/symActorSmall.png')
      with Cluster('ctxbasicrobot', graph_attr=nodeattr):
           basicrobot=Custom('basicrobot(ext)','./qakicons/externalQActor.png')
-     mapbuilder >> Edge(color='magenta', style='solid', decorate='true', label='<step<font color="darkgreen"> stepdone stepfailed</font> &nbsp; >',  fontcolor='magenta') >> basicrobot
-     mapbuilder >> Edge(color='blue', style='solid',  decorate='true', label='<halt &nbsp; move &nbsp; >',  fontcolor='blue') >> basicrobot
+     mapbuilder >> Edge(color='magenta', style='solid', decorate='true', label='<engage &nbsp; step<font color="darkgreen"> stepdone stepfailed</font> &nbsp; >',  fontcolor='magenta') >> basicrobot
+     mapbuilder >> Edge(color='blue', style='solid',  decorate='true', label='<cmd &nbsp; >',  fontcolor='blue') >> basicrobot
 diag

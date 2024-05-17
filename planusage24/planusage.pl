@@ -1,16 +1,17 @@
 %====================================================================================
 % planusage description   
 %====================================================================================
-dispatch( move, move(MOVE) ).
-dispatch( halt, halt(X) ).
+dispatch( cmd, cmd(MOVE) ).
+request( engage, engage(ARG,STEPTIME) ).
+dispatch( disengage, disengage(ARG) ).
 request( step, step(TIME) ).
 reply( stepdone, stepdone(V) ).  %%for step
 reply( stepfailed, stepfailed(DURATION,CAUSE) ).  %%for step
 event( alarm, alarm(X) ).
-event( mapinfo, mapinfo(X) ).
 request( doplan, doplan(PATH,OWNER) ).
 reply( doplandone, doplandone(ARG) ).  %%for doplan
 reply( doplanfail, doplanfail(ARG) ).  %%for doplan
+event( mapinfo, mapinfo(X) ).
 %====================================================================================
 context(ctxmapbuild, "localhost",  "TCP", "8032").
 context(ctxbasicrobot, "127.0.0.1",  "TCP", "8020").
