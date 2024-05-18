@@ -1,0 +1,47 @@
+System mqttdemo
+
+/*
+========================================
+mqttdemo.qak
+========================================
+*/
+
+Event sonardata : sonardata(D)
+
+Context ctxmmqtt  ip [host="localhost" port=8920     ]
+
+
+
+QActor publisher context ctxmmqtt{
+	State s0 initial{
+		connectToMqttBroker "wss://test.mosquitto.org:8081"
+		//subscribe "sonardatatopic"  //se uncommented, percepisce anche lui sonardata
+		delay 1000
+		publish "sonardatatopic" -m sonardata : sonardata(10)
+	}
+	Transition t0 whenEvent sonardata -> handlesonardata
+	
+	State handlesonardata{
+		onMsg( sonardata : sonardata(D)){
+			println("$name| sonar distance ${payloadArg(0)}") color blue
+		}
+	}
+}
+
+QActor receiver context ctxmmqtt{
+	State s0 initial{
+		connectToMqttBroker "wss://test.mosquitto.org:8081"
+		subscribe "sonardatatopic"		
+	}
+	Transition t0 whenEvent sonardata -> handlesonardata
+	
+	State handlesonardata{
+		printCurrentMessage color cyan
+		onMsg( sonardata : sonardata(D)){
+			println("$name| sonar distance ${payloadArg(0)}") color magenta
+		}
+		//delay 2000
+		//		[# System.exit(0) #]
+	}
+	Transition t0 whenEvent sonardata -> handlesonardata
+}
