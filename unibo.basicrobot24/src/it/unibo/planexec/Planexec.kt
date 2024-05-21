@@ -21,6 +21,7 @@ class Planexec ( name: String, scope: CoroutineScope, isconfined: Boolean=false 
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
+		 val robot = uniborobots.robotSupport
 		  var Plan          = ""
 				var PlanOrig      = ""
 				var CurMoveTodo   = ""		
@@ -86,7 +87,7 @@ class Planexec ( name: String, scope: CoroutineScope, isconfined: Boolean=false 
 						 request("step", "step($StepTime)" ,"basicrobot" )  
 						 }
 						 else
-						  {uniborobots.robotSupport.move( CurMoveTodo  )
+						  {robot.move( CurMoveTodo  )
 						  forward("nextmove", "nextmove(goon)" ,"planexec" ) 
 						  }
 						 }

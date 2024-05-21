@@ -54,12 +54,16 @@ var client1         = mqtt.connect('wss://test.mosquitto.org:8081');
 			client1.on('message', function (topic, message) { // message is Buffer
 			 
 			  var mstr = message.toString()
-			  //console.log("MMM|"+ mstr)			   
-			  var i1   = mstr.indexOf("'")
-			  var i2   = mstr.lastIndexOf("'")
-			  var m1   = mstr.substring(i1+1,i2)
-			  var m    = m1.replaceAll("@","<br/>")
-			  document.getElementById("display").innerHTML = "<pre>"+m +"</pre>"
+			  console.log("MMM|"+ mstr)		
+			  if( mstr.includes("@") ){	   
+				  var i1   = mstr.indexOf("'")
+				  var i2   = mstr.lastIndexOf("'")
+				  var m1   = mstr.substring(i1+1,i2)
+				  var m    = m1.replaceAll("@","<br/>")
+				  document.getElementById("display").innerHTML = "<pre>"+m +"</pre>"
+			  }else{
+			  	document.getElementById("display").innerHTML = "<pre>"+mstr +"</pre>"
+			  }
 			   
 			});
 			
@@ -117,7 +121,7 @@ Riceve sulla topic informazioni da basicrobot
          <b>IP</b>:<input   id="IPADDR" value="localhost" size="10"/>
          <button onclick="connect( )">CONNECT</button>
       <h3>DISPLAY AREA <button onclick="clearDisplay()">CLEAR</button></h3>
-      <div id = "display"></div></td>
+      <div id = "display" style="font-size:10px;"></div></td>
 
  </tr>
 

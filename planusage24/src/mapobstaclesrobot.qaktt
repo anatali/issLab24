@@ -1,9 +1,9 @@
 System planusage//-msglog 
 /*
 ========================================
-mapobstacles.qak
+mapobstaclesrobot.qak
 
-Utilizza vrqak
+Utilizza basicrobot con engagement
 ========================================
 */
 /*
@@ -13,7 +13,7 @@ Utilizza vrqak
  * docker cp sceneConfig.js 87c9eb2e0989:/home/node/WEnv/WebGLScene/sceneConfig.js
  */
 Dispatch cmd       : cmd(MOVE)     
-
+ 
 Request engage        : engage(ARG,STEPTIME)	
 Reply   engagedone    : engagedone(ARG)
 Reply   engagerefused : engagerefused(ARG)
@@ -29,12 +29,13 @@ Request  doplan   : doplan( PATH, OWNER )
 Reply doplandone  : doplandone( ARG )    for doplan
 Reply doplanfail  : doplanfail( ARG )    for doplan
 
-Context ctxmapbuild ip [host="localhost" port=8032]
-//Context ctxvrqak  ip [host="127.0.0.1" port=8020]   
-Context ctxvrqak    ip [host="127.0.0.1"  port=8125   ]
+Event mapinfo      : mapinfo(X)
 
-//ExternalQActor vrqak context ctxvrqak  
-ExternalQActor vrqak context ctxvrqak
+Context ctxmapbuild ip [host="localhost" port=8032]
+Context ctxbasicrobot    ip [host="127.0.0.1"  port=8020   ]
+
+//ExternalQActor basicrobot context ctxbasicrobot  
+ExternalQActor basicrobot context ctxbasicrobot
 
 /*   
  * ------------------------------------------------------------------
@@ -55,8 +56,10 @@ val planner     = Planner23Util()
 		//printCurrentMessage
 		[# NumStep     = 0;
            planner.initAI()
+           
         #]  
-		request vrqak -m engage : engage($MyName,350) 
+        connectToMqttBroker "wss://test.mosquitto.org:8081"
+		request basicrobot -m engage : engage($MyName,350) 
 	} 
 //	Goto coverNextColumn
 	Transition t0 //whenTime 2000           -> work
@@ -69,7 +72,7 @@ val planner     = Planner23Util()
 
 	State coverNextColumn{  
 		println("$name | coverNextColumn")	color blue	  
-   		request vrqak -m step : step(350)	
+   		request basicrobot -m step : step(350)	
 	}
 	Transition t0  whenReply stepdone -> coverColumn   
 				   whenReply stepfailed -> backHome
@@ -81,7 +84,7 @@ val planner     = Planner23Util()
    		#]
    		println("coverColumn stepok=$stepok NumStep=$NumStep")
      	delay 300 
-   		request vrqak -m step : step(340)
+   		request basicrobot -m step : step(340)
  	}
 	Transition t0  whenReply stepdone -> coverColumn
  	               whenReply stepfailed -> backHome // and [# NumStep <  MaxNumStep #] 
@@ -91,15 +94,17 @@ val planner     = Planner23Util()
 		[#  planner.updateMapObstacleOnCurrentDirection()
  		#]   		
 		println("backHome")
-   			forward vrqak -m cmd : cmd(l)
+   			forward basicrobot -m cmd : cmd(l)
 			[#  planner.updateMap(  "l", "" )  #]   			
    			delay 300 
-   			forward vrqak -m cmd : cmd(l)
+   			forward basicrobot -m cmd : cmd(l)
 			[#  planner.updateMap(  "l", "" )  #]   			
    			delay 300  
     			
     		[# planner.showCurrentRobotState() #]
-    		request vrqak -m step : step(340)   
+        [# val MAP = planner.getMapOneLine() #]
+        publish "unibodisiplan" -m mapinfo : mapinfo($MAP)
+    	request basicrobot -m step : step(340)   
 	}	
    	Transition t0  whenReply stepdone -> gotoHome
  	               whenReply stepfailed -> turnAndStep //endOfWork
@@ -113,7 +118,7 @@ val planner     = Planner23Util()
  		#]
  		println("gotoHome stepok=$stepok")	
  		delay 300 
- 		request vrqak -m step : step(340)  
+ 		request basicrobot -m step : step(340)  
  	}
 // 	Goto gotoHome if [# stepok > 0 #] else turnAndStep  //WRONG
   	Transition t0  whenReply stepdone and [# stepok > 0 #]  -> gotoHome
@@ -122,17 +127,17 @@ val planner     = Planner23Util()
 
  	
  	State turnAndStep{
-   		forward vrqak -m cmd : cmd(r)
+   		forward basicrobot -m cmd : cmd(r)
 		[#  planner.updateMap(  "r", "" )  #]   			
    		delay 300 			
-   		request vrqak -m step : step(340)  //step laterale
+   		request basicrobot -m step : step(340)  //step laterale
  	}
   	Transition t0  whenReply stepdone -> posForNextColumn
   				   whenReply stepfailed -> endOfWork
  	
  	State posForNextColumn{
  		[# planner.updateMap(  "w", "" ) #]
-   		forward vrqak -m cmd : cmd(r)
+   		forward basicrobot -m cmd : cmd(r)
 		[#  planner.updateMap(  "r", "" )  #]   	
 		println("posForNextColumn stepok=$stepok")		
    		[# planner.showCurrentRobotState() #]		
@@ -140,7 +145,7 @@ val planner     = Planner23Util()
    		delay 1300 		 
 	}
  	Goto coverNextColumn
- 	
+ 	 
  	
 	State endOfWork{  		  
    		printCurrentMessage

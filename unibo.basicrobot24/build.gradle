@@ -16,6 +16,7 @@ plugins {
     //Per poter usare qakfacadegui23-1.0 che usa Spring
     id 'org.springframework.boot' version '2.7.16'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+ 
     
     //Per poter usare javafx
     id 'org.openjfx.javafxplugin' version '0.1.0'
@@ -115,9 +116,18 @@ dependencies {
     // https://mvnrepository.com/artifact/com.googlecode.aima-java/aima-core
     implementation group: 'com.googlecode.aima-java', name: 'aima-core', version: '3.0.0'
 
+ 
+    /* UNIBO *********************************************************************************/
+    implementation name: 'uniboInterfaces'
+    implementation name: '2p301'
+	implementation name: 'unibo.qakactor23-5.0'
+    implementation name: 'unibo.basicomm23-1.0'
+
+   
+ 
     //USER libs for facades
-    implementation name: 'servicefacade24-1.0'
-    implementation name: 'servicefacade24-1.0-plain'
+    implementation name: 'robotfacade24-1.0-plain'
+    implementation name: 'robotfacade24-1.0'
     
 	/* Librerie spring per il supporto a facade ***************************** */
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
@@ -125,16 +135,6 @@ dependencies {
 	//depends on spring-boot-starter-logging, which already pulls in spring-jcl for us.
 	//When using starters, Logback is used for logging by default.
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
-
-    /* UNIBO *********************************************************************************/
-    implementation name: 'uniboInterfaces'
-    implementation name: '2p301'
-	implementation name: 'unibo.qakactor23-5.0'
-    implementation name: 'unibo.basicomm23-1.0'
-
-
-    
-    //USER libs for facades
     
 }
 	

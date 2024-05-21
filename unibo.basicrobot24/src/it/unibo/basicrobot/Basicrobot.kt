@@ -21,6 +21,7 @@ class Basicrobot ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 	}
 	override fun getBody() : (ActorBasicFsm.() -> Unit){
 		//val interruptedStateTransitions = mutableListOf<Transition>()
+		 val robot = uniborobots.robotSupport
 		  
 		  var StepTime      = 0L
 		  var StartTime     = 0L     
@@ -46,11 +47,15 @@ class Basicrobot ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 						delegate("setrobotstate", "robotpos") 
 						delegate("moverobot", "robotpos") 
 						delegate("setdirection", "robotpos") 
-						 uniborobots.robotSupport.create(myself,"basicrobotConfig.json")  
-						 RobotType = uniborobots.robotSupport.robotKind  
+						 robot.create(myself,"basicrobotConfig.json")  
+						 RobotType = robot.robotKind  
 						connectToMqttBroker( "wss://test.mosquitto.org:8081" )
 						CommUtils.outmagenta("basicrobot | CREATED  (and connected to mosquitto) ... ")
 						subscribe(  "unibodisi" ) //mqtt.subscribe(this,topic)
+						robot.move( "h"  )
+						delay(300) 
+						robot.move( "a"  )
+						robot.move( "d"  )
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -90,7 +95,7 @@ class Basicrobot ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 						 ){if( checkMsgContent( Term.createTerm("cmd(MOVE)"), Term.createTerm("cmd(MOVE)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								 CurrentMove = payloadArg(0)  
-								uniborobots.robotSupport.move( payloadArg(0)  )
+								robot.move( payloadArg(0)  )
 								updateResourceRep( "moveactivated(${payloadArg(0)})"  
 								)
 								//val m = MsgUtil.buildEvent(name, "info", "info(done($CurrentMove))" ) 
@@ -116,7 +121,7 @@ class Basicrobot ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 								)
 						}
 						StartTime = getCurrentTime()
-						 StepSynchRes = uniborobots.robotSupport.dostep( StepTime )  
+						 StepSynchRes = robot.dostep( StepTime )  
 						}
 						else
 						 { AnswerKo = "youarenotowner"  
@@ -134,7 +139,7 @@ class Basicrobot ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 				state("stepok") { //this:State
 					action { //it:State
 						 StepSynchRes = false  
-						uniborobots.robotSupport.move( "h"  )
+						robot.move( "h"  )
 						updateResourceRep( "stepDone($StepTime)"  
 						)
 						answer("step", "stepdone", "stepdone($StepTime)"   )  
@@ -149,12 +154,12 @@ class Basicrobot ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 					action { //it:State
 						if(  AnswerKo == ""  
 						 ){Duration = getDuration(StartTime)
-						uniborobots.robotSupport.move( "h"  )
+						robot.move( "h"  )
 						 var TunedDuration   = StepTime - ((Duration * 0.80)).toLong()    
 						if(  TunedDuration > 30  
-						 ){uniborobots.robotSupport.move( "s"  )
+						 ){robot.move( "s"  )
 						delay(TunedDuration)
-						uniborobots.robotSupport.move( "h"  )
+						robot.move( "h"  )
 						updateResourceRep( "stepFail($Duration)"  
 						)
 						delay(300) 

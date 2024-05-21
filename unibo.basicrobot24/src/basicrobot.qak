@@ -9,7 +9,7 @@ System /* -trace -msglog  */ basicrobot24
 Dispatch cmd       	: cmd(MOVE)        
 Dispatch end       	: end(ARG)     
 //Dispatch move       : move(M)
-
+ 
 Request step       : step(TIME)	
 Reply stepdone     : stepdone(V)                 for step
 Reply stepfailed   : stepfailed(DURATION, CAUSE) for step
@@ -153,7 +153,7 @@ QActor engager context ctxbasicrobot{
  * basicrobot
  * ------------------------------
  */ 
-QActor basicrobot context ctxbasicrobot{
+QActor basicrobot context ctxbasicrobot withobj robot using "uniborobots.robotSupport"{
 [#  
   var StepTime      = 0L
   var StartTime     = 0L     
@@ -185,8 +185,8 @@ QActor basicrobot context ctxbasicrobot{
  		//delay 1000  //per inserzione in docker
 		//[# sysUtil.trace = true #]  //Trace the behavior of ActorBasic
  		//qrun uniborobots.robotSupport.create(myself,"basicrobotConfig.json")	 		
- 		[# uniborobots.robotSupport.create(myself,"basicrobotConfig.json") #]
- 		[# RobotType = uniborobots.robotSupport.robotKind #]  
+ 		[# robot.create(myself,"basicrobotConfig.json") #]
+ 		[# RobotType = robot.robotKind #]  
  		connectToMqttBroker "wss://test.mosquitto.org:8081"
  		println("basicrobot | CREATED  (and connected to mosquitto) ... ") color magenta
   		subscribe "unibodisi"
@@ -200,11 +200,14 @@ QActor basicrobot context ctxbasicrobot{
   	    [#  subscribeTo("distancefilter","realsonar")
   	    	subscribeToLocalActor("distancefilter")
   	    #]
-  	       
-  		run uniborobots.robotSupport.move( "a" )    //synch 
- 		run uniborobots.robotSupport.move( "d" )	//synch
-  		//delay 2000 //per inserzione in docker
+   		//delay 2000 //per inserzione in docker
   		*/
+        run robot.move( "h" )    //reset
+        delay 300
+	  	run robot.move( "a" )    //synch 
+ 		run robot.move( "d" )	 //synch
+ 
+
  	}
  	//Goto waitForRobot   
  	Goto work
@@ -215,8 +218,8 @@ QActor basicrobot context ctxbasicrobot{
  		println("basicrobot | STARTING ... ") color magenta
  		
  		//ELIMINO LA INTERAZIONE SINCRONA perch� richiede la presenza dell'immagine
-   		//run uniborobots.robotSupport.move( "a" )    //synch 
- 		//run uniborobots.robotSupport.move( "d" )	//synch   	
+   		//run robot.move( "a" )    //synch 
+ 		//run robot.move( "d" )	//synch   	
     }
     Goto work
     
@@ -239,7 +242,7 @@ QActor basicrobot context ctxbasicrobot{
 			onMsg( cmd : cmd(MOVE) ){
 	  			//activate the motors  
 	  			[# CurrentMove = payloadArg(0) #] 
-				run uniborobots.robotSupport.move( payloadArg(0 ) )
+				run robot.move( payloadArg(0 ) )
 				updateResource [# "moveactivated(${payloadArg(0)})" #]
 				publish "unibodisi" -m info : info(done($CurrentMove))
 			}
@@ -256,7 +259,7 @@ QActor basicrobot context ctxbasicrobot{
 	  		}  
 	        //println("basicrobot | doing doStep StepTime=$StepTime  ")        
 	        memoCurrentTime StartTime  
-	        [# StepSynchRes = uniborobots.robotSupport.dostep( StepTime ) #]          
+	        [# StepSynchRes = robot.dostep( StepTime ) #]          
         } else{
  		    //println("$name doStep AnswerKo=$AnswerKo") color red
         	[# AnswerKo = "youarenotowner" #]
@@ -269,7 +272,7 @@ QActor basicrobot context ctxbasicrobot{
 	State stepok{   
 		//printCurrentMessage
 		[# StepSynchRes = false #]
- 		run uniborobots.robotSupport.move( "h" )  //stop the (real) robot 
+ 		run robot.move( "h" )  //stop the (real) robot 
 		updateResource [# "stepDone($StepTime)" #]
    		//emit info : info( stepdone($StepTime) )
    		replyTo step with stepdone : stepdone($StepTime)
@@ -282,13 +285,13 @@ QActor basicrobot context ctxbasicrobot{
 		if [# AnswerKo == "" #]{
 			setDuration Duration from StartTime
 			//printCurrentMessage
-			run uniborobots.robotSupport.move( "h" )  //stop the (real) robot
+			run robot.move( "h" )  //stop the (real) robot
 			[# var TunedDuration   = StepTime - ((Duration * 0.80)).toLong()   #]
 			//println("basicrobot | stepKo $StepTime  duration=$Duration  TunedDuration=$TunedDuration") color magenta
 			if [# TunedDuration > 30 #]{
-				run uniborobots.robotSupport.move( "s" )
+				run robot.move( "s" )
 				delayVar TunedDuration 
-				run uniborobots.robotSupport.move( "h" ) 
+				run robot.move( "h" ) 
 		 		updateResource [# "stepFail($Duration)" #] 
 		 		delay 300
 			}
@@ -314,7 +317,7 @@ QActor basicrobot context ctxbasicrobot{
  * planexec
  * ------------------------------
  */
-QActor planexec context ctxbasicrobot{
+QActor planexec context ctxbasicrobot withobj robot using "uniborobots.robotSupport"{
 	[#  var Plan          = ""
 		var PlanOrig      = ""
 		var CurMoveTodo   = ""		
@@ -324,7 +327,7 @@ QActor planexec context ctxbasicrobot{
    	#]
 	State s0 initial{
 		subscribeTo engager for alarm
-        //[# StepTime = uniborobots.robotSupport.readStepTime( )	#]		
+        //[# StepTime = robot.readStepTime( )	#]		
 	}
 	Goto work
 
@@ -389,11 +392,11 @@ QActor planexec context ctxbasicrobot{
 	 			delay 300  //avoid too fast ...
 	 			//Il supporto non fa step-back
 	 			//Chiedo di fare step 
-	 			//[# StepSynchRes = uniborobots.robotSupport.dostep( StepTime ) #]
+	 			//[# StepSynchRes = robot.dostep( StepTime ) #]
 	 			request basicrobot -m step : step($StepTime)	//mentre fa doplan ...		
 			}else{
 				//println("$name | doMoveTurn $CurMoveTodo")  
-				run uniborobots.robotSupport.move(  CurMoveTodo )
+				run robot.move(  CurMoveTodo )
 				forward planexec -m nextmove : nextmove(goon)
 			}
 		}
@@ -528,7 +531,7 @@ QActor robotpos context ctxbasicrobot{
 	#]
 	State s0 initial{
         println("$name STARTS loading $MapName") 
-        //[# StepTime = OwnerMngr.steptime //uniborobots.robotSupport.readStepTime( )	 		
+        //[# StepTime = OwnerMngr.steptime //robot.readStepTime( )	 		
  		//#]		
         
 		[# planner.initAI()  
@@ -709,11 +712,11 @@ QActor robotpos context ctxbasicrobot{
 	}
 	Goto waitclientrequest
  
-} 
-
-//Facade f port 8088 usingactor basicrobot inctx ctxbasicrobot  
+} 	
+  
+//Facade robotfacade port 8085 usingactor basicrobot inctx ctxbasicrobot  
 //                   appl "unibo.servicefacade24.Servicefacade24Application" 
-//                   UserLibs -f "servicefacade24-1.0" -f "servicefacade24-1.0-plain"
+//                   UserLibs -f "robotfacade24-1.0-plain"  -f "robotfacade24-1.0"
 
 
 /*

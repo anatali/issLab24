@@ -27,8 +27,8 @@ with Diagram('basicrobot24Arch', show=False, outformat='png', graph_attr=graphat
 ### see https://renenyffenegger.ch/notes/tools/Graphviz/attributes/label/HTML-like/index
      with Cluster('ctxbasicrobot', graph_attr=nodeattr):
           engager=Custom('engager','./qakicons/symActorSmall.png')
-          basicrobot=Custom('basicrobot','./qakicons/symActorSmall.png')
-          planexec=Custom('planexec','./qakicons/symActorSmall.png')
+          basicrobot=Custom('basicrobot','./qakicons/symActorWithobjSmall.png')
+          planexec=Custom('planexec','./qakicons/symActorWithobjSmall.png')
           robotpos=Custom('robotpos','./qakicons/symActorSmall.png')
      engager >> Edge( label='alarm', **eventedgeattr, decorate='true', fontcolor='red') >> planexec
      basicrobot >> Edge(color='magenta', style='solid', decorate='true', label='<getrobotstate<font color="darkgreen"> robotstate</font> &nbsp; moverobot<font color="darkgreen"> moverobotdone moverobotfailed</font> &nbsp; >',  fontcolor='magenta') >> robotpos

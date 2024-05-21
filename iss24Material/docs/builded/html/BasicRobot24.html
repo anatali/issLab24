@@ -50,11 +50,11 @@ ed altre funzionalità utili.</p>
 <p>Il servizio offre anche un modo di operare in modo indipendente dalla tecnologia con cui è
 realizzato uno specifico DDR robot (virtuale o reale).</p>
 <section id="br24-requisito-tipidirobot">
-<h2>BR24 requisito  <em>tipidirobot</em><a class="headerlink" href="#br24-requisito-tipidirobot" title="Permalink to this heading">¶</a></h2>
+<h2>BR24 requisito  tipidirobot<a class="headerlink" href="#br24-requisito-tipidirobot" title="Permalink to this heading">¶</a></h2>
 <p>Facciamo riferimento ad almeno tre diversi tipi di robot:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="VirtualRobot23.html#virtualrobot23"><span class="std std-ref">VirtualRobot23</span></a></p></li>
-<li><p><a class="reference external" href="../../../../..//unibo.basicrobot24/userDocs/Mbot2020.html">Mbot</a> (realmbot)</p></li>
+<li><p><a class="reference external" href="../../../../../unibo.basicrobot24/userDocs/Mbot2020.html">Mbot</a> (realmbot)</p></li>
 <li><p><a class="reference external" href="../../../../../unibo.basicrobot24/userDocs/LabNanoRobot.html">NanoRobot</a> (realnano)</p></li>
 </ul>
 <a class="reference internal image-reference" href="_images/basicrobotComponent.PNG"><img alt="_images/basicrobotComponent.PNG" class="align-center" src="_images/basicrobotComponent.PNG" style="width: 60%;" /></a>
@@ -66,7 +66,7 @@ realizzato uno specifico DDR robot (virtuale o reale).</p>
 <section id="br24-configurazione">
 <h3>BR24: configurazione<a class="headerlink" href="#br24-configurazione" title="Permalink to this heading">¶</a></h3>
 <p>La utility class <a class="reference external" href="../../../../../unibo.basicrobot24/src/main/resources/uniborobots/robotSupport.kt">robotSupport.kt</a> si occupa dei dettagli tecnologici specifici di ogni
-<span class="xref std std-ref">tipo di robot</span> utilizzando un supporto diverso per ciascun tipo.</p>
+<a class="reference internal" href="#br24-requisito-tipidirobot"><span class="std std-ref">tipo di robot</span></a> utilizzando un supporto diverso per ciascun tipo.</p>
 <section id="br24-supporti">
 <h4>BR24: supporti<a class="headerlink" href="#br24-supporti" title="Permalink to this heading">¶</a></h4>
 <table class="docutils align-default" style="width: 100%">
@@ -77,15 +77,15 @@ realizzato uno specifico DDR robot (virtuale o reale).</p>
 <tbody>
 <tr class="row-odd"><td><a class="reference internal image-reference" href="_images/wenvscene1.PNG"><img alt="_images/wenvscene1.PNG" class="align-center" src="_images/wenvscene1.PNG" style="width: 90%;" /></a>
 </td>
-<td><p>per il VirtualRobot: <a class="reference external" href="../../../../../.unibo.basicrobot24/src/main/resources/robotVirtual/virtualrobotSupport23.kt">virtualrobotSupport</a></p></td>
+<td><p>per il VirtualRobot: <a class="reference external" href="../../../../../unibo.basicrobot24/src/main/resources/robotVirtual/virtualrobotSupport23.kt">virtualrobotSupport</a></p></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal image-reference" href="_images/robotsUnibo.jpg"><img alt="_images/robotsUnibo.jpg" class="align-center" src="_images/robotsUnibo.jpg" style="width: 90%;" /></a>
 </td>
-<td><p>per il  NanoRobot: <a class="reference external" href="../../../../../../unibo.basicrobot24/src/main/resources/robotNano/nanoSupport.kt">nanoSupport</a>, <a class="reference external" href="../../../../../../unibo.basicrobot24/src/main/resources/robotNano/Motors.c">motors</a></p></td>
+<td><p>per il  NanoRobot: <a class="reference external" href="../../../../../unibo.basicrobot24/src/main/resources/robotNano/nanoSupport.kt">nanoSupport</a>, <a class="reference external" href="../../../../../unibo.basicrobot24/src/main/resources/robotNano/Motors.c">motors</a></p></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal image-reference" href="_images/mbot.PNG"><img alt="_images/mbot.PNG" class="align-center" src="_images/mbot.PNG" style="width: 90%;" /></a>
 </td>
-<td><p>per Mbot: <a class="reference external" href="../../../../../../unibo.basicrobot24/userDocs/Mbot2020.html">mbotSupport</a></p></td>
+<td><p>per Mbot: <a class="reference external" href="../../../../../unibo.basicrobot24/userDocs/Mbot2020.html">mbotSupport</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -283,7 +283,7 @@ la risposta <span class="high">stepdone</span> in caso di successo e <span class
 <ul>
 <li><p>Il robot è un oggetto di dimensioni finite, inscrivibile in un cerchio di diametro <code class="docutils literal notranslate"><span class="pre">D</span></code> (<strong>unità robotica</strong>) ed esegue
 movimenti a velocità costante.</p></li>
-<li><p>Il <span class="xref std std-ref">basicrobot</span> fornito dal committente è un puro <span class="remark">esecutore di comandi</span>, con cui il robot
+<li><p>Il <a class="reference internal" href="#basicrobot24"><span class="std std-ref">basicrobot</span></a> fornito dal committente è un puro <span class="remark">esecutore di comandi</span>, con cui il robot
 può effettuare singole mosse o sequenze di mosse, a seguito di messaggi di richiesta.</p>
 <table class="docutils align-default" style="width: 100%">
 <colgroup>
@@ -336,8 +336,8 @@ in <strong>forma compatta</strong>  (ad esempio <code class="docutils literal no
 <td><ul class="simple">
 <li><p><span class="blue">PLAN</span>: la sequenza di mosse da eseguire, espressa in <em>forma verbosa</em> oppure
 in <em>forma compatta</em> ;</p></li>
-<li><p><span class="blue">OWNER</span>:  il nome dell’attore chiamante (che ha ingaggiato il <span class="xref std std-ref">basicrobot</span>);</p></li>
-<li><p><span class="blue">STEPTIME</span>: il tempo (in msec) di esecuzione dello <a class="reference internal" href="VrobotLLMoves24.html#step"><span class="std std-ref">step</span></a> da parte del <span class="xref std std-ref">basicrobot</span>.</p></li>
+<li><p><span class="blue">OWNER</span>:  il nome dell’attore chiamante (che ha ingaggiato il <a class="reference internal" href="#basicrobot24"><span class="std std-ref">basicrobot</span></a>);</p></li>
+<li><p><span class="blue">STEPTIME</span>: il tempo (in msec) di esecuzione dello <a class="reference internal" href="VrobotLLMoves24.html#step"><span class="std std-ref">step</span></a> da parte del <a class="reference internal" href="#basicrobot24"><span class="std std-ref">basicrobot</span></a>.</p></li>
 </ul>
 </td>
 </tr>
@@ -357,19 +357,23 @@ PLAN che è stata eseguita prima del fallimento (per allarme o per l’incontro 
 </tr>
 </tbody>
 </table>
+<p><a class="reference internal" href="#br24-esperimenti-di-uso-con-virtualrobot"><span class="std std-ref">BR24 Esperimenti di uso (con VirtualRobot)</span></a></p>
 </section>
-<section id="br24-modalita-di-uso-con-virtualrobot">
-<h2>BR24 Modalità di uso con VirtualRobot<a class="headerlink" href="#br24-modalita-di-uso-con-virtualrobot" title="Permalink to this heading">¶</a></h2>
+<section id="br24-esperimenti-di-uso-con-virtualrobot">
+<h2>BR24 Esperimenti di uso (con VirtualRobot)<a class="headerlink" href="#br24-esperimenti-di-uso-con-virtualrobot" title="Permalink to this heading">¶</a></h2>
 <ol class="arabic simple">
 <li><p>Posizionarsi sulla direcory <span class="high">unibo.basicrobot24</span></p></li>
 <li><p>Attivare il VirtualRobot con il comando <span class="high">docker-compose -f virtualRobot23.yaml up</span></p></li>
 <li><p>Attivare il basic robot on il comando <span class="high">gradlew run</span></p></li>
-<li><p>Attivare <span class="xref std std-ref">mapobstaclesrobot.qak</span>  in <a class="reference internal" href="Planner.html#planner"><span class="std std-ref">Planner</span></a></p></li>
+<li><p>Aprire la pagina HTML <a class="reference external" href="../../../../../planusage24/src/main/resources/MapGui.html">MapGui.html</a> in <a class="reference external" href="../../../../../planusage24">planusage24</a>, che offre una GUI che usa MQTT per inviare comandi
+al basicrobot e per ricevere informazioni di stato sia dal basicrobot sia dal planner</p></li>
+<li><p>Attivare <a class="reference internal" href="Planner.html#id4"><span class="std std-ref">mapobstaclesrobot.qak</span></a>  in <a class="reference external" href="../../../../../planusage24">planusage24</a> che usa il <a class="reference internal" href="Planner.html#planner"><span class="std std-ref">Planner</span></a> per esplorazione in colonne vertcali</p></li>
+<li><p>Altro esprimento con <a class="reference external" href="../../../../../planusage24/src/mapobstaclesplan.qaktt">mapobstaclesplan.qak</a> in <a class="reference external" href="../../../../../planusage24">planusage24</a>, che cerca di raggiungere una cella fuori dalla mappa</p></li>
 </ol>
 </section>
 <section id="br24-facade">
 <h2>BR24 Facade<a class="headerlink" href="#br24-facade" title="Permalink to this heading">¶</a></h2>
-<p>Il servizio può anche essere usato mediante un Browser collegandosi alla porta 8085.</p>
+<p>Il basicrobot può anche essere usato mediante un Browser collegandosi alla porta 8085.</p>
 </section>
 </section>
 
@@ -384,7 +388,7 @@ PLAN che è stata eseguita prima del fallimento (per allarme o per l’incontro 
     <h3><a href="index.html">Table of Contents</a></h3>
     <ul>
 <li><a class="reference internal" href="#">BasicRobot24</a><ul>
-<li><a class="reference internal" href="#br24-requisito-tipidirobot">BR24 requisito  <em>tipidirobot</em></a><ul>
+<li><a class="reference internal" href="#br24-requisito-tipidirobot">BR24 requisito  tipidirobot</a><ul>
 <li><a class="reference internal" href="#br24-una-prima-architettura">BR24 Una prima architettura</a></li>
 <li><a class="reference internal" href="#br24-configurazione">BR24: configurazione</a><ul>
 <li><a class="reference internal" href="#br24-supporti">BR24: supporti</a></li>
@@ -399,7 +403,7 @@ PLAN che è stata eseguita prima del fallimento (per allarme o per l’incontro 
 </li>
 <li><a class="reference internal" href="#br24-come-esecutore-di-movimenti">BR24 come esecutore di movimenti</a></li>
 <li><a class="reference internal" href="#br24-planexec">BR24 planexec</a></li>
-<li><a class="reference internal" href="#br24-modalita-di-uso-con-virtualrobot">BR24 Modalità di uso con VirtualRobot</a></li>
+<li><a class="reference internal" href="#br24-esperimenti-di-uso-con-virtualrobot">BR24 Esperimenti di uso (con VirtualRobot)</a></li>
 <li><a class="reference internal" href="#br24-facade">BR24 Facade</a></li>
 </ul>
 </li>
