@@ -126,8 +126,8 @@ dependencies {
    
  
     //USER libs for facades
-    implementation name: 'robotfacade24-1.0-plain'
-    implementation name: 'robotfacade24-1.0'
+//    implementation name: 'robotfacade24-1.0-plain'
+//    implementation name: 'robotfacade24-1.0'
     
 	/* Librerie spring per il supporto a facade ***************************** */
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
@@ -194,7 +194,7 @@ task run0(type: JavaExec) {
     group = "Execution"
     description = "Run the main class with JavaExecTask"
     classpath = sourceSets.main.runtimeClasspath
-    main = 'it.unibo.ctxbasicrobot.MainCtxbasicrobotKt'
+    //main = 'it.unibo.ctxbasicrobot.MainCtxbasicrobotKt'
 }
 
 /*
