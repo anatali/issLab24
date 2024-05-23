@@ -8,7 +8,7 @@ System /* -trace -msglog  */ basicrobot24
    
 Dispatch cmd       	: cmd(MOVE)        
 Dispatch end       	: end(ARG)     
-//Dispatch move       : move(M)
+ 
  
 Request step       : step(TIME)	
 Reply stepdone     : stepdone(V)                 for step
@@ -187,10 +187,10 @@ QActor basicrobot context ctxbasicrobot withobj robot using "uniborobots.robotSu
  		//qrun uniborobots.robotSupport.create(myself,"basicrobotConfig.json")	 		
  		[# robot.create(myself,"basicrobotConfig.json") #]
  		[# RobotType = robot.robotKind #]  
- 		connectToMqttBroker "wss://test.mosquitto.org:8081"
+  		connectToMqttBroker "wss://test.mosquitto.org:8081" clientid "brnat"
  		println("basicrobot | CREATED  (and connected to mosquitto) ... ") color magenta
-  		subscribe "unibodisi"
- 		/*  
+   		subscribe "unibodisi"
+ 		/*   
  		println("basicrobot | STARTING ... ") color magenta
  		//realsonar creato da uniborobots.robotsupport come sonarHCSR04SupportActor
   	    //[# subscribeToLocalActor("distancefilter").subscribeToLocalActor("realsonar") #] 
@@ -244,7 +244,7 @@ QActor basicrobot context ctxbasicrobot withobj robot using "uniborobots.robotSu
 	  			[# CurrentMove = payloadArg(0) #] 
 				run robot.move( payloadArg(0 ) )
 				updateResource [# "moveactivated(${payloadArg(0)})" #]
-				publish "unibodisi" -m info : info(done($CurrentMove))
+ 				publish "unibodisi" -m info : info(done($CurrentMove))
 			}
 		}
 	 }
@@ -351,19 +351,7 @@ QActor planexec context ctxbasicrobot withobj robot using "uniborobots.robotSupp
     	}
     }
     Goto nextMove if [# IsOwner #] else planrefused
-    /*
-    Transition t0 whenReply checkownerok -> execplan
-                  whenReply checkownerfailed -> planrefused
-    
-    
-	State execplan{
-		//printCurrentMessage color red
  
-	}  
-	Transition t0 
-		whenTime 100    -> nextMove
-		//whenEvent alarm -> planinterruptedalarm
-	*/
 	
 	State nextMove{ 
 		[# 
@@ -375,15 +363,7 @@ QActor planexec context ctxbasicrobot withobj robot using "uniborobots.robotSupp
 		   	Plan        = "empty"
 		   } 		   
 		#]
-/*		
-		//println("$name | CurMoveTodo= $CurMoveTodo remain:$Plan" ) 
-		forward planexec -m nextmove : nextmove($CurMoveTodo)
-	} 	 
-	Transition t0  whenEvent alarm   -> planinterruptedalarm
-		           whenMsg nextmove  -> doMove
-	
-	State doMove{
- */
+ 
  		//println("$name | domove $CurMoveTodo")    
  		if [# CurMoveTodo == "" #] { 
  			forward planexec -m nomoremove : nomoremove(end)
