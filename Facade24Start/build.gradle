@@ -66,5 +66,5 @@ jar {
 	}
 }
 application {
-	mainClass = 'main.java.facade24.Facade24Application'
+	mainClass = 'main.java.facade24.Facade24Application'  
 }

@@ -10,6 +10,7 @@ fun main() = runBlocking {
 	        "localhost", this, "basicrobot24.pl", "sysRules.pl", "ctxbasicrobot"
 	)
 	//JAN Facade
+	main.java.facade24.Facade24Application.main( arrayOf<String>() );
 	//JAN24 Display
 }
 

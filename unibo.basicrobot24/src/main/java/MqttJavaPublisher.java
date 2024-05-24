@@ -26,7 +26,7 @@ public class MqttJavaPublisher {
   			for( int i=1; i<4; i++) {
   				String msg = sonarevent.replace("D",(""+i*10) );
 	  			sendMessageMqtt(msg);
-	  			CommUtils.delay(2000);
+	  			CommUtils.delay(4000);
   			}
   			System.exit(0);
         }catch(Exception e){

@@ -25,7 +25,7 @@ public class WSHandler extends AbstractWebSocketHandler {
     private final Map<String, WebSocketSession> curSessions     = new HashMap<>();
     private ApplguiCore guiCore;
 
-    private static int namecounter = 1; //April24
+    private static int namecounter = 1;  
 
     //Injiection
     public void setGuiCore(ApplguiCore gui) {
@@ -60,7 +60,7 @@ public class WSHandler extends AbstractWebSocketHandler {
         CommUtils.outgreen("WSH | sendermockname: " + sendermockname) ;
         //Memorizzo la sessione del sendermockname
         curSessions.put(sendermockname,session);
-        guiCore.handleWsMsg( sendermockname, msg ); //gestisce dorequest e docmd e reply ad ask
+        guiCore.handleWsMsg( sendermockname,  msg ); //gestisce dorequest e docmd e reply ad ask
     }
 
     protected  void sendToOne(String msg) {
@@ -103,56 +103,17 @@ public class WSHandler extends AbstractWebSocketHandler {
         try {
             if( sessions.size() > 0 ){
                 for (WebSocketSession session : sessions) {
-                    session.sendMessage(new TextMessage(message));
+                    session.sendMessage(new TextMessage("WSH> "+message));
                     //CommUtils.outcyan("WSH | sent on current session " + session.getRemoteAddress());
                 }
             }
             else{
                 //CommUtils.outred("WSH | Sorry: no session yet ...");
             }
-            //qualcuno ha chiamato troppo presto
-            /*
-            new Thread() {
-                public void run() {
-                    try {
-                            while (sessions.size() == 0) {
-                                CommUtils.outcyan("WSH | waiting for session ... ");
-                                Thread.sleep(1500);
-                            }
-
-                            for (WebSocketSession session : sessions) {
-                                session.sendMessage(new TextMessage(message));
-                                //CommUtils.outcyan("WSH | sent on current session " + session.getRemoteAddress());
-                            }
-                            CommUtils.outcyan("WSH | session done ");
-                    } catch (Exception e) {
-                            e.printStackTrace();
-                    }
-                }
-            }.start();
-           */
+ 
         } catch (Exception e) {
                 CommUtils.outred("WSH | sendToAll " + message + " ERROR " + e.getMessage() );
         }
     }
-
-    /*
-    protected void sendToClient(String message, String requestId, Boolean requestComplete) {
-        System.out.println("WSH | Sending to client " + message);
-        WebSocketSession session = this.pendingRequests.get(requestId);
-        try {
-            session.sendMessage(new TextMessage(message));
-        } catch (Exception e) {
-            System.out.println("WSH | There was an error while sending the response " + message + " to " + session);
-        }
-        if (requestComplete) {
-            this.pendingRequests.remove(requestId);
-        }
-    }
-
-    protected String newRequest(WebSocketSession session) {
-        String requestId = "req" + session.getId().substring(session.getId().lastIndexOf('-') + 1);
-        pendingRequests.put(requestId, session);
-        return requestId;
-    }*/
+ 
 }

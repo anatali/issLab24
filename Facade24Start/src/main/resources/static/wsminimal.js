@@ -27,14 +27,15 @@ wsminimal.js
             setMessageToWindow(infoDisplay,"socket | Connected to " + addr);
         };
 
+//Sulla WS scrive WSHandler
         socket.onmessage = function (event) {
-            //alert(`Got Message: ${event.data}`);
-            msg = event.data;
+             msg = event.data;
             //alert(`Got Message: ${msg}`);
             console.log("ws-status:" + msg);
-            if( msg.includes("plan") ) setMessageToWindow(planexecDisplay,msg);
+            if( msg.includes("plan") ) addMessageToWindow(planexecDisplay,msg); //in ioutils
             //else if( msg.includes("RobotPos") ) setMessageToWindow(robotDisplay,msg);
-            else setMessageToWindow(robotDisplay,msg); //""+`${event.data}`*/
+            else //setMessageToWindow(robotDisplay,msg); //""+`${event.data}`*/
+            addToMessageArea( msg );
          };
     }//connect
 

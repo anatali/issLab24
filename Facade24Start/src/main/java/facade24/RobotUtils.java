@@ -101,7 +101,7 @@ public class RobotUtils {
             }
             else {
                 conn.forward( msg.toString() );
-                return "done "+  msg.toString();
+                return "WSH sendMsg "+  msg.toString();
             }
         } catch (Exception e) {
         	String error = "RobotUtils | sendMsg on:" + tcpconn + " ERROR:"+e.getMessage();

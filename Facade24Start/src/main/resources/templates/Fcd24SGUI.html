@@ -27,7 +27,7 @@
     <form action="setrobotip" method="post">
         <!-- the form-data is sent to the path specified in the action attribute -->
         <input type="text" size="10" id="configurespec" name="ipaddr" value="localhost">
-        <input type="submit" value="setrobotip">
+        <input type="submit" value="setbasicrobotip">
     </form>
  
     <table style="width:100%">
@@ -53,9 +53,10 @@
             <h4>MessageArea</h4>
         &nbsp;&nbsp;&nbsp;
     <div class="info">
-        <button type="button" onclick=clear_messageArea()>Clear</button>
-        <!-- <div class="display-info" id="messageArea"></div> -->
-        <textarea id="messageArea" name="messageArea" font="Arial" style="font-size:10pt" rows="15" cols="85"></textarea>
+        <button type="button" onclick=clearmessageArea()>Clear</button>
+         
+         <textarea id="messageArea" name="messageArea" 
+        	font="Arial" style="font-size:8pt" rows="10" cols="85"></textarea> 
     </div>
     </div> <!-- row -->
     </div> <!-- container -->
@@ -78,13 +79,8 @@
                 <span id="infoDisplay">...</span>
             </div>
          </div>
-      <!-- robotDisplay -->
-      <div class="card iss-bg-robotarea text-dark">
-          <div class="card-header px-1">Robot Display (Coap updated):</div>
-          <div class="card-content px-1">
-             <span id="robotDisplay" >...</span>
-          </div>
-      </div>
+       
+
 <script src="vendors/jquery/jquery.min.js"></script>
 <script src="sockjs.min.js"></script>
 <script src="ioutils.js"></script>

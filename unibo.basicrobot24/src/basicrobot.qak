@@ -694,9 +694,9 @@ QActor robotpos context ctxbasicrobot{
  
 } 	
   
-//Facade robotfacade port 8085 usingactor basicrobot inctx ctxbasicrobot  
-//                   appl "unibo.servicefacade24.Servicefacade24Application" 
-//                   UserLibs -f "robotfacade24-1.0-plain"  -f "robotfacade24-1.0"
+Facade robotfacade port 8085 usingactor basicrobot inctx ctxbasicrobot  
+                   appl "main.java.facade24.Facade24Application" 
+                   UserLibs -f "Facade24Start-1.0-plain"  -f "Facade24Start-1.0"
 
 
 /*

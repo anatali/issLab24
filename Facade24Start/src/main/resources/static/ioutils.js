@@ -2,11 +2,9 @@
 ioutils.js
 */
 
-    const infoDisplay     = document.getElementById("infoDisplay");
-    //const webcamip        = document.getElementById("webcamip");
-    const robotDisplay    = document.getElementById("robotDisplay");
-    const planxecDisplay  = document.getElementById("planxecDisplay");
-
+    const infoDisplay  = document.getElementById("infoDisplay");
+    const messageArea  = document.getElementById("messageArea");
+  
     function setMessageToWindow(outfield, message) {
          var output = message.replace("\n","<br/>")
          outfield.innerHTML = `<pre>${output}</pre>`
@@ -15,6 +13,14 @@ ioutils.js
     function addMessageToWindow(outfield, message) {
          var output = message.replace("\n","<br/>")
           outfield.innerHTML += `<div>${output}</div>`
+    }
+    function addToMessageArea( message ) {
+         //var output = message.replace("\n","<br/>")
+         messageArea.innerHTML += message + "\n"
+    }
+    
+    function clearmessageArea(  ) {
+      messageArea.innerHTML  = ""
     }
  
 //short-hand for $(document).ready(function() { ... });
@@ -25,7 +31,7 @@ $(function () {
     $( "#r" ).click(function() { callServerUsingAjax("r") });
     $( "#l" ).click(function() { callServerUsingAjax("l") });
     $( "#p" ).click(function() { callServerUsingAjax("p") });
-    $( "#z" ).click(function() { callDoPlanUsingAjax() });
+    //$( "#z" ).click(function() { callDoPlanUsingAjax() });
     //$( "#z" ).click(function() { alert( document.getElementById("platodo") ) });
 
 });

@@ -49,7 +49,7 @@ class Basicrobot ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 						delegate("setdirection", "robotpos") 
 						 robot.create(myself,"basicrobotConfig.json")  
 						 RobotType = robot.robotKind  
-						connectToMqttBroker( "wss://test.mosquitto.org:8081" )
+						connectToMqttBroker( "wss://test.mosquitto.org:8081", "brnat" )
 						CommUtils.outmagenta("basicrobot | CREATED  (and connected to mosquitto) ... ")
 						subscribe(  "unibodisi" ) //mqtt.subscribe(this,topic)
 						robot.move( "h"  )

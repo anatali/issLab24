@@ -25,7 +25,7 @@ public class ApplguiCore {
     //Chiamato da CoapObserver
     public void handleMsgFromActor(String msg, String requestId) {
         CommUtils.outcyan("AGC | hanldeMsgFromActor " + msg + " requestId=" + requestId) ;
-        updateMsg( msg );
+        updateMsg( "AGC "+msg );
     }
     public void handleReplyMsg( String msg) { //IApplMessage msg
         CommUtils.outcyan("AGC | handleReplyMsg " + msg  ) ;
