@@ -1,0 +1,59 @@
+ <!DOCTYPE html>
+<html>
+<meta charset = "utf-8" />
+<title>RobotCmdGuiWs</title>
+<body>
+<script src="https://cdn.jsdelivr.net/webjars/org.webjars/jquery/2.1.0/jquery.js"></script>
+<script language="javascript" type="text/javascript">
+const socket  = new WebSocket('ws://localhost:8085/socket');
+
+  socket.onopen = function () {
+   //console.log("socket connected on 8085/socket")
+   addMessageToWindow("socket connected on 8085/socket");
+   };
+
+  	socket.onmessage = function(evt) { console.log(evt.data); };
+
+	socket.addEventListener('message', event => {
+	  document.getElementById("display").innerHTML += event.data +"<br/>"
+	});
+
+    function doMove(move, time) {
+        const moveJson = '{"cmd":"'+ move + '", "time":'+time+'}'
+        console.log("doMove moveJson:" + moveJson);
+        if (socket && socket.bufferedAmount == 0) { socket.send(moveJson) }
+    }
+	
+
+
+$(function () {
+	$( "#lsocket" ).click(function() { doMove("cmd(l)", 300);    })
+	$( "#rsocket" ).click(function() { doMove("cmd(r)", 300);    })
+	$( "#wsocket" ).click(function() { doMove("cmd(w)", 350);  })
+	$( "#ssocket" ).click(function() { doMove("cmd(s)", 350);  })
+	$( "#hsocket" ).click(function() { doMove("cmd(h)", 100);         })
+});
+
+    function addMessageToWindow(message) {
+        messageWindow.innerHTML += `<div>${message}</div>`
+        //messageWindow.innerHTML = `<div>${message}</div>`
+    }
+</script>
+
+<h3>COMMAND-WS AREA</h3>
+
+ <button id="lsocket" >turnLeft</button>  &nbsp;&nbsp;   <button id="rsocket" >turnRight</button> 
+ &nbsp;&nbsp;  <button id="wsocket" >moveForward</button> &nbsp;&nbsp;  <button id="ssocket" >moveBackward</button>
+ &nbsp;&nbsp;  	<button id="hsocket" >halt</button>
+
+
+<hr/>
+<h3>DISPLAY AREA</h3>
+<div id = "display"></div>
+
+
+<script language="javascript" type="text/javascript">
+ const messageWindow   = document.getElementById("display");
+</script>
+</body>
+</html>

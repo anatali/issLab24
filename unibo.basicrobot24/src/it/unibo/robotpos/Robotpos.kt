@@ -57,10 +57,11 @@ class Robotpos ( name: String, scope: CoroutineScope, isconfined: Boolean=false 
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t015",targetState="getRoboSstate",cond=whenRequest("getrobotstate"))
-					transition(edgeName="t016",targetState="checkTheOwnerForMove",cond=whenRequest("moverobot"))
-					transition(edgeName="t017",targetState="checkTheOwnerForSet",cond=whenDispatch("setrobotstate"))
-					transition(edgeName="t018",targetState="checkTheOwnerForSetDir",cond=whenDispatch("setdirection"))
+					 transition(edgeName="t016",targetState="getRoboSstate",cond=whenRequest("getrobotstate"))
+					transition(edgeName="t017",targetState="checkTheOwnerForMove",cond=whenRequest("moverobot"))
+					transition(edgeName="t018",targetState="getEnvMap",cond=whenRequest("getenvmap"))
+					transition(edgeName="t019",targetState="checkTheOwnerForSet",cond=whenDispatch("setrobotstate"))
+					transition(edgeName="t020",targetState="checkTheOwnerForSetDir",cond=whenDispatch("setdirection"))
 				}	 
 				state("getRoboSstate") { //this:State
 					action { //it:State
@@ -68,6 +69,17 @@ class Robotpos ( name: String, scope: CoroutineScope, isconfined: Boolean=false 
 						    		val PY  = planner.getPosY()
 						    		val DIR = ""+planner.getDir()
 						answer("getrobotstate", "robotstate", "robotstate(pos($PX,$PY),$DIR)"   )  
+						//genTimer( actor, state )
+					}
+					//After Lenzi Aug2002
+					sysaction { //it:State
+					}	 	 
+					 transition( edgeName="goto",targetState="waitclientrequest", cond=doswitch() )
+				}	 
+				state("getEnvMap") { //this:State
+					action { //it:State
+						 val Maprep = planner.getMapOneLine()  
+						answer("getenvmap", "envmap", "envmap($Maprep)"   )  
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -103,8 +115,8 @@ class Robotpos ( name: String, scope: CoroutineScope, isconfined: Boolean=false 
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t019",targetState="planfordirok",cond=whenReply("doplandone"))
-					transition(edgeName="t020",targetState="fatalerror",cond=whenReply("doplanfailed"))
+					 transition(edgeName="t021",targetState="planfordirok",cond=whenReply("doplandone"))
+					transition(edgeName="t022",targetState="fatalerror",cond=whenReply("doplanfailed"))
 				}	 
 				state("planfordirok") { //this:State
 					action { //it:State
@@ -202,8 +214,8 @@ class Robotpos ( name: String, scope: CoroutineScope, isconfined: Boolean=false 
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t021",targetState="endok",cond=whenReply("doplandone"))
-					transition(edgeName="t022",targetState="endko",cond=whenReply("doplanfailed"))
+					 transition(edgeName="t023",targetState="endok",cond=whenReply("doplandone"))
+					transition(edgeName="t024",targetState="endko",cond=whenReply("doplanfailed"))
 				}	 
 				state("endok") { //this:State
 					action { //it:State

@@ -29,6 +29,8 @@ reply( moverobotdone, moverobotok(ARG) ).  %%for moverobot
 reply( moverobotfailed, moverobotfailed(PLANDONE,PLANTODO) ).  %%for moverobot
 request( getrobotstate, getrobotstate(ARG) ).
 reply( robotstate, robotstate(POS,DIR) ).  %%for getrobotstate
+request( getenvmap, getenvmap(X) ).
+reply( envmap, envmap(MAP) ).  %%for getenvmap
 %====================================================================================
 context(ctxbasicrobot, "localhost",  "TCP", "8020").
  qactor( engager, ctxbasicrobot, "it.unibo.engager.Engager").

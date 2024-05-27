@@ -9,7 +9,6 @@ System /* -trace -msglog  */ basicrobot24
 Dispatch cmd       	: cmd(MOVE)        
 Dispatch end       	: end(ARG)     
  
- 
 Request step       : step(TIME)	
 Reply stepdone     : stepdone(V)                 for step
 Reply stepfailed   : stepfailed(DURATION, CAUSE) for step
@@ -24,7 +23,7 @@ Reply doplandone    : doplandone( ARG )    for doplan
 Reply doplanfailed  : doplanfailed( ARG )  for doplan
 
 Dispatch setrobotstate: setpos(X,Y,D)
-//Dispatch setsteptime:setsteptime(T)
+
 
 Request engage        : engage(OWNER, STEPTIME)	
 Reply   engagedone    : engagedone(ARG)    for engage
@@ -51,6 +50,9 @@ Reply moverobotfailed:  moverobotfailed(PLANDONE, PLANTODO) for moverobot
 //Richieste di info 
 Request getrobotstate : getrobotstate(ARG)
 Reply robotstate      : robotstate(POS,DIR)  for getrobotstate
+
+Request getenvmap     : getenvmap(X)
+Reply   envmap        : envmap(MAP)  for getenvmap
 
 Context ctxbasicrobot ip [host="localhost" port=8020]  
 
@@ -180,16 +182,19 @@ QActor basicrobot context ctxbasicrobot withobj robot using "uniborobots.robotSu
  		delegate setrobotstate to robotpos
  		delegate moverobot to robotpos
  		delegate setdirection to robotpos
+ 		delegate getenvmap to robotpos
  		
+ 		subscribeTo basicrobot for sonardata
  		//[# unibo.comm22.utils.CommSystemConfig.tracing = false #]  //tracing at unibo.comm22 level
  		//delay 1000  //per inserzione in docker
 		//[# sysUtil.trace = true #]  //Trace the behavior of ActorBasic
  		//qrun uniborobots.robotSupport.create(myself,"basicrobotConfig.json")	 		
  		[# robot.create(myself,"basicrobotConfig.json") #]
  		[# RobotType = robot.robotKind #]  
-  		connectToMqttBroker "wss://test.mosquitto.org:8081" clientid "brnat"
- 		println("basicrobot | CREATED  (and connected to mosquitto) ... ") color magenta
-   		subscribe "unibodisi"
+//PROVE NQTT
+//  		connectToMqttBroker "wss://test.mosquitto.org:8081" clientid "brnat"
+// 		println("basicrobot | CREATED  (and connected to mosquitto) ... ") color magenta
+//   		subscribe "unibodisi"
  		/*   
  		println("basicrobot | STARTING ... ") color magenta
  		//realsonar creato da uniborobots.robotsupport come sonarHCSR04SupportActor
@@ -210,7 +215,7 @@ QActor basicrobot context ctxbasicrobot withobj robot using "uniborobots.robotSu
 
  	}
  	//Goto waitForRobot   
- 	Goto work
+ 	Goto work 
  
     State waitForRobot{
  		delay 5000 //per inserzione in docker: attesa per wenv  
@@ -232,9 +237,17 @@ QActor basicrobot context ctxbasicrobot withobj robot using "uniborobots.robotSu
 	} 
 	Transition t0   whenRequest  step      -> doStep		
 					whenMsg     cmd        -> execcmd
-				  	whenMsg     end        -> endwork			  
-	                //whenMsg     disengaged -> waitForOwner
-	                //whenMsg     engaged    -> work  //repetita ...
+				  	whenMsg     end        -> endwork		
+				  	whenEvent   sonardata  -> handlesonardata	  
+	
+	State handlesonardata{ 
+    	printCurrentMessage color yellow
+    	onMsg( sonardata : sonar(D)){
+    		updateResource [# "sonar(${payloadArg(0)})" #] //"moveactivated(${payloadArg(0)})"
+    	}   	
+    }
+    Goto work
+	
 	
 	State execcmd{ 
 		printCurrentMessage 
@@ -244,8 +257,8 @@ QActor basicrobot context ctxbasicrobot withobj robot using "uniborobots.robotSu
 	  			[# CurrentMove = payloadArg(0) #] 
 				run robot.move( payloadArg(0 ) )
 				updateResource [# "moveactivated(${payloadArg(0)})" #]
- 				publish "unibodisi" -m info : info(done($CurrentMove))
-			}
+ 				//publish "unibodisi" -m info : info(done($CurrentMove))
+			} 
 		}
 	 }
 	 Goto work   
@@ -326,8 +339,7 @@ QActor planexec context ctxbasicrobot withobj robot using "uniborobots.robotSupp
 		var IsOwner       = false
    	#]
 	State s0 initial{
-		subscribeTo engager for alarm
-        //[# StepTime = robot.readStepTime( )	#]		
+//		subscribeTo engager for alarm
 	}
 	Goto work
 
@@ -342,7 +354,7 @@ QActor planexec context ctxbasicrobot withobj robot using "uniborobots.robotSupp
     	onMsg( doplan : doplan(PLAN, STEPTIME)){
     		[# Plan       = payloadArg(0).replace("[","").replace("]","").replace(",","").replace(" ","")
 			   PlanOrig   = Plan
-			   StepTime   = payloadArg(1) 
+			   StepTime   = payloadArg(1)          //if int ...
     		   val Caller = currentMsg.msgSender() //payloadArg(1) 
     		   IsOwner    = OwnerMngr.checkOwner( Caller )
     		#]
@@ -525,9 +537,10 @@ QActor robotpos context ctxbasicrobot{
 		println("$name | waiting the client request...")
 	}              
 	Transition t0 whenRequest getrobotstate -> getRoboSstate
-				  whenRequest moverobot -> checkTheOwnerForMove //elabClientRequest
-				  whenMsg setrobotstate -> checkTheOwnerForSet  //setTheRobotState
-				  whenMsg setdirection  -> checkTheOwnerForSetDir  //setTheRobotState
+				  whenRequest moverobot -> checkTheOwnerForMove  
+				  whenRequest getenvmap -> getEnvMap
+				  whenMsg setrobotstate -> checkTheOwnerForSet   
+				  whenMsg setdirection  -> checkTheOwnerForSetDir   
 
     //Non fa check su owner: risponde a tutti
     State getRoboSstate{
@@ -539,6 +552,11 @@ QActor robotpos context ctxbasicrobot{
     }
     Goto waitclientrequest
     
+    State getEnvMap{
+    	[# val Maprep = planner.getMapOneLine() #]
+    	replyTo getenvmap with envmap : envmap($Maprep)
+    }
+    Goto waitclientrequest
     
     State checkTheOwnerForSetDir{
  		onMsg(setdirection : dir( D )){
@@ -548,13 +566,10 @@ QActor robotpos context ctxbasicrobot{
  			   
 			#]						 
 		}
-   		//request engager -m checkowner : checkowner($Caller)
+
     }
     Goto setTheRobotDirection if [# IsOwner #] else waitclientrequest
-    /*
-    Transition t0 whenReply checkownerok     -> setTheRobotDirection
-                  whenReply checkownerfailed -> waitclientrequest
-    */
+
     State setTheRobotDirection{
     	//println("setTheRobotDirection $D") color magenta
     	[# Plan = planner.setTheDirection(D) #]  //Solo nel planner ? Anche nel real world ...
@@ -627,17 +642,6 @@ QActor robotpos context ctxbasicrobot{
    			//request engager -m checkowner : checkowner($Caller)
     }
     Goto planTheRobotmoves if [# IsOwner #] else moveRefused    
-    /*
-    Transition t0 whenReply checkownerok     -> planTheRobotmoves //elabClientRequest
-                  whenReply checkownerfailed -> moveRefused
- 	*/
-	
-	/*
-	State elabClientRequest{
-		printCurrentMessage 
-	}
-	Goto planTheRobotmoves
-	*/
 	
 	/* 
 	 * Uso il planner per gestire il robot
@@ -684,7 +688,7 @@ QActor robotpos context ctxbasicrobot{
 		}
 	}
 	Goto waitclientrequest
-	
+	 
  	//Added June6
 	State moveRefused{
 		//println("moveRefused ") color red
@@ -693,10 +697,15 @@ QActor robotpos context ctxbasicrobot{
 	Goto waitclientrequest
  
 } 	
+
   
+//Facade robotfacadestart port 8085 usingactor basicrobot inctx ctxbasicrobot  
+//                   appl "main.java.facade24.Facade24Application" 
+//                   UserLibs -f "Facade24Start-1.0-plain"  -f "Facade24Start-1.0"
+
 Facade robotfacade port 8085 usingactor basicrobot inctx ctxbasicrobot  
-                   appl "main.java.facade24.Facade24Application" 
-                   UserLibs -f "Facade24Start-1.0-plain"  -f "Facade24Start-1.0"
+                   appl "main.java.robotfacade24.Robotfacade24Application" 
+                   UserLibs -f "robotfacade24-1.0-plain"  -f "robotfacade24-1.0"
 
 
 /*
@@ -796,4 +805,24 @@ QActor basicrobotusage context ctxbasicrobot{
 		forward basicrobot -m disengage :  disengage($MyName)
 	}	
 }
- */  
+ 
+ 
+ QActor sonarobs context ctxbasicrobot{
+	State s0 initial{
+        println("$name STARTS ") 
+    }
+    Goto work
+    
+    State work{
+    	
+    }
+    Transition t0 whenEvent sonardata -> handlesonardata
+    
+    State handlesonardata{
+    	printCurrentMessage color yellow
+    }
+    Goto work
+	
+}
+*/
+ 

@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>RobotFacade24 &#8212; iss24 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Studenti2024" href="Studenti2024.html" />
+    <link rel="prev" title="Facade24Start" href="Facade24Start.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="Studenti2024.html" title="Studenti2024"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Facade24Start.html" title="Facade24Start"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">RobotFacade24</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="id1">
+<h1>RobotFacade24<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h1>
+<p><span class="slide3">progetto RobotFacade24</span> (<code class="docutils literal notranslate"><span class="pre">RbtFcd24</span></code>)</p>
+<section id="rbtfcd24-il-progetto">
+<h2>RbtFcd24: il progetto<a class="headerlink" href="#rbtfcd24-il-progetto" title="Permalink to this heading">¶</a></h2>
+<p>Lo scopo di questo lavoro è usare <a class="reference external" href="https://spring.io/projects/spring-boot">SpringBoot</a> -&gt; per costruire una applicazione Web (<code class="docutils literal notranslate"><span class="pre">RbtFcd24</span></code>) che fornisca una console di comando
+per  il  <a class="reference internal" href="BasicRobot24.html#basicrobot24"><span class="std std-ref">BasicRobot24</span></a>.</p>
+<p>Il progetto <a class="reference external" href="../../../../../robotfacade24">robotfacade24</a> è una evoluzione di <a class="reference internal" href="Facade24Start.html#facade24start"><span class="std std-ref">Facade24Start</span></a>.</p>
+<p>Il lettore è invitato a</p>
+<ol class="arabic simple">
+<li><p>illustrare come ritiene che siano aggiornate le varie parti della pagina con riferimento
+a  quanto già introddto in <a class="reference internal" href="Facade24Start.html#la-parte-dinamica"><span class="std std-ref">La parte dinamica</span></a> e in <a class="reference internal" href="Facade24Start.html#fcd24s-interazioni"><span class="std std-ref">Fcd24S: interazioni</span></a>.</p></li>
+<li><p>prefigurare il modo con cui sono state impostate le azioni relative ai pulsanti <code class="docutils literal notranslate"><span class="pre">envmap</span></code> e <code class="docutils literal notranslate"><span class="pre">robotpos</span></code></p></li>
+<li><p>prefigurare il modo in cui i dati di WEnv relativi al sonar vengono riportati nella ssezione  <code class="docutils literal notranslate"><span class="pre">Sonar</span> <span class="pre">lastval</span></code></p></li>
+</ol>
+<section id="rbtfcd24-la-gui-come-pagina-html">
+<h3>RbtFcd24: la GUI come pagina HTML<a class="headerlink" href="#rbtfcd24-la-gui-come-pagina-html" title="Permalink to this heading">¶</a></h3>
+<blockquote>
+<div><a class="reference internal image-reference" href="_images/basicrobot24WebConsole.PNG"><img alt="_images/basicrobot24WebConsole.PNG" class="align-center" src="_images/basicrobot24WebConsole.PNG" style="width: 80%;" /></a>
+</div></blockquote>
+</section>
+</section>
+<section id="rbtfcd24-prima-attivazione-ed-uso">
+<h2>RbtFcd24: prima attivazione ed uso<a class="headerlink" href="#rbtfcd24-prima-attivazione-ed-uso" title="Permalink to this heading">¶</a></h2>
+<section id="attivazione-del-virtualrobot">
+<h3>1) Attivazione del virtualrobot<a class="headerlink" href="#attivazione-del-virtualrobot" title="Permalink to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p>Posizionarsi sulla directory <span class="high">unibo.basicrobot24</span></p></li>
+<li><p>Attivare il VirtualRobot con il comando <span class="high">docker-compose -f virtualRobot23.yaml up</span></p></li>
+</ol>
+</section>
+<section id="attivazione-del-basicrobot24">
+<h3>2) Attivazione del basicrobot24<a class="headerlink" href="#attivazione-del-basicrobot24" title="Permalink to this heading">¶</a></h3>
+<p><span class="slide2">Premesse:</span></p>
+<ol class="arabic simple">
+<li><p>verificare che nel modello <a class="reference external" href="../../../../../unibo.basicrobot24/src/basicrobot.qak">basicrobotqak</a> sia commentata la specifica</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Facade</span> <span class="n">robotfacade</span> <span class="o">...</span>
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li><p>verificare che il file <a class="reference external" href="../../../../../unibo.basicrobot24/basicrobotConfig.json">basicrobotConfig.json</a> abbia il seguente contenuto:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;virtual&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="s2">&quot;8090&quot;</span><span class="p">,</span> <span class="s2">&quot;iprobot&quot;</span><span class="p">:</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="s2">&quot;commtrace&quot;</span><span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Successivamente:</p>
+<ol class="arabic simple">
+<li><p>Posizionarsi sulla directory <span class="high">unibo.basicrobot24</span></p></li>
+<li><p>Attivare il basic robot con il comando <span class="high">gradlew run</span></p></li>
+</ol>
+</section>
+<section id="attivazione-della-facade">
+<h3>3) Attivazione della Facade<a class="headerlink" href="#attivazione-della-facade" title="Permalink to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p>Posizionarsi sulla directory <span class="high">robotfacade24</span></p></li>
+<li><p>Attivare la Facade con il comando <span class="high">gradlew run</span></p></li>
+<li><p>Usare la Facade mediante i pulsanti</p></li>
+</ol>
+</section>
+</section>
+<section id="attivazione-intergrata-della-facade">
+<h2>Attivazione intergrata della Facade<a class="headerlink" href="#attivazione-intergrata-della-facade" title="Permalink to this heading">¶</a></h2>
+<p>Premessa: introdurre nel modello <a class="reference external" href="../../../../../unibo.basicrobot24/src/basicrobot.qak">basicrobotqak</a> la specifica</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Facade</span> <span class="n">robotfacade</span> <span class="n">port</span> <span class="mi">8085</span> <span class="n">usingactor</span> <span class="n">basicrobot</span> <span class="n">inctx</span> <span class="n">ctxbasicrobot</span>
+               <span class="n">appl</span> <span class="s2">&quot;main.java.robotfacade24.Robotfacade24Application&quot;</span>
+               <span class="n">UserLibs</span> <span class="o">-</span><span class="n">f</span> <span class="s2">&quot;robotfacade24-1.0-plain&quot;</span>  <span class="o">-</span><span class="n">f</span> <span class="s2">&quot;robotfacade24-1.0&quot;</span>
+</pre></div>
+</div>
+<p>Assicurarsi di <span class="slide2">avere copiato le librerie</span> <code class="docutils literal notranslate"><span class="pre">robotfacade24-1.0-plain</span></code> e <code class="docutils literal notranslate"><span class="pre">robotfacade24-1.0</span></code>
+che vengono automaticamente refenziate nel file <a class="reference external" href="../../../../../unibo.basicrobot24/build2024.gradle">build2024.gradle</a> (sezione <span class="slide3">USER libs for facades</span>)
+del progetto <a class="reference external" href="../../../../../unibo.basicrobot24">basicrobot24</a>.</p>
+</section>
+<section id="rbtfcd24-una-applicazione">
+<h2>RbtFcd24: una applicazione<a class="headerlink" href="#rbtfcd24-una-applicazione" title="Permalink to this heading">¶</a></h2>
+<p><span class="slide3">progetto boundaryBasicrobot24</span></p>
+<p>Realizzare i <strong>primi 2 requisiti</strong> del progetto <a class="reference internal" href="BoundaryWalk24.html#boundarywalk24"><span class="std std-ref">BoundaryWalk24</span></a>  usando
+il <a class="reference internal" href="BasicRobot24.html#basicrobot24"><span class="std std-ref">BasicRobot24</span></a> e osservare le informazioni sulla <a class="reference internal" href="#rbtfcd24-la-gui-come-pagina-html"><span class="std std-ref">FacadeGui</span></a></p>
+</section>
+<section id="rbtfcd24-creare-una-immagine-docker">
+<h2>RbtFcd24: creare una immagine Docker<a class="headerlink" href="#rbtfcd24-creare-una-immagine-docker" title="Permalink to this heading">¶</a></h2>
+<p><span class="slide2">Premessa:</span></p>
+<ol class="arabic simple">
+<li><p>verificare che il file <a class="reference external" href="../../../../../unibo.basicrobot24/basicrobotConfig.json">basicrobotConfig.json</a> abbia il seguente contenuto:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;virtual&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="s2">&quot;8090&quot;</span><span class="p">,</span> <span class="s2">&quot;iprobot&quot;</span><span class="p">:</span><span class="s2">&quot;IPCOMPUTER&quot;</span><span class="p">,</span> <span class="s2">&quot;commtrace&quot;</span><span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+<ol class="arabic">
+<li><p>Consultare ed eseguire quanto riportato nel file <a class="reference external" href="../../../../../unibo.basicrobot24/Dockerfile">Dockerfile</a> del progetto.</p></li>
+<li><p>Eseguire l’immagine</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">--</span><span class="n">rm</span> <span class="o">--</span><span class="n">name</span> <span class="n">basicrobot24</span> <span class="o">-</span><span class="n">p8020</span><span class="p">:</span><span class="mi">8020</span><span class="o">/</span><span class="n">tcp</span> <span class="o">-</span><span class="n">p8020</span><span class="p">:</span><span class="mi">8020</span><span class="o">/</span><span class="n">udp</span> <span class="o">-</span><span class="n">p8085</span><span class="p">:</span><span class="mi">8085</span><span class="o">/</span><span class="n">tcp</span> <span class="o">--</span><span class="n">privileged</span> <span class="n">basicrobot24</span><span class="p">:</span><span class="mf">1.0</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="rbtfcd24-flie-yaml">
+<h2>RbtFcd24: flie yaml<a class="headerlink" href="#rbtfcd24-flie-yaml" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic">
+<li><p>Consultare il file yaml: <a class="reference external" href="../../../../../unibo.basicrobot24/webbasicrobot24.yaml">webbasicrobot24.yaml</a></p></li>
+<li><p>Eseguire</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">--</span><span class="n">rm</span> <span class="o">--</span><span class="n">name</span> <span class="n">basicrobot24</span> <span class="o">-</span><span class="n">p8020</span><span class="p">:</span><span class="mi">8020</span><span class="o">/</span><span class="n">tcp</span> <span class="o">-</span><span class="n">p8020</span><span class="p">:</span><span class="mi">8020</span><span class="o">/</span><span class="n">udp</span> <span class="o">-</span><span class="n">p8085</span><span class="p">:</span><span class="mi">8085</span><span class="o">/</span><span class="n">tcp</span> <span class="o">--</span><span class="n">privileged</span> <span class="n">basicrobot24</span><span class="p">:</span><span class="mf">1.0</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">RobotFacade24</a><ul>
+<li><a class="reference internal" href="#rbtfcd24-il-progetto">RbtFcd24: il progetto</a><ul>
+<li><a class="reference internal" href="#rbtfcd24-la-gui-come-pagina-html">RbtFcd24: la GUI come pagina HTML</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#rbtfcd24-prima-attivazione-ed-uso">RbtFcd24: prima attivazione ed uso</a><ul>
+<li><a class="reference internal" href="#attivazione-del-virtualrobot">1) Attivazione del virtualrobot</a></li>
+<li><a class="reference internal" href="#attivazione-del-basicrobot24">2) Attivazione del basicrobot24</a></li>
+<li><a class="reference internal" href="#attivazione-della-facade">3) Attivazione della Facade</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#attivazione-intergrata-della-facade">Attivazione intergrata della Facade</a></li>
+<li><a class="reference internal" href="#rbtfcd24-una-applicazione">RbtFcd24: una applicazione</a></li>
+<li><a class="reference internal" href="#rbtfcd24-creare-una-immagine-docker">RbtFcd24: creare una immagine Docker</a></li>
+<li><a class="reference internal" href="#rbtfcd24-flie-yaml">RbtFcd24: flie yaml</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="Facade24Start.html"
+                          title="previous chapter">Facade24Start</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="Studenti2024.html"
+                          title="next chapter">Studenti2024</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/RobotFacade24.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="Studenti2024.html" title="Studenti2024"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Facade24Start.html" title="Facade24Start"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">RobotFacade24</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>

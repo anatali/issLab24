@@ -31,7 +31,6 @@ class Planexec ( name: String, scope: CoroutineScope, isconfined: Boolean=false 
 		return { //this:ActionBasciFsm
 				state("s0") { //this:State
 					action { //it:State
-						subscribeToLocalActor("engager") 
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -46,7 +45,7 @@ class Planexec ( name: String, scope: CoroutineScope, isconfined: Boolean=false 
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t06",targetState="checkTheOwner",cond=whenRequest("doplan"))
+					 transition(edgeName="t07",targetState="checkTheOwner",cond=whenRequest("doplan"))
 				}	 
 				state("checkTheOwner") { //this:State
 					action { //it:State
@@ -54,7 +53,7 @@ class Planexec ( name: String, scope: CoroutineScope, isconfined: Boolean=false 
 						                        currentMsg.msgContent()) ) { //set msgArgList
 								 Plan       = payloadArg(0).replace("[","").replace("]","").replace(",","").replace(" ","")
 											   PlanOrig   = Plan
-											   StepTime   = payloadArg(1) 
+											   StepTime   = payloadArg(1)          //if int ...
 								    		   val Caller = currentMsg.msgSender() //payloadArg(1) 
 								    		   IsOwner    = OwnerMngr.checkOwner( Caller )
 						}
@@ -96,11 +95,11 @@ class Planexec ( name: String, scope: CoroutineScope, isconfined: Boolean=false 
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t07",targetState="planinterruptedobstacle",cond=whenReply("stepfailed"))
-					transition(edgeName="t08",targetState="planinterruptedalarm",cond=whenEvent("alarm"))
-					transition(edgeName="t09",targetState="planend",cond=whenDispatch("nomoremove"))
-					transition(edgeName="t010",targetState="nextMove",cond=whenDispatch("nextmove"))
-					transition(edgeName="t011",targetState="nextMove",cond=whenReply("stepdone"))
+					 transition(edgeName="t08",targetState="planinterruptedobstacle",cond=whenReply("stepfailed"))
+					transition(edgeName="t09",targetState="planinterruptedalarm",cond=whenEvent("alarm"))
+					transition(edgeName="t010",targetState="planend",cond=whenDispatch("nomoremove"))
+					transition(edgeName="t011",targetState="nextMove",cond=whenDispatch("nextmove"))
+					transition(edgeName="t012",targetState="nextMove",cond=whenReply("stepdone"))
 				}	 
 				state("planend") { //this:State
 					action { //it:State
@@ -147,9 +146,9 @@ class Planexec ( name: String, scope: CoroutineScope, isconfined: Boolean=false 
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t012",targetState="nonextmovesincealarm",cond=whenDispatch("nextmove"))
-					transition(edgeName="t013",targetState="nonextmovesincealarm",cond=whenReply("stepdone"))
-					transition(edgeName="t014",targetState="planinterruptedobstacle",cond=whenReply("stepfailed"))
+					 transition(edgeName="t013",targetState="nonextmovesincealarm",cond=whenDispatch("nextmove"))
+					transition(edgeName="t014",targetState="nonextmovesincealarm",cond=whenReply("stepdone"))
+					transition(edgeName="t015",targetState="planinterruptedobstacle",cond=whenReply("stepfailed"))
 				}	 
 				state("nonextmovesincealarm") { //this:State
 					action { //it:State

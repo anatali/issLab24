@@ -124,8 +124,8 @@ dependencies {
 
     
     //USER libs for facades
-    implementation name: 'Facade24Start-1.0-plain'
-    implementation name: 'Facade24Start-1.0'
+    implementation name: 'robotfacade24-1.0-plain'
+    implementation name: 'robotfacade24-1.0'
     
 	/* Librerie spring per il supporto a facade ***************************** */
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'

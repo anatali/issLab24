@@ -115,8 +115,7 @@ public class VrobotHLMovesActors23 extends ApplAbstractObserver implements IVrob
     public void update(String info) {
          try {
             elapsed = getDuration();
-            //if( tracing )
-                
+            //if( tracing )               
                 CommUtils.outcyan(
                     "     VrobotHLMovesActors23 | update:" + info
                             + " elapsed=" + elapsed + " doingStep=" + doingStep
@@ -133,11 +132,12 @@ public class VrobotHLMovesActors23 extends ApplAbstractObserver implements IVrob
                 return;
             }
             if (jsonObj.get("sonarName") != null) {
-                long d = (long) jsonObj.get("distance") ;
+                long d = -(long) jsonObj.get("distance") ;
                 IApplMessage sonarEvent = CommUtils.buildEvent(
-                        "vrhlsprt","sonardata","'"+"sonar(" +d + " )"+"'");
+                        "vrhlsprt","sonardata", "sonar(" + d + ")" );
                 //Imviare un msg ad owner perchè generi un evento a favore di sonarobs/engager
-                MsgUtil.emitLocalEvent(sonarEvent,owner,null);  //percepito da sonarobs/engager
+                CommUtils.outyellow("     VrobotHLMovesActors23 | emit " + sonarEvent + " " + owner.getMyName() );
+                MsgUtil.emitLocalStreamEvent(sonarEvent, owner, null); //.emitLocalEvent(sonarEvent,owner,null);  //percepito da sonarobs/engager
                 return;
             }
             if (jsonObj.get("collision") != null) {

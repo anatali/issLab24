@@ -31,8 +31,9 @@ with Diagram('basicrobot24Arch', show=False, outformat='png', graph_attr=graphat
           planexec=Custom('planexec','./qakicons/symActorWithobjSmall.png')
           robotpos=Custom('robotpos','./qakicons/symActorSmall.png')
      robotfacade=Custom('robotfacade','./qakicons/server.png')
-     engager >> Edge( label='alarm', **eventedgeattr, decorate='true', fontcolor='red') >> planexec
-     basicrobot >> Edge(color='magenta', style='solid', decorate='true', label='<getrobotstate<font color="darkgreen"> robotstate</font> &nbsp; moverobot<font color="darkgreen"> moverobotdone moverobotfailed</font> &nbsp; >',  fontcolor='magenta') >> robotpos
+     basicrobot >> Edge( label='sonardata', **eventedgeattr, decorate='true', fontcolor='red') >> basicrobot
+     sys >> Edge( label='alarm', **evattr, decorate='true', fontcolor='darkgreen') >> planexec
+     basicrobot >> Edge(color='magenta', style='solid', decorate='true', label='<getrobotstate<font color="darkgreen"> robotstate</font> &nbsp; moverobot<font color="darkgreen"> moverobotdone moverobotfailed</font> &nbsp; getenvmap<font color="darkgreen"> envmap</font> &nbsp; >',  fontcolor='magenta') >> robotpos
      basicrobot >> Edge(color='magenta', style='solid', decorate='true', label='<engage<font color="darkgreen"> engagedone engagerefused</font> &nbsp; >',  fontcolor='magenta') >> engager
      robotpos >> Edge(color='magenta', style='solid', decorate='true', label='<doplan<font color="darkgreen"> doplandone doplanfailed</font> &nbsp; >',  fontcolor='magenta') >> planexec
      planexec >> Edge(color='magenta', style='solid', decorate='true', label='<step<font color="darkgreen"> stepdone stepfailed</font> &nbsp; >',  fontcolor='magenta') >> basicrobot
