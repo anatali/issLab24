@@ -17,7 +17,7 @@
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Studenti2024" href="Studenti2024.html" />
+    <link rel="next" title="RobotFacade24" href="RobotFacade24.html" />
     <link rel="prev" title="BasicRobot24" href="BasicRobot24.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -27,7 +27,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="Studenti2024.html" title="Studenti2024"
+          <a href="RobotFacade24.html" title="RobotFacade24"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="BasicRobot24.html" title="BasicRobot24"
@@ -61,9 +61,9 @@ il sistema <a class="reference internal" href="QakService24Init.html#qakservice2
 <h2>La parte statica<a class="headerlink" href="#la-parte-statica" title="Permalink to this heading">¶</a></h2>
 <p>Anticipiamo qui che per la configurazione della pagina HTML:</p>
 <ol class="arabic simple">
-<li><p>useremo   <a class="reference external" href="https://www.w3schools.com/bootstrap5/">Bootstrap5</a>, come indicato in <a class="reference internal" href="Facade24StartWeb.html#usiamo-bootstrap5"><span class="std std-ref">Usiamo Bootstrap5</span></a></p></li>
-<li><p>useramo gli script (da noi deifniti) <a class="reference internal" href="#ioutils-js"><span class="std std-ref">ioutils.js</span></a> e  <a class="reference internal" href="Facade24StartWeb.html#wsminimal-js-in-webrobo22"><span class="std std-ref">wsminimal.js</span></a>
-egli <a class="reference internal" href="Facade24StartWeb.html#stili-custom-issspec-css"><span class="std std-ref">Stili custom: issSpec.css</span></a></p></li>
+<li><p>useremo   <a class="reference external" href="https://www.w3schools.com/bootstrap5/">Bootstrap5</a>, come indicato in <a class="reference internal" href="RobotPosWeb.html#usiamo-bootstrap5"><span class="std std-ref">Usiamo Bootstrap5</span></a></p></li>
+<li><p>useramo gli script (da noi deifniti) <a class="reference internal" href="RobotPosWeb.html#ioutils-js"><span class="std std-ref">ioutils.js</span></a> e  <span class="xref std std-ref">wsminimal.js</span>
+egli <a class="reference internal" href="RobotPosWeb.html#stili-custom-issspec-css"><span class="std std-ref">Stili custom: issSpec.css</span></a></p></li>
 </ol>
 </section>
 <section id="la-parte-dinamica">
@@ -93,7 +93,7 @@ Tuttavia, notiamo che:</p>
 che, in quetsa sede,  <span class="slide2">potrà essere copiato</span> in quanto già opportunamente configurato con dipendenze
 a (vecchie) versioni di SpringBoot, allineate con le nostre esigenze.</p>
 <ul class="simple">
-<li><p>Per i <a class="reference external" href="https://mvnrepository.com/artifact/org.webjars">WebJars</a> si veda <a class="reference internal" href="SpringBootIntro.html#bootstrap-e-webjars"><span class="std std-ref">Bootstrap  e webJars</span></a>.</p></li>
+<li><p>Per i <a class="reference external" href="https://mvnrepository.com/artifact/org.webjars">WebJars</a> si veda <a class="reference internal" href="SpringBootWebSocket.html#bootstrap-e-webjars"><span class="std std-ref">Bootstrap  e webJars</span></a>.</p></li>
 </ul>
 <section id="enable-springboot-live-devtools">
 <h3>Enable SpringBoot live DevTools<a class="headerlink" href="#enable-springboot-live-devtools" title="Permalink to this heading">¶</a></h3>
@@ -182,7 +182,7 @@ il file <a class="reference internal" href="#facadeconfig-json"><span class="std
 <h3>Fcd24S: funzionamento<a class="headerlink" href="#fcd24s-funzionamento" title="Permalink to this heading">¶</a></h3>
 <ol class="arabic simple">
 <li><p>Un client (diciamo <strong>clientMaster</strong>)  esegue <a class="reference external" href="http://localhost:8085">http://localhost:8085</a>. La pagina può essere aperta anche da altri nodi.</p></li>
-<li><p><a class="reference internal" href="#facadecontroller"><span class="std std-ref">FacadeController</span></a> restituisce pagina HTML che include gli script <a class="reference internal" href="#ioutils-js"><span class="std std-ref">ioutils.js</span></a> e <a class="reference internal" href="#wsminimal-js"><span class="std std-ref">wsminimal.js</span></a></p></li>
+<li><p><a class="reference internal" href="#facadecontroller"><span class="std std-ref">FacadeController</span></a> restituisce pagina HTML che include gli script <a class="reference internal" href="RobotPosWeb.html#ioutils-js"><span class="std std-ref">ioutils.js</span></a> e <a class="reference internal" href="#wsminimal-js"><span class="std std-ref">wsminimal.js</span></a></p></li>
 <li><p>il <strong>clientMaster</strong> preme  uno dei pulsanti presentati dalla GUI per inviare un comando (dispatch) o una richiesta (request)
 all’ppliazione qak</p></li>
 <li><p>il server esegue <code class="docutils literal notranslate"><span class="pre">handleTextMessage</span></code>  di <a class="reference internal" href="#wshandler"><span class="std std-ref">WSHandler</span></a> che chiama <code class="docutils literal notranslate"><span class="pre">handleWsMsg</span></code> di <a class="reference internal" href="#applguicore"><span class="std std-ref">ApplguiCore</span></a>
@@ -193,7 +193,7 @@ la risposta</p></li>
 <code class="docutils literal notranslate"><span class="pre">handleReplyMsg</span></code> di <a class="reference internal" href="#applguicore"><span class="std std-ref">ApplguiCore</span></a> che gestisce la risposta chimando  <code class="docutils literal notranslate"><span class="pre">sendToAll(..)</span></code> di <a class="reference internal" href="#actoroutin"><span class="std std-ref">ActorOutIn</span></a>
 che chiama   <code class="docutils literal notranslate"><span class="pre">sendToAll(..)</span></code> di <a class="reference internal" href="#wshandler"><span class="std std-ref">WSHandler</span></a> per aggiornare tutte le pagine connesse,
 tra cui quella del <strong>clientMaster</strong>.</p></li>
-<li><p><a class="reference internal" href="#ioutils-js"><span class="std std-ref">ioutils.js</span></a> della pagina HTML di ogni client esegue <code class="docutils literal notranslate"><span class="pre">socket.onmessage</span></code> e quindi visualizza il messaggio
+<li><p><a class="reference internal" href="RobotPosWeb.html#ioutils-js"><span class="std std-ref">ioutils.js</span></a> della pagina HTML di ogni client esegue <code class="docutils literal notranslate"><span class="pre">socket.onmessage</span></code> e quindi visualizza il messaggio
 ricevuto via websocket nell’area di output.</p></li>
 </ol>
 </section>
@@ -467,8 +467,8 @@ ed attivare il basic robot con il comando <span class="high">gradlew run</span> 
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="Studenti2024.html"
-                          title="next chapter">Studenti2024</a></p>
+    <p class="topless"><a href="RobotFacade24.html"
+                          title="next chapter">RobotFacade24</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -498,7 +498,7 @@ ed attivare il basic robot con il comando <span class="high">gradlew run</span> 
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="Studenti2024.html" title="Studenti2024"
+          <a href="RobotFacade24.html" title="RobotFacade24"
              >next</a> |</li>
         <li class="right" >
           <a href="BasicRobot24.html" title="BasicRobot24"
