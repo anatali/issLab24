@@ -55,7 +55,7 @@ per  il  <a class="reference internal" href="BasicRobot24.html#basicrobot24"><sp
 <li><p>illustrare come ritiene che siano aggiornate le varie parti della pagina con riferimento
 a  quanto già introddto in <a class="reference internal" href="Facade24Start.html#la-parte-dinamica"><span class="std std-ref">La parte dinamica</span></a> e in <a class="reference internal" href="Facade24Start.html#fcd24s-interazioni"><span class="std std-ref">Fcd24S: interazioni</span></a>.</p></li>
 <li><p>prefigurare il modo con cui sono state impostate le azioni relative ai pulsanti <code class="docutils literal notranslate"><span class="pre">envmap</span></code> e <code class="docutils literal notranslate"><span class="pre">robotpos</span></code></p></li>
-<li><p>prefigurare il modo in cui i dati di WEnv relativi al sonar vengono riportati nella ssezione  <code class="docutils literal notranslate"><span class="pre">Sonar</span> <span class="pre">lastval</span></code></p></li>
+<li><p>prefigurare il modo in cui i dati di WEnv relativi al sonar vengono riportati nella sezione  <code class="docutils literal notranslate"><span class="pre">Sonar</span> <span class="pre">lastval</span></code></p></li>
 </ol>
 <section id="rbtfcd24-la-gui-come-pagina-html">
 <h3>RbtFcd24: la GUI come pagina HTML<a class="headerlink" href="#rbtfcd24-la-gui-come-pagina-html" title="Permalink to this heading">¶</a></h3>
@@ -124,13 +124,12 @@ il <a class="reference internal" href="BasicRobot24.html#basicrobot24"><span cla
 <section id="rbtfcd24-creare-una-immagine-docker">
 <h2>RbtFcd24: creare una immagine Docker<a class="headerlink" href="#rbtfcd24-creare-una-immagine-docker" title="Permalink to this heading">¶</a></h2>
 <p><span class="slide2">Premessa:</span></p>
-<ol class="arabic simple">
-<li><p>verificare che il file <a class="reference external" href="../../../../../unibo.basicrobot24/basicrobotConfig.json">basicrobotConfig.json</a> abbia il seguente contenuto:</p></li>
-</ol>
+<ol class="arabic">
+<li><p>verificare che il file <a class="reference external" href="../../../../../unibo.basicrobot24/basicrobotConfig.json">basicrobotConfig.json</a> abbia il seguente contenuto:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;virtual&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="s2">&quot;8090&quot;</span><span class="p">,</span> <span class="s2">&quot;iprobot&quot;</span><span class="p">:</span><span class="s2">&quot;IPCOMPUTER&quot;</span><span class="p">,</span> <span class="s2">&quot;commtrace&quot;</span><span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">}</span>
 </pre></div>
 </div>
-<ol class="arabic">
+</li>
 <li><p>Consultare ed eseguire quanto riportato nel file <a class="reference external" href="../../../../../unibo.basicrobot24/Dockerfile">Dockerfile</a> del progetto.</p></li>
 <li><p>Eseguire l’immagine</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">--</span><span class="n">rm</span> <span class="o">--</span><span class="n">name</span> <span class="n">basicrobot24</span> <span class="o">-</span><span class="n">p8020</span><span class="p">:</span><span class="mi">8020</span><span class="o">/</span><span class="n">tcp</span> <span class="o">-</span><span class="n">p8020</span><span class="p">:</span><span class="mi">8020</span><span class="o">/</span><span class="n">udp</span> <span class="o">-</span><span class="n">p8085</span><span class="p">:</span><span class="mi">8085</span><span class="o">/</span><span class="n">tcp</span> <span class="o">--</span><span class="n">privileged</span> <span class="n">basicrobot24</span><span class="p">:</span><span class="mf">1.0</span>
@@ -142,6 +141,12 @@ il <a class="reference internal" href="BasicRobot24.html#basicrobot24"><span cla
 <section id="rbtfcd24-flie-yaml">
 <h2>RbtFcd24: flie yaml<a class="headerlink" href="#rbtfcd24-flie-yaml" title="Permalink to this heading">¶</a></h2>
 <ol class="arabic">
+<li><p>verificare che il file <a class="reference external" href="../../../../../unibo.basicrobot24/basicrobotConfig.json">basicrobotConfig.json</a> abbia il seguente contenuto:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;virtual&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="s2">&quot;8090&quot;</span><span class="p">,</span> <span class="s2">&quot;iprobot&quot;</span><span class="p">:</span><span class="s2">&quot;wenv&quot;</span><span class="p">,</span> <span class="s2">&quot;commtrace&quot;</span><span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>Creare l’immagine come riportato in <a class="reference internal" href="#rbtfcd24-creare-una-immagine-docker"><span class="std std-ref">RbtFcd24: creare una immagine Docker</span></a></p></li>
 <li><p>Consultare il file yaml: <a class="reference external" href="../../../../../unibo.basicrobot24/webbasicrobot24.yaml">webbasicrobot24.yaml</a></p></li>
 <li><p>Eseguire</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">--</span><span class="n">rm</span> <span class="o">--</span><span class="n">name</span> <span class="n">basicrobot24</span> <span class="o">-</span><span class="n">p8020</span><span class="p">:</span><span class="mi">8020</span><span class="o">/</span><span class="n">tcp</span> <span class="o">-</span><span class="n">p8020</span><span class="p">:</span><span class="mi">8020</span><span class="o">/</span><span class="n">udp</span> <span class="o">-</span><span class="n">p8085</span><span class="p">:</span><span class="mi">8085</span><span class="o">/</span><span class="n">tcp</span> <span class="o">--</span><span class="n">privileged</span> <span class="n">basicrobot24</span><span class="p">:</span><span class="mf">1.0</span>
