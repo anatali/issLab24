@@ -50,11 +50,13 @@ var curSonarDistance	= 0
 			 * We should avoid this pattern
 			*/	
 			if( Distance > LimitDistance ) obstacleFound = false
-	 		if( curSonarDistance != Distance){
+	 		//if( curSonarDistance != Distance ){
+			val delta = kotlin.math.abs( curSonarDistance - Distance )
+		    if( delta > 2 ){
 				//println("$tt $name |  $Distance")
 				curSonarDistance = Distance
 		 	 	val m0 = MsgUtil.buildEvent(name, "sonardata", "distance($Distance)")
-				println("$tt $name |  emitLocalStreamEvent $m0")
+		 	 	 println("$tt $name |  emitLocalStreamEvent $m0") 
 		 	 	//emit( m0 )
 				emitLocalStreamEvent( m0 )
 			}
