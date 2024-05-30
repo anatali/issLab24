@@ -1,0 +1,44 @@
+body {
+    padding: 20px;
+    background-color: #e6ffe6;
+}
+
+#gridContainer {
+    padding-bottom: 10px;
+}
+
+table {
+    background-color: #ffffe6;
+    border-spacing: 0;
+}
+
+td {
+    border: 1px solid #b3ccff;
+    border-radius: 0px;
+    width:  20px;
+    height: 20px;
+}
+
+span {
+    color: #222;
+}
+
+#start,
+#clear {
+    padding: .75em;
+    border-radius: 5px;
+    border: 1px solid #3333ff;
+    background-color: #e6e6ff;
+//    background: linear-gradient(    
+//        to bottom right,
+//        #C5DEC6, #587559);
+}
+
+td.dead {
+    background-color: transparent;
+}
+
+td.live {
+    background-color: #ff471a;
+    border-radius: 0px;
+}

@@ -1,5 +1,5 @@
 ## ----------------------------------------------------------
-## Dockerfile for unibo.basicrobot22
+## Dockerfile for unibo.basicrobot24
 ## ----------------------------------------------------------
 
 FROM openjdk:12.0.2

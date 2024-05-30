@@ -1,0 +1,1109 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>ConwayLife &#8212; iss24 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="GLM: introduzione" href="GLMIntro.html" />
+    <link rel="prev" title="KotlinNotes" href="KotlinNotes.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="GLMIntro.html" title="GLM: introduzione"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="KotlinNotes.html" title="KotlinNotes"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">ConwayLife</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="conwaylife">
+<h1>ConwayLife<a class="headerlink" href="#conwaylife" title="Permalink to this heading">¶</a></h1>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="#il-gioco"><span class="std std-ref">Il gioco</span></a></p></li>
+<li><p><a class="reference internal" href="#il-gioco-in-pratica"><span class="std std-ref">Il gioco in pratica</span></a></p></li>
+<li><p><a class="reference internal" href="#un-progetto-concentrato"><span class="std std-ref">Un progetto concentrato</span></a></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#la-logica-applicativa"><span class="std std-ref">La logica applicativa</span></a></p></li>
+<li><p><a class="reference internal" href="#il-sottosistema-di-i-o-in-javascript"><span class="std std-ref">Il sottosistema di I/O in JavaScript</span></a></p></li>
+<li><p><a class="reference internal" href="#il-sottosistema-di-i-o-in-javafx"><span class="std std-ref">Il sottosistema di I/O in JavaFx</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="GLMIntro.html#glm-introduzione"><span class="std std-ref">Conway Life a celle-attori</span></a></p></li>
+<li><p><a class="reference internal" href="GLMSprint9.html#glm-sprint9-gamelife-distribuito"><span class="std std-ref">Conway Life distribuito</span></a></p></li>
+</ol>
+<section id="il-gioco">
+<h2>Il gioco<a class="headerlink" href="#il-gioco" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Una griglia rettangolare (detta <span class="blue">mondo</span>) di caselle quadrate (dette <span class="blue">celle</span>)
+si estende all’infinito in tutte le direzioni.</p></li>
+<li><p>Gli stati di tutte le celle in un dato istante sono usati per calcolare lo stato delle
+celle all’istante successivo.</p></li>
+<li><p>Ogni cella ha 8 celle vicine.</p></li>
+<li><p>Le celle del mondo vengono  aggiornate simultaneamente nel passaggio (<span class="blue">generazione</span>)
+da un istante a quello successivo  secondo le seguenti <span class="brown">regole</span>:</p></li>
+</ol>
+<p>Si veda: <a class="reference external" href="https://playgameoflife.com/">https://playgameoflife.com/</a></p>
+<section id="le-regole-del-gioco">
+<h3>Le regole del gioco<a class="headerlink" href="#le-regole-del-gioco" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Una cella viva con meno di due celle vive adiacenti muore, per <cite>isolamento</cite>.</p></li>
+<li><p>Una cella viva con due o tre celle vive adiacenti <cite>sopravvive</cite> alla generazione successiva.</p></li>
+<li><p>Una cella viva con più di tre celle vive adiacenti muore, per <cite>sovrappopolazione</cite>.</p></li>
+<li><p>Una cella morta con esattamente tre celle vive adiacenti diventa viva, per <cite>riproduzione</cite>.</p></li>
+</ul>
+</section>
+</section>
+<section id="il-gioco-in-pratica">
+<h2>Il gioco in pratica<a class="headerlink" href="#il-gioco-in-pratica" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 70%" />
+<col style="width: 30%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><ol class="arabic simple">
+<li><p>La griglia ha dimensioni finite.</p></li>
+<li><p>La griglia si può pensare come una matrice di <span class="blue">RowsNum</span> righe e <span class="blue">ColsNum</span> colonne.</p></li>
+<li><p>Oltre a celle con <cite>8</cite> celle vicine, ve ne sono altre con <cite>3</cite>  vicine ed altre con <cite>5</cite> vicine.</p></li>
+</ol>
+</td>
+<td><a class="reference internal image-reference" href="_images/griglia.png"><img alt="_images/griglia.png" class="align-left" src="_images/griglia.png" style="width: 100%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="il-progetto-di-una-soluzione">
+<h2>Il progetto di una soluzione<a class="headerlink" href="#il-progetto-di-una-soluzione" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>un sistema software <span class="blue">concentrato</span> che definisce a manipola la griglia di Conway come una struttura dati</p></li>
+<li><p>un sistema software <span class="blue">distribuito</span> in cui ciascuna cella è un ente attivo ed autonomo, capace di intergire
+con le altre celle solo attraverso scambio di messaggi, in toale assenza di memoria comune.</p></li>
+</ul>
+<p>In ogni caso, il progetto del sistema distingue due macro-parti di codice (sottosistemi):</p>
+<ul class="simple">
+<li><p>il sottosistemi che realizza la logica applicativa;</p></li>
+<li><p>il sottosistemi che realizza la parte di Input/Output.</p></li>
+</ul>
+</section>
+</section>
+<section id="un-progetto-concentrato">
+<h1>Un progetto concentrato<a class="headerlink" href="#un-progetto-concentrato" title="Permalink to this heading">¶</a></h1>
+<p><span class="slide3">progetto uniboConway</span></p>
+<p>Nel seguito presentiamo due esempi di soluzione, una scritta in <em>JavaScript</em> (<code class="docutils literal notranslate"><span class="pre">main.resources.conwayJS</span></code>)
+e una in <em>Java</em> (<code class="docutils literal notranslate"><span class="pre">main.java.conway</span></code>).</p>
+<ul class="simple">
+<li><p>il codice che realizza la logica applicativa viene definito in  <a class="reference external" href="../../../../../uniboConway/src/main/resources/conwayJS/conwaycore.js">conwaycore.js</a> e  <a class="reference external" href="../../../../../uniboConway/src/main/conway/Life.java">Life.java</a>;</p></li>
+<li><p>il codice che realizza la parte di Input/Output viene definito in  <a class="reference external" href="../../../../../uniboConway/src/main/resources/conwayJS/conwayio.js">conwayio.js</a> e <a class="reference external" href="../../../../../uniboConway/src/main/conway/ConwayIO.java">ConwayIO.java</a></p></li>
+</ul>
+<p>Vedremo che le due soluzioni sono molto simili per quento riguarda la logica applicativa,
+mentre differiscono sensibilmente per quanto riguarda la parte di Input/Output.</p>
+<p>I <span class="slide2">principi</span> seguiti nella scrittura del codice sono:</p>
+<p><span class="slide2">P_1 |</span> <span class="slidekp">Il sottosistema di Input non deve realizzare logica applicativa</span>, ma solo invocare funzioni
+di livello applicativo.</p>
+<p><span class="slide2">P_2 |</span> <span class="slidekp">Il sottosistema di Output realizza funzioni di utilità</span> che la logica applicativa ritiene
+per lei necessarie, <strong>e non viceversa</strong>.</p>
+<section id="la-logica-applicativa">
+<h2>La logica applicativa<a class="headerlink" href="#la-logica-applicativa" title="Permalink to this heading">¶</a></h2>
+<section id="la-struttura">
+<h3>La struttura<a class="headerlink" href="#la-struttura" title="Permalink to this heading">¶</a></h3>
+<p><span class="slide2">La parte strutturale</span>
+consiste nel rappresentare la griglia come un Array di Array di valori
+<span class="blue">0</span> (cella morta)/<span class="blue">1</span> (cella viva)`.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><em>conwaycore.js</em></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">var</span> <span class="n">rows</span>     <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+<span class="n">var</span> <span class="n">cols</span>     <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+<span class="n">var</span> <span class="n">grid</span>     <span class="o">=</span> <span class="n">new</span> <span class="n">Array</span><span class="p">(</span><span class="n">rows</span><span class="p">);</span>
+<span class="n">var</span> <span class="n">nextGrid</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Array</span><span class="p">(</span><span class="n">rows</span><span class="p">);</span>
+</pre></div>
+</div>
+</td>
+<td><p><em>Life.java</em></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">private</span> <span class="nb">int</span> <span class="n">rows</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+<span class="n">private</span> <span class="nb">int</span> <span class="n">cols</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+<span class="n">private</span> <span class="n">static</span> <span class="nb">int</span><span class="p">[][]</span> <span class="n">grid</span><span class="p">;</span>
+<span class="n">private</span> <span class="n">static</span> <span class="nb">int</span><span class="p">[][]</span> <span class="n">nextGrid</span><span class="p">;</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>La variabile <span class="brown">nextGrid</span> viene introdotta per rappresentare il risultato del
+<a class="reference internal" href="#calcolo-della-nuova-generazione"><span class="std std-ref">Calcolo della nuova generazione</span></a> di celle.</p>
+</section>
+<section id="il-funzionamento">
+<h3>Il funzionamento<a class="headerlink" href="#il-funzionamento" title="Permalink to this heading">¶</a></h3>
+<p><span class="slide2">La parte del funzionamento</span> consiste nel <a class="reference internal" href="#calcolo-della-nuova-generazione"><span class="std std-ref">Calcolo della nuova generazione</span></a> di celle,
+che, partendo dallo stato iniziale di <span class="brown">grid</span>, procede in due fasi:</p>
+<ol class="arabic simple">
+<li><p><em>Fase1</em>: per ogni cella della griglia si fa il <a class="reference internal" href="#conteggio-delle-celle-vicine-vive"><span class="std std-ref">Conteggio delle celle vicine vive</span></a>;</p></li>
+<li><p><em>Fase2</em>: si applicano <a class="reference internal" href="#le-regole-del-gioco"><span class="std std-ref">Le regole del gioco</span></a> alle celle, le cui sorti dipendono dal risultato del conteggio.</p></li>
+</ol>
+<p>Questa specifica in linguaggio naturale può essere formalizzata in un linguaggio comprensibile alla macchina
+introducendo una funzione, qui denominata <em>computeNextGen</em>:</p>
+<section id="calcolo-della-nuova-generazione">
+<h4>Calcolo della nuova generazione<a class="headerlink" href="#calcolo-della-nuova-generazione" title="Permalink to this heading">¶</a></h4>
+<p>La nuova generazione di celle si ottiene costruendo una nuova versione della griglia
+(<span class="brown">nextGrid</span>) mediante la <a class="reference internal" href="#applicazione-delle-regole-del-gioco"><span class="std std-ref">Applicazione delle regole del gioco</span></a> ad ogni cella della
+griglia corrente (<span class="brown">grid</span>).</p>
+<p>Il codice in JavaScript è quasi identico a quello scritto in Java:</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><em>conwaycore.js</em></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">function</span> <span class="n">computeNextGen</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">var</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">rows</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">var</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">cols</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">var</span> <span class="n">n</span> <span class="o">=</span> <span class="n">countNeighborsLive</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">);</span>
+            <span class="n">applyRules</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">n</span>  <span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><p><em>Life.java</em></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">protected</span> <span class="n">void</span> <span class="n">computeNextGen</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="nb">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">rows</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nb">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">cols</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nb">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">countNeighborsLive</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">);</span>
+            <span class="n">applyRules</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="conteggio-delle-celle-vicine-vive">
+<h4>Conteggio delle celle vicine vive<a class="headerlink" href="#conteggio-delle-celle-vicine-vive" title="Permalink to this heading">¶</a></h4>
+<p>Il conteggio delle celle vive vicine alla cella di coordinate <em>row,col</em> deve guardare alla
+celle limitrofe. Tenendo conto che <em>grid</em> <strong>è di dimensioni finite</strong>, ciò significa guardare:</p>
+<ul class="simple">
+<li><p>sulla riga <em>row-1</em> (se esiste), le celle <em>col-1</em> (se esiste), <em>col</em> e <em>col+1</em> (se esiste)</p></li>
+<li><p>sulla riga <em>row+1</em> (se esiste) le celle <em>col-1</em> (se esiste), <em>col</em> e <em>col+1</em> (se esiste)</p></li>
+<li><p>la cella di coordinate <em>row,col-1</em> (se esiste) e <em>row,col+1</em> (se esiste)</p></li>
+</ul>
+<p>Anche ora, il codice in JavaScript è quasi identico a quello scritto in Java:</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><em>conwaycore.js</em></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">function</span> <span class="n">countNeighborsLive</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">var</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">row</span><span class="o">-</span><span class="mi">1</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="n">row</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="n">count</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">row</span><span class="o">-</span><span class="mi">1</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">col</span><span class="o">-</span><span class="mi">1</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="n">row</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">col</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="n">count</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">row</span><span class="o">-</span><span class="mi">1</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">col</span><span class="o">+</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">cols</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="n">row</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">col</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="n">count</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">col</span><span class="o">-</span><span class="mi">1</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="n">count</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">col</span><span class="o">+</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">cols</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="n">count</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">row</span><span class="o">+</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">rows</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="n">row</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="n">count</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">row</span><span class="o">+</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">rows</span> <span class="o">&amp;&amp;</span> <span class="n">col</span><span class="o">-</span><span class="mi">1</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="n">row</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">col</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="n">count</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">row</span><span class="o">+</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">rows</span> <span class="o">&amp;&amp;</span> <span class="n">col</span><span class="o">+</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">cols</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="n">row</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">col</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="n">count</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">count</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><p><em>Life.java</em></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">protected</span> <span class="nb">int</span> <span class="n">countNeighborsLive</span><span class="p">(</span><span class="nb">int</span> <span class="n">row</span><span class="p">,</span> <span class="nb">int</span> <span class="n">col</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">row</span><span class="o">-</span><span class="mi">1</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="n">row</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="n">count</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">row</span><span class="o">-</span><span class="mi">1</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">col</span><span class="o">-</span><span class="mi">1</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="n">row</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">col</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="n">count</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">row</span><span class="o">-</span><span class="mi">1</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">col</span><span class="o">+</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">cols</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="n">row</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">col</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="n">count</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">col</span><span class="o">-</span><span class="mi">1</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="n">count</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">col</span><span class="o">+</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">cols</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="n">count</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">row</span><span class="o">+</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">rows</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="n">row</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="n">count</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">row</span><span class="o">+</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">rows</span> <span class="o">&amp;&amp;</span> <span class="n">col</span><span class="o">-</span><span class="mi">1</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="n">row</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">col</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="n">count</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">row</span><span class="o">+</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">rows</span> <span class="o">&amp;&amp;</span> <span class="n">col</span><span class="o">+</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">cols</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="n">row</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">col</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="n">count</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">count</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="applicazione-delle-regole-del-gioco">
+<h4>Applicazione delle regole del gioco<a class="headerlink" href="#applicazione-delle-regole-del-gioco" title="Permalink to this heading">¶</a></h4>
+<p><a class="reference internal" href="#le-regole-del-gioco"><span class="std std-ref">Le regole del gioco</span></a> vengono realizzate da una funzione (<em>applyRules</em>) che decide le sorti di una cella
+di coordinate <em>row,col</em> all’interno di <span class="brown">grid</span>:</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><em>conwaycore.js</em></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">function</span> <span class="n">applyRules</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">numNeighbors</span><span class="p">)</span> <span class="p">{</span>
+ <span class="o">//</span><span class="n">CELLA</span> <span class="n">VIVA</span>
+ <span class="k">if</span> <span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">numNeighbors</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span> <span class="o">//</span><span class="n">muore</span> <span class="n">isolamento</span>
+    <span class="n">nextGrid</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+ <span class="p">}</span><span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">numNeighbors</span><span class="o">==</span><span class="mi">2</span> <span class="o">||</span> <span class="n">numNeighbors</span><span class="o">==</span><span class="mi">3</span><span class="p">){</span>
+    <span class="n">nextGrid</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="o">//</span><span class="n">sopravv</span>
+ <span class="p">}</span><span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">numNeighbors</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span> <span class="o">//</span><span class="n">muore</span> <span class="n">sovrapp</span>
+    <span class="n">nextGrid</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+ <span class="p">}</span>
+ <span class="p">}</span>
+ <span class="o">//</span><span class="n">CELLA</span> <span class="n">MORTA</span>
+ <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">numNeighbors</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span> <span class="o">//</span><span class="n">riproduzione</span>
+        <span class="n">nextGrid</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+ <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><p><em>Life.java</em></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">protected</span> <span class="n">void</span> <span class="n">applyRules</span><span class="p">(</span><span class="nb">int</span> <span class="n">row</span><span class="p">,</span><span class="nb">int</span> <span class="n">col</span><span class="p">,</span><span class="nb">int</span> <span class="n">numNeighbors</span><span class="p">){</span>
+ <span class="o">//</span><span class="n">CELLA</span> <span class="n">VIVA</span>
+ <span class="k">if</span> <span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">numNeighbors</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span> <span class="o">//</span><span class="n">muore</span> <span class="n">isolamento</span>
+    <span class="n">nextGrid</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span><span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">numNeighbors</span><span class="o">==</span><span class="mi">2</span> <span class="o">||</span> <span class="n">numNeighbors</span><span class="o">==</span><span class="mi">3</span><span class="p">){</span>
+    <span class="n">nextGrid</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="o">//</span><span class="n">sopravv</span>
+  <span class="p">}</span><span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">numNeighbors</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span> <span class="o">//</span><span class="n">muore</span> <span class="n">sovrapp</span>
+    <span class="n">nextGrid</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span>
+ <span class="p">}</span>
+ <span class="o">//</span><span class="n">CELLA</span> <span class="n">MORTA</span>
+ <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">numNeighbors</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span> <span class="o">//</span><span class="n">riproduzione</span>
+        <span class="n">nextGrid</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+ <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Un volta disponibile la nuova generazione di celle, occorre:</p>
+<ol class="arabic simple">
+<li><p>Rendere visibile il risultato su un dispositivo di Output</p></li>
+<li><p>Copiare <span class="brown">nextgrid</span> in <span class="brown">grid</span> e rieseguire il <a class="reference internal" href="#calcolo-della-nuova-generazione"><span class="std std-ref">Calcolo della nuova generazione</span></a></p></li>
+</ol>
+<p>La specifica risultante del funzionamento delineato in linguaggio naturale,
+può essere formalizzata da una unica funzione denominata <em>Play</em>:</p>
+</section>
+<section id="play">
+<h4>Play<a class="headerlink" href="#play" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><em>conwaycore.js</em></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">function</span> <span class="n">play</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">computeNextGen</span><span class="p">();</span>
+    <span class="n">copyAndDisplayGrid</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><p><em>Life.java</em></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="n">void</span> <span class="n">play</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">computeNextGen</span><span class="p">();</span>
+    <span class="n">copyAndDisplayGrid</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="copyanddisplaygrid">
+<h4>copyAndDisplayGrid<a class="headerlink" href="#copyanddisplaygrid" title="Permalink to this heading">¶</a></h4>
+<p>La funzione  <em>copyAndDisplayGrid</em>  :</p>
+<ol class="arabic simple">
+<li><p>copia <span class="brown">nextgrid</span> in <span class="brown">grid</span></p></li>
+<li><p>reinizializza <span class="brown">nextgrid</span></p></li>
+<li><p>visualizza ogni cella sul dispositivo di output assumendo l’esistenza di una funzione <strong>setCellColor</strong> realizzata
+dal Sottosistema di Output</p></li>
+</ol>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><em>conwaycore.js</em></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">function</span> <span class="n">copyAndDisplayGrid</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">var</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">rows</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">var</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">cols</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">grid</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">nextGrid</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">];</span>
+            <span class="n">setCellColor</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">grid</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">])</span>
+            <span class="n">nextGrid</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>La funzione <em>setCellColor</em> è definita nel file <span class="blue">conwayio.js</span>.
+Si veda <a class="reference internal" href="#il-sottosistema-di-i-o-in-javascript"><span class="std std-ref">Il sottosistema di I/O in JavaScript</span></a>.</p>
+</td>
+<td><p><em>Life.java</em></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">protected</span> <span class="n">void</span> <span class="n">copyAndDisplayGrid</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="nb">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">rows</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nb">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">cols</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">grid</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">nextGrid</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">];</span>
+            <span class="n">outdev</span><span class="o">.</span><span class="n">setCellColor</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">grid</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]);</span>
+            <span class="n">nextGrid</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>La funzione <em>setCellColor</em> è definita in un oggetto <span class="brown">outdev</span>,
+istanza di <a class="reference internal" href="#la-classe-conwayoutput"><span class="std std-ref">La classe ConwayOutput</span></a>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="ripetizione-di-play">
+<h3>Ripetizione di play<a class="headerlink" href="#ripetizione-di-play" title="Permalink to this heading">¶</a></h3>
+<p><span class="slide1">Ripetizione ciclica:</span> il gioco consiste nella esecuzione ripetuta della funzione <em>play</em>, che
+viene ottenuta in modi diversi in JavaScript e in Java.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Sfrutta il meccanismo <em>setTimeout</em> in <em>conwaycore.js</em></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">function</span> <span class="n">doPlay</span><span class="p">(){</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">playing</span> <span class="p">){</span>
+        <span class="n">play</span><span class="p">();</span>
+        <span class="n">timer</span> <span class="o">=</span> <span class="n">setTimeout</span><span class="p">(</span><span class="n">doPlay</span><span class="p">,</span> <span class="mi">500</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><p>Sfrutta il meccanismo <em>AnimationTimer</em> in <a class="reference internal" href="#la-classe-lifecontroller"><span class="std std-ref">La classe LifeController</span></a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+<span class="n">AnimationTimer</span> <span class="n">runAnimation</span> <span class="o">=</span> <span class="n">new</span> <span class="n">AnimationTimer</span><span class="p">()</span> <span class="p">{</span>
+<span class="n">private</span> <span class="n">long</span> <span class="n">lastUpdate</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="nd">@Override</span>
+    <span class="n">public</span> <span class="n">void</span> <span class="n">handle</span><span class="p">(</span><span class="n">long</span> <span class="n">now</span><span class="p">)</span> <span class="p">{</span>
+     <span class="n">long</span> <span class="n">dt</span> <span class="o">=</span> <span class="n">TimeUnit</span><span class="o">.</span><span class="n">MILLISECONDS</span><span class="o">.</span><span class="n">toNanos</span><span class="p">((</span><span class="n">long</span><span class="p">)</span> <span class="n">generationTime</span><span class="p">);</span>
+     <span class="k">if</span> <span class="p">((</span><span class="n">now</span> <span class="o">-</span> <span class="n">lastUpdate</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">dt</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">life</span><span class="o">.</span><span class="n">play</span><span class="p">();</span>
+        <span class="n">lastUpdate</span> <span class="o">=</span> <span class="n">now</span><span class="p">;</span>
+     <span class="p">}</span>
+     <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+<section id="configurazione-e-attivazione">
+<h1>Configurazione e attivazione<a class="headerlink" href="#configurazione-e-attivazione" title="Permalink to this heading">¶</a></h1>
+<p><span class="slide2">La struttura del software</span> nel caso di JavaScript è molto diversa da quella di Java.</p>
+<ul class="simple">
+<li><p>JavaScript permette (o forse promuove) la definzione di un insieme ‘piatto’ di funzioni che vengono
+definite all’interno di una pagina HTML;</p></li>
+<li><p>Java obbliga a definire un ineieme di classi, promuovendo un visione del softwrae più orientata ai sistemi
+che non ai semplici algoritmi.</p></li>
+</ul>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><em>JavaScript</em></p>
+<p><a class="reference internal" href="#il-codice-javascript"><span class="std std-ref">Il codice JavaScript</span></a>  realizza il sistema includendo il codice all’interno di una pagina HTML,
+visualizzabile con un comune Browser.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">html</span><span class="o">&gt;</span>
+<span class="o">...</span>
+    <span class="o">&lt;</span><span class="n">script</span> <span class="n">src</span><span class="o">=</span><span class="s2">&quot;conwaycore.js&quot;</span><span class="o">&gt;&lt;/</span><span class="n">script</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">script</span> <span class="n">src</span><span class="o">=</span><span class="s2">&quot;conwayio.js&quot;</span><span class="o">&gt;&lt;/</span><span class="n">script</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">html</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</td>
+<td><p><em>Java</em></p>
+<p><a class="reference internal" href="#il-codice-java"><span class="std std-ref">Il codice Java</span></a> realizza il sistema introducendo diverse classi:</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="#la-classe-life"><span class="std std-ref">La classe Life</span></a>, responsabile della logica applicativa.</p></li>
+<li><p><a class="reference internal" href="#la-classe-conwayio"><span class="std std-ref">La classe ConwayIO</span></a>, che realizza il sottosistema di Input/Output.</p></li>
+<li><p><a class="reference internal" href="#la-classe-conwayoutput"><span class="std std-ref">La classe ConwayOutput</span></a>, che fornisce l’adapter tra la logica applicativa e il sottosistema di Output.</p></li>
+<li><p><a class="reference internal" href="#la-classe-lifecontroller"><span class="std std-ref">La classe LifeController</span></a>, che trasforma l’Input in azioni applicative.</p></li>
+<li><p><a class="reference internal" href="#la-classe-mainconway"><span class="std std-ref">La classe MainConway</span></a>, che funge da configuratore del sistema.</p></li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+<section id="il-codice-javascript">
+<h2>Il codice JavaScript<a class="headerlink" href="#il-codice-javascript" title="Permalink to this heading">¶</a></h2>
+<p>JavaScript permette di realizzare il sistema Conway all’interno di una pagina HTML, visualizzabile
+con un comune Browser.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>File  <a class="reference external" href="../../../../../uniboConway/src/main/resources/conwayJS/conway.html">conway.html</a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&lt;head&gt;
+    &lt;meta charset = &quot;UTF-8&quot; /&gt;
+    &lt;title&gt;The Game of Life&lt;/title&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;life.css&quot;&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+&lt;!-- sezione di OUTPUT --&gt;
+&lt;div id=&quot;gridContainer&quot;&gt;
+&lt;/div&gt;
+&lt;!-- sezione di INPUT --&gt;
+&lt;div class=&quot;controls&quot;&gt;
+    &lt;button id=&quot;start&quot;&gt;&lt;span&gt;Start&lt;/span&gt;&lt;/button&gt;
+    &lt;button id=&quot;clear&quot;&gt;&lt;span&gt;Clear&lt;/span&gt;&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;script src=&quot;conwaycore.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;conwayio.js&quot;&gt;&lt;/script&gt;
+&lt;/body&gt;
+</pre></div>
+</div>
+</td>
+<td><a class="reference internal image-reference" href="_images/conwayJs.png"><img alt="_images/conwayJs.png" class="align-left" src="_images/conwayJs.png" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="_images/configForTest.png"><img alt="_images/configForTest.png" class="align-left" src="_images/configForTest.png" style="width: 30%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Il file <span class="blue">conwaycore.js</span> contiene:</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>la logica applicativa discussa in precedenza:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">function</span> <span class="n">copyAndResetGrid</span><span class="p">()</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+<span class="n">function</span> <span class="n">play</span><span class="p">()</span> <span class="p">{</span> <span class="o">...</span> <span class="p">]</span>
+<span class="n">function</span> <span class="n">computeNextGen</span><span class="p">()</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+<span class="n">function</span> <span class="n">applyRules</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">numNeighbors</span><span class="p">)</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+<span class="n">function</span> <span class="n">countNeighborsLive</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><p>funzioni di utilità:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">function</span> <span class="n">initializeGrids</span><span class="p">()</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+<span class="n">function</span> <span class="n">resetGrids</span><span class="p">()</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+<span class="n">function</span> <span class="n">configureTheSystem</span><span class="p">()</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+<span class="n">function</span> <span class="n">setCellState</span><span class="p">{</span> <span class="o">...</span> <span class="p">}</span> <span class="o">//</span><span class="n">cellClickHandler</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Il file <span class="blue">conwayio.js</span> definisce il sottisistema di I/O e viene descritto in
+<a class="reference internal" href="#il-sottosistema-di-i-o-in-javascript"><span class="std std-ref">Il sottosistema di I/O in JavaScript</span></a>.</p>
+<p><span class="slide2">La configurazione del sistema in JavaScript</span> viene definita nel file  <em>conwaycore.js</em></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">function</span> <span class="n">configureTheSystem</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">initializeGrids</span><span class="p">();</span>   <span class="o">//</span><span class="n">crea</span> <span class="n">la</span> <span class="n">struttura</span> <span class="n">a</span> <span class="n">griglia</span>
+    <span class="n">resetGrids</span><span class="p">();</span>        <span class="o">//</span><span class="n">pone</span> <span class="mi">0</span> <span class="p">(</span><span class="n">dead</span><span class="p">)</span> <span class="n">lo</span> <span class="n">stato</span> <span class="n">di</span> <span class="n">tutte</span> <span class="n">le</span> <span class="n">celle</span>
+    <span class="n">initIO</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span><span class="n">cols</span><span class="p">)</span>    <span class="o">//</span><span class="ow">in</span> <span class="n">conwayio</span><span class="o">.</span><span class="n">js</span> <span class="n">crea</span> <span class="n">la</span> <span class="n">griglia</span> <span class="ow">in</span> <span class="n">HTML</span> <span class="n">e</span> <span class="n">i</span> <span class="n">control</span> <span class="n">buttons</span>
+<span class="p">}</span>
+
+<span class="n">function</span> <span class="n">initIO</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span><span class="n">cols</span><span class="p">){</span>
+    <span class="n">createHtmlTable</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span><span class="n">cols</span><span class="p">);</span>
+    <span class="n">setupControlButtons</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span><span class="n">cols</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><span class="slide2">La attivazione del sistema in JavaScript</span> viene realizzta da una istruzione posta al termine
+del file  <em>conwayio.js</em></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">window</span><span class="o">.</span><span class="n">onload</span> <span class="o">=</span> <span class="n">configureTheSystem</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="il-codice-java">
+<h2>Il codice Java<a class="headerlink" href="#il-codice-java" title="Permalink to this heading">¶</a></h2>
+<p>Il codice Java realizza il sistema introducendo diverse classi</p>
+<a class="reference internal image-reference" href="_images/conwayJavaUMLClassi.png"><img alt="_images/conwayJavaUMLClassi.png" class="align-center" src="_images/conwayJavaUMLClassi.png" style="width: 80%;" /></a>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><ol class="arabic simple">
+<li><p><a class="reference internal" href="#la-classe-life"><span class="std std-ref">La classe Life</span></a>, responsabile della logica applicativa.</p></li>
+<li><p><a class="reference internal" href="#la-classe-conwayio"><span class="std std-ref">La classe ConwayIO</span></a>, che realizza il sottosistema di Input/Output.</p></li>
+<li><p><a class="reference internal" href="#la-classe-conwayoutput"><span class="std std-ref">La classe ConwayOutput</span></a>, che fornisce l’adapter tra la logica applicativa e il sottosistema di Output.</p></li>
+<li><p><a class="reference internal" href="#la-classe-lifecontroller"><span class="std std-ref">La classe LifeController</span></a>, che trasforma l’Input in azioni applicative.</p></li>
+<li><p><a class="reference internal" href="#la-classe-mainconway"><span class="std std-ref">La classe MainConway</span></a>, che funge da configuratore del sistema.</p></li>
+</ol>
+</td>
+<td><a class="reference internal image-reference" href="_images/conwayJava.png"><img alt="_images/conwayJava.png" class="align-left" src="_images/conwayJava.png" style="width: 100%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+<section id="la-classe-life">
+<h3>La classe Life<a class="headerlink" href="#la-classe-life" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>public class Life {
+    //La struttura
+    private int rows = 10;
+    private int cols = 20;
+    private static int[][] grid;
+    private static int[][] nextGrid;
+    private ConwayOutput outdev;
+
+    public Life( int rowsNum, int colsNum, ConwayOutput outdev ) {
+        this.rows   = rowsNum;
+        this.cols   = colsNum;
+        this.outdev = outdev;
+        initializeGrids();   //crea la struttura a griglia
+        initGrids();         //pone 0 lo stato di tutte le celle
+    }
+
+    protected void  initializeGrids() {
+        grid     = new int[rows][cols];
+        nextGrid = new int[rows][cols];  //???
+    }
+
+    protected void initGrids() {
+     for (int i = 0; i &lt; rows; i++) {
+        for (int j = 0; j &lt; cols; j++) {
+            grid[i][j]     = 0;
+            setCellState(   i,   j, false );
+            nextGrid[i][j] = 0;
+        }
+     }
+    }
+
+    public void play() { ... }
+    protected void computeNextGen() { ... }
+    protected void copyAndDisplayGrid() { ... }
+    protected void applyRules(int row, int col, int numNeighbors) { ... }
+</pre></div>
+</div>
+</section>
+<section id="la-classe-conwayoutput">
+<h3>La classe ConwayOutput<a class="headerlink" href="#la-classe-conwayoutput" title="Permalink to this heading">¶</a></h3>
+<p>La versione Java mostra in modo esplicito che la funzione <em>setCellColor</em> è definita da un oggetto
+<span class="brown">outdev</span> di classe <em>ConwayOutput</em>, che viene fornito alla logica applicativa
+con un <strong>meccansimo di iniezione alla costruzione</strong> da un configuratore di sistema (in pratica il main
+program definito in <a class="reference internal" href="#la-classe-mainconway"><span class="std std-ref">La classe MainConway</span></a>).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="k">class</span> <span class="nc">ConwayOutput</span> <span class="p">{</span>
+
+    <span class="n">public</span> <span class="n">void</span> <span class="n">setCellColor</span><span class="p">(</span> <span class="nb">int</span> <span class="n">i</span><span class="p">,</span> <span class="nb">int</span> <span class="n">j</span><span class="p">,</span> <span class="nb">int</span> <span class="n">state</span> <span class="p">){</span>
+        <span class="k">if</span><span class="p">(</span> <span class="n">state</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">)</span> <span class="n">ConwayIO</span><span class="o">.</span><span class="n">cellOff</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">);</span>
+        <span class="k">else</span> <span class="n">ConwayIO</span><span class="o">.</span><span class="n">cellOn</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>La classe <em>ConwayOutput</em> realizza l’adapter tra la logica applicativa e il sottosistema di Output
+definito, più avanit, in <a class="reference internal" href="#la-classe-conwayio"><span class="std std-ref">La classe ConwayIO</span></a>.</p>
+</section>
+<section id="la-classe-lifecontroller">
+<h3>La classe LifeController<a class="headerlink" href="#la-classe-lifecontroller" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="k">class</span> <span class="nc">LifeController</span> <span class="p">{</span>
+<span class="n">private</span> <span class="nb">int</span> <span class="n">generationTime</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">;</span>
+<span class="n">public</span> <span class="n">Button</span> <span class="n">startStop</span><span class="p">;</span>
+<span class="n">public</span> <span class="n">Slider</span> <span class="n">slider</span><span class="p">;</span>
+<span class="n">private</span>  <span class="n">Life</span> <span class="n">life</span><span class="p">;</span>
+
+    <span class="n">public</span> <span class="n">LifeController</span><span class="p">(</span> <span class="n">Life</span> <span class="n">game</span><span class="p">){</span> <span class="o">//</span><span class="p">,</span><span class="n">GridPane</span> <span class="n">gameGrid</span><span class="p">,</span> <span class="n">Button</span> <span class="n">startStop</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">startStop</span> <span class="o">=</span> <span class="n">startStop</span><span class="p">;</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">life</span>      <span class="o">=</span> <span class="n">game</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">public</span> <span class="n">void</span> <span class="n">cellClicked</span><span class="p">(</span><span class="n">MouseEvent</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>
+    <span class="n">public</span> <span class="n">void</span> <span class="n">startStopClicked</span><span class="p">(</span><span class="n">Boolean</span> <span class="n">isStart</span><span class="p">,</span> <span class="n">Button</span> <span class="n">startStop</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">AnimationTimer</span> <span class="n">runAnimation</span> <span class="o">=</span> <span class="n">new</span> <span class="n">AnimationTimer</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">private</span> <span class="n">long</span> <span class="n">lastUpdate</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="nd">@Override</span>
+            <span class="n">public</span> <span class="n">void</span> <span class="n">handle</span><span class="p">(</span><span class="n">long</span> <span class="n">now</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">long</span> <span class="n">dt</span> <span class="o">=</span> <span class="n">TimeUnit</span><span class="o">.</span><span class="n">MILLISECONDS</span><span class="o">.</span><span class="n">toNanos</span><span class="p">((</span><span class="n">long</span><span class="p">)</span> <span class="n">generationTime</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">((</span><span class="n">now</span> <span class="o">-</span> <span class="n">lastUpdate</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">dt</span><span class="p">))</span> <span class="p">{</span>
+                <span class="n">life</span><span class="o">.</span><span class="n">play</span><span class="p">();</span>
+                <span class="n">lastUpdate</span> <span class="o">=</span> <span class="n">now</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">if</span><span class="p">(</span> <span class="n">startStop</span><span class="o">.</span><span class="n">getText</span><span class="p">()</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="s2">&quot;Start&quot;</span><span class="p">)</span> <span class="p">){</span>
+                <span class="n">CommUtils</span><span class="o">.</span><span class="n">outred</span><span class="p">(</span><span class="s2">&quot;LifeController | runAnimation STOPPED &quot;</span>  <span class="p">);</span>
+                <span class="n">this</span><span class="o">.</span><span class="n">stop</span><span class="p">();</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">};</span>
+   <span class="k">if</span><span class="p">(</span> <span class="n">isStart</span> <span class="p">){</span>
+        <span class="n">runAnimation</span><span class="o">.</span><span class="n">start</span><span class="p">();</span>
+        <span class="n">startStop</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Stop&quot;</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="o">//</span><span class="n">CommUtils</span><span class="o">.</span><span class="n">outred</span><span class="p">(</span><span class="s2">&quot;LifeController | STOPPED &quot;</span>  <span class="p">);</span>
+        <span class="n">startStop</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Start&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><span class="slide2">La configurazione del sistema in Java</span> viene realizzata da <a class="reference internal" href="#la-classe-mainconway"><span class="std std-ref">La classe MainConway</span></a>.</p>
+</section>
+<section id="la-classe-mainconway">
+<h3>La classe MainConway<a class="headerlink" href="#la-classe-mainconway" title="Permalink to this heading">¶</a></h3>
+<p>Il main della classe Java viene introdotto come specializzazione della classe
+<em>javafx.application.Application</em> in quanto si vuole usare <a class="reference external" href="https://openjfx.io/">JavaFX</a> come
+tecnologia di costruzione dei dispositivi virtuali di I/O.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="k">class</span> <span class="nc">MainConway</span> <span class="n">extends</span> <span class="n">Application</span><span class="p">{</span>
+
+    <span class="n">protected</span> <span class="n">void</span> <span class="n">configureTheSystem</span><span class="p">(){</span>
+        <span class="n">ConwayOutput</span> <span class="n">outdev</span> <span class="o">=</span> <span class="n">new</span> <span class="n">ConwayOutput</span><span class="p">();</span>
+        <span class="n">Life</span> <span class="n">life</span>           <span class="o">=</span> <span class="n">new</span> <span class="n">Life</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span> <span class="n">outdev</span><span class="p">);</span>
+        <span class="n">LifeController</span> <span class="n">cc</span>   <span class="o">=</span> <span class="n">new</span> <span class="n">LifeController</span><span class="p">(</span><span class="n">life</span><span class="p">);</span>
+        <span class="n">new</span> <span class="n">ConwayIO</span><span class="p">(</span><span class="n">life</span><span class="o">.</span><span class="n">getRowsNum</span><span class="p">(),</span> <span class="n">life</span><span class="o">.</span><span class="n">getColsNum</span><span class="p">(),</span> <span class="n">cc</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="n">public</span> <span class="n">void</span> <span class="n">start</span><span class="p">(</span><span class="n">Stage</span> <span class="n">primaryStage</span><span class="p">)</span> <span class="n">throws</span> <span class="ne">Exception</span> <span class="p">{</span>
+        <span class="n">ConwayIO</span><span class="o">.</span><span class="n">setTheStage</span><span class="p">(</span><span class="n">primaryStage</span><span class="p">);</span>  <span class="o">//</span><span class="n">injection</span>
+        <span class="n">configureTheSystem</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="n">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">main</span><span class="p">(</span><span class="n">String</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">launch</span><span class="p">();</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p><span class="slide2">La attivazione del sistema in Java</span> viene realizzata invocando il metodo <span class="brown">launch</span>
+di <em>javafx.application.Application</em>, che pone in esecuzione il metodo <span class="brown">start</span>.
+Il sistema Java viene dunque eseguito nel thread <em>JavaFX Application</em> e non nel thread <em>main</em>.</p>
+</section>
+</section>
+</section>
+<section id="il-sottosistema-di-i-o-in-javascript">
+<h1>Il sottosistema di I/O in JavaScript<a class="headerlink" href="#il-sottosistema-di-i-o-in-javascript" title="Permalink to this heading">¶</a></h1>
+<p>Il codice relativo alla costruzione di dispositivi virtuali di I/O nella pagina HTML,
+parte dalla definizione della sezione di OUTPUT (elemento con <em>id=”gridContainer”</em>)
+e dei pulsanti di controllo (elemento con <em>id=”start”</em> e con <em>id=”clear”</em>).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&lt;!-- sezione di OUTPUT --&gt;
+&lt;div id=&quot;gridContainer&quot;&gt;
+&lt;/div&gt;
+&lt;!-- sezione di INPUT  --&gt;
+&lt;div class=&quot;controls&quot;&gt;
+    &lt;button id=&quot;start&quot;&gt;&lt;span&gt;Start&lt;/span&gt;&lt;/button&gt;
+    &lt;button id=&quot;clear&quot;&gt;&lt;span&gt;Clear&lt;/span&gt;&lt;/button&gt;
+&lt;/div&gt;
+</pre></div>
+</div>
+<section id="la-table-delle-celle">
+<h2>La table delle celle<a class="headerlink" href="#la-table-delle-celle" title="Permalink to this heading">¶</a></h2>
+<p>La visualizzazione della <em>grid</em> corrente si basa su una tabella (matrice) di una dato numero
+di righe (<em>rows</em>) e colonne (<em>cols</em>) che viene costruita dalla funzione che segue:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>function createHtmlTable(rows,cols) {
+    var gridContainer = document.getElementById(&#39;gridContainer&#39;);
+    if (!gridContainer) {
+        console.error(&quot;Problem: No div for the drid table!&quot;);
+    }
+    var table = document.createElement(&quot;table&quot;);
+    for (var i = 0; i &lt; rows; i++) {
+        var tr = document.createElement(&quot;tr&quot;);
+        for (var j = 0; j &lt; cols; j++) {
+            var cell = document.createElement(&quot;td&quot;);
+            cell.setAttribute(&quot;id&quot;, i + &quot;_&quot; + j);
+            cell.setAttribute(&quot;class&quot;, &quot;dead&quot;);
+            cell.onclick = cellClickHandler;
+            tr.appendChild(cell);
+        }
+        table.appendChild(tr);
+    }
+    gridContainer.appendChild(table);
+}
+</pre></div>
+</div>
+<p>La tabella è costruita in modo  che ogni suo elemento <em>cell</em> abbia come attributi</p>
+<ul class="simple">
+<li><p>l’attributo <em>id</em> di valore <em>i_j</em> (per rappresentare le coordinate)</p></li>
+<li><p>l’attributo <em>class</em> di valore <em>dead</em> (di default) oppure <em>live</em></p></li>
+<li><p>una funzione di controllo-utente (<em>cellClickHandler</em>) per permettere all’utente finale di
+porre (con un click) la cella nello stato <em>live</em> oppure ancora <em>dead</em></p></li>
+</ul>
+</section>
+<section id="cellclickhandler">
+<h2>cellClickHandler<a class="headerlink" href="#cellclickhandler" title="Permalink to this heading">¶</a></h2>
+<p>L’impostazione strutturale della tabella delle celle, si accompagna alla funzione di controllo-utente che segue:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">function</span> <span class="n">cellClickHandler</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">var</span> <span class="n">rowcol</span>  <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">);</span>
+    <span class="n">var</span> <span class="n">row</span>     <span class="o">=</span> <span class="n">rowcol</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="n">var</span> <span class="n">col</span>     <span class="o">=</span> <span class="n">rowcol</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+    <span class="n">var</span> <span class="n">classes</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">classes</span><span class="o">.</span><span class="n">indexOf</span><span class="p">(</span><span class="s2">&quot;live&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;dead&quot;</span><span class="p">);</span>
+        <span class="n">setCellState</span><span class="p">(</span><span class="n">row</span><span class="p">,</span><span class="n">col</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;live&quot;</span><span class="p">);</span>
+        <span class="n">setCellState</span><span class="p">(</span><span class="n">row</span><span class="p">,</span><span class="n">col</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>La funzione <strong>setCellState</strong> è definita nel file <span class="blue">conwaycore.js</span> che protegge la visibilità
+della variabile <em>grid</em></p>
+</section>
+<section id="setcellcolor">
+<h2>setCellColor<a class="headerlink" href="#setcellcolor" title="Permalink to this heading">¶</a></h2>
+<p>La modifica del colore delle celle della griglia viene esguita da una funzione che
+il codice della logica applicativa <strong>suppone disponibile</strong>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">function</span> <span class="n">setCellColor</span><span class="p">(</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">state</span> <span class="p">){</span>
+    <span class="n">var</span> <span class="n">cell</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">getElementById</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">j</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">state</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">)</span> <span class="n">cell</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;dead&quot;</span><span class="p">);</span>
+    <span class="k">else</span> <span class="n">cell</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;live&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="i-pulsanti-di-controllo">
+<h2>I pulsanti di controllo<a class="headerlink" href="#i-pulsanti-di-controllo" title="Permalink to this heading">¶</a></h2>
+<p>I pulsanti che l’utente finale può usare per attivare/sospendere il gioco sono costruiti da
+una funzione che crea elementi cui sono associati opportune funzioni di gestione.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">function</span> <span class="n">setupControlButtons</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span><span class="n">cols</span><span class="p">)</span> <span class="p">{</span>
+    <span class="o">//</span> <span class="n">button</span> <span class="n">to</span> <span class="n">start</span>
+    <span class="n">var</span> <span class="n">startButton</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">getElementById</span><span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">);</span>
+    <span class="n">startButton</span><span class="o">.</span><span class="n">onclick</span> <span class="o">=</span> <span class="n">startButtonHandler</span><span class="p">;</span>
+    <span class="o">//</span> <span class="n">button</span> <span class="n">to</span> <span class="n">clear</span>
+    <span class="n">var</span> <span class="n">clearButton</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">getElementById</span><span class="p">(</span><span class="s1">&#39;clear&#39;</span><span class="p">);</span>
+    <span class="n">clearButton</span><span class="o">.</span><span class="n">onclick</span> <span class="o">=</span> <span class="n">clearTheGrid</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Attivazione/pausa</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">function</span> <span class="n">startButtonHandler</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">isPlaying</span><span class="p">())</span> <span class="p">{</span> <span class="o">//</span> <span class="ow">in</span> <span class="n">conwaycore</span><span class="o">.</span><span class="n">js</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Pause the game&quot;</span><span class="p">);</span>
+        <span class="n">playing</span> <span class="o">=</span> <span class="n">false</span><span class="p">;</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">innerHTML</span> <span class="o">=</span> <span class="s2">&quot;Continue&quot;</span><span class="p">;</span>
+        <span class="n">clearTimeout</span><span class="p">(</span><span class="n">timer</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Continue the game&quot;</span><span class="p">);</span>
+        <span class="n">playing</span> <span class="o">=</span> <span class="n">true</span><span class="p">;</span>
+        <span class="n">this</span><span class="o">.</span><span class="n">innerHTML</span> <span class="o">=</span> <span class="s2">&quot;Pause&quot;</span><span class="p">;</span>
+        <span class="n">doPlay</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">function</span> <span class="n">doPlay</span><span class="p">(){</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">playing</span> <span class="p">){</span>
+        <span class="n">play</span><span class="p">();</span>
+        <span class="n">timer</span> <span class="o">=</span> <span class="n">setTimeout</span><span class="p">(</span><span class="n">doPlay</span><span class="p">,</span> <span class="mi">500</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><p>Azzeramento delle celle live sulla griglia di output</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">function</span> <span class="n">clearTheGrid</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">stopPlaying</span><span class="p">();</span>
+    <span class="n">var</span> <span class="n">startButton</span><span class="o">=</span><span class="n">document</span><span class="o">.</span><span class="n">getElementById</span><span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">);</span>
+    <span class="n">startButton</span><span class="o">.</span><span class="n">innerHTML</span><span class="o">=</span><span class="s2">&quot;Start&quot;</span><span class="p">;</span>
+    <span class="n">clearTimeout</span><span class="p">(</span><span class="n">timer</span><span class="p">);</span>  <span class="o">//</span><span class="n">timer</span> <span class="ow">in</span> <span class="n">conwaycore</span><span class="o">.</span><span class="n">js</span>
+    <span class="n">var</span> <span class="n">cellsList</span><span class="o">=</span><span class="n">document</span><span class="o">.</span><span class="n">getElementsByClassName</span><span class="p">(</span><span class="s2">&quot;live&quot;</span><span class="p">);</span>
+    <span class="n">var</span> <span class="n">cells</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">var</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">cellsList</span><span class="o">.</span><span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">cells</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">cellsList</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">var</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">cells</span><span class="o">.</span><span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">cells</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;dead&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">resetGrids</span><span class="p">();</span>  <span class="o">//</span><span class="ow">in</span> <span class="n">conwaycore</span><span class="o">.</span><span class="n">js</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="il-sottosistema-di-i-o-in-javafx">
+<h1>Il sottosistema di I/O in JavaFx<a class="headerlink" href="#il-sottosistema-di-i-o-in-javafx" title="Permalink to this heading">¶</a></h1>
+<p>La classe <em>ConwayIO.java</em> definisce il sottosistema di I/O realizzato con tecnologia  <a class="reference external" href="https://openjfx.io/">JavaFX</a>. Essa:</p>
+<ul class="simple">
+<li><p>Riceve un oggetto di classe <em>javafx.stage.Stage</em> per injection da parte del metodo start de
+<a class="reference internal" href="#la-classe-mainconway"><span class="std std-ref">La classe MainConway</span></a>.</p></li>
+<li><p>Crea la scena del gioco che include una matrice di celle rettangolari (OUTPUT) e i pulsanti
+Start / Clear di INPUT. Ciascuna cella creata dal metodo <em>createCells</em> è associata a un <em>javafx.event.EventHandler</em>
+che invoca il metodo <strong>cellClicked</strong> de <a class="reference internal" href="#la-classe-lifecontroller"><span class="std std-ref">La classe LifeController</span></a> in modo da permettere all’utente
+finale di modificare il colore (e quindi lo stato di una cella nella fase iniziale del gioco.</p></li>
+<li><p>Associa ai pulsanti un <em>javafx.event.EventHandler</em> che connette un click del pulsante <code class="docutils literal notranslate"><span class="pre">Start</span></code> al metodo
+<strong>startStopClicked</strong>  de <a class="reference internal" href="#la-classe-lifecontroller"><span class="std std-ref">La classe LifeController</span></a> e un click del pulsante <code class="docutils literal notranslate"><span class="pre">Clear</span></code>
+al metodo  <strong>clearTheCells</strong>  de <a class="reference internal" href="#la-classe-lifecontroller"><span class="std std-ref">La classe LifeController</span></a>.</p></li>
+<li><p>Definisce i metodi cellOn/cellOff per permettere alla classe Life (attraverso <a class="reference internal" href="#la-classe-lifecontroller"><span class="std std-ref">La classe LifeController</span></a>)
+di cambiare il colore di una cella, quando il suo stato passa da <em>dead</em> a <em>live</em> e viceversa.</p></li>
+</ul>
+<a class="reference internal image-reference" href="_images/conwayJavaUMLAll.png"><img alt="_images/conwayJavaUMLAll.png" class="align-center" src="_images/conwayJavaUMLAll.png" style="width: 80%;" /></a>
+<section id="la-classe-conwayio">
+<h2>La classe ConwayIO<a class="headerlink" href="#la-classe-conwayio" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="k">class</span> <span class="nc">ConwayIO</span>  <span class="p">{</span>
+<span class="n">private</span> <span class="n">static</span> <span class="nb">int</span> <span class="n">CELL_SIZE</span> <span class="o">=</span> <span class="mi">45</span><span class="p">;</span>
+<span class="n">private</span> <span class="n">static</span> <span class="n">Rectangle</span><span class="p">[][]</span>  <span class="n">cells</span>   <span class="p">;</span>
+<span class="n">private</span> <span class="n">static</span> <span class="n">Stage</span> <span class="n">stage</span><span class="p">;</span> <span class="o">//</span><span class="n">injected</span> <span class="n">by</span> <span class="n">start</span> <span class="ow">in</span> <span class="n">MainConway</span>
+<span class="n">private</span> <span class="n">GridPane</span> <span class="n">gridPane</span><span class="p">;</span>
+<span class="n">private</span> <span class="n">Scene</span> <span class="n">scene</span><span class="p">;</span>
+<span class="n">private</span> <span class="n">Button</span> <span class="n">bstart</span><span class="p">;</span>
+<span class="n">private</span> <span class="n">Button</span> <span class="n">bclear</span><span class="p">;</span>
+<span class="n">private</span> <span class="nb">int</span> <span class="n">rows</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="n">private</span> <span class="nb">int</span> <span class="n">cols</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="n">private</span> <span class="n">LifeController</span> <span class="n">cc</span><span class="p">;</span>
+
+<span class="n">public</span> <span class="n">ConwayIO</span><span class="p">(</span>  <span class="nb">int</span> <span class="n">rows</span><span class="p">,</span> <span class="nb">int</span> <span class="n">cols</span><span class="p">,</span> <span class="n">LifeController</span> <span class="n">cc</span> <span class="p">){</span>
+    <span class="n">this</span><span class="o">.</span><span class="n">cc</span>   <span class="o">=</span> <span class="n">cc</span><span class="p">;</span>
+    <span class="n">this</span><span class="o">.</span><span class="n">rows</span> <span class="o">=</span> <span class="n">rows</span><span class="p">;</span>
+    <span class="n">this</span><span class="o">.</span><span class="n">cols</span> <span class="o">=</span> <span class="n">cols</span><span class="p">;</span>
+    <span class="n">createScene</span><span class="p">(</span>   <span class="p">);</span>
+<span class="p">}</span>
+
+ <span class="n">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">setTheStage</span><span class="p">(</span><span class="n">Stage</span> <span class="n">primaryStage</span><span class="p">){</span>
+    <span class="n">stage</span>  <span class="o">=</span> <span class="n">primaryStage</span><span class="p">;</span>
+ <span class="p">}</span>
+ <span class="n">protected</span> <span class="n">void</span> <span class="n">createScene</span><span class="p">(</span> <span class="p">){</span>
+  <span class="o">/*</span>
+  <span class="n">Crea</span> <span class="n">e</span> <span class="n">configura</span> <span class="n">scena</span> <span class="n">e</span> <span class="n">pulsanti</span> <span class="n">di</span> <span class="n">Input</span>
+  <span class="o">*/</span>
+  <span class="o">...</span>
+  <span class="n">createCells</span><span class="p">(</span>    <span class="p">);</span>
+  <span class="n">stage</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+ <span class="p">}</span>
+
+ <span class="n">protected</span> <span class="n">void</span> <span class="n">createCells</span><span class="p">(</span>  <span class="p">){</span>
+ <span class="n">cells</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Rectangle</span><span class="p">[</span><span class="n">rows</span><span class="p">][</span><span class="n">cols</span><span class="p">];</span>
+    <span class="k">for</span> <span class="p">(</span><span class="nb">int</span> <span class="n">row</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">row</span> <span class="o">&lt;</span> <span class="n">rows</span><span class="p">;</span> <span class="n">row</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nb">int</span> <span class="n">col</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">col</span> <span class="o">&lt;</span> <span class="n">cols</span><span class="p">;</span> <span class="n">col</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">cells</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Rectangle</span><span class="p">(</span><span class="n">CELL_SIZE</span><span class="p">,</span> <span class="n">CELL_SIZE</span><span class="p">);</span>
+            <span class="n">cells</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">setId</span><span class="p">(</span><span class="n">row</span><span class="o">+</span><span class="s2">&quot;,&quot;</span><span class="o">+</span><span class="n">col</span><span class="p">);</span>
+            <span class="n">cells</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">setFill</span><span class="p">(</span> <span class="n">Color</span><span class="o">.</span><span class="n">WHITE</span> <span class="p">);</span>
+            <span class="n">cells</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">setStroke</span><span class="p">(</span> <span class="n">Color</span><span class="o">.</span><span class="n">BLACK</span> <span class="p">);</span>
+
+            <span class="n">gridPane</span><span class="o">.</span><span class="n">add</span><span class="p">(</span> <span class="n">cells</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">],</span> <span class="n">col</span><span class="p">,</span> <span class="n">row</span> <span class="p">)</span> <span class="p">;</span>
+
+            <span class="n">cells</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">addEventHandler</span><span class="p">(</span><span class="n">MouseEvent</span><span class="o">.</span><span class="n">MOUSE_CLICKED</span><span class="p">,</span>
+                    <span class="n">e</span> <span class="o">-&gt;</span>  <span class="n">cc</span><span class="o">.</span><span class="n">cellClicked</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="p">);</span>
+        <span class="p">}</span><span class="o">//</span><span class="n">col</span>
+    <span class="p">}</span><span class="o">//</span><span class="n">row</span>
+<span class="p">}</span>
+
+ <span class="n">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">cellOn</span><span class="p">(</span><span class="nb">int</span> <span class="n">i</span><span class="p">,</span> <span class="nb">int</span> <span class="n">j</span><span class="p">){</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">cells</span> <span class="o">==</span> <span class="n">null</span> <span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+    <span class="n">cells</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">setFill</span><span class="p">(</span><span class="n">Color</span><span class="o">.</span><span class="n">RED</span><span class="p">);</span>
+ <span class="p">}</span>
+ <span class="n">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">cellOff</span><span class="p">(</span><span class="nb">int</span> <span class="n">i</span><span class="p">,</span> <span class="nb">int</span> <span class="n">j</span><span class="p">){</span>
+ <span class="k">if</span><span class="p">(</span> <span class="n">cells</span> <span class="o">==</span> <span class="n">null</span> <span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+    <span class="n">cells</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">setFill</span><span class="p">(</span><span class="n">Color</span><span class="o">.</span><span class="n">WHITE</span><span class="p">);</span>
+ <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">ConwayLife</a><ul>
+<li><a class="reference internal" href="#il-gioco">Il gioco</a><ul>
+<li><a class="reference internal" href="#le-regole-del-gioco">Le regole del gioco</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#il-gioco-in-pratica">Il gioco in pratica</a></li>
+<li><a class="reference internal" href="#il-progetto-di-una-soluzione">Il progetto di una soluzione</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#un-progetto-concentrato">Un progetto concentrato</a><ul>
+<li><a class="reference internal" href="#la-logica-applicativa">La logica applicativa</a><ul>
+<li><a class="reference internal" href="#la-struttura">La struttura</a></li>
+<li><a class="reference internal" href="#il-funzionamento">Il funzionamento</a><ul>
+<li><a class="reference internal" href="#calcolo-della-nuova-generazione">Calcolo della nuova generazione</a></li>
+<li><a class="reference internal" href="#conteggio-delle-celle-vicine-vive">Conteggio delle celle vicine vive</a></li>
+<li><a class="reference internal" href="#applicazione-delle-regole-del-gioco">Applicazione delle regole del gioco</a></li>
+<li><a class="reference internal" href="#play">Play</a></li>
+<li><a class="reference internal" href="#copyanddisplaygrid">copyAndDisplayGrid</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#ripetizione-di-play">Ripetizione di play</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#configurazione-e-attivazione">Configurazione e attivazione</a><ul>
+<li><a class="reference internal" href="#il-codice-javascript">Il codice JavaScript</a></li>
+<li><a class="reference internal" href="#il-codice-java">Il codice Java</a><ul>
+<li><a class="reference internal" href="#la-classe-life">La classe Life</a></li>
+<li><a class="reference internal" href="#la-classe-conwayoutput">La classe ConwayOutput</a></li>
+<li><a class="reference internal" href="#la-classe-lifecontroller">La classe LifeController</a></li>
+<li><a class="reference internal" href="#la-classe-mainconway">La classe MainConway</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#il-sottosistema-di-i-o-in-javascript">Il sottosistema di I/O in JavaScript</a><ul>
+<li><a class="reference internal" href="#la-table-delle-celle">La table delle celle</a></li>
+<li><a class="reference internal" href="#cellclickhandler">cellClickHandler</a></li>
+<li><a class="reference internal" href="#setcellcolor">setCellColor</a></li>
+<li><a class="reference internal" href="#i-pulsanti-di-controllo">I pulsanti di controllo</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#il-sottosistema-di-i-o-in-javafx">Il sottosistema di I/O in JavaFx</a><ul>
+<li><a class="reference internal" href="#la-classe-conwayio">La classe ConwayIO</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="KotlinNotes.html"
+                          title="previous chapter">KotlinNotes</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="GLMIntro.html"
+                          title="next chapter">GLM: introduzione</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/ConwayLife.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="GLMIntro.html" title="GLM: introduzione"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="KotlinNotes.html" title="KotlinNotes"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">ConwayLife</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>

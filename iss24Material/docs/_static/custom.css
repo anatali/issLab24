@@ -1,0 +1,170 @@
+body {
+    background-color: rgb(255,255,255);
+    font-size: 20px;
+  }
+
+pre{
+  color: rgb(6, 35, 6) !important;
+  font-size: 12px;
+}
+ 
+
+
+h1{
+    background-color: #fffed6 !important;
+    color: rgb(115, 0, 255)  !important;
+    border: 1px solid rgb(0, 10, 0) !important;
+    margin: 0 !important;
+    border-radius: 15px !important;
+  }
+
+h2{
+    background-color: #e4ffd6 !important;
+    color: rgb(47, 0, 255) !important;
+    margin: 100 !important;
+    border: 1px solid rgb(0, 10, 0) !important;
+    border-radius: 15px !important;
+    padding: 2px !important;
+  }
+
+h3{
+    background-color: #d6fff7 !important;
+    color: rgb(119, 0, 255) !important;
+    border-radius: 25px !important;
+    text-decoration: underline !important;
+}
+
+h4{
+  background-color: #a7f66fa4 !important;
+  color: rgb(39, 7, 164) !important;
+  border-radius: 25px !important;
+}
+
+  .pre{
+    font-family: Arial;
+    font-weight: bold;
+    font-size: 14px;
+    color: rgba(7, 10, 190, 0.981);     
+    margin: 0;
+    background-color: #fffed6;
+  }  
+
+  .n{ 
+    font-size: small;
+    font-style: normal;
+   }
+
+  .c1{ 
+    font-family: Arial;
+    font-style: normal;
+    color: red;
+    font-size: small;
+  }
+
+  .blue {
+    color: blue; 
+    font-style: italic;
+    font-weight: 0;
+  }
+
+  .red {
+    color:red;
+  }
+
+  .brown {
+    color:#990000;
+  }
+
+  .green {
+    color:#0fd80f;
+  }
+
+  .magenta {
+    color:#8f0099e5;
+    font-style: oblique;
+    
+  }
+
+  .reference{
+    padding: 1px;
+    font-style: italic;
+    background-color: #fffed6; 
+    color:#990000;
+    text-decoration: underline;
+  }
+
+  .remark{
+    background-color: #E3F2FD;
+      border: 2px solid green;
+      padding: 3px;
+      margin: 0px;
+      line-height: 1.4;
+    border-radius: 25px;
+  }
+
+  .high{
+    background-color: hsl(62, 100%, 75%);
+    border: 1px solid green;
+    font-size: 16px; 
+    line-height: 1.5; 
+    padding: 3px
+  }  
+
+  .worktodo{
+    background-color: #a8ff66b7;
+    padding: 3px;
+    margin: 3px;
+    font-size: 15px; 
+    font-weight: bold;
+    line-height: 1.4;
+    border-radius: 20px;
+  }
+
+  .slide{
+    background-color: #E3F2FD;
+    border-radius: 25px;
+    font-size: 40px; 
+    line-height: 1.5;
+    padding: 3px
+  }
+
+  .slide1{
+    background-color: #ccff66;
+    border-radius: 25px;
+    border: 1px solid green;
+    font-size: 30px; 
+    line-height: 1.5;
+     
+    padding: 5px
+  }
+
+  .slide2{
+    background-color: #c5f6f6;
+    border-radius: 15px;
+    border: 1px solid black;
+    font-size: 20px; 
+    line-height: 1.5;
+    margin: 10;
+    padding: 3px
+  }
+
+  .slide3{
+    background-color: yellow;
+    border-radius: 10px;
+    border: 1px solid blue;
+    font-size: 16px; 
+    line-height: 1.0;
+    padding: 3px;
+    font-weight: bold;
+  }  
+
+  .slidekp{
+    background-color: hsl(332, 77%, 86%);
+    border-radius: 10px;
+    border: 1px solid blue;
+    font-size: 18px; 
+    font-weight: bold;
+    line-height: 1.5;
+    padding: 3px
+  }  
+
