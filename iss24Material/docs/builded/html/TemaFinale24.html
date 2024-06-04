@@ -1,0 +1,221 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>TemaFinale24 &#8212; iss24 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="TemaFinale23" href="TemaFinale23.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="TemaFinale23.html" title="TemaFinale23"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">TemaFinale24</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="temafinale24">
+<h1>TemaFinale24<a class="headerlink" href="#temafinale24" title="Permalink to this heading">¶</a></h1>
+<p>A company intends to build a <span class="slide3">WasteIncineratorService</span> to treat waste by burning it
+and requires a software system service (<span class="blue">WIS</span>) that controls a robot (called  <span class="blue">OpRobot</span>) in order to move
+the waste.</p>
+<section id="the-structural-part-of-the-building">
+<h2>The structural part of the building<a class="headerlink" href="#the-structural-part-of-the-building" title="Permalink to this heading">¶</a></h2>
+<p>THe <span class="blue">Incinerator</span> is situated within a service area (rectangular, flat) as shown in the following picture:</p>
+<blockquote>
+<div><a class="reference internal image-reference" href="_images/TF24Annotated.PNG"><img alt="_images/TF24Annotated.PNG" class="align-center" src="_images/TF24Annotated.PNG" style="width: 80%;" /></a>
+</div></blockquote>
+<p>Outside the service area, there are:</p>
+<ol class="arabic simple">
+<li><p>a <span class="blue">WasteStorage</span> container,  devoted to store waste material in the form of Roll Packets (<span class="blue">RP</span>). Each <span class="blue">RP</span>
+has a weigth <span class="blue">WRP</span> = <strong>50 Kg</strong> (approximately);</p></li>
+<li><p>a <span class="blue">AshStorage</span> container,  devoted to store the ashes produced by the incineration process. This container can store
+(approximately) the ashes of <code class="docutils literal notranslate"><span class="pre">3-4</span></code> <span class="blue">RP</span>.</p></li>
+<li><p>a <span class="blue">MonitoringDevice</span>, composed by a a <span class="magenta">Sonar</span> and a <span class="magenta">Led</span> working on a RaspberryPi.</p></li>
+</ol>
+<p>The waste can be introduced into the <span class="blue">Incinerator</span> through its <span class="brown">BURNIN</span> port, while
+the ash produced by the <span class="blue">Incinerator</span> can be extracted using the <span class="brown">BURNOUT</span> port.</p>
+<p>The service area includes:</p>
+<ol class="arabic simple">
+<li><p>a <span class="brown">WASTEIN</span> port, that can be used to enter into the service area the <span class="blue">RP</span> of waste.</p></li>
+<li><p>a <span class="brown">ASHOUT</span> port, that can be used to move out of the service area the ash produced by the incineration process.</p></li>
+</ol>
+</section>
+<section id="the-behavior-of-the-incinerator">
+<h2>The behavior of the <span class="blue">Incinerator</span><a class="headerlink" href="#the-behavior-of-the-incinerator" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>The <span class="blue">Incinerator</span> is able to perceive a  proper activation command sent by using a wireless (<em>wifi, bluetotth</em>) connection.</p></li>
+<li><p>The <span class="blue">Incinerator</span> can process one <span class="blue">RP</span> at the time. The burning process requires  (approximately) <span class="blue">BTIME</span> seconds.</p></li>
+<li><p>At the end of a burning phase, the <span class="blue">Incinerator</span>
+emits a (acustic, or other) signal that can be perceived by the <span class="blue">OpRobot</span> and by the <span class="blue">WIS</span>.</p></li>
+</ul>
+</section>
+<section id="the-behavior-of-the-oprobot">
+<h2>The behavior of the <span class="blue">OpRobot</span><a class="headerlink" href="#the-behavior-of-the-oprobot" title="Permalink to this heading">¶</a></h2>
+<p>The company provides a <span class="blue">DDR robot</span> (and its own control software), that should be used as the physical actuator for
+the behavior of the <span class="blue">OpRobot</span>, that can be listed as follows:</p>
+<ol class="arabic simple">
+<li><p>stay in the <span class="brown">HOME</span> location when the is no work to do;</p></li>
+<li><p>if the <span class="blue">WasteStorage</span> container is not empty, the  <span class="blue">AshStorage</span> container is not full, and the <span class="blue">Incinerator</span>
+is not in a burning phase, move to the <span class="brown">WASTEIN</span> port.
+If one of the conditions is <strong>not true</strong>, wait at <span class="brown">HOME</span>, until it becomes <em>true</em>.</p></li>
+<li><p>get a <span class="blue">RP</span> from the <span class="blue">WasteStorage</span> container;</p></li>
+<li><p>move to the <span class="blue">BURNIN</span> port and deposit the <span class="blue">RP</span> into the <span class="blue">Incinerator</span>;</p></li>
+<li><p>move to the <span class="brown">HOME</span> location when the <span class="blue">Incinerator</span> is in its burning phase;</p></li>
+<li><p>move to  the <span class="blue">BURNOUT</span> port to extract the ash, when the <span class="blue">Incinerator</span> has completed a burning phase;</p></li>
+<li><p>move to the <span class="brown">ASHOUT</span> port and deposit the ash into the <span class="blue">AshStorage</span> container;</p></li>
+<li><p>reconsider the point <code class="docutils literal notranslate"><span class="pre">2</span></code> (and go back to <span class="brown">HOME</span>, if it is the case).</p></li>
+</ol>
+</section>
+<section id="the-management-of-containers">
+<h2>The management of Containers<a class="headerlink" href="#the-management-of-containers" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>A new <span class="blue">RP</span> is put into the  <span class="blue">WasteStorage</span> container by some external agent.</p></li>
+<li><p>The  <span class="blue">WasteStorage</span> owns a <em>weighing device</em> (<span class="blue">Scale</span>) that reports the current weigth af all the
+<span class="blue">RP</span> currently stored into the container. The container can be considered <span class="brown">empty</span> when  the value of the
+<span class="blue">Scale</span> is (approximately) <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p></li>
+<li><p>Onother exetrnal agent provides to remove the ash from the <span class="blue">AshStorage</span> container. This actions modifies
+the value measured by the <span class="magenta">Sonar</span> of the <a class="reference internal" href="#the-behavior-of-the-monitoringdevice"><span class="std std-ref">MonitoringDevice</span></a>.</p></li>
+</ul>
+<p>The <span class="blue">WIS</span> can acquire information from the input devices  <span class="blue">Scale</span> and <span class="magenta">Sonar</span> through
+software supports that must be properly designed and implemented.</p>
+</section>
+<section id="the-servicestatusgui">
+<h2>The ServiceStatusGUI<a class="headerlink" href="#the-servicestatusgui" title="Permalink to this heading">¶</a></h2>
+<p>The <span class="blue">WIS</span> system must also provide a <span class="slide3">ServiceStatusGUI</span> (<span class="blue">SSGUI</span>)  that must show:</p>
+<ol class="arabic simple">
+<li><p>the current state of the <span class="blue">WasteStorage</span>, i.e. the number of <span class="blue">RP</span> currently stored in it;</p></li>
+<li><p>the current state of the <span class="blue">AshStorage</span>, i.e. an indication of the level of its capacity currently used;</p></li>
+<li><p>the current state of the <span class="blue">Incinerator</span>, i.e. if it burning or not;</p></li>
+<li><p>the state of the <span class="blue">OpRobot</span>, i.e. an indication of its current location in the service area
+and of the job that it is doing.</p></li>
+</ol>
+</section>
+<section id="the-behavior-of-the-monitoringdevice">
+<h2>The behavior of the MonitoringDevice<a class="headerlink" href="#the-behavior-of-the-monitoringdevice" title="Permalink to this heading">¶</a></h2>
+<p>The <span class="magenta">Sonar</span> of the <span class="blue">MonitoringDevice</span> is used to measures the level of the ash in the <span class="blue">AshStorage</span> container,
+by measuring the distance between the top of the ash and the <cite>Sonar</cite> itself.
+When the distance is less than a prefixed value <strong>DLIMT</strong>, the <span class="blue">AshStorage</span> container is considered full.</p>
+<p>The <span class="magenta">Led</span> is used as a <span class="blue">warning device</span>, according to the following rules:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the <span class="magenta">Led</span> is <strong>on</strong> when the <span class="blue">Incinerator</span> is  burning a <span class="blue">RP</span>.</p></li>
+<li><p>the <span class="magenta">Led</span> is <strong>off</strong> when the <span class="blue">Incinerator</span> is not burning.</p></li>
+<li><p>the <span class="magenta">Led</span> <strong>blinks</strong> while the <span class="blue">AshStorage</span> is full or the <span class="blue">AshStorage</span> is empty</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="service-users-story">
+<h2>Service users story<a class="headerlink" href="#service-users-story" title="Permalink to this heading">¶</a></h2>
+<p>An an user of the <span class="blue">WIS</span>, I see that:</p>
+<ol class="arabic simple">
+<li><p>The <span class="blue">OpRobot</span> is somewhere in the service area (initially in the <span class="brown">HOME</span> location).</p></li>
+<li><p>If the <span class="blue">WasteStorage</span> container is not empty, and <span class="blue">AshStorage</span> container is not full,
+(i.e. the <cite>Led</cite> is not blinking ) and the <span class="blue">Incinerator</span> is not burning,
+the <span class="blue">OpRobot</span> moves to the <span class="brown">WASTEIN</span> port and
+gets a <span class="blue">RP</span> from the <span class="blue">WasteStorage</span> container.  Otherwise, if returns to <span class="brown">HOME</span>, if not already here.</p></li>
+<li><p>Fron now on, <a class="reference internal" href="#the-servicestatusgui"><span class="std std-ref">The ServiceStatusGUI</span></a> shall properly change  (part of) its content.</p></li>
+<li><p>The <span class="blue">OpRobot</span> moves to the <span class="brown">BURNIN</span> port and deposits the <span class="blue">RP</span> into the <span class="blue">Incinerator</span>
+(the <span class="magenta">Led</span> is on).</p></li>
+<li><p>While the <span class="blue">Incinerator</span> is burning, the <span class="blue">OpRobot</span> moves to its <span class="brown">HOME</span> port.</p></li>
+<li><p>Whan the <span class="blue">Incinerator</span> has completed a burning phase, the <span class="magenta">Led</span> is off, and the <span class="blue">OpRobot</span> moves
+to the <span class="brown">BURNOUT</span> port, picks up the ash and moves to the <span class="brown">ASHOUT</span> port.</p></li>
+<li><p>The <span class="blue">OpRobot</span> deposits the ash into the <span class="blue">AshStorage</span> container and the <span class="magenta">Sonar</span> gives a value
+less the the previous one.</p></li>
+<li><p>The <span class="blue">OpRobot</span> restarts from point <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
+</ol>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">TemaFinale24</a><ul>
+<li><a class="reference internal" href="#the-structural-part-of-the-building">The structural part of the building</a></li>
+<li><a class="reference internal" href="#the-behavior-of-the-incinerator">The behavior of the <span class="blue">Incinerator</span></a></li>
+<li><a class="reference internal" href="#the-behavior-of-the-oprobot">The behavior of the <span class="blue">OpRobot</span></a></li>
+<li><a class="reference internal" href="#the-management-of-containers">The management of Containers</a></li>
+<li><a class="reference internal" href="#the-servicestatusgui">The ServiceStatusGUI</a></li>
+<li><a class="reference internal" href="#the-behavior-of-the-monitoringdevice">The behavior of the MonitoringDevice</a></li>
+<li><a class="reference internal" href="#service-users-story">Service users story</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="TemaFinale23.html"
+                          title="previous chapter">TemaFinale23</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/TemaFinale24.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="TemaFinale23.html" title="TemaFinale23"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">TemaFinale24</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>
