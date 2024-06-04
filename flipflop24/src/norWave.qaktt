@@ -1,0 +1,87 @@
+System flipflop
+/*
+ * norWave.qak
+ */
+Dispatch s : s(X)
+Dispatch a : a(X)
+
+
+Context ctxflipflop  ip [host="localhost" port=8765]
+
+QActor nor context ctxflipflop{
+	[# var Value = 0 
+	   var OldValue = 0
+	   var CurS  = 1
+	   var CurB  = 0
+	   
+	   fun norf( ){
+	   	 if( CurS==0 && CurB==0 ) Value = 1
+	   	 else Value = 0
+	   }	 
+	#]
+
+	State work initial{
+	   println("$name | $Value  ($CurS,$CurB)") color blue
+	   if [# OldValue !=  Value #]{
+	   	 //println("$name | $Value  ($CurS,$CurB)") color blue
+	   	 [# OldValue =  Value #]
+	   	 autodispatch a:a($Value)
+	   }
+	}
+	Transition t0 
+		whenMsg s -> elabInputS
+		whenMsg a -> elabInputB
+ 
+    State elabInputS{
+    	printCurrentMessage color black
+    	onMsg( s:s(0)){
+    		[# CurS = 0 #]
+    	}
+    	onMsg( s:s(1)){
+    		[# CurS = 1 #]
+    	}   
+    	[# norf() #]	
+    	//println("$name | $Value") color blue
+    	delay 200 //the state change requires time ...
+    	//autodispatch a:a($Value)
+     }
+     Goto work
+     
+    State elabInputB{
+    	//printCurrentMessage color green
+    	onMsg( a:a(0)){
+    		[# CurB = 0 #]
+    	}
+    	onMsg( a:a(1)){
+    		[# CurB = 1 #]
+    	}   
+    	[# norf() #]	   	
+    	//println("$name | $Value") color cyan
+    	delay 200 //the state change requires time ...
+    	//autodispatch a:a($Value)
+    }		
+    Goto work
+ }
+
+/*
+ * Il dispositivo ha un unico ingresso S, essendo l'uscita Q connessa al secondo ingresso b
+ */
+QActor norusage context ctxflipflop{
+	State s0 initial{
+//		println("$name | START") color cyan
+		delay 400
+		println("soff ----------- ") color magenta
+ 		forward nor -m s : s(0)
+  		delay 2000
+		println("son  ----------- ") color magenta
+		forward nor -m s : s(1)
+  		delay 2000
+		println("soff ----------- ") color magenta
+		forward nor -m s : s(0)
+  		delay 2000
+		println("son  ----------- ") color magenta
+		forward nor -m s : s(1)
+  		delay 3000
+		[# System.exit(0) #]
+	}	
+}

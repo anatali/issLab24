@@ -1,0 +1,153 @@
+System flipflop
+/*
+ * flipflop.qak
+ */
+Dispatch s : s(X)
+Dispatch a : a(X)
+
+Dispatch r : r(X)
+Dispatch b : b(X)
+
+Context ctxflipflop  ip [host="localhost" port=8765]
+
+QActor nor1 context ctxflipflop{
+	[# var Value = 3 
+	   var CurS  = 0
+	   var CurA  = 0
+	   
+	   var nInput = 0
+	   
+	   fun norf( ){
+	   	 if( CurS==0 && CurA==0 ) Value = 1
+	   	 else Value = 0
+	   }	 
+	#]
+	State s0 initial{
+		delay 100  //wait for nor2
+		forward nor2 -m b : b(0)
+	}
+	Transition t0 
+		whenMsg s -> elabInputS
+		whenMsg a -> elabInputA
+
+	State elabout  {
+//      if[# nInput == 2 #]{
+ 	    [# norf() #]
+        println("$name | $Value nInput=$nInput") color blue
+       	[# nInput = 0 #]
+       	delay 300
+       	forward nor2 -m b : b($Value)
+//       }
+	}   
+	Transition t0 
+		whenMsg s -> elabInputS
+		whenMsg a -> elabInputA
+ 
+    State elabInputS{
+    	printCurrentMessage color blue
+    	[# nInput = 2 #]
+    	onMsg( s:s(0)){
+    		[# CurS = 0 #]
+    	}
+    	onMsg( s:s(1)){
+    		[# CurS = 1 #]
+    	}   
+     }
+     Goto elabout
+     
+    State elabInputA{
+    	println("$name | elabInputA ${currentMsg.msgContent()} nInput=$nInput") color blue
+    	[# nInput++ #]
+    	onMsg( a:a(0)){
+    		[# CurA = 0 #]
+    	}
+    	onMsg( a:a(1)){
+    		[# CurA = 1 #]
+    	}   
+    }		
+    Goto elabout
+ }
+
+QActor nor2 context ctxflipflop{
+	[# var Value = 1 
+	   var CurR  = 0
+	   var CurB  = 0
+	   
+	   var nInput = 0
+	   
+	   fun norf( ){
+	   	 if( CurR==0 && CurB==0 ) Value = 1
+	   	 else Value = 0
+	   }	 
+	#]
+	
+	State s0 initial{
+		forward nor1 -m a : a(0)
+	}
+	Transition t0 
+		whenMsg r -> elabInputR
+		whenMsg b -> elabInputB
+
+	State elabout  {
+//       if[# nInput == 2 #]{
+ 	     [# norf() #]
+         println("$name | $Value nInput=$nInput") color red
+       	[# nInput = 0 #]
+       	delay 300
+       	forward nor1 -m a : a($Value)
+//       }
+	}  
+	Transition t0 
+		whenMsg r -> elabInputR
+		whenMsg b -> elabInputB
+ 
+    State elabInputR{
+    	printCurrentMessage color magenta
+    	[# nInput = 2 #]
+    	onMsg( r:r(0)){
+    		[# CurR = 0 #]
+    	}
+    	onMsg( r:r(1)){
+    		[# CurR = 1 #]
+    	}   
+     }
+     Goto elabout
+     
+    State elabInputB{   	 
+    	println("$name | elabInputB ${currentMsg.msgContent()} nInput=$nInput") color magenta
+    	[# nInput++ #]
+    	onMsg( b:b(0)){
+    		[# CurB = 0 #]
+    	}
+    	onMsg( b:b(1)){
+    		[# CurB = 1 #]
+    	}     	
+    }		
+    Goto elabout
+ } 
+
+/*
+ * 
+ */
+QActor norusage context ctxflipflop{
+	State s0 initial{
+		println("$name | START") color cyan
+        delay 1000
+		println("ron ----------------  (RESET) ") color yellow
+		forward nor2 -m r : r(1)
+  		delay 1000
+		println("son ------------------(SET) ") color yellow
+		forward nor1 -m s : s(1)
+  		delay 1000
+//		println("ron") color yellow
+//		forward nor2 -m r : r(1)
+//  		delay 2000
+//  		println("son") color yellow
+//		forward nor1 -m s : s(1)
+
+		//delay 2000
+		
+		 
+		[# System.exit(0) #]
+	}	
+}

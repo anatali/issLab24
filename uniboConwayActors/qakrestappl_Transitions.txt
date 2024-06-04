@@ -1,0 +1,3 @@
+{"actor":"griddisplay", "msgType":"dispatch", "curstate":"working", "nextstate":"guicmdhandle", "msgId":"guicmd"}
+{"actor":"griddisplay", "msgType":"dispatch", "curstate":"working", "nextstate":"todisplayhandle", "msgId":"todisplay"}
+{"actor":"gamemock", "msgType":"dispatch", "curstate":"working", "nextstate":"fromdisplayhandle", "msgId":"fromdisplay"}

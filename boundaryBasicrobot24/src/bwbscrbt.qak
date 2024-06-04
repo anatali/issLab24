@@ -1,0 +1,162 @@
+System bwbscrbt
+/*
+ * bwbscrbt.qak
+ * usa basicrobot
+ * 
+ * Percorre il perimetro della stanza e fa una pausa quando rilevato dal sonar
+ */
+Request engage        : engage(OWNER, STEPTIME)	
+Reply   engagedone    : engagedone(ARG)    for engage
+Reply   engagerefused : engagerefused(ARG) for engage
+Dispatch disengage    : disengage(ARG)
+
+Dispatch cmd    : cmd( MOVE )  "MOVE = a|d|l|r|h   "
+
+Request  cmd    : cmd(MOVE,T)  "MOVE = w|s|p (stepSynch)" 
+
+Reply cmddone   : cmddone(R)          for cmd
+Reply cmdfailed : cmdfailed(T,CAUSE)  for cmd
+
+Request step       : step(TIME)	
+Reply stepdone     : stepdone(V)                 for step
+Reply stepfailed   : stepfailed(DURATION, CAUSE) for step
+ 
+Event  sonardata   : sonar( DISTANCE ) 	   
+Event obstacle     : obstacle(X)  
+
+Dispatch brdata    : brdata(S,INFO)
+Dispatch pause     : pause(X) 
+Dispatch goon      : goon(N)   //for automsg in turnandgo
+ 
+Context ctxbwbscrbt   ip [host="localhost"  port=8720   ]
+Context ctxbasicrobot ip [host="127.0.0.1"  port=8020   ]  
+
+ExternalQActor basicrobot context ctxbasicrobot   
+   
+ QActor bwbrcore context ctxbwbscrbt  {
+ 	[# var N = 0 #] 
+	State s0 initial{ 
+		println("$name | STARTS") color yellow 
+//riguardo alla info enessa da WEnv, bwbrcore potrebbe:
+// i) ossservre direttamente ii) osservare delegando iii) NON osservare proprio
+		//observeResource basicrobot msgid brdata           
+		//delegate brdata to bwobserver
+	}  
+	Goto engage
+	
+	State engage{
+		println("$name | $MyName engaging ... ") color yellow 
+		request basicrobot -m engage : engage($MyName,330)
+	}
+	Transition t0 whenReply engagedone   -> doboundary
+ 	              whenReply engagerefused -> end
+ 	
+	State doboundary{
+		delay 200
+		request basicrobot -m  step : step(335)   
+	}
+	Transition t0    
+	    //whenInterrupt brdata -> handleWEnvdata
+	    whenEvent obstacle    -> stoptherobot
+	    whenReply  stepdone   -> doboundary
+	    whenReply  stepfailed -> turnandgo
+	    whenInterrupt   pause -> pausetherobot
+	
+	
+	
+	State turnandgo{
+		//printCurrentMessage color red
+		[# N = N + 1 #]
+		onMsg( stepfailed : stepfailed(T,C)){
+			println("$name | turnandgo after ${payloadArg(0)} since ${payloadArg(1)} N=$N" ) color yellow
+		}
+		forward basicrobot -m cmd : cmd(l) 
+		if [# N == 4 #]{
+			delay 500
+			forward basicrobot -m disengage : disengage($MyName)
+			println("$name | EXIT ") color yellow
+			[# System.exit(0) #]
+		}else {
+			autodispatch goon : goon($N)
+		}
+	}
+	Transition t0 
+	    //whenInterrupt brdata  -> handleWEnvdata
+	    whenEvent obstacle    -> stoptherobot
+	    whenMsg   goon        -> doboundary
+	    whenInterrupt   pause -> pausetherobot
+	    
+
+	State stoptherobot{
+		printCurrentMessage color magenta
+		forward basicrobot -m cmd : cmd(h)
+	} 
+	
+	State handleWEnvdata{
+		//forward basicrobot -m cmd : cmd(h)
+		printCurrentMessage color yellow
+		onMsg( brdata : brdata(basicrobot,sonar(D)) ){
+			println("$name | pausetherobot") color red
+			delay 2500			
+		}
+		returnFromInterrupt
+	} 
+	
+	State pausetherobot{
+		//forward basicrobot -m cmd : cmd(h)
+		println("$name | pausetherobot") color red
+ 		delay 2500			
+		returnFromInterrupt
+	} 
+ 
+	
+	State end{
+		println("$name | ENDS ") color yellow
+	}
+}
+
+/*
+ * Observer della info emessa da WEnv, tra cui i dati del sonar
+ */
+
+QActor bwobserver context ctxbwbscrbt{
+	[# var pauseSent = false #]
+	State s0 initial{ 
+		println("$name | START") color green
+		observeResource basicrobot msgid brdata 
+	}
+	Transition t0
+		whenMsg brdata   -> handlebrdata
+	
+	
+	State handlebrdata{
+		onMsg( brdata : brdata(basicrobot,DATA) ){
+			[# val data = payloadArg(1) #]
+			if [# data.contains("sonar")   #] {
+				if [# ! pauseSent #]{ 
+					forward bwbrcore -m pause : pause(ok)
+					println("$name | sent pause to bwbrcore $data") color magenta
+					[# pauseSent = true #]
+				}								
+			}else{ //other WEnv info
+				[# pauseSent = false #]  //avoid repetirions of pause
+			}
+		}
+ 	}
+	Transition t0
+ 		whenMsg brdata -> handlebrdata
+	    
+ }
+
+/*
+QActor sonar24mock context ctxbwbscrbt{
+	State s0 initial{ 
+		println("$name | START") color yellow
+		//delay 8000
+		//emit obstacle : obstacle(10)
+		println("$name | ENDS")  color yellow
+	}  
+} 
+*/
+
+ 

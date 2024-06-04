@@ -1,0 +1,224 @@
+System conwayactors 
+Event curstate       : curstate(NB,STATE)
+Event startthegame   : startthegame(X)
+Dispatch setstateon  : setsateon(X)      
+Dispatch cellcreated : cellcreated(X,STATE)
+Dispatch griddone    : griddone(X)
+Dispatch nbconfig    : nbconfig(N)
+Dispatch cellends	 : cellends(X)
+Dispatch startdisplay: startdisplay(N,M)
+
+Context ctxconwayactors ip [ host="localhost" port=8260] 
+
+
+QActor gridisplay context ctxconwayactors{
+	State s0 initial{
+		println("gridisplay STARTS") 
+	}
+	Transition t0 whenMsg startdisplay -> initdisplaygrid
+	
+	State initdisplaygrid {
+		onMsg( startdisplay : startdisplay(N,M)) {
+			[#  val Ncells   = payloadArg(0).toInt(); 
+				val CellSize = payloadArg(1).toInt();
+				unibo.GridAppNoFXML.start(Ncells,CellSize)
+			#]
+		}
+	}
+}
+ 
+QActor gridcreator context ctxconwayactors{
+	[# val GridSize         = 5
+	   var Ncells           = 0
+	   var Ncellscreated    = 0
+	   var CellEndNum       = 0  
+	   var DelayBeforeStart = 0L 
+	#]
+	State s0 initial{
+		println("gridcreator STARTS") 		
+		//CREA LA DESCR Prolog DELLA GRID e gli attori-cella
+		[#  
+			utils.GenGridDescr.gen(GridSize,GridSize); 
+			sysUtil.loadTheory("grid.pl");
+			val cells= utils.GenGridDescr.readTheCellsFromProlog(); 
+			while( cells.hasNext() ){
+				val next = "_"+cells.next().toString()
+				Ncells   = Ncells + 1
+				createActorDynamically("cell", next, false) //false isconfined
+			}
+			DelayBeforeStart = Ncells * 100L 
+		#]
+		forward gridisplay -m startdisplay : startdisplay($GridSize,50)
+ 		delay 1500 //Give the grid the time to setup
+  } 
+  Transition t0 whenMsg cellcreated -> cellcreatedhandle
+  
+  State cellcreatedhandle{
+  	//printCurrentMessage
+  	[# Ncellscreated = Ncellscreated + 1 #]
+  	onMsg( cellcreated : cellcreated(CELL,STATE) ){
+  		println("${payloadArg(0)} CREATED - $Ncellscreated/$Ncells") color black
+  		if[# Ncellscreated == Ncells #]{
+  			//Init some cell (we could use the javafx interface)
+		  	[# forward("setstateon", "setstateon(ok)" ,"cell_c(1,2)"  ) 
+		  	   forward("setstateon", "setstateon(ok)" ,"cell_c(2,2)"  ) 
+		  	   forward("setstateon", "setstateon(ok)" ,"cell_c(3,2)"  ) 
+		  	#]  	
+  			forward gridcreator -m griddone : griddone(Ncells)
+  			//delay 1500
+  		} 
+  	}
+  }
+  Transition t0 whenMsg cellcreated  -> cellcreatedhandle  
+                whenMsg griddone     -> configthecells
+  
+  //Dopo avere creato la griglia, dico a ciascuna cella quanti vicini ha
+  State configthecells{
+	[#
+			val cells= utils.GenGridDescr.readTheCellsFromProlog()
+			//CommUtils.outred("configthecells $cells") 
+			while( cells.hasNext() ){
+				var countnb = 0
+				val name    =  cells.next().toString()
+				//CommUtils.outred("Connessione ai vicini della cella $name")
+	 			val coords  = name.replace("c(","").replace(")","")
+				val nblist  = utils.GenGridDescr.getNeigbornPrologListIterator(coords);
+				//CommUtils.outcyan("Connessione ai vicini della cella c($coords)") 
+				while( nblist.hasNext() ){
+					val next = nblist.next().toString()
+					//CommUtils.outcyan("vicino di $name=$next")
+					subscribeTo("cell_$next", "cell_$name" )
+					countnb=countnb+1
+				} 
+				CommUtils.outcyan("La cella cell_c($coords) ha $countnb vicini")
+				forward("nbconfig", "nbconfig($countnb)" ,"cell_c($coords)")
+			}		
+	#]  	  
+	delayVar   DelayBeforeStart
+	println("====================== start =========================") color blue
+    emit startthegame : startthegame(ok)
+  } 
+  Transition t0 whenMsg cellends -> terminatethegame 
+  
+  State terminatethegame{
+  	onMsg( cellends : cellends(X) ) {
+ 		[# CellEndNum = CellEndNum  + 1 #]
+ 		println("CELL TERMINATED ${payloadArg(0)} N=$CellEndNum") color blue
+   		if [# CellEndNum == Ncellscreated #]{
+  			println("GAME TERMINATED")
+  			[# System.exit(0) #]
+  		} 
+  	}
+  }   
+  Transition t0 whenMsg cellends -> terminatethegame 
+  
+}//gridcreator
+
+
+QActor cell context ctxconwayactors dynamicOnly{ 
+	[#  val MyName      = name
+		var Mystate     = false
+		var MyInfo      = name+","+Mystate 
+		var countnb     = 0  //numero dei vicini
+		var countnbon   = 0  //numero degli stati on dei vicini
+		var countnbmsgs = 0  //numero dei msg ricevuti dai vicini
+		val limit       = 2  //numero max di ripetizioni
+		var nloop       = 0  //numero corrente di ripetizioni
+		var coords      = listOf<String>("","")
+		var x           = -1
+		var y           = -1 
+	#]
+	State s0 initial{	
+		//println("$name READY ") color magenta	
+		[# coords = name.replace("cell_c(","").replace(")","").split(",") 
+		   x = coords[0].toInt()
+		   y = coords[1].toInt()
+		#]
+		println("$name READY $x,$y") color magenta
+		forward gridcreator -m cellcreated : cellcreated($MyInfo)
+ 	}
+	Transition t0 whenMsg nbconfig     -> setmyneigborns 
+	              whenMsg setstateon   -> setthecellstate
+	
+	State setthecellstate{
+		[# Mystate = true; unibo.GridAppNoFXML.cellOn( x,y )#]		
+		println("$name setthecellstate $Mystate") color magenta
+	}
+	Transition t0 whenMsg nbconfig -> setmyneigborns
+	
+ 
+    State setmyneigborns{
+    	//printCurrentMessage color green
+    	//La cella riceve l'info su QUANTI vicini ha da gridcreator	    
+	    onMsg( nbconfig : nbconfig(N) ){
+	    	[# countnb = payloadArg(0).toInt() #]
+	    	println("$name ha configurato $countnb vicini") color black
+	    }
+    }
+    Transition t0 whenMsg nbconfig       -> setmyneigborns
+    	          whenEvent startthegame -> emitinfophase    
+ 
+			
+	State emitinfophase{
+	    [# countnbmsgs = 0
+	       countnbon   = 0  
+            MyInfo     = name+","+Mystate  
+		#]
+		//println("$name emitinfophase $MyInfo") color green
+	    emitlocalstream curstate : curstate($MyInfo)
+ 		delay 1000  //give the other cells the time to elaborate
+ 	}  
+	Goto perceiveinfophase 
+ 	//Transition t0 whenEvent curstate -> elabinfo
+	
+	State perceiveinfophase{
+		//println("$name perceiveinfophase") 
+	}
+ 	Transition t0 whenEvent curstate -> elabinfo
+ 	 
+	State elabinfo{ 
+		//if [# name.equals("cell_c(2,2)") #] { println("$name elabinfo ($x,$y) $countnbmsgs/$countnb | $countnbon") }
+		[# countnbmsgs=countnbmsgs+1 #]
+		onMsg ( curstate : curstate(NB,false) ){
+			
+		}
+		onMsg ( curstate : curstate(NB,true) ){
+			//println("$name | state of neighborn ${payloadArg(0)} is true ") color blue
+			[# countnbon = countnbon + 1 #]
+		}
+ 	} 
+	Goto perceiveinfophase if [# countnbmsgs < countnb #] else elabstatephase
+	
+	
+	State elabstatephase{
+		//if [# name.equals("cell_c(2,2)") #] {println("$name elabstatephase $Mystate $countnbon $nloop/$limit  ")}
+		//[# val oldstate = Mystate # ]
+		if [# Mystate  #]{ //soprevvice o muore
+			[# Mystate = countnbon==2 || countnbon==3 #]
+		}
+		if [# ! Mystate  #]{ //rinasce o rimane morta
+			[# Mystate = (countnbon==3) #]
+		}
+		//Aggiorno il display		  
+		[# if( Mystate ) unibo.GridAppNoFXML.cellOn( x,y ) 
+			else unibo.GridAppNoFXML.cellOff( x,y )
+			nloop = nloop + 1
+		 #]
+		delay 1000
+		//if [# name.equals("cell_c(2,2)") #] {println("$name elabstatephase $Mystate $countnbon $nloop/$limit  ")}
+	}
+	Goto emitinfophase if [# nloop <= limit #] else  end
+	
+	
+	State end{
+		//println("$name ENDS") color cyan
+		forward gridcreator -m cellends : cellends($MyName)
+	}
+}
+                    
+                    
+//https://foojay.io/today/beginning-javafx-with-intellij/
+//https://www.google.com/search?q=fxml+tutorial+in+itellij&sca_esv=576432660&rlz=1C1CHBF_itIT812IT812&sxsrf=AM9HkKlMi7oxSgmOhEmlwB1HHtIVOVCY6Q%3A1698226632584&ei=yOE4ZaD7IumN9u8P5qGc6As&ved=0ahUKEwig_7qZ85CCAxXphv0HHeYQB70Q4dUDCBA&uact=5&oq=fxml+tutorial+in+itellij&gs_lp=Egxnd3Mtd2l6LXNlcnAiGGZ4bWwgdHV0b3JpYWwgaW4gaXRlbGxpajIFEAAYogQyBRAAGKIESLsbUABYAHAAeACQAQCYAXCgAckBqgEDMS4xuAEDyAEA-AEB4gMEGAAgQYgGAQ&sclient=gws-wiz-serp#fpstate=ive&vld=cid:1f75af36,vid:IZCwawKILsk,st:0
+//javafx gluecom
+//--module-path C:\\Didattica2023\\issLab2023\\jfxintro\lib --add-modules javafx.controls,javafx.fxm
+                    

@@ -107,20 +107,6 @@ class Engager ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 					}	 	 
 					 transition( edgeName="goto",targetState="s0", cond=doswitch() )
 				}	 
-				state("handleEvent") { //this:State
-					action { //it:State
-						CommUtils.outcyan("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
-						 	   
-						 CommUtils.outcyan("handleEvent $currentMsg") 
-								   val info = currentMsg.toString()
-								   if( curConn != null ) CommUtils.forwardOnInterconn(curConn,info) //invio l'evento al caller'
-						//genTimer( actor, state )
-					}
-					//After Lenzi Aug2002
-					sysaction { //it:State
-					}	 	 
-					 transition( edgeName="goto",targetState="s0", cond=doswitch() )
-				}	 
 				state("checkTheOwner") { //this:State
 					action { //it:State
 						CommUtils.outcyan("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")

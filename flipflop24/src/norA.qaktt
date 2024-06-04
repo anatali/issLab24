@@ -1,0 +1,95 @@
+System flipflop
+/*
+ * norA.qak
+ */
+Dispatch s : s(X)
+Dispatch a : a(X)
+
+Dispatch son  : son(ok)
+Dispatch soff : soff(ok)
+
+Dispatch aon  : aon(ok)
+Dispatch aoff : aoff(ok)
+
+Context ctxflipflop  ip [host="localhost" port=8765]
+
+QActor nor context ctxflipflop{
+	[# var Value = 1 #]
+	
+		
+	State s00 initial{
+       [# Value = 1 #]		
+       println("s00 | $Value") color cyan
+       //delay 1000
+       //forward nor -m aon : aon(ok)
+	}
+	Transition t0 
+		whenMsg son  -> s10
+		whenMsg soff -> s00
+		whenMsg aon  -> s01
+		whenMsg aoff -> s00
+	
+	State s01{
+ 	   [# Value = 0 #]	
+ 	   println("s01 | $Value") color cyan
+ 	   //delay 1000
+ 	   //forward nor -m aoff : aoff(ok)
+	}	
+	Transition t0 
+		whenMsg son  -> s11
+		whenMsg soff -> s01
+		whenMsg aon  -> s01
+		whenMsg aoff -> s00
+	
+	State s10{
+		[# Value = 0 #]	
+		println("s10 | $Value") color cyan
+	}	
+	Transition t0 
+		whenMsg son  -> s10
+		whenMsg soff -> s00
+		whenMsg aon  -> s11
+		whenMsg aoff -> s10
+	
+	
+		
+	State s11{
+		[# Value = 0 #]
+		println("s11 | $Value") color cyan
+	}			
+	Transition t0 
+		whenMsg son  -> s11
+		whenMsg soff -> s01
+		whenMsg aon  -> s11
+		whenMsg aoff -> s10
+}
+
+/*
+ * 
+ */
+QActor norusage context ctxflipflop{
+	State s0 initial{
+//		println("$name | START") color cyan
+		println("soff") color yellow
+		forward nor -m soff : soff(ok)
+ 		delay 500
+ 		println("aoff") color yellow
+		forward nor -m aoff : aoff(ok)
+		delay 500
+		println("son") color yellow
+		forward nor -m son : son(ok)
+		delay 500
+		println("aon") color yellow
+		forward nor -m aon : aon(ok)
+		delay 500
+		println("soff") color yellow
+		forward nor -m soff : soff(ok)
+		delay 500
+		println("aoff") color yellow
+		forward nor -m aoff : aoff(ok)
+		delay 3000
+		
+		 
+		[# System.exit(0) #]
+	}	
+}

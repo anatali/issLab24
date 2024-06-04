@@ -1,0 +1,154 @@
+System flipflop
+/*
+ * flipflopNoFacade.qak
+ * Un nor emette un messaggio di output solo se cambia di stato
+ * 
+ * Vedi https://www.edutecnica.it/sistemi/latch/latch.htm
+ */
+//Messaggi relativi ai NOR 
+Dispatch s : s(X)
+Dispatch q : q(X) 
+
+Dispatch r : r(X)
+Dispatch q1 : q1(X)
+
+Context ctxflipflop  ip [host="localhost" port=8765]
+
+/*
+ * nor_r
+ */ 
+QActor nor_r context ctxflipflop{
+	[# var Value    = 1 
+	   var NewValue = 0
+	   var CurR     = 0
+	   var CurQ1    = 0
+	   	   
+	   fun norf( a:Int,b:Int ) : Int{
+	   	 if( a == 0 && b == 0) return 1
+	   	 else return 0
+	   }	 
+	#]
+	
+	State s0 initial{
+	}
+	Transition t0 
+		whenMsg r  -> elabInputR
+		whenMsg q1 -> elabInputQ1
+ 
+
+	State elabout  { 
+		[# NewValue = norf(CurR,CurQ1) #]
+		//Invia messaggio solo se cambia di valore
+    	if [# NewValue !==  Value #]{
+    		forward nor_s -m q : q($NewValue)  
+    		[# Value=NewValue #]   
+    	}   	
+         println("$name | $Value  ") color magenta
+ 	}   
+	Transition t0 
+		whenMsg r -> elabInputR 
+		whenMsg q1 -> elabInputQ1
+  
+    State elabInputR{   	
+    	//printCurrentMessage color black
+    	onMsg( r:r(0)){ [# CurR = 0  #] }
+    	onMsg( r:r(1)){ [# CurR = 1  #] }  
+     }
+     Goto elabout
+      
+    State elabInputQ1{   	 
+    	//printCurrentMessage color black
+    	onMsg( q1:q1(0)){ [# CurQ1 = 0  #] }
+    	onMsg( q1:q1(1)){ [# CurQ1 = 1  #] }    
+    }		
+    Goto elabout
+ } 
+ 
+/*
+ * nor_s
+ */ 
+ QActor nor_s context ctxflipflop{
+	[# var Value    = 0  
+	   var NewValue = 0
+	   var CurS     = 0
+	   var CurQ     = 1
+ 	   
+	   fun norf( a:Int,b:Int ) : Int{
+	   	 if( a == 0 && b == 0) return 1
+	   	 else return 0
+	   }		 
+	#]
+	State s0 initial{
+//		delay 100  //wait for nor_r 
+	}
+	Transition t0 
+		whenMsg s -> elabInputS
+		whenMsg q -> elabInputQ
+
+
+	State elabout  {
+		[# NewValue = norf(CurS,CurQ) #]
+		//Invia messaggio solo se cambia di valore
+     	if [# NewValue !==  Value #]{
+     		forward nor_r -m q1 : q1($NewValue)
+     	    [# Value=NewValue #] 
+     	}
+        println("$name | $Value  ") color blue
+  	}   
+	Transition t0 
+		whenMsg s -> elabInputS
+		whenMsg q -> elabInputQ
+ 
+    State elabInputS{
+    	//printCurrentMessage color black
+    	onMsg( s:s(0)){ [# CurS = 0  #] }
+    	onMsg( s:s(1)){ [# CurS = 1  #] }   
+     }
+     Goto elabout
+
+     
+    State elabInputQ{
+    	//printCurrentMessage color black
+    	onMsg( q:q(0)){ [# CurQ = 0 #] }
+    	onMsg( q:q(1)){ [# CurQ = 1  #] } 
+    }	
+    Goto elabout	
+ }
+
+
+ 
+/*
+ * UTILIZZATORE: si vedano gli stati della figura in FlipFlop24.html
+ */
+ 
+
+ 
+   QActor latchusage context ctxflipflop{
+  	State s0 initial{
+		println("$name | START with (1,0)") color cyan
+		delay 1000
+         	
+		println("s1 - RESET 1 ........................ " ) color cyan
+		forward nor_r  -m r : r(1)	
+		delay 500	 //Give time to elaborate
+		println("s2 - RESET 0 ........................ " ) color cyan
+		forward nor_r  -m r : r(0)		 
+		delay 500	 //Give time to elaborate
+		println("s3 - SET 1 ........................ " ) color cyan
+		forward nor_s  -m s : s(1)		 
+		delay 500	 //Give time to elaborate
+		println("s4 - SET 0 ........................ " ) color cyan
+		forward nor_s  -m s : s(0)		 
+		delay 500	 //Give time to elaborate
+		println("s5 - RESET 1 ........................ " ) color cyan
+		forward nor_r  -m r : r(1)		 
+		delay 500	 //Give time to elaborate
+		println("s6 - RESET 0 ........................ " ) color cyan
+		forward nor_r  -m r : r(0)		 
+		delay 500	 //Give time to elaborate
+		[# System.exit(0) #]
+	}
+   	
+  }
+ 
+ 

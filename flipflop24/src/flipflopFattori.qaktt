@@ -1,0 +1,171 @@
+System flipflop
+
+Request calcoutputQ : calcoutputQ(S,T)
+Reply resultOkQ : resultOkQ(R) for calcoutputQ
+Reply resultKoQ : resultKoQ(R) for calcoutputQ
+
+Request calcoutputN : calcoutputN(S,T)
+Reply resultOkN : resultOkN(R) for calcoutputN
+Reply resultKoN : resultKoN(R) for calcoutputN
+
+Request update : update(S,R)
+Reply updateOk : updateOk(Q,N) for update
+Reply updateKo : updateKo(Q,N) for update
+
+
+Context ctxflipflop ip [host="localhost" port=8012]
+
+
+QActor flipflop context ctxflipflop{
+	
+	[# var S = 0
+	   var R = 0
+	   var Q = 0
+	   var N = 0
+	#]
+	
+	State s0 initial{
+		println("$name STARTS") color magenta
+	}
+	Transition t0 whenRequest update -> handleUpdate
+	
+	State handleUpdate{
+		onMsg( update : update(S,R) ){
+			[#
+				S = payloadArg(0).toInt() 
+				R = payloadArg(1).toInt()
+			#]
+			
+				request nor -m calcoutputQ : calcoutputQ($R,$N)
+				//delay 100
+				request nor -m calcoutputN : calcoutputN($S,$Q)
+
+		}
+	}
+	Transition t0 whenReply resultOkQ -> handleUpdateOk
+				  whenReply resultOkN -> handleUpdateOk
+				  whenReply resultKoQ -> handleUpdateKo
+				  whenReply resultKoN -> handleUpdateKo
+				  //whenRequest update  -> handleUpdate
+				  
+	State handleUpdateOk{
+		printCurrentMessage
+		onMsg( resultOkQ : resultOkQ(V) ){
+			[# Q = payloadArg(0).toInt()  #]
+			//replyTo update with updateOk : updateOk($Q,$N)
+		}
+		
+		onMsg( resultOkN : resultOkN(V) ){
+			[# N = payloadArg(0).toInt()  #]
+			replyTo update with updateOk : updateOk($Q,$N)
+		}
+	}
+	Transition t0 whenReply resultOkQ -> handleUpdateOk
+				  whenReply resultOkN -> handleUpdateOk
+				  whenReply resultKoQ -> handleUpdateKo
+				  whenReply resultKoN -> handleUpdateKo
+				  whenRequest update  -> handleUpdate
+	
+	State handleUpdateKo{
+		printCurrentMessage
+		onMsg( resultKoQ : resultKoQ(V) ){
+			replyTo update with updateKo : updateKo(10) 
+		}
+		
+		onMsg( resultKoN : resultKoN(V) ){
+			replyTo update with updateKo : updateKo(10) 
+		}
+	}
+}
+
+
+QActor nor context ctxflipflop withobj utils using "NorUtils.create()"{
+	import "main.resources.utils.NorUtils"
+	
+	[# var S = 0
+	   var T = 0
+	   var R = 0
+	#]
+	
+	State s0 initial{
+		println("$name STARTS") color cyan
+	}
+	Transition t0 whenRequest calcoutputQ -> handleRequest
+				  whenRequest calcoutputN -> handleRequest
+	
+	State handleRequest{
+		printCurrentMessage
+		onMsg( calcoutputQ : calcoutputQ(S,T) ){
+			[#  S = payloadArg(0).toInt() 
+				T = payloadArg(1).toInt() 
+				var check = utils.checkInputs(S,T);
+			#]
+			
+			if [# check #]{
+				[# R = utils.nor(S,T); #]
+				replyTo calcoutputQ with resultOkQ : resultOkQ($R)
+			} else {
+				replyTo calcoutputQ with resultKoQ : resultKoQ(10)
+			}
+			
+		}
+		
+		onMsg( calcoutputN : calcoutputN(S,T) ){
+			[#  S = payloadArg(0).toInt() 
+				T = payloadArg(1).toInt() 
+				var check = utils.checkInputs(S,T);
+			#]
+			
+			if [# check #]{
+				[# R = utils.nor(S,T); #]
+				replyTo calcoutputN with resultOkN : resultOkN($R)
+			} else {
+				replyTo calcoutputN with resultKoN : resultKoN(10)
+			}
+			
+		}
+	}
+	Transition t0 whenRequest calcoutputQ -> handleRequest
+				  whenRequest calcoutputN -> handleRequest
+}
+
+
+QActor requestmock context ctxflipflop{
+	
+	[# 
+		var Q = 0
+		var N = 0
+	#]
+	
+	State s0 initial{
+		println("$name STARTS") color green
+	}
+	Goto sendRequest
+	
+	State sendRequest{
+		delay 2000
+		request flipflop -m update : update(1,1)
+	}
+	Transition t0 whenReply updateOk -> handleUpdateOk
+				  whenReply updateKo -> handleUpdateKo
+				  
+	State handleUpdateOk{
+		printCurrentMessage
+		onMsg( updateOk : updateOk(Q,N) ){
+			[#  Q = payloadArg(0).toInt()
+				N = payloadArg(1).toInt() 
+			#]
+			println("$name | request valid - result = Q = $Q, N = $N") color green
+		}
+	}
+	Goto end
+	
+	State handleUpdateKo{
+		println("$name | request invalid") color red
+	}
+	Goto end
+	
+	State end{
+		[# System.exit(0) #]
+	}
+} 

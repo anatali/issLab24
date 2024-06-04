@@ -1,0 +1,360 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>GLM: Analisi del problema &#8212; iss24 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="GLM-Sprint2: basi di conoscenza" href="GLMSprint2.html" />
+    <link rel="prev" title="GLM-Sprint1: sottosistema di I/O" href="GLMSprint1.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="GLMSprint2.html" title="GLM-Sprint2: basi di conoscenza"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="GLMSprint1.html" title="GLM-Sprint1: sottosistema di I/O"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">GLM: Analisi del problema</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="glm-analisi-del-problema">
+<h1>GLM: Analisi del problema<a class="headerlink" href="#glm-analisi-del-problema" title="Permalink to this heading">¶</a></h1>
+<p>Impostare il gioco come il risultato delle attività di celle
+logicamente disposte in una griglia,
+che possono interagire solo con scambio di messaggi,
+implica dover affrontare nuovi problemi. E’ quindi</p>
+<p><span class="slide1">necessaria una accurata fase di analisi</span></p>
+<p>per individuare e discutere i nuovi problemi che si pongono.</p>
+<p>Iniziamo ricordando che disponiamo già di un <em>Actor</em> (<a class="reference internal" href="GLMSprint1.html#griddisplay"><span class="std std-ref">griddisplay</span></a>)
+con cui rendere visibile su una GUI una rappresentazione dello stato corrente di una cella.</p>
+<p>Abbiamo anche stabilito (regola <a class="reference internal" href="GLMSprint1.html#principio-r-1"><span class="std std-ref">R_1</span></a>) che il dispositivo  <a class="reference internal" href="GLMSprint1.html#griddisplay"><span class="std std-ref">griddisplay</span></a>
+deve fornire solo funzioni di I/O, lasciando  a <a class="reference internal" href="GLMSprint3.html#gamelife"><span class="std std-ref">gamelife</span></a> la responsabilità della logica applicativa.</p>
+<section id="problematiche">
+<h2>Problematiche<a class="headerlink" href="#problematiche" title="Permalink to this heading">¶</a></h2>
+<section id="p-1">
+<h3>P_1<a class="headerlink" href="#p-1" title="Permalink to this heading">¶</a></h3>
+<ul>
+<li><p>La transizione dello stato di una cella (da <strong>true</strong> a <strong>false</strong> o viceversa) implica che la cella
+debba acquisire conoscenza sullo stato corrente delle sue celle adiacenti.</p>
+<p><span class="slide2">P_1) come fa una cella a conoscere quali sono le sue celle adiacenti</span> in assenza di una struttura globale?</p>
+<p>Abbiamo già osservato che la <a class="reference internal" href="GLMIntro.html#denominazione-delle-celle"><span class="std std-ref">Denominazione delle celle</span></a> implica che una cella,
+pur non avendo riferimenti concreti
+(puntatori o altro) alle celle vicine, può <em>conosere i nomi delle sue celle logicamente vicine</em>,
+restituiti dalla funzione <a class="reference internal" href="GLMSprint2.html#genneighborsnames"><span class="std std-ref">genNeighborsNames</span></a>.</p>
+</li>
+</ul>
+</section>
+<section id="p-2">
+<h3>P_2<a class="headerlink" href="#p-2" title="Permalink to this heading">¶</a></h3>
+<ul>
+<li><p>L’assenza di una matrice globale di celle, come <span class="blue">grid</span> del <a class="reference internal" href="ConwayLife.html#la-struttura"><span class="std std-ref">caso concentrato</span></a>
+implica che una cella possa venire a conoscenza dello stato corrente di una sua vicina solo
+attraverso una comunicazione esplicita a messaggi.</p>
+<p><span class="slide2">P_2) quale è la forma di comunicazione più opportuna tra le celle?</span></p>
+</li>
+</ul>
+</section>
+</section>
+<section id="strategie-di-comunicazione-tra-le-celle">
+<h2>Strategie di comunicazione tra le celle<a class="headerlink" href="#strategie-di-comunicazione-tra-le-celle" title="Permalink to this heading">¶</a></h2>
+<p>Si possono individuare diverse strategie.
+Una cella <strong>C</strong>, per <span class="blue">conoscere lo stato</span> di una sua cella adicente <strong>A</strong>, può:</p>
+<ol class="arabic simple">
+<li><p>inviare ad <strong>A</strong> una  <span class="blue">request</span> per conoscere il valore corrente dello stato di <strong>A</strong>, che
+si impegna a inviare tale valore come risposta (<span class="blue">reply</span>) a <strong>C</strong>;</p></li>
+<li><p>elaborare un <span class="blue">dispatch</span> inviato da <strong>A</strong> a <strong>C</strong>, con il valore del suo stato corrente;</p></li>
+<li><p>operare come un <span class="blue">observer</span> della cella <strong>A</strong>. Ad ogni cambio di stato, <strong>A</strong>
+<em>emette informazione di aggiornamento</em> a favore di
+a <strong>C</strong> e di tutte le altre celle-observer (quelle a lei logicamante adiacenti).</p></li>
+</ol>
+<p>Se una cella opera come un ente osservabile, l’informazione di aggiornamento può essere propagata in modi diversi:</p>
+<section id="interazione-a-eventi">
+<h3>Interazione a eventi<a class="headerlink" href="#interazione-a-eventi" title="Permalink to this heading">¶</a></h3>
+<p>la cella <strong>A</strong> emette un <em>event generico</em>, che viene propagato a tutti i componenti del sistema.</p>
+</section>
+<section id="interazione-a-eventi-stream">
+<h3>Interazione a eventi-stream<a class="headerlink" href="#interazione-a-eventi-stream" title="Permalink to this heading">¶</a></h3>
+<p>la cella <strong>A</strong> emette un <em>evento-stream</em>, che viene propagato solo alle celle (locali, vicine) che si sono
+sottoscritte a <strong>C</strong> mediante la primitiva <strong>qak</strong> <a class="reference internal" href="GLMSprint3.html#subscribeto"><span class="std std-ref">subscribeTo</span></a>.</p>
+</section>
+<section id="interazione-publish-subscribe">
+<h3>Interazione publish-subscribe<a class="headerlink" href="#interazione-publish-subscribe" title="Permalink to this heading">¶</a></h3>
+<p>la cella <strong>A</strong> <em>pubblica</em> l’informazione su un <a class="reference external" href="https://en.wikipedia.org/wiki/Message_broker">Message Broker</a>, usando ad esempio un
+protocollo <span class="blue">publish-subscribe</span> come <a class="reference external" href="https://en.wikipedia.org/wiki/MQTT">MQTT</a></p>
+<p>A queste forme aggiungiamo, per completare l’elenco, la già menzionata:</p>
+</section>
+<section id="interazione-a-dispatch">
+<h3>Interazione a dispatch<a class="headerlink" href="#interazione-a-dispatch" title="Permalink to this heading">¶</a></h3>
+<p>la cella <strong>A</strong> invia a ogni sua cella vicina <strong>C</strong> un <em>dispatch</em> con il valore del suo stato corrente</p>
+<p>Ciascuna di queste forme di interazione ha i suoi pro e contro ed andrebbe sperimentata concretamente.
+Noi pocederemo in questo modo:</p>
+<ul class="simple">
+<li><p>Escludiamo la <a class="reference internal" href="#interazione-a-eventi"><span class="std std-ref">Interazione a eventi</span></a> generici, in quanto un evento <strong>qak</strong> viene propagato
+a tutti gli attori del sistema (escluso l’emettitore); quindi la riteniamo inutilmente onerosa.</p></li>
+<li><p>Lasciamo la interazione tramite <strong>request</strong> a una discussione finale.</p></li>
+</ul>
+<p>Per quanto riguarda le rimanenti forme di interazione tra le celle,
+osserviamo che. concettualmente, sono forme diverse di realizzazione di
+una <span class="slide1">unica operazione logica</span>: l’invio di informazione alle celle vicine.
+Questa operazione logica può essere espressa da una nuova funzione.</p>
+<p><span class="slide2">sendToNeighbors</span>: operazione logica di alto livello
+(definita nel file <a class="reference external" href="../../../../../uniboConwayActors/src/conway/GLMSupport.kt">GMLSupport.kt</a>), con cui una cella può
+inviare il valore del suo stato corrente alle celle vicine.</p>
+</section>
+</section>
+<section id="pianificazione-degli-ulteriori-sprint-di-sviluppo">
+<h2>Pianificazione degli ulteriori Sprint di sviluppo<a class="headerlink" href="#pianificazione-degli-ulteriori-sprint-di-sviluppo" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Iniziamo pensando che tutte le celle siano locali a uno stesso <strong>Context</strong> e che possano quindi
+usare la <a class="reference internal" href="#interazione-a-eventi-stream"><span class="std std-ref">Interazione a eventi-stream</span></a>. Questa forma verrà sperimentata nello
+<a class="reference internal" href="GLMSprint3.html#glm-sprint3-interazioni-a-eventi-stream"><span class="std std-ref">Sprint3</span></a></p></li>
+<li><p>Visto che l’ipotesi di località non è ammissibile se il sistema è distribuito su più nodi
+computazionali, sperimentiamo nello <a class="reference internal" href="GLMSprint4.html#glm-sprint4-interazioni-a-eventi-via-mqtt"><span class="std std-ref">Sprint4</span></a>
+una  <a class="reference internal" href="#interazione-publish-subscribe"><span class="std std-ref">Interazione publish-subscribe</span></a> che
+dovrebbe costituire una evoluzione semplice della versione precedente.</p></li>
+<li><p>Per verificare come l’uso dei modelli di alto livello faciliti la modifica degli schemi di interazione,
+adotteremo una  <a class="reference internal" href="#interazione-a-dispatch"><span class="std std-ref">Interazione a dispatch</span></a> nello <a class="reference internal" href="GLMSprint5.html#glm-sprint5-interazioni-a-dispatch"><span class="std std-ref">Sprint5</span></a>.</p></li>
+</ol>
+<p>La funzione <em>sendToNeighbors</em> può quindi essere impostata come segue:</p>
+<section id="sendtoneighbors">
+<h3>sendToNeighbors<a class="headerlink" href="#sendtoneighbors" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>La cella rappresentata dall’<em>Actor</em> <code class="docutils literal notranslate"><span class="pre">a</span></code>
+invia informazione <code class="docutils literal notranslate"><span class="pre">MyInfo</span></code> sullo suo stato corrente alle celle vicine,
+usando forme di comunicazione diverse a seconda dell’argomento <span class="slide3">mode</span>.</p>
+<p>La comunicazione a <em>dispatch</em> richiede di ricevere in ingresso
+la lista dei nomi delle celle vicine (<code class="docutils literal notranslate"><span class="pre">NbNameslist</span></code>) che
+alle altre forme non serve.</p>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>suspend fun sendToNeighbors(
+   a: ActorBasic, MyInfo: String,
+   mode:String=&quot;evstream&quot;,
+   NbNameslist: Vector&lt;Term&gt;? = null ){
+   when( mode ){
+   &quot;evstream&quot;-&gt;
+     emitLocalStreamToNeighbors(a,MyInfo )
+   &quot;mqtt&quot;    -&gt;
+     emitEvstreamWithmqtt(a,MyInfo)
+   &quot;dispatch&quot;-&gt;forwardToNeighbors(a,MyInfo,NbNameslist!!)
+   else -&gt; CommUtils.outred(
+       &quot;sendToNeighbors mode $mode not found&quot;)
+   }
+}
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>In questo Sprint, useremo il valore di default (<em>evstream</em>) di <span class="slide3">mode</span>, usando
+la funzione <a class="reference internal" href="#emitlocalstreamevent"><span class="std std-ref">emitLocalStreamEvent</span></a> che ogni <em>Actor</em> posside</p>
+</section>
+<section id="emitlocalstreamtoneighbors">
+<h3>emitLocalStreamToNeighbors<a class="headerlink" href="#emitlocalstreamtoneighbors" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="nd">@JvmStatic</span>
+<span class="kd">suspend</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">emitLocalStreamToNeighbors</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="n">ActorBasic</span><span class="p">,</span><span class="w"> </span><span class="n">MyInfo</span><span class="p">:</span><span class="kt">String</span><span class="w"> </span><span class="p">){</span>
+<span class="w">    </span><span class="n">a</span><span class="p">.</span><span class="na">emitLocalStreamEvent</span><span class="p">(</span><span class="s">&quot;curstate&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;curstate(</span><span class="si">$</span><span class="n">MyInfo</span><span class="s">)&quot;</span><span class="w"> </span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="emitlocalstreamevent">
+<h3>emitLocalStreamEvent<a class="headerlink" href="#emitlocalstreamevent" title="Permalink to this heading">¶</a></h3>
+<p>Questa funzione è definita in <code class="docutils literal notranslate"><span class="pre">ActorBasic.kt</span></code> e permette a un <em>Actor</em> di inviare un evento-stream
+a tutti i suoi <em>subscriber</em>.</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">suspend</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">emitLocalStreamEvent</span><span class="p">(</span><span class="n">ev</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="p">,</span><span class="w"> </span><span class="n">evc</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="p">){</span>
+<span class="w">   </span><span class="n">emitLocalStreamEvent</span><span class="p">(</span><span class="n">MsgUtil</span><span class="p">.</span><span class="na">buildEvent</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">ev</span><span class="p">,</span><span class="w"> </span><span class="n">evc</span><span class="p">))</span>
+<span class="p">}</span>
+
+<span class="kd">suspend</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">emitLocalStreamEvent</span><span class="p">(</span><span class="n">v</span><span class="p">:</span><span class="w"> </span><span class="n">IApplMessage</span><span class="p">){</span>
+<span class="w">   </span><span class="n">subscribers</span><span class="p">.</span><span class="na">forEach</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nb">it</span><span class="p">.</span><span class="na">actor</span><span class="p">.</span><span class="na">send</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="p-3">
+<h3>P_3<a class="headerlink" href="#p-3" title="Permalink to this heading">¶</a></h3>
+<ul>
+<li><p>La logica del comportamento di una cella deve essere identico a quello di ogni altra cella.</p>
+<p><span class="slide2">P_3) come definire il comportamento di una cella?</span></p>
+<p>Sappiamo che ogni cella opera logicamente in due fasi:</p>
+<ol class="arabic simple">
+<li><p>Acquisizione del numero di celle vicine con stato  <strong>live</strong></p></li>
+<li><p>Calcolo del nuovo stato e propagazione della informazione relativa a tale cambiamento alle celle vicine.</p></li>
+</ol>
+</li>
+</ul>
+</section>
+<section id="p-4">
+<h3>P_4<a class="headerlink" href="#p-4" title="Permalink to this heading">¶</a></h3>
+<ul>
+<li><p>L’autonomia delle celle implica <strong>asincronismo</strong> nelle loro attività.</p>
+<p><span class="slide2">P_4) come coordinare i comportamenti delle celle?</span></p>
+<p>In linea generale, osserviamo che la presenza di un <strong>‘orchestratore’</strong> facilita
+la possibilità che le celle aggiornino il loro valore in modo coerente e coordinato con quello delle altre celle.</p>
+<p>Impostare un soluzione priva di orchestratore (anche detta <strong>coreografata</strong>) è possibile, ma risulta (molto) più
+difficle da realizzare. Si veda <a class="reference external" href="https://blog.sparkfabrik.com/it/orchestration-vs-choreography-quale-usare-pro-e-contro">OrchestrazionevsCoreografia</a></p>
+</li>
+</ul>
+</section>
+<section id="p-5">
+<h3>P_5<a class="headerlink" href="#p-5" title="Permalink to this heading">¶</a></h3>
+<ul>
+<li><p>Il campo di gioco può essere composto da molte celle.
+Nel caso di una <code class="docutils literal notranslate"><span class="pre">griglia</span> <span class="pre">10x10</span></code>, il sistema applicativo dovrà essere composto da <code class="docutils literal notranslate"><span class="pre">100</span></code> celle-attori</p>
+<p><span class="slide2">P_5) chi ha la responsabilità di creare/configurare il sistema delle celle?</span></p>
+</li>
+</ul>
+<p>Come principo generale, può essere opportuno tenere conto del
+<a class="reference internal" href="Principi.html#id1"><span class="std std-ref">Principio di singola responsabilità</span></a>.</p>
+</section>
+<section id="p-6">
+<h3>P_6<a class="headerlink" href="#p-6" title="Permalink to this heading">¶</a></h3>
+<ul>
+<li><p>Aspetti rilevanti sono anche legati problematica dell’<a class="reference external" href="https://it.wikipedia.org/wiki/User_experience">User exeperience</a> (<strong>UX</strong>), cioè della
+relazione tra una persona-utente e il gioco.</p>
+<p><span class="slide2">P_6) quali funzioni introdurre per una accettabile/buona UX?</span></p>
+</li>
+</ul>
+<p>In questa fase saremo alquanto minimalisti, ipotizzando solo che l’utente finale si aspetta di:</p>
+<ol class="arabic simple">
+<li><p><span class="slide2">P_6_0</span>:  poter usare la GUI solo a gioco completamente inizializzato;</p></li>
+<li><p><span class="slide2">P_6_1</span>:  poter sospendere il gioco;</p></li>
+<li><p><span class="slide2">P_6_2</span>:  poter ripredere il gioco da dove l’aveva sospeso;</p></li>
+<li><p><span class="slide2">P_6_3</span>:  poter sospendere il gioco, <span class="blue">ripulire</span> la griglia astratta
+(cioè porre a <strong>off</strong> lo stato di tutte le celle) e ripredere dopo avere
+impostato sulla griglia una nuova configurazione iniziale di celle <strong>on</strong>.</p></li>
+</ol>
+<p>Notiamo che <a class="reference internal" href="GLMSprint1.html#una-gui-in-javafx"><span class="std std-ref">Una GUI in JavaFX</span></a> fornisce già un pulsante <code class="docutils literal notranslate"><span class="pre">start</span></code> per attivare il gioco,
+(che poi commuta in un pulsante <code class="docutils literal notranslate"><span class="pre">stop</span></code> per poterlo sospendere) e un pulsante <code class="docutils literal notranslate"><span class="pre">clear</span></code>
+per poter ripulire la griglia astratta (in una fase di gioco sospeso).</p>
+<p>A questo punto,
+procediamo con  <a class="reference internal" href="GLMSprint3.html#glm-sprint3-interazioni-a-eventi-stream"><span class="std std-ref">GLM-Sprint3: interazioni a eventi-stream</span></a> in cui
+realizzare e sperimentare interazioni tra celle locali a una stessa JVM medianie
+<a class="reference internal" href="#interazione-a-eventi-stream"><span class="std std-ref">eventi-stream</span></a>.</p>
+<p><span class="slide1">Indice:</span>: <a class="reference internal" href="GLMIntro.html#indice-glm"><span class="std std-ref">Indice GLM</span></a></p>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">GLM: Analisi del problema</a><ul>
+<li><a class="reference internal" href="#problematiche">Problematiche</a><ul>
+<li><a class="reference internal" href="#p-1">P_1</a></li>
+<li><a class="reference internal" href="#p-2">P_2</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#strategie-di-comunicazione-tra-le-celle">Strategie di comunicazione tra le celle</a><ul>
+<li><a class="reference internal" href="#interazione-a-eventi">Interazione a eventi</a></li>
+<li><a class="reference internal" href="#interazione-a-eventi-stream">Interazione a eventi-stream</a></li>
+<li><a class="reference internal" href="#interazione-publish-subscribe">Interazione publish-subscribe</a></li>
+<li><a class="reference internal" href="#interazione-a-dispatch">Interazione a dispatch</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pianificazione-degli-ulteriori-sprint-di-sviluppo">Pianificazione degli ulteriori Sprint di sviluppo</a><ul>
+<li><a class="reference internal" href="#sendtoneighbors">sendToNeighbors</a></li>
+<li><a class="reference internal" href="#emitlocalstreamtoneighbors">emitLocalStreamToNeighbors</a></li>
+<li><a class="reference internal" href="#emitlocalstreamevent">emitLocalStreamEvent</a></li>
+<li><a class="reference internal" href="#p-3">P_3</a></li>
+<li><a class="reference internal" href="#p-4">P_4</a></li>
+<li><a class="reference internal" href="#p-5">P_5</a></li>
+<li><a class="reference internal" href="#p-6">P_6</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="GLMSprint1.html"
+                          title="previous chapter">GLM-Sprint1: sottosistema di I/O</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="GLMSprint2.html"
+                          title="next chapter">GLM-Sprint2: basi di conoscenza</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/GLMAnalisi.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="GLMSprint2.html" title="GLM-Sprint2: basi di conoscenza"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="GLMSprint1.html" title="GLM-Sprint1: sottosistema di I/O"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">GLM: Analisi del problema</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>

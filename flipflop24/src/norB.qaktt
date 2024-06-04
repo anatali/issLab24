@@ -1,0 +1,80 @@
+System flipflop
+/*
+ * norB.qak
+ */
+Dispatch s : s(X)
+Dispatch a : a(X)
+
+
+Context ctxflipflop  ip [host="localhost" port=8765]
+
+QActor nor context ctxflipflop{
+	[# var Value = 1 
+	   var CurS  = 0
+	   var CurB  = 0
+	   
+	   fun norf( ){
+	   	 if( CurS==0 && CurB==0 ) Value = 1
+	   	 else Value = 0
+	   }	 
+	#]
+
+	State work initial{
+       println("$name | $Value") color cyan
+	}
+	Transition t0 
+		whenMsg s -> elabInputS
+		whenMsg a -> elabInputB
+ 
+    State elabInputS{
+    	onMsg( s:s(0)){
+    		[# CurS = 0 #]
+    	}
+    	onMsg( s:s(1)){
+    		[# CurS = 1 #]
+    	}   
+    	[# norf() #]	
+     }
+     Goto work
+     
+    State elabInputB{
+    	onMsg( a:a(0)){
+    		[# CurB = 0 #]
+    	}
+    	onMsg( a:a(1)){
+    		[# CurB = 1 #]
+    	}   
+    	[# norf() #]	   	
+    }		
+    Goto work
+ }
+
+/*
+ * 
+ */
+QActor norusage context ctxflipflop{
+	State s0 initial{
+//		println("$name | START") color cyan
+		println("soff") color yellow
+		forward nor -m s : s(0)
+ 		delay 500
+ 		println("aoff") color yellow
+		forward nor -m a:a(0)
+		delay 500
+		println("son") color yellow
+		forward nor -m s : s(1)
+		delay 500
+		println("aon") color yellow
+		forward nor -m a:a(1)
+		delay 500
+		println("soff") color yellow
+		forward nor -m s : s(0)
+		delay 500
+		println("aoff") color yellow
+		forward nor -m a:a(0)
+		delay 3000
+		
+		 
+		[# System.exit(0) #]
+	}	
+}

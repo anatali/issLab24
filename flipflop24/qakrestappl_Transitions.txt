@@ -1,0 +1,2 @@
+{"actor":"nor", "msgType":"dispatch", "curstate":"work", "nextstate":"elabInputS", "msgId":"s"}
+{"actor":"nor", "msgType":"dispatch", "curstate":"work", "nextstate":"elabInputB", "msgId":"a"}

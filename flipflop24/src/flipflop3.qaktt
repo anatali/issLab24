@@ -1,0 +1,255 @@
+System flipflop
+/*
+ * flipflop.qak
+ */
+Dispatch s : s(X)
+Dispatch q : q(X) 
+
+Dispatch r : r(X)
+Dispatch q1 : q1(X)
+
+Event clock : clock(T)
+
+Context ctxflipflop  ip [host="localhost" port=8765]
+
+QActor nor_r context ctxflipflop{
+	[# var Value    = 0 
+	   var NewValue = 0
+	   var CurR     = 0
+	   var CurQ1    = 0
+	   	   
+	   fun norf( a:Int,b:Int ) : Int{
+	   	 if( a == 0 && b == 0) return 1
+	   	 else return 0
+	   }	 
+	#]
+	
+	State s0 initial{
+	}
+	Transition t0 
+		whenEvent clock -> elabout
+		whenMsg r -> elabInputR
+		whenMsg q1 -> elabInputQ1
+
+	State elabout  { 
+         println("$name | $Value  ") color red
+         delay 1000
+ 	}  
+	Transition t0 
+//		whenEvent clock -> elabout
+		whenMsg r -> elabInputR
+		whenMsg q1 -> elabInputQ1
+/* 	
+	State elaboutOld  { 
+ 	    onMsg( clock:clock(N)){
+  	        //[# norf() #]
+         	println("$name | $Value clock=${payloadArg(0)} CurR=$CurR CurQ1=$CurQ1") color red
+       	    //forward nor_s -m q : q($Value)
+		}         
+		delay 100
+	}  
+	Transition t0 
+//		whenEvent clock -> elabout
+		whenMsg r -> elabInputR
+		whenMsg q1 -> elabInputQ1
+*/ 
+    State elabInputR{   	
+    	printCurrentMessage color black
+    	onMsg( r:r(0)){ [# CurR = 0  #] }
+    	onMsg( r:r(1)){ [# CurR = 1  #] }  
+    	[# NewValue = norf(CurR,CurQ1) #]
+    	if [# NewValue !==  Value #]{
+    		forward nor_s -m q : q($NewValue)
+    		[# NewValue == Value #]
+    	}   	
+     }
+     Goto elabout
+//	Transition t0 
+//		whenEvent clock -> elabout
+//		whenMsg r -> elabInputR
+//		whenMsg q1 -> elabInputQ1 
+     
+    State elabInputQ1{   	 
+    	printCurrentMessage color yellow
+    	onMsg( q1:q1(0)){ [# CurQ1 = 0  #] }
+    	onMsg( q1:q1(1)){ [# CurQ1 = 1  #] }    
+    	[# NewValue = norf(CurR,CurQ1) #]
+    	if [# NewValue !==  Value #]{
+    		forward nor_s -m q : q($NewValue)
+    		[# NewValue == Value #]
+    	}   	
+    }		
+    Goto elabout
+// 	Transition t0 
+//		whenEvent clock -> elabout
+//		whenMsg r -> elabInputR
+//		whenMsg q1 -> elabInputQ1
+ } 
+ 
+QActor nor_s context ctxflipflop{
+	[# var Value = 0  
+	   var NewValue = 0
+	   var CurS  = 0
+	   var CurQ  = 1
+ 	   
+	   fun norf( a:Int,b:Int ) : Int{
+	   	 if( a == 0 && b == 0) return 1
+	   	 else return 0
+	   }		 
+	#]
+	State s0 initial{
+		delay 100  //wait for nor_r
+//		forward nor_r -m q1 : q1(0)
+	}
+	Transition t0 
+		whenEvent clock -> elabout
+		whenMsg s -> elabInputS
+		whenMsg q -> elabInputQ
+/* 
+	State elaboutOld  {
+ 	    onMsg( clock:clock(N)){
+ 	        //[# norf() #]
+         	println("$name | $Value clock=${payloadArg(0)} CurS=$CurS CurQ=$CurQ") color blue
+//       	    forward nor_r -m q1 : q1($Value)
+		}
+		delay 100
+	}   
+	Transition t0 
+//		whenEvent clock -> elabout
+		whenMsg s -> elabInputS
+		whenMsg q -> elabInputQ
+*/
+
+	State elabout  {
+          	println("$name | $Value  ") color blue
+          	delay 1000
+  	}   
+	Transition t0 
+		whenMsg s -> elabInputS
+		whenMsg q -> elabInputQ
+ 
+    State elabInputS{
+    	printCurrentMessage color black
+    	onMsg( s:s(0)){ [# CurS = 0  #] }
+    	onMsg( s:s(1)){ [# CurS = 1  #] }   
+   		[# NewValue = norf(CurS,CurQ) #]
+    	if [# NewValue !==  Value #]{
+     		forward nor_r -m q1 : q1($NewValue)
+     	    [# NewValue =  Value #] 
+     	}
+     }
+     Goto elabout
+//	Transition t0 
+//		whenEvent clock -> elabout
+//		whenMsg s -> elabInputS
+//		whenMsg q -> elabInputQ
+     
+    State elabInputQ{
+    	printCurrentMessage color black
+    	onMsg( q:q(0)){ [# CurQ = 0 #] }
+    	onMsg( q:q(1)){ [# CurQ = 1  #] } 
+    	[# NewValue = norf(CurS,CurQ) #]  
+     	if [# NewValue !==  Value #]{
+     		forward nor_r -m q1 : q1($NewValue)
+     	    [# NewValue =  Value #] 
+     	}
+    }	
+    Goto elabout	
+//	Transition t0 
+//		whenEvent clock -> elabout
+//		whenMsg s -> elabInputS
+//		whenMsg q -> elabInputQ
+ }
+
+
+
+
+/*
+ * FUNGE DA ORCHESTRATORE
+ */
+QActor srusage context ctxflipflop{
+	State s0 initial{
+		println("$name | START") color cyan
+		delay 1400
+	}	
+	Goto s00 
+	
+	State s00{
+//		forward nor_r -m r : r(0)
+//		forward nor_s -m s : s(0)
+ 		println("S00 .............................. clock(1)") color cyan
+		emit clock : clock(1)
+		delay 1400
+	}
+	Goto s01
+	
+	State s01{
+		//forward nor_s -m s : s(0)
+		forward nor_r -m r : r(1)
+		println("S01 (RESET)........................ clock(2)" ) color cyan
+		emit clock : clock(2)
+		delay 1400
+ 	}
+	Goto s00A 
+
+	State s00A {
+		//forward nor_s -m s : s(0)
+		forward nor_r -m r : r(0)
+  		println("s00A    .......................... clock(3)") color cyan
+		emit clock : clock(3)
+		delay 1400
+	}
+    Goto s10
+
+
+
+	State s10{
+		//forward nor_r -m r : r(0)
+		forward nor_s -m s : s(1)
+		println("S10 (SET) ......................... clock(4)") color cyan
+		emit clock : clock(4)
+ 		delay 1400
+	}
+	Goto s00B
+
+	State s00B{
+		forward nor_s -m s : s(0)
+		//forward nor_r -m r : r(0)
+		println("s00B    .......................... clock(5)") color cyan
+		emit clock : clock(5)
+ 		delay 1400
+	}
+    Goto s01B
+    
+	State s01B{
+		//forward nor_s -m s : s(0)
+		forward nor_r -m r : r(1)
+		println("s01B (RESET)................... clock(6)" ) color cyan
+		emit clock : clock(6) 
+ 		delay 1400
+	}
+	Goto s00C
+ 
+	State s00C{
+		//forward nor_s -m s : s(0)
+		forward nor_r -m r : r(0)
+		println("s00C .......................... clock(7)") color cyan
+		emit clock : clock(6)
+ 		delay 1400
+	}
+    Goto s00D
+	
+	State s00D{
+//		forward nor_s -m s : s(0)
+//		forward nor_r -m r : r(0)
+		println("s00D .......................... clock(8)") color cyan
+		emit clock : clock(7)
+ 		delay 1400 
+	}
+	Goto end
+	
+	State end{
+		delay 1000
+		[# System.exit(0) #]
+	}
+}

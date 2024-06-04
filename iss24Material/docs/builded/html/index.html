@@ -440,7 +440,8 @@
 <li class="toctree-l4"><a class="reference internal" href="QakActors24.html#accesso-al-contenuto-dei-messaggi">Accesso al contenuto dei messaggi</a></li>
 <li class="toctree-l4"><a class="reference internal" href="QakActors24.html#azioni-condizionali">Azioni condizionali</a></li>
 <li class="toctree-l4"><a class="reference internal" href="QakActors24.html#payloadarg">payloadArg</a></li>
-<li class="toctree-l4"><a class="reference internal" href="QakActors24.html#operazioni-di-messaggista-publisch-subscribe">Operazioni di messaggista publisch-subscribe</a></li>
+<li class="toctree-l4"><a class="reference internal" href="QakActors24.html#operazioni-di-messaggista-via-mqtt">Operazioni di messaggista via MQTT</a></li>
+<li class="toctree-l4"><a class="reference internal" href="QakActors24.html#operazioni-di-messaggista-streamed">Operazioni di messaggista streamed</a></li>
 <li class="toctree-l4"><a class="reference internal" href="QakActors24.html#operazioni-relative-agli-eventi">Operazioni relative agli eventi</a></li>
 <li class="toctree-l4"><a class="reference internal" href="QakActors24.html#operazioni-relative-alla-osservabilita">Operazioni relative alla osservabilità</a></li>
 <li class="toctree-l4"><a class="reference internal" href="QakActors24.html#operazioni-di-delegazione">Operazioni di delegazione</a></li>
@@ -542,6 +543,21 @@
 <li class="toctree-l3"><a class="reference internal" href="QakActors24Demo.html#producer">producer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="QakActors24Demo.html#consumer">consumer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="QakActors24Demo.html#consumerhelper">consumerhelper</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="QakActors24Demo.html#demomqttexplicit-qak">demomqttexplicit.qak</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="QakActors24Demo.html#publisher-explicit">publisher(explicit)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="QakActors24Demo.html#subscriber-explicit">subscriber(explicit)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="QakActors24Demo.html#demomqttimplicit-qak">demomqttimplicit.qak</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="QakActors24Demo.html#publisher-implicit">publisher(implicit)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="QakActors24Demo.html#subscriber-implicit">subscriber(implicit)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="QakActors24Demo.html#invio-di-dispatch-via-mqtt">Invio di dispatch via MQTT</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="QakActors24Demo.html#demomqttsender-qak">demomqttsender.qak</a></li>
+<li class="toctree-l3"><a class="reference internal" href="QakActors24Demo.html#demomqttreceiver-qak">demomqttreceiver.qak</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="QakActors24Demo.html#demostreams-qak">demostreams.qak</a><ul>
@@ -1295,9 +1311,13 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="BasicRobot24.html#br24-come-esecutore-di-movimenti">BR24 come esecutore di movimenti</a></li>
-<li class="toctree-l2"><a class="reference internal" href="BasicRobot24.html#br24-planexec">BR24 planexec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BasicRobot24.html#br24-planexec">BR24 planexec</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="BasicRobot24.html#br24-sequenza-di-mosse-in-forma-verbosa-compatta">BR24 Sequenza di mosse in forma verbosa/compatta</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="BasicRobot24.html#br24-esperimenti-di-uso-con-virtualrobot">BR24 Esperimenti di uso (con VirtualRobot)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="BasicRobot24.html#br24-facade">BR24 Facade</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BasicRobot24.html#br24-nanorobot">BR24 NanoRobot</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="Facade24Start.html">Facade24Start</a><ul>
@@ -1353,38 +1373,8 @@
 <li class="toctree-l2"><a class="reference internal" href="RobotFacade24.html#rbtfcd24-flie-yaml">RbtFcd24: flie yaml</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="Studenti2024.html">Studenti2024</a></li>
-<li class="toctree-l1"><a class="reference internal" href="StudWorks2024.html">StudWorks2024</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="StudWorks2024.html#prodcons">ProdCons</a></li>
-<li class="toctree-l2"><a class="reference internal" href="StudWorks2024.html#prodconsqak">ProdConsQak</a></li>
-<li class="toctree-l2"><a class="reference internal" href="StudWorks2024.html#pingpong24">PingPong24</a></li>
-<li class="toctree-l2"><a class="reference internal" href="StudWorks2024.html#pingpong24-distributed">PingPong24 distributed</a></li>
-<li class="toctree-l2"><a class="reference internal" href="StudWorks2024.html#smath-asynch">Smath asynch</a></li>
-<li class="toctree-l2"><a class="reference internal" href="StudWorks2024.html#wolf-detector">Wolf Detector</a></li>
-<li class="toctree-l2"><a class="reference internal" href="StudWorks2024.html#prestiti-rsap">Prestiti Rsap</a></li>
-<li class="toctree-l2"><a class="reference internal" href="StudWorks2024.html#progetto-sonarqak24">Progetto sonarqak24</a></li>
-<li class="toctree-l2"><a class="reference internal" href="StudWorks2024.html#progetto-boundary">Progetto Boundary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="StudWorks2024.html#sonar-e-robot-cleaner-analisi">Sonar e Robot Cleaner analisi</a></li>
-<li class="toctree-l2"><a class="reference internal" href="StudWorks2024.html#modello-req-e-flipflop">modello req e flipflop</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="UsiamoChatGPT.html">UsiamoChatGPT</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="UsiamoChatGPT.html#chatgpt-fibo">ChatGPT fibo</a></li>
-<li class="toctree-l2"><a class="reference internal" href="UsiamoChatGPT.html#chatgpt-robot">ChatGPT robot</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="UsiamoChatGPT.html#richiesta-di-codice">Richiesta di codice</a></li>
-<li class="toctree-l3"><a class="reference internal" href="UsiamoChatGPT.html#richiesta-di-progetto">Richiesta di progetto</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="UsiamoChatGPT.html#chatgpt-ingegneria-del-software">ChatGPT Ingegneria del software</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="UsiamoChatGPT.html#richiesta-su-analisi-vs-progetto">Richiesta su analisi vs. progetto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="UsiamoChatGPT.html#oop-vs-messages">OOP vs. messages</a></li>
-<li class="toctree-l3"><a class="reference internal" href="UsiamoChatGPT.html#microservizi-vs-pojo">Microservizi vs. POJO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="UsiamoChatGPT.html#da-un-supporto-pojo-a-un-microservizio">Da un supporto-POJO a un microservizio</a></li>
-</ul>
-</li>
-</ul>
-</li>
 <li class="toctree-l1"><a class="reference internal" href="KotlinNotes.html">KotlinNotes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="KotlinNotes.html#riferimenti">Riferimenti</a></li>
 <li class="toctree-l2"><a class="reference internal" href="KotlinNotes.html#alcuni-punti-chiave">Alcuni punti-chiave</a></li>
 <li class="toctree-l2"><a class="reference internal" href="KotlinNotes.html#koltin-per-iss-72939">Koltin per ISS-72939</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="KotlinNotes.html#il-file-labintroductiontokotlin-html">Il file LabIntroductionToKotlin.html</a></li>
@@ -1431,6 +1421,325 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="ConwayLife.html">ConwayLife</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ConwayLife.html#il-gioco">Il gioco</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ConwayLife.html#le-regole-del-gioco">Le regole del gioco</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ConwayLife.html#il-gioco-in-pratica">Il gioco in pratica</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ConwayLife.html#il-progetto-di-una-soluzione">Il progetto di una soluzione</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ConwayLife.html#un-progetto-concentrato">Un progetto concentrato</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ConwayLife.html#la-logica-applicativa">La logica applicativa</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ConwayLife.html#la-struttura">La struttura</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ConwayLife.html#il-funzionamento">Il funzionamento</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ConwayLife.html#calcolo-della-nuova-generazione">Calcolo della nuova generazione</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ConwayLife.html#conteggio-delle-celle-vicine-vive">Conteggio delle celle vicine vive</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ConwayLife.html#applicazione-delle-regole-del-gioco">Applicazione delle regole del gioco</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ConwayLife.html#play">Play</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ConwayLife.html#copyanddisplaygrid">copyAndDisplayGrid</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ConwayLife.html#ripetizione-di-play">Ripetizione di play</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ConwayLife.html#configurazione-e-attivazione">Configurazione e attivazione</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ConwayLife.html#il-codice-javascript">Il codice JavaScript</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ConwayLife.html#il-codice-java">Il codice Java</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ConwayLife.html#la-classe-life">La classe Life</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ConwayLife.html#la-classe-conwayoutput">La classe ConwayOutput</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ConwayLife.html#la-classe-lifecontroller">La classe LifeController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ConwayLife.html#la-classe-mainconway">La classe MainConway</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ConwayLife.html#il-sottosistema-di-i-o-in-javascript">Il sottosistema di I/O in JavaScript</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ConwayLife.html#la-table-delle-celle">La table delle celle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ConwayLife.html#cellclickhandler">cellClickHandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ConwayLife.html#setcellcolor">setCellColor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ConwayLife.html#i-pulsanti-di-controllo">I pulsanti di controllo</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ConwayLife.html#il-sottosistema-di-i-o-in-javafx">Il sottosistema di I/O in JavaFx</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ConwayLife.html#la-classe-conwayio">La classe ConwayIO</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="GLMIntro.html">GLM: introduzione</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="GLMIntro.html#attori-qak">Attori qak</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GLMIntro.html#myname-e-myself">MyName e myself</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMIntro.html#infrastruttura-qak">Infrastruttura qak</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="GLMIntro.html#la-griglia-astratta">La griglia astratta</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GLMIntro.html#denominazione-delle-celle">Denominazione delle celle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GLMIntro.html#il-processo-di-sviluppo">Il processo di sviluppo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GLMIntro.html#indice-glm">Indice GLM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="GLMSprint1.html">GLM-Sprint1: sottosistema di I/O</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint1.html#il-sottosistema-di-i-o">Il sottosistema di I/O</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint1.html#principio-r-1">Principio R_1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint1.html#una-gui-in-javafx">Una GUI in JavaFX</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint1.html#i-parametri-delle-griglia">I parametri delle griglia</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint1.html#gridconfig-json">gridConfig.json</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint1.html#gridsupport-kt-prime-funzioni">GridSupport.kt: prime funzioni</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="GLMSprint1.html#id1">&#64;JvmStatic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GLMSprint1.html#saveonfile">saveOnFile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GLMSprint1.html#getcellcoords">getCellCoords</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GLMSprint1.html#readgridconfig">readGridConfig</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GLMSprint1.html#getnumofcells">getNumOfCells</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint1.html#griddisplay">griddisplay</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint1.html#conwayio">ConwayIO</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="GLMSprint1.html#conwayio-java-come-emettitore-di-messaggi">ConwayIO.java come emettitore di messaggi</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint1.html#gamemock">gamemock</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="GLMAnalisi.html">GLM: Analisi del problema</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="GLMAnalisi.html#problematiche">Problematiche</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GLMAnalisi.html#p-1">P_1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMAnalisi.html#p-2">P_2</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="GLMAnalisi.html#strategie-di-comunicazione-tra-le-celle">Strategie di comunicazione tra le celle</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GLMAnalisi.html#interazione-a-eventi">Interazione a eventi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMAnalisi.html#interazione-a-eventi-stream">Interazione a eventi-stream</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMAnalisi.html#interazione-publish-subscribe">Interazione publish-subscribe</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMAnalisi.html#interazione-a-dispatch">Interazione a dispatch</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="GLMAnalisi.html#pianificazione-degli-ulteriori-sprint-di-sviluppo">Pianificazione degli ulteriori Sprint di sviluppo</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GLMAnalisi.html#sendtoneighbors">sendToNeighbors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMAnalisi.html#emitlocalstreamtoneighbors">emitLocalStreamToNeighbors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMAnalisi.html#emitlocalstreamevent">emitLocalStreamEvent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMAnalisi.html#p-3">P_3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMAnalisi.html#p-4">P_4</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMAnalisi.html#p-5">P_5</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMAnalisi.html#p-6">P_6</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="GLMSprint2.html">GLM-Sprint2: basi di conoscenza</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint2.html#gridsupport-kt">GridSupport.kt</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint2.html#createactordynamically">createActorDynamically</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint2.html#genneighborsnames">genNeighborsNames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint2.html#genneighbornsdescr">genNeighbornsDescr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint2.html#getcellneighbors">getCellNeighbors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint2.html#gencelldescr">genCellDescr</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint2.html#basi-di-conoscenza-sulla-griglia">Basi di conoscenza sulla griglia</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint2.html#i-files-cellnbs-pl-e-grid-pl">I files cellnbs.pl e grid.pl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint2.html#genlocalgriddescr">genLocalGriddescr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint2.html#aggiornamento-della-base-di-conoscenza-dell-actor">Aggiornamento della base di conoscenza dell’Actor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint2.html#sysutil">sysUtil</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint2.html#gamemock-come-tester-della-base-di-conoscenza">gamemock come tester della base di conoscenza</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="GLMSprint2.html#uso-del-file-cellsfname">Uso del file cellsFName</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint2.html#getcellnamesincontext">getCellNamesInContext</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint2.html#esempio-di-uso-della-kb-di-un-actor">Esempio di uso della KB di un Actor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint2.html#createcellsinternal">createCellsInternal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint2.html#creazione-dinamica-di-celle-attori">Creazione dinamica di celle-attori</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint2.html#le-celle-come-attori">Le celle come attori</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="GLMSprint3.html">GLM-Sprint3: interazioni a eventi-stream</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint3.html#messaggi-in-gamelifeactors-nello-sprint3">Messaggi in gamelifeactors nello SPRINT3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint3.html#messaggi-di-i-o">Messaggi di I/O</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint3.html#messaggi-relativi-alla-creazione">Messaggi relativi alla creazione</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint3.html#messaggi-relativi-alla-inizializzazione">Messaggi relativi alla inizializzazione</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint3.html#messaggi-relativi-al-funzionamento">Messaggi relativi al funzionamento</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint3.html#messaggi-relativi-alla-terminazione">Messaggi relativi alla terminazione</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint3.html#il-problema-della-creazione-configurazione">Il problema della creazione/configurazione</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint3.html#gridcreator">gridcreator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint3.html#configthecells">configthecells</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint3.html#terminatethegame">terminatethegame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint3.html#configurethecells">configureTheCells</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint3.html#subscribetoneighbors">subscribeToNeighbors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint3.html#subscribeto">subscribeTo</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint3.html#il-comportamento-di-una-cell">Il comportamento di una cell</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint3.html#la-interazione-tra-le-celle">La interazione tra le celle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint3.html#cell">cell</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="GLMSprint3.html#setmyneigbors">setmyneigbors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GLMSprint3.html#setcellstate">setcellstate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GLMSprint3.html#emitinfophase">emitinfophase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GLMSprint3.html#elabinfophase">elabinfophase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GLMSprint3.html#elabstatephase">elabstatephase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint3.html#come-qak-attiva-le-transizioni">Come qak attiva le transizioni</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="GLMSprint3.html#endthecell">endthecell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GLMSprint3.html#waittoresume">waittoresume</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GLMSprint3.html#clearthecell">clearThecell</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint3.html#gamelife">gamelife</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint3.html#il-meccanismo-di-delega">Il meccanismo di delega</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint3.html#gamelife-fase-iniziale">gamelife: fase iniziale</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint3.html#handlecellready">handlecellready</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint3.html#setstopgame">setstopgame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint3.html#synchclock">synchclock</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint3.html#stopgame">stopgame</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint3.html#gamelifehelper">gamelifehelper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint3.html#sendstoptoallcells">sendStopToAllCells</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint3.html#handleguicmd">handleguicmd</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint3.html#id1">terminatethegame</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="GLMSprint4.html">GLM-Sprint4: interazioni a eventi via MQTT</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint4.html#modifiche-al-modello-glmevstream-qak">Modifiche al modello glmevstream.qak</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint4.html#connessione-di-una-cella-al-broker">Connessione di una cella al Broker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint4.html#connecttomqttbroker">connectToMqttBroker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint4.html#subscribetoneighborsmqtt">subscribeToNeighborsMqtt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint4.html#invio-del-valore-dello-stato-corrente">Invio del valore dello stato corrente</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint4.html#emitevstreamwithmqtt">emitEvstreamWithmqtt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint4.html#emitstreammqtt">emitstreammqtt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint4.html#modifiche-a-gridcreator">Modifiche a gridcreator</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="GLMSprint5.html">GLM-Sprint5: interazioni a dispatch</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint5.html#modifiche-al-modello-glmevstream-qak">Modifiche al modello glmevstream.qak</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint5.html#determinazione-delle-celle-vicine">Determinazione delle celle vicine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint5.html#invio-del-valore-dello-stato-corrente">Invio del valore dello stato corrente</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="GLMSprint5.html#forwardtoneighbors">forwardToNeighbors</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint5.html#modifiche-a-gridcreator">Modifiche a gridcreator</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint5.html#il-gioco-nella-sua-essenza">Il gioco nella sua essenza</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="GLMSprint6.html">GLM-Sprint6: griddisplay come observer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint6.html#griddisplay-come-observer">griddisplay come observer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint6.html#osservazione-delle-celle">Osservazione delle celle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint6.html#gridcreator-come-observable">gridcreator come observable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint6.html#cell-come-observable">cell come observable</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="GLMSprint7.html">GLM-Sprint7: griddisplay con GUI di configurazione</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint7.html#conwayiotwostep">ConwayIOTwostep</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint7.html#createsceneinitial">createSceneInitial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint7.html#submitevent">submitevent</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint7.html#griddisplay-two-steps">griddisplay two steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint7.html#gridcreator-nuova-versione">gridcreator: nuova versione</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="GLMSprint8.html">GLM-Sprint8: viewer lineare</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GLMSprint9.html">GLM-Sprint9: gamelife distribuito</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint9.html#ipotesi-semplificatrici">Ipotesi semplificatrici</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint9.html#caso-senza-righe-aggiuntive">Caso senza righe aggiuntive</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint9.html#caso-con-righe-aggiuntive">Caso con righe aggiuntive</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint9.html#problematiche-del-sistema-a-righe-remote-prr">Problematiche del sistema a righe remote (PRR)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint9.html#comunicazioni-slave-master">Comunicazioni slave-master</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint9.html#basi-di-conoscenza-sulla-griglia">Basi di conoscenza sulla griglia</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint9.html#basi-di-conoscenza-sul-sistema">Basi di conoscenza sul sistema</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="GLMSprint9.html#lo-slave">Lo slave</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint9.html#glmmorerows-qak">glmmorerows.qak</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint9.html#gridaddstarter">gridaddstarter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint9.html#problematiche-lato-slave">Problematiche lato slave</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint9.html#genaddedgriddescr">genAddedGriddescr</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint9.html#celladded">celladded</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint9.html#declareexternalcells">declareExternalCells</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint9.html#declareinternalcells">declareInternalCells</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint9.html#cells-lato-slave">cells lato slave</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint9.html#cell-slave-fase-iniziale">cell slave fase iniziale</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint9.html#cell-slave-fase-operativa">cell slave fase operativa</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="GLMSprint9.html#glmmorerows-messaggi-operativi">glmmorerows messaggi operativi</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GLMSprint9.html#cell-slave-emitinfophase">cell slave emitinfophase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GLMSprint9.html#cell-slave-handlestop">cell slave handlestop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GLMSprint9.html#cell-slave-elabinfophase">cell slave elabinfophase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GLMSprint9.html#cell-slave-elabstatephase">cell slave elabstatephase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint9.html#cell-slave-fase-di-ripresa-del-gioco">cell slave fase di ripresa del gioco</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="GLMSprint9.html#il-master">Il master</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint9.html#problematiche-lato-master">Problematiche lato master</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GLMSprint9.html#glmdistributed-qak">glmdistributed.qak</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint9.html#gridcreator-sprint9">gridcreator-sprint9</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="GLMSprint9.html#handlenewrows">handlenewrows</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="GLMSprint9.html#master-gamelifehelper">master gamelifehelper</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Studenti2024.html">Studenti2024</a></li>
+<li class="toctree-l1"><a class="reference internal" href="StudWorks2024.html">StudWorks2024</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="StudWorks2024.html#prodcons">ProdCons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="StudWorks2024.html#prodconsqak">ProdConsQak</a></li>
+<li class="toctree-l2"><a class="reference internal" href="StudWorks2024.html#pingpong24">PingPong24</a></li>
+<li class="toctree-l2"><a class="reference internal" href="StudWorks2024.html#pingpong24-distributed">PingPong24 distributed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="StudWorks2024.html#smath-asynch">Smath asynch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="StudWorks2024.html#wolf-detector">Wolf Detector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="StudWorks2024.html#prestiti-rsap">Prestiti Rsap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="StudWorks2024.html#progetto-sonarqak24">Progetto sonarqak24</a></li>
+<li class="toctree-l2"><a class="reference internal" href="StudWorks2024.html#progetto-boundary">Progetto Boundary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="StudWorks2024.html#sonar-e-robot-cleaner-analisi">Sonar e Robot Cleaner analisi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="StudWorks2024.html#modello-req-e-flipflop">modello req e flipflop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="StudWorks2024.html#boudary-con-basicrobot">boudary con basicrobot</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="UsiamoChatGPT.html">UsiamoChatGPT</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="UsiamoChatGPT.html#chatgpt-fibo">ChatGPT fibo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="UsiamoChatGPT.html#chatgpt-robot">ChatGPT robot</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="UsiamoChatGPT.html#richiesta-di-codice">Richiesta di codice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="UsiamoChatGPT.html#richiesta-di-progetto">Richiesta di progetto</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="UsiamoChatGPT.html#chatgpt-ingegneria-del-software">ChatGPT Ingegneria del software</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="UsiamoChatGPT.html#richiesta-su-analisi-vs-progetto">Richiesta su analisi vs. progetto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="UsiamoChatGPT.html#oop-vs-messages">OOP vs. messages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="UsiamoChatGPT.html#microservizi-vs-pojo">Microservizi vs. POJO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="UsiamoChatGPT.html#da-un-supporto-pojo-a-un-microservizio">Da un supporto-POJO a un microservizio</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="IntroLLM.html">IntroLLM</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="IntroLLM.html#introduction-to-large-language-models">Introduction to Large Language Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="IntroLLM.html#what-are-large-language-models">2. What Are Large Language Models?</a><ul>
@@ -1465,12 +1774,23 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="FlipFlop24.html">FlipFlop24</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="FlipFlop24.html#premessa-nor-in-retorazione">Premessa:Nor in retorazione</a></li>
 <li class="toctree-l2"><a class="reference internal" href="FlipFlop24.html#flipflop24-introduzione">FlipFlop24-Introduzione</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="TemaFinale23.html">TemaFinale23</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="TemaFinale23.html#alarm-requirements">Alarm requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="TemaFinale23.html#service-users-story">Service users story</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="TemaFinale24.html">TemaFinale24</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="TemaFinale24.html#the-structural-part-of-the-building">The structural part of the building</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TemaFinale24.html#the-behavior-of-the-incinerator">The behavior of the <span class="blue">Incinerator</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="TemaFinale24.html#the-behavior-of-the-oprobot">The behavior of the <span class="blue">OpRobot</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="TemaFinale24.html#the-management-of-containers">The management of Containers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TemaFinale24.html#the-servicestatusgui">The ServiceStatusGUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TemaFinale24.html#the-behavior-of-the-monitoringdevice">The behavior of the MonitoringDevice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TemaFinale24.html#service-users-story">Service users story</a></li>
 </ul>
 </li>
 </ul>

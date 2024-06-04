@@ -1,0 +1,98 @@
+System gamelifeactors 
+
+Dispatch guicmd        : guicmd(X) //X=startthegame | stopthegame
+Dispatch fromdisplay   : fromdisplay(CELL)
+Dispatch todisplay     : todisplay(CELL,STATE)
+
+Event startthegame     : startthegame(X)
+Event stopthegame      : stopthegame(X)
+     
+Context ctxconwayactors ip [ host="localhost" port=8360] 
+ 
+QActor griddisplay context ctxconwayactors withobj display using "conway.ConwayIO()"{ 
+	//[# val display = conway.ConwayIO() #] //create an object
+	State s0 initial{
+		println("=======================================") color blue
+		println("$name | gamelifeactors0.qak STARTS") color blue
+		println("=======================================") color blue
+		[# kotlin.concurrent.thread(start = true) {
+			 display.initialize(myself)  //launch javafx.application.Application
+		   }
+		#]		 
+	}	 
+	Goto working
+		
+	State working{
+		//println("$name | working") color blue
+	}
+	Transition t0 whenMsg guicmd    -> guicmdhandle
+	              whenMsg todisplay -> todisplayhandle
+	
+	State guicmdhandle{
+		printCurrentMessage color cyan
+         onMsg( guicmd : guicmd(startthegame)){ //seleziona usando UNIFICAZIONE Prolog
+            forward gamemock -m fromdisplay : fromdisplay( start )
+         } 		
+         onMsg( guicmd : guicmd(stopthegame)){
+         	emit stopthegame : stopthegame(fromgui)
+		}
+        onMsg( guicmd : guicmd(click(X,Y)) ){
+        	//[# var xy = payloadArg(0).replace("click","").replace("(","").replace(")","").split(",") #]       	
+        	[# val template = "click(X,Y)" 
+        	   val goal     = "${payloadArg(0)}=$template"; //UNIFICAZIONE
+        	   val x = sysUtil.solve( goal,"X" )!!.toInt();
+        	   val y = sysUtil.solve( goal,"Y" )!!.toInt();
+        	#]
+         	//println("$name | guicmdhandle ${x} $y") color blue
+         	[# display.switchColor(x,y) #]
+		}
+         onMsg( guicmd : guicmd(clear)){
+			 [# display.clearCells() #]
+		}
+	}
+	Goto working 
+	
+	State todisplayhandle{
+		//printCurrentMessage color cyan
+		onMsg( todisplay : todisplay(CELL,STATE)){
+			[#  val CellName= payloadArg(0) 
+ 				val State   = payloadArg(1)
+                val coords  = conway.GridSupport.getCellCoords(CellName)
+			    val x=coords[0]
+			    val y=coords[1] 
+                if( State=="true") display.cellOn( x,y )
+			    else display.cellOff( x,y )
+			#]
+		}		
+	}   
+	Goto working
+}
+  
+QActor gamemock context ctxconwayactors{
+	State s0 initial{
+		println("$name | STARTS") color blue
+	}
+	Goto working
+	               
+	State working{
+		 
+	}
+	Transition t0 whenMsg fromdisplay    -> fromdisplayhandle
+	              whenEvent stopthegame  -> handlestop
+	
+	State fromdisplayhandle{
+		printCurrentMessage color blue
+		onMsg( fromdisplay:fromdisplay(start)){
+		   //Just to show that works ...
+		   forward griddisplay -m todisplay : todisplay(cellc_1_1, true)
+ 		}
+		
+	}
+	Goto working
+
+		
+	State handlestop{
+		println("$name | GAME STOPPED") color magenta
+	}
+	Goto working
+}

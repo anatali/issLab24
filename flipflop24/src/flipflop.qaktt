@@ -1,0 +1,435 @@
+System flipflop
+/*
+ * flipflop.qak
+ * I nor operano come in flipflopNoFacade.qak ma 
+ * viene introdotta un actor-facade latch
+ * che risponde ai comandi-dispatch r (reset) ed s (set)
+ * evitando di gestire la configurazione 1,1
+ * 
+ * Vedi https://www.edutecnica.it/sistemi/latch/latch.htm
+ */
+//Messaggi relativi ai NOR 
+Dispatch s : s(X)
+Dispatch q : q(X) 
+
+Dispatch r : r(X)
+Dispatch q1 : q1(X)
+
+Event qchange : qchange(V)
+
+//Messaggi relativi al latch
+Request latchdo : latchdo(S,R)
+Reply latchval : latchval(V) for latchdo
+
+Dispatch set   : set(V)
+Dispatch reset : reset(V)
+
+//Messaggi relativi al latchobserver
+Dispatch info : latchval(SOURCE,TERM)
+
+
+Context ctxflipflop  ip [host="localhost" port=8765]
+
+/*
+ * nor_r
+ * 
+ * Emette l'evento qchange quando camia il suo valor
+ */ 
+QActor nor_r context ctxflipflop{
+	[# var Value    = 1 
+	   var NewValue = 0
+	   var CurR     = 0
+	   var CurQ1    = 0
+	   	   
+	   fun norf( a:Int,b:Int ) : Int{
+	   	 if( a == 0 && b == 0) return 1
+	   	 else return 0
+	   }	 
+	#]
+	
+	State s0 initial{
+	}
+	Transition t0 
+		whenMsg r  -> elabInputR
+		whenMsg q1 -> elabInputQ1
+ 
+
+	State elabout  { 
+		[# NewValue = norf(CurR,CurQ1) #]
+    	if [# NewValue !==  Value #]{
+    		forward nor_s -m q : q($NewValue)  
+    		[# Value=NewValue #]  //potrebbe essere modificato da altro msg da nor_s
+    	    //emitlocalstream latchval : latchval($Value)
+    	}   	
+        println("$name | $Value  ") color magenta
+ 	}   
+	Transition t0 
+		whenMsg r -> elabInputR 
+		whenMsg q1 -> elabInputQ1
+  
+    State elabInputR{   	
+    	//printCurrentMessage color black
+    	onMsg( r:r(0)){ [# CurR = 0  #] }
+    	onMsg( r:r(1)){ [# CurR = 1  #] }  
+     }
+     Goto elabout
+      
+    State elabInputQ1{   	 
+    	//printCurrentMessage color black
+    	onMsg( q1:q1(0)){ [# CurQ1 = 0  #] }
+    	onMsg( q1:q1(1)){ [# CurQ1 = 1  #] }    
+    }		
+    Goto elabout
+ } 
+ 
+/*
+ * nor_s
+ */ 
+ QActor nor_s context ctxflipflop{
+	[# var Value    = 0  
+	   var NewValue = 0
+	   var CurS     = 0
+	   var CurQ     = 1
+ 	   
+	   fun norf( a:Int,b:Int ) : Int{
+	   	 if( a == 0 && b == 0) return 1
+	   	 else return 0
+	   }		 
+	#]
+	State s0 initial{
+		delay 100  //wait for nor_r
+	}
+	Transition t0 
+		whenMsg s -> elabInputS
+		whenMsg q -> elabInputQ
+
+
+	State elabout  {
+		[# NewValue = norf(CurS,CurQ) #]
+     	if [# NewValue !==  Value #]{
+     		forward nor_r -m q1 : q1($NewValue)
+     	    [# Value=NewValue #] 
+     	}
+        println("$name | $Value  ") color blue
+  	}   
+	Transition t0 
+		whenMsg s -> elabInputS
+		whenMsg q -> elabInputQ
+ 
+    State elabInputS{
+    	//printCurrentMessage color black
+    	onMsg( s:s(0)){ [# CurS = 0  #] }
+    	onMsg( s:s(1)){ [# CurS = 1  #] }   
+     }
+     Goto elabout
+
+     
+    State elabInputQ{
+    	//printCurrentMessage color black
+    	onMsg( q:q(0)){ [# CurQ = 0 #] }
+    	onMsg( q:q(1)){ [# CurQ = 1  #] } 
+    }	
+    Goto elabout	
+ }
+
+/*
+ * Il componente latch fa la FACADE del sistema, gestendo richieste latchdo(S,R)
+ * Nasconde agli utilizzatori i due NOR della organizzazione interna del sistema
+ * Controlla gli accessi, evitando di gestire la configurazione 1,1
+ * SA quando il nor_r NON CAMBIA di stato e invia subito la risposta
+ * Altrimenti invia la risposta dopo che il nor_r ha emesso l'evento-stream latchval
+ * in seguito a un CAMBIO di STATO
+ * 
+ * Si rende osservabile nello stato work eseguendo 
+ * 		updateResource [# "latchval($name,$CurVal)" #]
+ */
+QActor latch context ctxflipflop{
+	[# var Seton   = false 
+	   var Reseton = false	
+	   var CurVal  = "1"
+	   var docmd   = false  //discrimine tra richieste e comandi
+	   /*
+	    * Alla ricezione di un evento latchval emesso da nor_r
+	    * si invia una risposta solo se docmd   = false
+	    */
+	   
+	   fun input(S:Boolean, R:Boolean) : String{
+	   	  //CommUtils.outgreen("input $S,$R - OLD: $Seton,$Reseton")
+	   	  if( S == Seton && R == Reseton ) return "nop" //no new input	   	  
+	   	  
+	   	  if( S && R ) return "error"
+	   	  if( S && !Seton) return "seton" 
+	   	  if( !S && Seton) return "setoff" 
+	   	  if( R && ! Reseton) return "reseton" 
+	   	  if( !R && Reseton) return "resetoff" 
+	   	  
+	   	  return "nop"
+	   }
+	#]
+	State s0 initial{
+		println("$name | START") color magenta
+		subscribeTo nor_r for qchange
+	}	
+	Goto work
+	
+	State work{
+		updateResource [# "latchval($name,$CurVal)" #]
+	}
+    Transition t0
+    	whenEvent qchange     -> handleqchange
+    	whenRequest latchdo   -> hanlelatchdo	
+    	whenMsg set           -> handleset
+    	whenMsg reset         -> handlereset
+    
+    State handleset{
+    	[# docmd = true #] 
+    	onMsg( set : set(V)){
+    		[# val V = payloadArg(0); val S = V == "1"  #]
+    		if [# S && Reseton #]{
+    			//SR=11 NO !!
+    		}
+    		else{
+    		  if [# S != Seton #]{
+    		  	[# docmd = true #] 
+	    	    forward nor_s -m s : s($V)   
+	    	    [# Seton=S #]
+    		  }//else non ci sono modifiche in input   			
+    		}
+    	}
+    }
+    Goto work
+
+    State handlereset{
+    	[# docmd = true #] 
+     	onMsg( reset : reset(V)){
+    		[# val V = payloadArg(0); val R = V == "1"  #]
+    		if [# R && Seton #]{
+    			//SR=11 NO !!
+    		}
+    		else{
+    		  if [# R != Reseton #]{
+    		  	
+	    	    forward nor_r -m r : r($V)   
+	    	    [# Reseton = R #]
+    		  }//else non ci sono modifiche in input   			
+    		}
+    	}    	
+    }
+    Goto work
+    
+    State hanlelatchdo{
+    	[# docmd = false #]
+     	onMsg( latchdo : latchdo(S,R) ){
+    		[# val S    = payloadArg(0) == "1" 
+    		   val R    = payloadArg(1) == "1"
+    		   var Todo = "nop";    		  
+    	    #]
+    	    if [# S == Seton && R == Reseton #]{
+    	    	replyTo latchdo with latchval : latchval($CurVal)
+    	    }else{
+    	    	[# Todo = input(S,R)  #]
+    	   		// println("$name | Todo = $Todo $S $R") color magenta
+    	    
+	    	    if [# Todo == "nop" #]{ 
+	    	    	replyTo latchdo with latchval : latchval($CurVal)
+	    	    }
+	    	    if [# Todo == "seton" #]{   	    	    	
+	    	    	forward nor_s -m s : s(1)   
+	    	    	[# Seton=true #]
+	    	    }
+	    	    if [# Todo == "setoff" #]{  	    	    	
+	    	    	forward nor_s -m s : s(0)   
+	    	    	[# Seton=false #]
+	    	    	replyTo latchdo with latchval : latchval($CurVal)
+	    	    }
+	    	    if [# Todo == "reseton" #]{ 
+	    	    	
+	    	    	forward nor_r -m r : r(1)   
+	    	    	[# Reseton=true #]
+	    	    }
+	    	    if [# Todo == "resetoff" #]{	    	    	
+	    	    	forward nor_r -m r : r(0)   
+	    	    	[# Reseton=false #]
+	    	    	replyTo latchdo with latchval : latchval($CurVal)
+	    	    }   	   
+    	    }
+    	}
+    }
+    Goto work
+     
+    State handleqchange{
+    	 printCurrentMessage color magenta
+    	 onMsg( latchval : latchval(V) ){ 
+    	 	[# val V = payloadArg(0); val VS= ""+V; CurVal = VS #]
+    	 	//potrebbe non esserci richiesta ... Poco male, ma meglio fare un check
+    	 	if [#  ! docmd  #]{
+    	 		replyTo latchdo with latchval : latchval($V)    	 	
+    	 	}
+    	 }
+    }
+    Goto work
+  
+}
+
+  /*
+   * OBSERVER
+   */
+   QActor latchobserver context ctxflipflop{
+   	State s0 initial{
+   		println("$name | START") color blue
+   		observeResource latch msgid info
+   	}
+   	Transition t0
+   		whenMsg info -> handleinfo
+   		
+   	State handleinfo{
+   		//printCurrentMessage color blue
+   		onMsg( info:latchval(SOURCE,TERM)){
+			[#  val Source = payloadArg(0)
+		        val infoMsg = payloadArg(1)
+		        val M      = "$infoMsg from $Source"
+	     	 #]  
+	     	 println("		$name | $M") 	color blue		
+   		}
+   	}
+   	Transition t0
+   		whenMsg info -> handleinfo
+   	
+   }
+ 
+/*
+ * UTILIZZATORI
+ */
+ 
+ 
+//Interazione con il latch a comandi-dispatch
+//Una successione troppo rapida dei comandi reset/set va evitata dall'utente
+//L'output è visibile mediante  latchobserver
+  QActor latchusage context ctxflipflop{
+  	State s0 initial{
+		println("$name | START") color cyan
+		delay 1000
+		//Richiesta per conoscere lo stato iniziale 
+        request latch -m  latchdo : latchdo(0,0)		 		
+	}	
+	Transition t0 
+		whenReply latchval -> s1
+ 
+	State s1{
+ 		println(" 00 (stato inziale) " ) color cyan
+		println("$name | ${currentMsg.msgContent()}") color magenta
+		println("s1 - RESET 1 ........................ " ) color cyan
+		forward latch -m reset : reset(1)	
+		delay 500	 //Give time to elaborate
+		println("s2 - RESET 0 ........................ " ) color cyan
+		forward latch -m reset : reset(0)		 
+		delay 500	 //Give time to elaborate
+		println("s3 - SET 1 ........................ " ) color cyan
+		forward latch -m  set :  set(1)		 
+		delay 500	 //Give time to elaborate
+		println("s4 - SET 0 ........................ " ) color cyan
+		forward latch -m  set :  set(0)		 
+		delay 500	 //Give time to elaborate
+		println("s5 - RESET 1 ........................ " ) color cyan
+		forward latch -m reset : reset(1)		 
+		delay 500	 //Give time to elaborate
+		println("s6 - RESET 0 ........................ " ) color cyan
+		forward latch -m reset : reset(0)		 
+		delay 500	 //Give time to elaborate
+		println("s7 - SET 0 ........................ " ) color cyan
+		request latch -m  latchdo : latchdo(0,0)	 
+	}
+	Transition t0 
+		whenReply latchval -> end
+	
+	State end{
+		println("$name end | ${currentMsg.msgContent()}") color magenta
+		[# System.exit(0) #]		
+	}
+  	
+  }
+  
+ 
+ 
+/*    
+//Interazione con latch a request-response
+  QActor latchusagefig context ctxflipflop{
+	State s0 initial{
+		println("s0 | START") color cyan
+		delay 1000
+ 		println(" 00 (stato inziale) " ) color cyan
+        request latch -m  latchdo : latchdo(0,0)		 		
+	}	
+	Transition t0 
+		whenReply latchval -> s1
+ 
+	State s1{
+		println("s0 | ${currentMsg.msgContent()}") color red
+		println(" RESET 1 ........................ " ) color cyan
+		request latch -m  latchdo : latchdo(0,1)		 
+	}
+	Transition t0 
+		whenReply latchval -> s2
+		
+	State s2{
+		//printCurrentMessage color blue
+		println("s1 | ${currentMsg.msgContent()}") color red
+		println(" RESET 0 ........................ " ) color cyan
+		request latch -m  latchdo : latchdo(0,0)
+	}
+	Transition t0 
+		whenReply latchval ->  s3
+
+	State s3{
+		//printCurrentMessage color blue
+		println("s2 | ${currentMsg.msgContent()}") color red
+		println(" SET1 ........................ " ) color cyan
+		request latch -m  latchdo : latchdo(1,0)
+	}
+	Transition t0 
+		whenReply latchval -> s4
+	
+	State s4{
+		//printCurrentMessage color blue
+		println("s3 | ${currentMsg.msgContent()}") color red
+		println(" SET0 ........................ " ) color cyan
+		request latch -m  latchdo : latchdo(0,0)
+	}
+	Transition t0 
+		whenReply latchval -> s5
+
+	State s5{
+		//printCurrentMessage color blue
+		println("s4 | ${currentMsg.msgContent()}") color red
+		println(" RESET 1 ........................ " ) color cyan
+		request latch -m  latchdo : latchdo(0,1)
+	} 
+	Transition t0 
+		whenReply latchval  -> s6
+
+	State s6{
+		//printCurrentMessage color blue
+		println("s5 | ${currentMsg.msgContent()}") color red
+		println(" RESET 0 ........................ " ) color cyan
+		request latch -m  latchdo : latchdo(0,0)
+	}
+	Transition t0 
+		whenReply latchval -> s7
+
+	State s7{ 
+		//printCurrentMessage color blue
+		println("s6 | ${currentMsg.msgContent()}  ") color red
+		println(" SET0 ........................ " ) color cyan
+		request latch -m  latchdo : latchdo(0,0)
+	}
+	Transition t0 
+		whenReply latchval  -> end
+	
+	State end{
+		//printCurrentMessage color blue
+		println("s7 end | ${currentMsg.msgContent()}") color red
+		[# System.exit(0) #]
+	}
+ 
+ }
+ */

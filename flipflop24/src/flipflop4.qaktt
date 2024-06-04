@@ -1,0 +1,457 @@
+System flipflop
+/*
+ * flipflop.qak
+ * Vedi https://www.edutecnica.it/sistemi/latch/latch.htm
+ */
+Dispatch s : s(X)
+Dispatch q : q(X) 
+
+Dispatch r : r(X)
+Dispatch q1 : q1(X)
+
+//Request val  : val(X)
+//Reply curval : curval(X) for val
+
+//Request set : set(X)
+//Request reset : reset(X)
+//Reply latchval : latchval(V) //for set and reset
+
+Request latchdo : latchdo(S,R)
+Reply latchval : latchval(V) for latchdo
+
+Event latchval : latchval(V)
+
+Context ctxflipflop  ip [host="localhost" port=8765]
+
+QActor nor_r context ctxflipflop{
+	[# var Value    = 1 
+	   var NewValue = 0
+	   var CurR     = 0
+	   var CurQ1    = 0
+	   	   
+	   fun norf( a:Int,b:Int ) : Int{
+	   	 if( a == 0 && b == 0) return 1
+	   	 else return 0
+	   }	 
+	#]
+	
+	State s0 initial{
+	}
+	Transition t0 
+		whenMsg r  -> elabInputR
+		whenMsg q1 -> elabInputQ1
+//		whenRequest val -> handlerequest
+		
+//	State handlerequest{
+//		//println("$name | handlerequest Value=$Value  ") color green
+//		replyTo val with curval : curval($Value)
+//	}
+//	Transition t0 
+//		whenMsg r  -> elabInputR
+//		whenMsg q1 -> elabInputQ1
+//		whenRequest val -> handlerequest
+
+	State elabout  { 
+		[# NewValue = norf(CurR,CurQ1) #]
+    	if [# NewValue !==  Value #]{
+    		forward nor_s -m q : q($NewValue)  
+    		[# Value=NewValue #]  //potrebbe essere modificato da altro msg da nor_s
+    	    emitlocalstream latchval : latchval($Value)
+    	}   	
+    	//emitlocalstream latchval : latchval($Value)
+        println("$name | $Value  ") color red
+ 	}   
+	Transition t0 
+//        whenRequest val -> handlerequest
+		whenMsg r -> elabInputR 
+		whenMsg q1 -> elabInputQ1
+  
+    State elabInputR{   	
+    	//printCurrentMessage color black
+    	onMsg( r:r(0)){ [# CurR = 0  #] }
+    	onMsg( r:r(1)){ [# CurR = 1  #] }  
+     }
+     Goto elabout
+      
+    State elabInputQ1{   	 
+    	//printCurrentMessage color black
+    	onMsg( q1:q1(0)){ [# CurQ1 = 0  #] }
+    	onMsg( q1:q1(1)){ [# CurQ1 = 1  #] }    
+    }		
+    Goto elabout
+ } 
+ 
+/*
+ * S
+ */ 
+ 
+QActor nor_s context ctxflipflop{
+	[# var Value    = 0  
+	   var NewValue = 0
+	   var CurS     = 0
+	   var CurQ     = 1
+ 	   
+	   fun norf( a:Int,b:Int ) : Int{
+	   	 if( a == 0 && b == 0) return 1
+	   	 else return 0
+	   }		 
+	#]
+	State s0 initial{
+		delay 100  //wait for nor_r
+	}
+	Transition t0 
+		whenMsg s -> elabInputS
+		whenMsg q -> elabInputQ
+
+
+	State elabout  {
+		[# NewValue = norf(CurS,CurQ) #]
+     	if [# NewValue !==  Value #]{
+     		forward nor_r -m q1 : q1($NewValue)
+     	    [# Value=NewValue #] 
+     	}
+        println("$name | $Value  ") color blue
+  	}   
+	Transition t0 
+		whenMsg s -> elabInputS
+		whenMsg q -> elabInputQ
+ 
+    State elabInputS{
+    	//printCurrentMessage color black
+    	onMsg( s:s(0)){ [# CurS = 0  #] }
+    	onMsg( s:s(1)){ [# CurS = 1  #] }   
+     }
+     Goto elabout
+
+     
+    State elabInputQ{
+    	//printCurrentMessage color black
+    	onMsg( q:q(0)){ [# CurQ = 0 #] }
+    	onMsg( q:q(1)){ [# CurQ = 1  #] } 
+    }	
+    Goto elabout	
+ }
+
+QActor latch context ctxflipflop{
+	[# var Seton   = false 
+	   var Reseton = false	
+	   var CurVal  = "1"
+	   
+	   fun input(S:Boolean, R:Boolean) : String{
+	   	  //CommUtils.outgreen("input $S,$R - OLD: $Seton,$Reseton")
+	   	  if( S == Seton && R == Reseton ) return "nop" //no new input	   	  
+	   	  
+	   	  if( S && R ) return "error"
+	   	  if( S && !Seton) return "seton" 
+	   	  if( !S && Seton) return "setoff" 
+	   	  if( R && ! Reseton) return "reseton" 
+	   	  if( !R && Reseton) return "resetoff" 
+	   	  
+	   	  return "nop"
+	   }
+	#]
+	State s0 initial{
+		println("$name | START") color magenta
+		subscribeTo nor_r for latchval
+	}	
+    Transition t0
+    	whenEvent latchval    -> handlelatchval
+    	whenRequest latchdo   -> hanlelatchdo	
+     
+    State hanlelatchdo{
+     	onMsg( latchdo : latchdo(S,R) ){
+    		[# val S    = payloadArg(0) == "1" 
+    		   val R    = payloadArg(1) == "1"
+    		   var Todo = "nop";    		  
+    	    #]
+    	    if [# S == Seton && R == Reseton #]{
+    	    	replyTo latchdo with latchval : latchval($CurVal)
+    	    }else{
+    	    	[# Todo = input(S,R)  #]
+    	   		// println("$name | Todo = $Todo $S $R") color magenta
+    	    
+	    	    if [# Todo == "nop" #]{ 
+	    	    	replyTo latchdo with latchval : latchval($CurVal)
+	    	    }
+	    	    if [# Todo == "seton" #]{   forward nor_s -m s : s(1)   [# Seton=true #]   }
+	    	    if [# Todo == "setoff" #]{  
+	    	    	forward nor_s -m s : s(0)   
+	    	    	[# Seton=false #]
+	    	    	replyTo latchdo with latchval : latchval($CurVal)
+	    	    }
+	    	    if [# Todo == "reseton" #]{ forward nor_r -m r : r(1)   [# Reseton=true #]  }
+	    	    if [# Todo == "resetoff" #]{forward nor_r -m r : r(0)   [# Reseton=false #] }
+    	   
+    	    }
+    	}
+    }
+     Transition t0
+    	whenEvent latchval -> handlelatchval
+    	whenRequest latchdo   -> hanlelatchdo	
+     
+    State handlelatchval{
+    	 printCurrentMessage color magenta
+    	 onMsg( latchval : latchval(V) ){ 
+    	 	[# val V = payloadArg(0); val VS= ""+V; CurVal = VS #]
+    	 	//potrebbe non esserci richiesta ...
+    	 	replyTo latchdo with latchval : latchval($V)
+    	 }
+    }
+     Transition t0
+    	whenEvent latchval -> handlelatchval
+    	whenRequest latchdo   -> hanlelatchdo	
+  
+}
+ 
+/*
+ * UTILIZZATORE
+ */
+ 
+  QActor latchusage context ctxflipflop{
+	State s0 initial{
+		println("$name | START") color cyan
+		delay 1000
+ 		println(" 00 ........................ " ) color cyan
+        request latch -m  latchdo : latchdo(0,0)		 		
+	}	
+	Transition t0 
+		whenReply latchval -> doJob
+ 
+	State doJob{
+		println("$name | ${currentMsg.msgContent()}") color green
+		println(" doJob  ........................ " ) color cyan
+		println(" RESET 1 ........................ " ) color cyan
+		request latch -m  latchdo : latchdo(0,1)		 
+	}
+	Transition t0 
+		whenReply latchval -> goon1
+		
+	State goon1{
+		//printCurrentMessage color blue
+		println("$name | ${currentMsg.msgContent()}") color green
+		println(" RESET 0 ........................ " ) color cyan
+		request latch -m  latchdo : latchdo(0,0)
+	}
+	Transition t0 
+		whenReply latchval ->  goon2
+
+	State goon2{
+		//printCurrentMessage color blue
+		println("$name | ${currentMsg.msgContent()}") color green
+		println(" SET1 ........................ " ) color cyan
+		request latch -m  latchdo : latchdo(1,0)
+	}
+	Transition t0 
+		whenReply latchval -> goon3
+	
+	State goon3{
+		//printCurrentMessage color blue
+		println("$name | ${currentMsg.msgContent()}") color green
+		println(" SET0 ........................ " ) color cyan
+		request latch -m  latchdo : latchdo(0,0)
+	}
+	Transition t0 
+		whenReply latchval -> goon4
+
+	State goon4{
+		//printCurrentMessage color blue
+		println("$name | ${currentMsg.msgContent()}") color green
+		println(" RESET 1 ........................ " ) color cyan
+		request latch -m  latchdo : latchdo(0,1)
+	}
+	Transition t0 
+		whenReply latchval  -> goon5
+
+	State goon5{
+		//printCurrentMessage color blue
+		println("$name | ${currentMsg.msgContent()}") color green
+		println(" RESET 0 ........................ " ) color cyan
+		request latch -m  latchdo : latchdo(0,0)
+	}
+	Transition t0 
+		whenReply latchval -> goon6
+
+	State goon6{ 
+		//printCurrentMessage color blue
+		println("$name | ${currentMsg.msgContent()}  ") color green
+		println(" SET0 ........................ " ) color cyan
+		request latch -m  latchdo : latchdo(0,0)
+	}
+	Transition t0 
+		whenReply latchval  -> end
+	
+	State end{
+		//printCurrentMessage color blue
+		println("$name end | ${currentMsg.msgContent()}") color green
+		[# System.exit(0) #]
+	}
+ 
+ }
+ /*
+  * 
+
+ QActor srusage context ctxflipflop{
+	State s0 initial{
+		println("$name | START") color cyan
+		delay 1200
+	}	
+	//Goto doJob 
+	
+	State doJob{
+		println(" RESET 1 ........................ " ) color cyan
+		forward nor_r -m r : r(1)
+		delay 1000 //give time to commute ...
+		request nor_r -m val : val(0)
+	}
+	Transition t0 
+		whenReply curval -> goon1
+		
+	State goon1{
+		//printCurrentMessage color blue
+		println("${currentMsg.msgContent()}") color magenta
+		println(" RESET 0 ........................ " ) color cyan
+		forward nor_r -m r : r(0)
+		delay 1000 //give time to commute ...
+		request nor_r -m val : val(0)
+	}
+	Transition t0 
+		whenReply curval -> goon2
+
+	State goon2{
+		//printCurrentMessage color blue
+		println("${currentMsg.msgContent()}") color magenta
+		println(" SET1 ........................ " ) color cyan
+		forward nor_s -m s : s(1)
+		delay 1000 //give time to commute ...
+		request nor_r -m val : val(0)
+	}
+	Transition t0 
+		whenReply curval -> goon3
+	
+	State goon3{
+		//printCurrentMessage color blue
+		println("${currentMsg.msgContent()}") color magenta
+		println(" SET0 ........................ " ) color cyan
+		forward nor_s -m s : s(0)
+		delay 1000 //give time to commute ...
+		request nor_r -m val : val(0)
+	}
+	Transition t0 
+		whenReply curval -> goon4
+
+	State goon4{
+		//printCurrentMessage color blue
+		println("${currentMsg.msgContent()}") color magenta
+		println(" RESET 1 ........................ " ) color cyan
+		forward nor_r -m r : r(1)
+		delay 1000 //give time to commute ...
+		request nor_r -m val : val(0)
+	}
+	Transition t0 
+		whenReply curval -> goon5
+
+	State goon5{
+		//printCurrentMessage color blue
+		println("${currentMsg.msgContent()}") color magenta
+		println(" RESET 0 ........................ " ) color cyan
+		forward nor_r -m r : r(0)
+		delay 1000 //give time to commute ...
+		request nor_r -m val : val(0)
+	}
+	Transition t0 
+		whenReply curval -> goon6
+
+	State goon6{
+		//printCurrentMessage color blue
+		println("${currentMsg.msgContent()}") color magenta
+		forward nor_s -m s : s(0)
+		delay 1000 //give time to commute ...
+		request nor_r -m val : val(0)		
+	}
+	Transition t0 
+		whenReply curval -> end
+	
+	State end{
+		//printCurrentMessage color blue
+		println("$name end | ${currentMsg.msgContent()}") color magenta
+		[# System.exit(0) #]
+	}
+	
+}
+
+QActor srusageold context ctxflipflop{
+	State s0 initial{
+		println("$name | START") color cyan
+		delay 1200
+	}	
+	//Goto s00 
+	
+	State s00{
+ 		println("S00 .............................. step(1)") color cyan
+		//emit clock : clock(1)
+		delay 1200
+	}
+	Goto s01
+	
+	State s01{
+		forward nor_r -m r : r(1)
+		println("S01 (RESET 1)........................ step(2)" ) color cyan
+		//emit clock : clock(2)
+		delay 1200
+ 	}
+	Goto s00A 
+
+	State s00A {
+		forward nor_r -m r : r(0)
+  		println("s00A (RESET 0)   .......................... step(3)") color cyan
+		//emit clock : clock(3)
+		delay 1200
+	}
+    Goto s10
+ 
+	State s10{
+		forward nor_s -m s : s(1)
+		println("S10 (SET 1) ......................... step(4)") color cyan
+		//emit clock : clock(4)
+ 		delay 1200
+	}
+	Goto s00B
+
+	State s00B{
+		forward nor_s -m s : s(0)
+		println("s00B (SET 0)   .......................... step(5)") color cyan
+		request nor_r -m val : val(0)
+ 		delay 1200
+	}
+    Goto s01B
+    
+	State s01B{
+		forward nor_r -m r : r(1)
+		println("s01B (RESET 1) ........................ step(6)" ) color cyan
+		//emit clock : clock(6) 
+ 		delay 1200
+	}
+	Goto s00C
+ 
+	State s00C{
+		forward nor_r -m r : r(0)
+		println("s00C (RESET 0) .......................... step(7)") color cyan
+		//emit clock : clock(6)
+ 		delay 1200
+	}
+    Goto s00D
+	
+	State s00D{
+		println("s00D .................................. step(8)") color cyan
+		//emit clock : clock(7)
+ 		delay 1200 
+	}
+	Goto end
+	
+	State end{
+		delay 1000
+		[# System.exit(0) #]
+	}
+}
+*    
+*/

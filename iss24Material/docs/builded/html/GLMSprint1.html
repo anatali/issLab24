@@ -1,0 +1,851 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>GLM-Sprint1: sottosistema di I/O &#8212; iss24 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="GLM: Analisi del problema" href="GLMAnalisi.html" />
+    <link rel="prev" title="GLM: introduzione" href="GLMIntro.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="GLMAnalisi.html" title="GLM: Analisi del problema"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="GLMIntro.html" title="GLM: introduzione"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">GLM-Sprint1: sottosistema di I/O</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="glm-sprint1-sottosistema-di-i-o">
+<h1>GLM-Sprint1: sottosistema di I/O<a class="headerlink" href="#glm-sprint1-sottosistema-di-i-o" title="Permalink to this heading">¶</a></h1>
+<p><span class="slide3">progetto uniboConwayActors</span></p>
+<p>Il <span class="slide2">Goal Sprint1:</span> consiste nel realizzare un sistema software (che denominiamo <span class="blue">GLM</span>)
+che renda  disponibile <a class="reference internal" href="#il-sottosistema-di-i-o"><span class="std std-ref">Il sottosistema di I/O</span></a>.</p>
+<p>Impostiamo il modello del sistema nel file: <span class="slide3">gamelifeactors0.qak</span>.</p>
+<section id="il-sottosistema-di-i-o">
+<h2>Il sottosistema di I/O<a class="headerlink" href="#il-sottosistema-di-i-o" title="Permalink to this heading">¶</a></h2>
+<p>Supponiamo di:</p>
+<ul class="simple">
+<li><p>denominare <span class="blue">griddisplay</span> il sottosistema che realizzerà il <em>DisplayI/O</em>;</p></li>
+<li><p>denominare <span class="blue">gamelife</span> il sottosistema che realizzerà la parte applicativa;</p></li>
+</ul>
+<p>In tal caso, dovremo realizzare:</p>
+<ul class="simple">
+<li><p>il <strong>griddisplay</strong>, per la visualizzazione della griglia e di pulsanti di comando verso l’applicazione</p></li>
+<li><p>funzioni per lo <em>switch di colore</em> di una cella da parte dell’utente finale, nella ipotesi di
+colorare in WHITE le celle con stato <strong>false</strong> (<em>off</em>) e in RED le celle con stato <strong>true</strong> (<em>on</em>)</p></li>
+<li><p>funzioni per la <em>modifica del colore</em> (WHITE/RED) di una cella</p></li>
+<li><p>funzioni per l’invio di informazioni (legate ai pulsanti di comando) a <span class="blue">gamelife</span></p></li>
+</ul>
+<section id="principio-r-1">
+<h3>Principio R_1<a class="headerlink" href="#principio-r-1" title="Permalink to this heading">¶</a></h3>
+<p>Naturalmente avremo cura di seguire il già citato principio (o regola):</p>
+<p><span class="slide2">R_1 |</span> <span class="slidekp">Il sottosistema di Input non deve realizzare logica applicativa</span>,
+ma solo invocare funzioni definite nel livello applicativo.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Definiamo nel file <strong>gamelifeactors0.qak</strong>, un <span class="slide1">modello</span> del (sotto)sistema di I/O,
+in cui il <em>DisplayI/O</em> è gestito da un attore denominato <a class="reference internal" href="#griddisplay"><span class="std std-ref">griddisplay</span></a>.</p>
+<p>In assenza del sottosistema <span class="blue">gamelife</span>, introduciamo, per il monento, un altro attore (<a class="reference internal" href="#gamemock"><span class="std std-ref">gamemock</span></a>),
+per testare il comportamento di quanto stiamo realizzando.</p>
+</td>
+<td><a class="reference internal image-reference" href="_images/gamelifeactors0.png"><img alt="_images/gamelifeactors0.png" class="align-center" src="_images/gamelifeactors0.png" style="width: 100%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">System</span> <span class="n">gamelifeactors</span>
+
+<span class="n">Dispatch</span> <span class="n">guicmd</span><span class="p">:</span> <span class="n">guicmd</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">//</span><span class="n">X</span><span class="o">=</span><span class="n">startthegame</span><span class="o">|</span><span class="n">stopthegame</span>
+<span class="n">Dispatch</span> <span class="n">todisplay</span>  <span class="p">:</span> <span class="n">todisplay</span><span class="p">(</span><span class="n">CELL</span><span class="p">,</span><span class="n">STATE</span><span class="p">)</span>
+<span class="n">Dispatch</span> <span class="n">fromdisplay</span><span class="p">:</span> <span class="n">fromdisplay</span><span class="p">(</span><span class="n">CELL</span><span class="p">)</span>
+
+<span class="n">Event</span> <span class="n">startthegame</span>  <span class="p">:</span> <span class="n">startthegame</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">Event</span> <span class="n">stopthegame</span>   <span class="p">:</span> <span class="n">stopthegame</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">Context</span> <span class="n">ctxconwayactors</span> <span class="n">ip</span><span class="p">[</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span> <span class="n">port</span><span class="o">=</span><span class="mi">8360</span><span class="p">]</span>
+
+<span class="n">QActor</span> <span class="n">griddisplay</span> <span class="n">context</span> <span class="n">ctxconwayactors</span><span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+
+<span class="n">QActor</span> <span class="n">gamemock</span> <span class="n">context</span> <span class="n">ctxconwayactors</span><span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+</pre></div>
+</div>
+</td>
+<td><p>I <strong>Dispatch</strong> denotano:</p>
+<ul class="simple">
+<li><p><span class="blue">guicmd</span>: comando inviato da <a class="reference internal" href="#conwayio-java-come-emettitore-di-messaggi"><span class="std std-ref">ConwayIO</span></a></p></li>
+<li><p><span class="blue">fromdisplay</span>: comando destinato a  <span class="blue">gamelife</span></p></li>
+<li><p><span class="blue">todisplay</span>: comando inviato da <span class="blue">gamelife</span></p></li>
+</ul>
+<p>Gli <strong>Event</strong> denotano:</p>
+<ul class="simple">
+<li><p><span class="blue">startthegame</span>: evento di attivazione del gioco</p></li>
+<li><p><span class="blue">stopthegame</span>: ev. di terminazione del gioco</p></li>
+</ul>
+<p>L’Actor <span class="blue">griddisplay</span> <span class="slide2">incapsula</span> un dispostivo di I/O di basso livello
+realizzato in <a class="reference external" href="https://openjfx.io/">JavaFX</a>
+dalla classe  <a class="reference internal" href="#conwayio-java-come-emettitore-di-messaggi"><span class="std std-ref">conway.ConwayIO</span></a>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="una-gui-in-javafx">
+<h3>Una GUI in JavaFX<a class="headerlink" href="#una-gui-in-javafx" title="Permalink to this heading">¶</a></h3>
+<p>Un oggetto di classe  <a class="reference internal" href="#conwayio-java-come-emettitore-di-messaggi"><span class="std std-ref">ConwayIO</span></a> visualizza
+<span class="slide2">una rappresentazione grafica della griglia astratta</span> come riportato nella figura.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 65%" />
+<col style="width: 35%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>L’utente finale può usare questa rappresentazione come dispositivo di input per:</p>
+<ol class="arabic simple">
+<li><p>modificare lo stato corrente di una cella da <strong>false</strong> (il default) a <strong>true</strong>,
+con conseguente modifica del colore</p></li>
+<li><p>inviare il comando di attivazione del gioco (click su <code class="docutils literal notranslate"><span class="pre">Start</span></code>)</p></li>
+<li><p>riportare tutte le celle allo stato <strong>false</strong> di default (click su <code class="docutils literal notranslate"><span class="pre">Clear</span></code>)</p></li>
+<li><p>terminare l’applicazione chiudendo la finestra</p></li>
+</ol>
+<p>La logica applicativa può inviare messaggi <span class="blue">todisplay</span> all’attore <span class="blue">griddisplay</span>
+per modificare il colore delle celle della griglia in relazione alla evoluzione del gioco.</p>
+</td>
+<td><a class="reference internal image-reference" href="_images/ConwayActors0.png"><img alt="_images/ConwayActors0.png" class="align-right" src="_images/ConwayActors0.png" style="width: 100%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="i-parametri-delle-griglia">
+<h3>I parametri delle griglia<a class="headerlink" href="#i-parametri-delle-griglia" title="Permalink to this heading">¶</a></h3>
+<p>I parametri delle griglia sono:</p>
+<ul class="simple">
+<li><p>il numero delle righe <span class="blue">rowsNum</span></p></li>
+<li><p>il numero delle colonne <span class="blue">colsNum</span></p></li>
+<li><p>l’ampiezza della cella <span class="blue">cellsize</span></p></li>
+</ul>
+</section>
+<section id="gridconfig-json">
+<h3>gridConfig.json<a class="headerlink" href="#gridconfig-json" title="Permalink to this heading">¶</a></h3>
+<p><a class="reference internal" href="#i-parametri-delle-griglia"><span class="std std-ref">I parametri delle griglia</span></a> si suppongono descritti in un <strong>file di configurazione</strong>
+di nome <span class="blue">gridConfig.json</span>. Ad esempio:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;rowsNum&quot;</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;colsNum&quot;</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;cellsize&quot;</span><span class="p">:</span><span class="mi">45</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>A questo punto è importante osservare che</p>
+<p><span class="slide1">Una rappresentazione della griglia non è la griglia</span></p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 70%" />
+<col style="width: 30%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>In particolare, la <em>rappresentazione grafica</em> in forma di matrice  <strong>non è la griglia</strong> .</p>
+<p>Tutto nel software è rappresentazione, ma alcune rappresentazioni creano una corrispondenza
+diretta
+tra il mondo virtuale del software e un possibile mondo reale.</p>
+</td>
+<td><a class="reference internal image-reference" href="_images/magritte.PNG"><img alt="_images/magritte.PNG" class="align-center" src="_images/magritte.PNG" style="width: 100%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+<p><a class="reference internal" href="ConwayLife.html#la-struttura"><span class="std std-ref">La struttura</span></a> della <a class="reference internal" href="ConwayLife.html#conwaylife"><span class="std std-ref">soluzione concentrata</span></a> rappresenta in
+forma di matrice
+un ente comune alle celle, da loro manipolabile in modo diretto. In questo senso
+la griglia  <a class="reference external" href="https://it.wikipedia.org/wiki/Esistenza#:~:text=Un%20oggetto%20fisico%20O%20esiste,dal%20senso%20comune%20dell'esistenza.">esiste</a> nel sistema.</p>
+<p>In questa versione ad attori però, le celle <strong>non</strong> possono disporre di una struttura-dati comune
+come <a class="reference internal" href="ConwayLife.html#la-struttura"><span class="std std-ref">La struttura</span></a>. Tuttavia, esse devono
+<strong>agire in modo da rispettare</strong> il <span class="blue">vincolo astratto di costituire una griglia</span>,
+che non esiste come struttura-dati esplicita all’interno del sistema.</p>
+</section>
+<section id="gridsupport-kt-prime-funzioni">
+<h3>GridSupport.kt: prime funzioni<a class="headerlink" href="#gridsupport-kt-prime-funzioni" title="Permalink to this heading">¶</a></h3>
+<p>Per agevolare la specifica delle azioni di livello applicativo, introduciamo nel file
+<code class="docutils literal notranslate"><span class="pre">conway.GridSupport.kt</span></code> alcune prime funzioni di utilità:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#saveonfile"><span class="std std-ref">saveOnFile</span></a>: salva un stringa data in un file</p></li>
+<li><p><a class="reference internal" href="#getcellcoords"><span class="std std-ref">getCellCoords</span></a>: restituisce le coordinate di una cella, noto il suo nome <strong>cell_x_y</strong></p></li>
+<li><p><a class="reference internal" href="#readgridconfig"><span class="std std-ref">readGridConfig</span></a>: acquisisce  <a class="reference internal" href="#i-parametri-delle-griglia"><span class="std std-ref">I parametri delle griglia</span></a>, leggendoli da un   file di configurazione</p></li>
+<li><p><a class="reference internal" href="#getnumofcells"><span class="std std-ref">getNumOfCells</span></a>: restituisce il numero complessivo delle celle</p></li>
+</ul>
+<section id="id1">
+<h4>&#64;JvmStatic<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h4>
+<p>La annotazione <a class="reference external" href="https://www.baeldung.com/kotlin/jvmstatic-annotation">&#64;JvmStatic</a> permette di invocare questo metodo
+Kotlin anche da un programma Java come metodo static.</p>
+</section>
+<section id="saveonfile">
+<h4>saveOnFile<a class="headerlink" href="#saveonfile" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>salva un stringa data in un file</p></td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>@JvmStatic fun saveOnFile(s: String?, fName: String?) {
+   try {
+         val myWriter = FileWriter(fName)
+         myWriter.write(s)
+         myWriter.close()
+   } catch (e: IOException) {
+         e.printStackTrace()
+   }
+}
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="getcellcoords">
+<h4>getCellCoords<a class="headerlink" href="#getcellcoords" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Restituisce le coordinate di una cella, noto il suo nome <strong>cell_x_y</strong></p></td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@JvmStatic</span> <span class="n">fun</span> <span class="n">getCellCoords</span><span class="p">(</span><span class="n">name</span> <span class="p">:</span> <span class="n">String</span><span class="p">)</span> <span class="p">:</span> <span class="n">Vector</span><span class="o">&lt;</span><span class="n">Int</span><span class="o">&gt;</span> <span class="p">{</span>
+   <span class="n">val</span> <span class="n">out</span> <span class="o">=</span> <span class="n">Vector</span><span class="o">&lt;</span><span class="n">Int</span><span class="o">&gt;</span><span class="p">()</span>
+   <span class="n">val</span> <span class="n">coords</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;cellc_&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+   <span class="n">val</span> <span class="n">x</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">toInt</span><span class="p">()</span>
+   <span class="n">val</span> <span class="n">y</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">toInt</span><span class="p">()</span>
+   <span class="n">out</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+   <span class="n">out</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+   <span class="k">return</span> <span class="n">out</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="readgridconfig">
+<h4>readGridConfig<a class="headerlink" href="#readgridconfig" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Legge i parametri delle griglia da un file (ad es. <a class="reference internal" href="#gridconfig-json"><span class="std std-ref">gridConfig.json</span></a>)</p></td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@JvmStatic</span> <span class="n">fun</span> <span class="n">readGridConfig</span><span class="p">(</span><span class="n">fName</span><span class="p">:</span> <span class="n">String</span><span class="p">):</span><span class="n">Vector</span><span class="o">&lt;</span><span class="n">Int</span><span class="o">&gt;</span><span class="p">{</span>
+   <span class="n">val</span> <span class="n">outV</span> <span class="o">=</span> <span class="n">Vector</span><span class="o">&lt;</span><span class="n">Int</span><span class="o">&gt;</span><span class="p">()</span>
+   <span class="n">val</span> <span class="n">jsonParser</span> <span class="o">=</span> <span class="n">JSONParser</span><span class="p">()</span>
+   <span class="n">val</span> <span class="n">config</span>     <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="s2">&quot;$</span><span class="si">{fName}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">readText</span><span class="p">(</span><span class="n">Charsets</span><span class="o">.</span><span class="n">UTF_8</span><span class="p">)</span>
+   <span class="n">val</span> <span class="n">jsonObject</span> <span class="o">=</span> <span class="n">jsonParser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">config</span><span class="p">)</span> <span class="k">as</span> <span class="n">JSONObject</span>
+   <span class="n">RowsNum</span>  <span class="o">=</span> <span class="n">jsonObject</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rows&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">toString</span><span class="p">()</span><span class="o">.</span><span class="n">toInt</span><span class="p">()</span>
+   <span class="n">ColsNum</span>  <span class="o">=</span> <span class="n">jsonObject</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cols&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">toString</span><span class="p">()</span><span class="o">.</span><span class="n">toInt</span><span class="p">()</span>
+   <span class="n">CellSize</span> <span class="o">=</span> <span class="n">jsonObject</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cellsize&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">toString</span><span class="p">()</span><span class="o">.</span><span class="n">toInt</span><span class="p">()</span>
+   <span class="n">outV</span><span class="o">.</span><span class="n">add</span><span class="p">(</span> <span class="n">RowsNum</span> <span class="p">)</span>
+   <span class="n">outV</span><span class="o">.</span><span class="n">add</span><span class="p">(</span> <span class="n">ColsNum</span> <span class="p">)</span>
+   <span class="n">outV</span><span class="o">.</span><span class="n">add</span><span class="p">(</span> <span class="n">CellSize</span> <span class="p">)</span>
+   <span class="k">return</span> <span class="n">outV</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="getnumofcells">
+<h4>getNumOfCells<a class="headerlink" href="#getnumofcells" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Legge i parametri delle griglia dal file <a class="reference internal" href="#gridconfig-json"><span class="std std-ref">gridConfig.json</span></a> e
+restituisce il numero complessivo delle celle</p></td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@JvmStatic</span> <span class="n">getNumOfCells</span><span class="p">()</span> <span class="p">:</span> <span class="n">Int</span> <span class="p">{</span>
+   <span class="n">val</span> <span class="n">res</span>  <span class="o">=</span> <span class="n">readGridConfig</span><span class="p">(</span><span class="s2">&quot;gridConfig.json&quot;</span><span class="p">)</span>
+   <span class="n">val</span> <span class="n">RowsN</span><span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+   <span class="n">val</span> <span class="n">ColsN</span><span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+   <span class="k">return</span> <span class="n">RowsN</span> <span class="o">*</span> <span class="n">ColsN</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+<section id="griddisplay">
+<h2>griddisplay<a class="headerlink" href="#griddisplay" title="Permalink to this heading">¶</a></h2>
+<p>Questo attore realizza il <a class="reference internal" href="#glm-sprint1-sottosistema-di-i-o"><span class="std std-ref">Goal Sprint1</span></a> utilizando al suo interno un oggetto (POJO) <strong>display</strong> di classe
+<a class="reference internal" href="#conwayio-java-come-emettitore-di-messaggi"><span class="std std-ref">conway.ConwayIO</span></a>,
+che assume la natura di una <em>javafx.application.Application</em>, che attiva il metodo <span class="blue">launch</span> di JavaFX.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>L’inizializzazione.</strong></p>
+<p>L’attore <span class="blue">griddisplay</span></p>
+<ol class="arabic simple">
+<li><p>crea una istanza <em>display</em> di
+<a class="reference internal" href="#conwayio-java-come-emettitore-di-messaggi"><span class="std std-ref">conway.ConwayIO</span></a></p></li>
+<li><p>attende (dall’applicazione) il dispatch <strong>gameready</strong> (si veda <code class="docutils literal notranslate"><span class="pre">P_6_0</span></code> in <a class="reference internal" href="GLMAnalisi.html#p-6"><span class="std std-ref">P_6</span></a>) e poi</p></li>
+<li><p>crea un nuovo thread, all’interno del quale invoca il metodo <em>display.initialize</em>
+trasferendo un riferimento a se stesso (<a class="reference internal" href="GLMIntro.html#myname-e-myself"><span class="std std-ref">myself</span></a>).</p></li>
+</ol>
+<p><span class="blue">launch</span> di JavaFX è invocato all’interno di un Thread diverso da quello dell’attore.
+In questo modo, <span class="blue">griddisplay</span> rimane capace di gestire messaggi a lui inviati dall’applicazione o
+da <a class="reference internal" href="#conwayio-java-come-emettitore-di-messaggi"><span class="std std-ref">display</span></a> stesso
+(che riceve un riferimento all’attore tramite <a class="reference internal" href="GLMIntro.html#myname-e-myself"><span class="std std-ref">myself</span></a>).</p>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span> <span class="n">griddisplay</span> <span class="n">context</span> <span class="n">ctxconwayactors</span><span class="p">{</span>
+<span class="p">[</span><span class="c1">#</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span> <span class="n">val</span> <span class="n">display</span><span class="o">=</span><span class="n">conway</span><span class="o">.</span><span class="n">ConwayIO</span><span class="p">()</span><span class="o">//</span><span class="n">create</span> <span class="n">a</span> <span class="n">POJO</span>
+<span class="c1">#]</span>
+<span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span><span class="p">{</span>
+<span class="p">}</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span> <span class="n">Transition</span> <span class="n">t0</span> <span class="n">whenMsg</span> <span class="n">gameready</span><span class="o">-&gt;</span><span class="n">createhegui</span>
+
+<span class="n">State</span> <span class="n">createhegui</span><span class="p">{</span>
+   <span class="p">[</span><span class="c1"># kotlin.concurrent.thread(start = true) {</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span>  <span class="n">display</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">myself</span><span class="p">)</span>  <span class="o">//</span><span class="n">launch</span>
+      <span class="p">}</span>
+   <span class="c1">#]</span>
+<span class="p">}</span>
+<span class="n">Goto</span> <span class="n">working</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Fase working.</strong></p>
+<ol class="arabic simple">
+<li><p>Attende il dispatch <strong>guicmd</strong> (da <a class="reference internal" href="#conwayio-java-come-emettitore-di-messaggi"><span class="std std-ref">conway.ConwayIO</span></a>)</p></li>
+<li><p>Attende il dispatch <strong>todisplay</strong> (da <a class="reference internal" href="GLMSprint3.html#cell"><span class="std std-ref">cell</span></a>)</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">State</span> <span class="n">working</span><span class="p">{</span>
+<span class="p">}</span>
+<span class="n">Transition</span> <span class="n">t0</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span>   <span class="n">whenMsg</span> <span class="n">guicmd</span> <span class="o">-&gt;</span><span class="n">guicmdhandle</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span>   <span class="n">whenMsg</span> <span class="n">todisplay</span><span class="o">-&gt;</span><span class="n">todisplayhandle</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>La gestione dei comandi-utente.</strong></p>
+<p>L’attore <span class="blue">griddisplay</span> gestisce i messaggi <span class="blue">guicmd</span> a lui inviati
+(tramite i pulsanti di comando)
+dall’oggetto di basso livello <a class="reference internal" href="#conwayio-java-come-emettitore-di-messaggi"><span class="std std-ref">display</span></a>,
+operando come un automa a stati finiti (FSM),
+il cui funzionamento è espresso dal modello qui a fianco.</p>
+<a class="reference internal image-reference" href="_images/griddisplay&amp;gamelife.png"><img alt="_images/griddisplay&amp;gamelife.png" class="align-center" src="_images/griddisplay&amp;gamelife.png" style="width: 100%;" /></a>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span> /* GESTONE COMANDI UTENTE */
+State guicmdhandle{
+   onMsg( guicmd : guicmd(startthegame)){//UNIFY
+      forward gamelife
+        -m fromdisplay:fromdisplay(start)
+   }
+   onMsg( guicmd : guicmd(stopthegame)){
+      emit stopthegame : stopthegame(fromgui)
+   }
+   onMsg( guicmd : guicmd(click(X,Y)) ){
+   [# val template = &quot;click(X,Y)&quot;
+      val goal=
+        &quot;${payloadArg(0)}=$template&quot;;//UNIFY
+      val x sysUtil.solve( goal,&quot;X&quot; )!!.toInt();
+      val y=sysUtil.solve( goal,&quot;Y&quot; )!!.toInt();
+      display.switchColor(x,y)
+   #]
+   }
+   onMsg( guicmd : guicmd(clear)){
+      [# display.clearCells() #]
+   }
+}
+ Goto working
+</pre></div>
+</div>
+<p>La frase  <span class="slide2">onMsg(guicmd:guicmd(xxx))</span></p>
+<p>risulta <em>true</em> quando nell coda dei messaggi dell’attore, esiste un messaggio
+di nome <span class="blue">giucmd</span>
+il cui payload <span class="slide2">unifica</span> (in senso Prolog) con <code class="docutils literal notranslate"><span class="pre">guicmd(xxx)</span></code>.</p>
+<p>Essa dunque funge da <strong>selettore di messsggi</strong> basato sul <em>meccansimo di
+unificazione</em> del Prolog.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong>La gestione dei comandi-applicativi.</strong></p>
+<p>L’attore <span class="blue">griddisplay</span> gestisce i messaggi <span class="blue">todisplay</span> a lui inviati
+dall’applicazione ,
+operando ancora come un automa a stati finiti (FSM),
+il cui funzionamento è espresso dal modello qui a fianco.</p>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="o">/*</span> <span class="n">GESTONE</span> <span class="n">COMANDI</span> <span class="n">applicativi</span> <span class="o">*/</span>
+   <span class="n">State</span> <span class="n">todisplayhandle</span><span class="p">{</span>
+      <span class="n">onMsg</span><span class="p">(</span> <span class="n">todisplay</span> <span class="p">:</span> <span class="n">todisplay</span><span class="p">(</span><span class="n">CELL</span><span class="p">,</span><span class="n">STATE</span><span class="p">)){</span>
+      <span class="p">[</span><span class="c1">#</span>
+         <span class="n">val</span> <span class="n">CellName</span> <span class="o">=</span> <span class="n">payloadArg</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+         <span class="n">val</span> <span class="n">State</span>     <span class="o">=</span> <span class="n">payloadArg</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+         <span class="n">val</span> <span class="n">coords</span><span class="o">=</span>
+            <span class="n">conway</span><span class="o">.</span><span class="n">GridSupport</span><span class="o">.</span><span class="n">getCellCoords</span><span class="p">(</span><span class="n">CellName</span><span class="p">)</span>
+         <span class="n">val</span> <span class="n">x</span><span class="o">=</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+         <span class="n">val</span> <span class="n">y</span><span class="o">=</span><span class="n">coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+         <span class="k">if</span><span class="p">(</span> <span class="n">State</span><span class="o">==</span><span class="s2">&quot;true&quot;</span><span class="p">)</span> <span class="n">display</span><span class="o">.</span><span class="n">cellOn</span><span class="p">(</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="p">)</span>
+          <span class="k">else</span> <span class="n">display</span><span class="o">.</span><span class="n">cellOff</span><span class="p">(</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="p">)</span>
+      <span class="c1">#]</span>
+      <span class="p">}</span>
+   <span class="p">}</span>
+   <span class="n">Goto</span> <span class="n">working</span>
+<span class="p">}</span><span class="o">//</span><span class="n">griddisplay</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<section id="conwayio">
+<h3>ConwayIO<a class="headerlink" href="#conwayio" title="Permalink to this heading">¶</a></h3>
+<p>La responsabilità di questo componente è di creare il dispositivo di basso livello per l’Input/Output
+fornire funzioni per il suo utilizzo.</p>
+<p>La classe <code class="docutils literal notranslate"><span class="pre">conway.ConwayIO</span></code> è simile a quella introdotta in <a class="reference internal" href="ConwayLife.html#la-classe-conwayio"><span class="std std-ref">La classe ConwayIO</span></a> nel
+sistema concentrato, con  alcune importanti differenze:</p>
+<ol class="arabic simple">
+<li><p>è la classe che assume la natura di una <em>javafx.application.Application</em></p></li>
+<li><p>non esiste più un oggetto istanza de <a class="reference internal" href="ConwayLife.html#la-classe-lifecontroller"><span class="std std-ref">La classe LifeController</span></a></p></li>
+<li><p>i ‘click’ del mouse sui pulsanti diventano messaggi
+all’attore (referenziato da <span class="blue">displayOwnerActor</span>) che possiede il dispositivo.</p></li>
+</ol>
+<section id="conwayio-java-come-emettitore-di-messaggi">
+<h4>ConwayIO.java come emettitore di messaggi<a class="headerlink" href="#conwayio-java-come-emettitore-di-messaggi" title="Permalink to this heading">¶</a></h4>
+<p>In quanto dispositivo di input in un ambiente ad attori, il componente trasforma il ‘click’ del mouse
+su un pulsante della GUI in un <strong>dispatch</strong> inviato all’attore che possiede il dispositivo.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>L’inizializzazione.</strong></p>
+<ol class="arabic simple">
+<li><p>Rappresenta i parametri delle griglia come variabili statiche</p></li>
+<li><p>Memorizza l*Actor* che possiede il display in <strong>displayOwnerActor</strong></p></li>
+<li><p>Invoca <a class="reference internal" href="#readgridconfig"><span class="std std-ref">conway.GridSupport.readGridConfig</span></a> per leggere
+<a class="reference internal" href="#i-parametri-delle-griglia"><span class="std std-ref">I parametri delle griglia</span></a></p></li>
+<li><p><strong>Lancia</strong> l’applicazione JavaFX</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">package</span> <span class="n">conway</span><span class="p">;</span>
+<span class="o">...</span>
+<span class="n">public</span> <span class="k">class</span> <span class="nc">ConwayIO</span>  <span class="n">extends</span> <span class="n">Application</span><span class="p">{</span>
+<span class="o">//</span><span class="n">POSESSORE</span> <span class="n">DEL</span> <span class="n">DISPOSITIVO</span>
+<span class="n">private</span> <span class="n">static</span> <span class="n">ActorBasic</span> <span class="n">displayOwnerActor</span> <span class="p">;</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span> <span class="o">//</span><span class="n">DICH</span><span class="o">.</span><span class="n">E</span> <span class="n">RELATIVE</span> <span class="n">ALLA</span> <span class="n">RAPPRES</span><span class="o">.</span> <span class="n">GRIGLIA</span>
+<span class="n">private</span> <span class="n">static</span> <span class="n">Rectangle</span><span class="p">[][]</span>  <span class="n">cells</span>   <span class="p">;</span>
+<span class="n">private</span> <span class="n">static</span> <span class="nb">int</span> <span class="n">rows</span>     <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">private</span> <span class="n">static</span> <span class="nb">int</span> <span class="n">cols</span>     <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">private</span> <span class="n">static</span> <span class="nb">int</span> <span class="n">cellsize</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="o">//</span><span class="n">DICH</span><span class="o">.</span> <span class="n">DEI</span> <span class="n">COMPONENTI</span> <span class="n">DELLA</span> <span class="n">SCENA</span>
+<span class="n">private</span>   <span class="n">Stage</span> <span class="n">stage</span><span class="p">;</span>
+<span class="n">private</span> <span class="n">GridPane</span> <span class="n">gridPane</span><span class="p">;</span>
+<span class="n">private</span> <span class="n">Scene</span> <span class="n">scene</span><span class="p">;</span>
+<span class="n">private</span> <span class="n">Button</span> <span class="n">bstart</span><span class="p">;</span>
+<span class="n">private</span> <span class="n">Button</span> <span class="n">bclear</span><span class="p">;</span>
+    <span class="o">...</span>
+   <span class="n">public</span> <span class="n">ConwayIO</span><span class="p">(</span>     <span class="p">){</span>
+      <span class="nb">super</span><span class="p">();</span>
+   <span class="p">}</span>
+
+   <span class="n">public</span>  <span class="n">void</span> <span class="n">initialize</span><span class="p">(</span><span class="n">ActorBasic</span> <span class="n">caller</span><span class="p">){</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span><span class="n">displayOwnerActor</span> <span class="o">=</span> <span class="n">caller</span><span class="p">;</span>
+
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span><span class="n">Vector</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">p</span><span class="o">=</span><span class="n">GridSupport</span><span class="o">.</span><span class="n">INSTANCE</span><span class="o">.</span><span class="n">readGridConfig</span><span class="p">(</span>
+                            <span class="s2">&quot;gridConfig.json&quot;</span><span class="p">);</span>
+    <span class="n">rows</span>     <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">elementAt</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">cols</span>     <span class="o">=</span> <span class="n">package</span><span class="o">.</span><span class="n">elementAt</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">cellsize</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">elementAt</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+
+<span class="o">/*</span><span class="mi">4</span><span class="o">*/</span><span class="n">launch</span><span class="p">(</span><span class="n">new</span> <span class="n">String</span><span class="p">[]</span> <span class="p">{});</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong>Funzioni di utilità in ConwayIO.</strong></p>
+<ul class="simple">
+<li><p><strong>cellOn</strong>: colora una cella di RED</p></li>
+<li><p><strong>cellOff</strong>: colora una cella di WHITE</p></li>
+<li><p><strong>clearCells</strong>: pone tutte le celle WHITE</p></li>
+<li><p><strong>switchColor</strong>: commuta il colore di una cella</p></li>
+<li><p><strong>sendMsgToOwner</strong>: invia un <em>dispatch</em> al’attore che possiede il display</p></li>
+</ul>
+<p><span class="blue">it.unibo.kactor.MsgUtil</span> è una classe utility definita nella <a class="reference internal" href="GLMIntro.html#infrastruttura-qak"><span class="std std-ref">Infrastruttura qak</span></a></p>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">public</span>  <span class="n">void</span> <span class="n">cellOn</span><span class="p">(</span><span class="nb">int</span> <span class="n">i</span><span class="p">,</span> <span class="nb">int</span> <span class="n">j</span><span class="p">){</span>
+   <span class="k">if</span><span class="p">(</span> <span class="n">cells</span> <span class="o">==</span> <span class="n">null</span> <span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+   <span class="n">cells</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">setFill</span><span class="p">(</span><span class="n">Color</span><span class="o">.</span><span class="n">RED</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">public</span>  <span class="n">void</span> <span class="n">cellOff</span><span class="p">(</span><span class="nb">int</span> <span class="n">i</span><span class="p">,</span> <span class="nb">int</span> <span class="n">j</span><span class="p">){</span>
+   <span class="k">if</span><span class="p">(</span> <span class="n">cells</span> <span class="o">==</span> <span class="n">null</span> <span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+   <span class="n">cells</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">setFill</span><span class="p">(</span><span class="n">Color</span><span class="o">.</span><span class="n">WHITE</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">public</span> <span class="n">void</span> <span class="n">clearCells</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="nb">int</span> <span class="n">row</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">row</span> <span class="o">&lt;</span> <span class="n">rows</span><span class="p">;</span> <span class="n">row</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+         <span class="k">for</span> <span class="p">(</span><span class="nb">int</span> <span class="n">col</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">col</span> <span class="o">&lt;</span> <span class="n">cols</span><span class="p">;</span> <span class="n">col</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">cellOff</span><span class="p">(</span><span class="n">row</span><span class="p">,</span><span class="n">col</span><span class="p">);</span>
+         <span class="p">}</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+<span class="n">public</span>  <span class="n">void</span> <span class="n">switchColor</span><span class="p">(</span><span class="nb">int</span> <span class="n">i</span><span class="p">,</span> <span class="nb">int</span> <span class="n">j</span><span class="p">){</span>
+   <span class="k">if</span><span class="p">(</span> <span class="n">cells</span> <span class="o">==</span> <span class="n">null</span> <span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+   <span class="k">if</span><span class="p">(</span> <span class="n">cells</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">getFill</span><span class="p">()</span> <span class="o">==</span> <span class="n">Color</span><span class="o">.</span><span class="n">WHITE</span> <span class="p">)</span>
+      <span class="n">cells</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">setFill</span><span class="p">(</span><span class="n">Color</span><span class="o">.</span><span class="n">RED</span><span class="p">);</span>
+   <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="n">cells</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">getFill</span><span class="p">()</span> <span class="o">==</span> <span class="n">Color</span><span class="o">.</span><span class="n">RED</span> <span class="p">)</span>
+      <span class="n">cells</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">setFill</span><span class="p">(</span><span class="n">Color</span><span class="o">.</span><span class="n">WHITE</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">public</span> <span class="n">void</span> <span class="n">sendMsgToOwner</span><span class="p">(</span><span class="n">String</span> <span class="n">msgId</span><span class="p">,</span> <span class="n">String</span> <span class="n">msgPayload</span><span class="p">)</span> <span class="p">{</span>
+   <span class="n">MsgUtil</span><span class="o">.</span><span class="n">sendMsg</span><span class="p">(</span><span class="s2">&quot;gui&quot;</span><span class="p">,</span><span class="n">msgId</span><span class="p">,</span>
+            <span class="n">msgPayload</span><span class="p">,</span><span class="n">displayOwnerActor</span><span class="p">,</span><span class="n">null</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong>L’attività al launch.</strong></p>
+<ol class="arabic simple">
+<li><p>L’applicazione JavaFX crea la scena, comprensiva della rappresentazione della griglia.</p></li>
+<li><p>La chiusura della finestra provoca la fine dell’applicazione</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@Override</span>
+<span class="n">public</span> <span class="n">void</span> <span class="n">start</span><span class="p">(</span><span class="n">Stage</span> <span class="n">primaryStage</span><span class="p">)</span> <span class="n">throws</span> <span class="ne">Exception</span> <span class="p">{</span>
+   <span class="n">stage</span>     <span class="o">=</span> <span class="n">primaryStage</span><span class="p">;</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span><span class="n">createScene</span><span class="p">(</span> <span class="p">);</span>
+<span class="p">}</span>
+<span class="o">//</span><span class="n">CHIUSURA</span> <span class="n">DELLA</span> <span class="n">FINESTRA</span>
+<span class="nd">@Override</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span><span class="n">public</span> <span class="n">void</span> <span class="n">stop</span><span class="p">(){</span>
+    <span class="n">System</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong>Creazione della scena.</strong></p>
+<ol class="arabic simple">
+<li><p>Pone la scena sempre al top</p></li>
+<li><p>Crea i pulsanti di comando (input)</p></li>
+<li><p>Imposta la reazione ai comandi di input</p></li>
+<li><p>Crea le gui per le celle</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">protected</span> <span class="n">void</span> <span class="n">createScene</span><span class="p">(</span> <span class="p">){</span>
+   <span class="n">gridPane</span> <span class="o">=</span> <span class="n">new</span> <span class="n">GridPane</span><span class="p">();</span>
+   <span class="n">scene</span>    <span class="o">=</span> <span class="n">new</span> <span class="n">Scene</span><span class="p">(</span> <span class="n">gridPane</span><span class="p">,</span>
+                  <span class="n">cols</span><span class="o">*</span><span class="n">cellsize</span><span class="o">+</span><span class="n">cellsize</span><span class="p">,</span>
+                  <span class="n">rows</span><span class="o">*</span><span class="n">cellsize</span><span class="o">+</span><span class="n">cellsize</span><span class="p">);</span>
+   <span class="n">stage</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;PROTOTYPE0&quot;</span><span class="p">);</span>
+   <span class="n">stage</span><span class="o">.</span><span class="n">setScene</span><span class="p">(</span><span class="n">scene</span><span class="p">);</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span><span class="n">stage</span><span class="o">.</span><span class="n">setAlwaysOnTop</span><span class="p">(</span><span class="n">true</span><span class="p">);</span>
+
+<span class="o">/*</span><span class="mi">2</span><span class="o">*///</span><span class="n">CREAZIONE</span> <span class="n">PULSANTI</span> <span class="n">COMANDO</span>
+   <span class="n">bstart</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Button</span><span class="p">(</span><span class="s2">&quot;Start&quot;</span><span class="p">);</span>
+   <span class="n">gridPane</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bstart</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="n">rows</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+   <span class="n">bclear</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Button</span><span class="p">(</span><span class="s2">&quot;Clear&quot;</span><span class="p">);</span>
+   <span class="n">gridPane</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bclear</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="n">rows</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+
+ <span class="o">/*</span><span class="mi">3</span><span class="o">*/</span><span class="n">setGameInput</span><span class="p">();</span>
+ <span class="o">/*</span><span class="mi">4</span><span class="o">*/</span><span class="n">createCells</span><span class="p">(</span>    <span class="p">);</span>
+   <span class="n">stage</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong>Reazione ai comandi di Input.</strong></p>
+<ol class="arabic simple">
+<li><p>Trasforma il ‘click’ del mouse su un pulsante di comando
+in un <strong>dispatch</strong> inviato a <strong>displayOwnerActor</strong>
+(attore <a class="reference internal" href="#griddisplay"><span class="std std-ref">griddisplay</span></a> che possiede il dispositivo).</p></li>
+<li><p>La ‘trasformazione’ del pulsante <strong>Start</strong> in <strong>Stop</strong> (e viceversa),
+che in precedenza faceva
+<a class="reference internal" href="ConwayLife.html#la-classe-lifecontroller"><span class="std std-ref">La classe LifeController</span></a>, viene ora fatta direttamente nel gestore dell’evento</p></li>
+</ol>
+<p>La <span class="slide2">responsabilità di attivare</span>  il gioco è lasciata a <span class="blue">gamelife</span>,
+che  in precedenza era affidata al  <a class="reference internal" href="ConwayLife.html#la-classe-lifecontroller"><span class="std std-ref">La classe LifeController</span></a> con <code class="docutils literal notranslate"><span class="pre">life.plaY()</span></code>.</p>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">protected</span> <span class="n">void</span> <span class="n">setGameInput</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">EventHandler</span><span class="o">&lt;</span><span class="n">ActionEvent</span><span class="o">&gt;</span> <span class="n">event</span> <span class="o">=</span>
+         <span class="n">new</span> <span class="n">EventHandler</span><span class="o">&lt;</span><span class="n">ActionEvent</span><span class="o">&gt;</span><span class="p">()</span> <span class="p">{</span>
+   <span class="n">public</span> <span class="n">void</span> <span class="n">handle</span><span class="p">(</span><span class="n">ActionEvent</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span> <span class="o">/*</span><span class="mi">1</span><span class="o">*/</span>
+      <span class="n">String</span> <span class="n">evstr</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">getSource</span><span class="p">()</span><span class="o">.</span><span class="n">toString</span><span class="p">();</span>
+      <span class="k">if</span><span class="p">(</span><span class="n">evstr</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;Start&quot;</span><span class="p">)){</span>
+   <span class="o">/*</span><span class="mi">2</span><span class="o">*/</span> <span class="n">bstart</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Stop&quot;</span><span class="p">);</span>
+         <span class="n">sendMsgToOwner</span><span class="p">(</span><span class="s2">&quot;guicmd&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;guicmd(startthegame)&quot;</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">evstr</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;Stop&quot;</span><span class="p">)){</span>
+   <span class="o">/*</span><span class="mi">2</span><span class="o">*/</span> <span class="n">bstart</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Start&quot;</span><span class="p">);</span>
+         <span class="n">sendMsgToOwner</span><span class="p">(</span><span class="s2">&quot;guicmd&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;guicmd(stopthegame)&quot;</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">evstr</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;Clear&quot;</span><span class="p">)){</span>
+         <span class="n">sendMsgToOwner</span><span class="p">(</span><span class="s2">&quot;guicmd&quot;</span><span class="p">,</span>
+                       <span class="s2">&quot;guicmd(clear)&quot;</span><span class="p">);</span>
+      <span class="p">}</span>
+   <span class="p">}</span>
+  <span class="p">};</span>
+  <span class="n">bstart</span><span class="o">.</span><span class="n">setOnAction</span><span class="p">(</span><span class="n">event</span><span class="p">);</span>
+  <span class="n">bclear</span><span class="o">.</span><span class="n">setOnAction</span><span class="p">(</span><span class="n">event</span><span class="p">);</span>
+     <span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong>createCells.</strong></p>
+<ol class="arabic simple">
+<li><p>Crea la rappresentazione grafica della griglia in forma di matrice</p></li>
+<li><p>Assegna a ogni cella un <strong>id</strong> formato con le sue coordinate</p></li>
+<li><p>Inizializza in colore della cella a WHITE</p></li>
+<li><p>Rende ciascuna cella reattiva al click del mouse, in modo
+da</p></li>
+<li><p>inviare l’informazione sulle coordinate della cella selezionata al <strong>displayOwnerActor</strong>
+(attore <a class="reference internal" href="#griddisplay"><span class="std std-ref">griddisplay</span></a> che possiede il dispositivo)</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">protected</span> <span class="n">void</span> <span class="n">createCells</span><span class="p">(</span>  <span class="p">){</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span><span class="n">cells</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Rectangle</span><span class="p">[</span><span class="n">rows</span><span class="p">][</span><span class="n">cols</span><span class="p">];</span>
+   <span class="k">for</span> <span class="p">(</span><span class="nb">int</span> <span class="n">row</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">row</span> <span class="o">&lt;</span> <span class="n">rows</span><span class="p">;</span> <span class="n">row</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="nb">int</span> <span class="n">col</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">col</span> <span class="o">&lt;</span> <span class="n">cols</span><span class="p">;</span> <span class="n">col</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">cells</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span><span class="o">=</span><span class="n">new</span> <span class="n">Rectangle</span><span class="p">(</span><span class="n">cellsize</span><span class="p">,</span><span class="n">cellsize</span><span class="p">);</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span> <span class="n">cells</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">setId</span><span class="p">(</span><span class="n">row</span><span class="o">+</span><span class="s2">&quot;,&quot;</span><span class="o">+</span><span class="n">col</span><span class="p">);</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span> <span class="n">cells</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">setFill</span><span class="p">(</span> <span class="n">Color</span><span class="o">.</span><span class="n">WHITE</span> <span class="p">);</span>
+      <span class="n">cells</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">setStroke</span><span class="p">(</span> <span class="n">Color</span><span class="o">.</span><span class="n">BLACK</span> <span class="p">);</span>
+
+      <span class="n">gridPane</span><span class="o">.</span><span class="n">add</span><span class="p">(</span> <span class="n">cells</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">],</span> <span class="n">col</span><span class="p">,</span> <span class="n">row</span> <span class="p">)</span> <span class="p">;</span>
+
+<span class="o">/*</span><span class="mi">4</span><span class="o">*/</span> <span class="n">cells</span><span class="p">[</span><span class="n">row</span><span class="p">][</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">addEventHandler</span><span class="p">(</span>
+         <span class="n">MouseEvent</span><span class="o">.</span><span class="n">MOUSE_CLICKED</span><span class="p">,</span>
+         <span class="n">e</span> <span class="o">-&gt;</span> <span class="p">{</span>
+   <span class="n">Vector</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">xy</span> <span class="o">=</span> <span class="n">cellClicked</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>
+
+<span class="o">/*</span><span class="mi">5</span><span class="o">*/</span> <span class="n">sendMsgToOwner</span><span class="p">(</span><span class="s2">&quot;guicmd&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;guicmd(click(&quot;</span><span class="o">+</span><span class="n">xy</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;,&quot;</span><span class="o">+</span><span class="n">xy</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;))&quot;</span><span class="p">);</span>
+         <span class="p">}</span>
+      <span class="p">);</span>
+    <span class="p">}</span><span class="o">//</span><span class="n">col</span>
+   <span class="p">}</span><span class="o">//</span><span class="n">row</span>
+<span class="p">}</span><span class="o">//</span><span class="n">createCells</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+<section id="gamemock">
+<h2>gamemock<a class="headerlink" href="#gamemock" title="Permalink to this heading">¶</a></h2>
+<p>Introduciamo un attore che funga da semplice sostituto temporaneo del sottosistema <strong>gamelife</strong>.</p>
+<a class="reference internal image-reference" href="_images/conwayIO&amp;griddisplay&amp;gamelife.PNG"><img alt="_images/conwayIO&amp;griddisplay&amp;gamelife.PNG" class="align-left" src="_images/conwayIO&amp;griddisplay&amp;gamelife.PNG" style="width: 50%;" /></a>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Attività di gamemock.</strong></p>
+<ol class="arabic simple">
+<li><p>attende il dispatch <code class="docutils literal notranslate"><span class="pre">fromdisplay:fromdisplay(start)</span></code> inviatogli da <span class="blue">griddisplay</span></p></li>
+<li><p>attende l’evento <strong>stopthegame</strong> emesso da <span class="blue">griddisplay</span> (per fermare il gioco).</p></li>
+<li><p>elabora il messaggio <strong>fromdisplay</strong>, inviando a <span class="blue">griddisplay</span> il dispatch <strong>todisplay</strong> per
+accendere la cella <code class="docutils literal notranslate"><span class="pre">cellc_1_1</span></code></p></li>
+<li><p>elabora l’evento <strong>stopthegame</strong></p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span> <span class="n">gamemock</span> <span class="n">context</span> <span class="n">ctxconwayactors</span><span class="p">{</span>
+<span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span><span class="p">{</span>
+   <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name | STARTS&quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">blue</span>
+<span class="p">}</span>
+<span class="n">Goto</span> <span class="n">working</span>
+
+<span class="n">State</span> <span class="n">working</span><span class="p">{</span>
+<span class="p">}</span>
+<span class="n">Transition</span> <span class="n">t0</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span> <span class="n">whenMsg</span> <span class="n">fromdisplay</span><span class="o">-&gt;</span><span class="n">fromdisplayhandle</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span> <span class="n">whenEvent</span> <span class="n">stopthegame</span> <span class="o">-&gt;</span> <span class="n">handlestop</span>
+
+<span class="n">State</span> <span class="n">fromdisplayhandle</span><span class="p">{</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span> <span class="n">forward</span> <span class="n">griddisplay</span>
+        <span class="o">-</span><span class="n">m</span> <span class="n">todisplay</span><span class="p">:</span><span class="n">todisplay</span><span class="p">(</span><span class="n">cellc_1_1</span><span class="p">,</span><span class="n">true</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="n">Goto</span> <span class="n">working</span>
+
+ <span class="n">State</span> <span class="n">handlestop</span><span class="p">{</span> <span class="o">/*</span><span class="mi">3</span><span class="o">*/</span>
+<span class="o">/*</span><span class="mi">4</span><span class="o">*/</span> <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name | GAME STOPPED&quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">magenta</span>
+<span class="p">}</span>
+<span class="n">Goto</span> <span class="n">working</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>A questo punto salviamo il modello corrente nel file <a class="reference external" href="../../../../../uniboConwayActors/src/gamelifeactors0.qaktt">gamelifeactors0.qak</a> e procediamo con un nuovo
+passo progettuale (<a class="reference internal" href="GLMSprint2.html#glm-sprint2-basi-di-conoscenza"><span class="std std-ref">GLM-Sprint2: basi di conoscenza</span></a>) , relativo al gioco vero e proprio.</p>
+<p><span class="slide1">Indice:</span>: <a class="reference internal" href="GLMIntro.html#indice-glm"><span class="std std-ref">Indice GLM</span></a></p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">GLM-Sprint1: sottosistema di I/O</a><ul>
+<li><a class="reference internal" href="#il-sottosistema-di-i-o">Il sottosistema di I/O</a><ul>
+<li><a class="reference internal" href="#principio-r-1">Principio R_1</a></li>
+<li><a class="reference internal" href="#una-gui-in-javafx">Una GUI in JavaFX</a></li>
+<li><a class="reference internal" href="#i-parametri-delle-griglia">I parametri delle griglia</a></li>
+<li><a class="reference internal" href="#gridconfig-json">gridConfig.json</a></li>
+<li><a class="reference internal" href="#gridsupport-kt-prime-funzioni">GridSupport.kt: prime funzioni</a><ul>
+<li><a class="reference internal" href="#id1">&#64;JvmStatic</a></li>
+<li><a class="reference internal" href="#saveonfile">saveOnFile</a></li>
+<li><a class="reference internal" href="#getcellcoords">getCellCoords</a></li>
+<li><a class="reference internal" href="#readgridconfig">readGridConfig</a></li>
+<li><a class="reference internal" href="#getnumofcells">getNumOfCells</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#griddisplay">griddisplay</a><ul>
+<li><a class="reference internal" href="#conwayio">ConwayIO</a><ul>
+<li><a class="reference internal" href="#conwayio-java-come-emettitore-di-messaggi">ConwayIO.java come emettitore di messaggi</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gamemock">gamemock</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="GLMIntro.html"
+                          title="previous chapter">GLM: introduzione</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="GLMAnalisi.html"
+                          title="next chapter">GLM: Analisi del problema</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/GLMSprint1.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="GLMAnalisi.html" title="GLM: Analisi del problema"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="GLMIntro.html" title="GLM: introduzione"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">GLM-Sprint1: sottosistema di I/O</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>

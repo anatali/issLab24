@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>FlipFlop24 &#8212; iss24 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="TemaFinale23" href="TemaFinale23.html" />
+    <link rel="prev" title="IntroLLM" href="IntroLLM.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="TemaFinale23.html" title="TemaFinale23"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="IntroLLM.html" title="IntroLLM"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">FlipFlop24</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="flipflop24">
+<h1>FlipFlop24<a class="headerlink" href="#flipflop24" title="Permalink to this heading">¶</a></h1>
+<p><span class="slide3">progetto flipflop24</span></p>
+<section id="premessa-nor-in-retorazione">
+<h2>Premessa:Nor in retorazione<a class="headerlink" href="#premessa-nor-in-retorazione" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><a class="reference internal image-reference" href="_images/norWave.png"><img alt="_images/norWave.png" class="align-center" src="_images/norWave.png" style="width: 60%;" /></a>
+</td>
+<td><ul class="simple">
+<li><p>Si veda <a class="reference external" href="../../../../flipflop24/src/norWave.qaktt">norWave.qak</a>.</p></li>
+<li><p>Stato iniziale: <code class="docutils literal notranslate"><span class="pre">S=1,</span> <span class="pre">b=0,</span> <span class="pre">Q=0</span></code></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="flipflop24-introduzione">
+<h2>FlipFlop24-Introduzione<a class="headerlink" href="#flipflop24-introduzione" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><a class="reference internal image-reference" href="_images/caso1.png"><img alt="_images/caso1.png" class="align-center" src="_images/caso1.png" style="width: 100%;" /></a>
+</td>
+<td><a class="reference internal image-reference" href="_images/caso1Events.png"><img alt="_images/caso1Events.png" class="align-center" src="_images/caso1Events.png" style="width: 100%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Le problematiche affrontate sono:</p>
+<ol class="arabic simple">
+<li><p>è necessario introdurre ritardi nelle elaborazioni locali dei nor?</p></li>
+<li><p>chi assicura che non sia mai inviata la configurazione proibita <code class="docutils literal notranslate"><span class="pre">1,1</span></code>?</p></li>
+<li><p>come si ottiene il risultato, cioè il valore corrente di Q?</p></li>
+<li><p>il sistema è sempre visto come composto da due elementi oppure è opportuno introdurre un concetto (<code class="docutils literal notranslate"><span class="pre">latch</span></code>) che
+nasconde questa struttura?</p></li>
+<li><p>Se sì, con quale linguaggio ‘si parla con latch’? Ovviamente: con comandi quali <code class="docutils literal notranslate"><span class="pre">set</span></code> e <code class="docutils literal notranslate"><span class="pre">reset</span></code> che nella versione
+“aperta” non ci sono.</p></li>
+</ol>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference external" href="../../../../flipflop24/src/flipflopNoFacade.qaktt">flipflopNoFacade.qak</a></p></td>
+<td><p>schema base in cui evitare la configurazione proibita <code class="docutils literal notranslate"><span class="pre">1,1</span></code> è responsabilità dell’utente</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="../../../../flipflop24/src/flipflop.qaktt">flipflop.qak</a></p></td>
+<td><p>schema che introduce un <code class="docutils literal notranslate"><span class="pre">latch</span></code> (come una facade) che risponde sia a comandi-dispatch (<code class="docutils literal notranslate"><span class="pre">set/reset</span></code>)
+sia a richieste (<code class="docutils literal notranslate"><span class="pre">latchdo</span></code>).
+Nel caso di comandi-dispatch, il valore corrente della uscita <code class="docutils literal notranslate"><span class="pre">Q</span></code> viene ottenuto rendendo osservabile il <code class="docutils literal notranslate"><span class="pre">latch</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">FlipFlop24</a><ul>
+<li><a class="reference internal" href="#premessa-nor-in-retorazione">Premessa:Nor in retorazione</a></li>
+<li><a class="reference internal" href="#flipflop24-introduzione">FlipFlop24-Introduzione</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="IntroLLM.html"
+                          title="previous chapter">IntroLLM</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="TemaFinale23.html"
+                          title="next chapter">TemaFinale23</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/FlipFlop24.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="TemaFinale23.html" title="TemaFinale23"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="IntroLLM.html" title="IntroLLM"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">FlipFlop24</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,518 @@
+System gamelifeactors 
+ 
+/*
+ * glmevstream con griddisplay OBSERVER
+ * VERSIONE CON EMISSIONE DI evstream AI VICINI
+ * CHE OGNI CELLA EMETTE in emitinfophase
+ */
+
+Dispatch guicmd        : guicmd(X) //X=startthegame | stopthegame
+Dispatch fromdisplay   : fromdisplay(CMD)
+//Dispatch todisplay     : todisplay(CELL,STATE)
+ 
+Event startthegame     : startthegame(X)
+//Event stopthegame      : stopthegame(X)  
+
+Dispatch stopthecell   : stopthecell(X)
+Dispatch gameended     : gameended(X)  //serve per andare in resumegame
+Dispatch gamestopped   : gamestopped(X) 
+Dispatch gamesuspend   : gamesuspend(X)
+
+       
+Dispatch cellcreated   : cellcreated(CELL,STATE)
+Dispatch allcellcreated: allcellcreated(N)
+Dispatch gameready     : gameready(CELLNUM)
+Dispatch cellends      : cellends(CELL)
+Dispatch switchstate   : switchstate(X)
+
+
+//Dispatch startgame     : startgame(CELLNUM)
+Dispatch nbconfig      : nbconfig(N)
+Dispatch allnbreceived : allnbreceived(N)
+Dispatch cellready     : cellready(CELL)
+Dispatch allcellready  : allcellready(X)
+
+Event    synch         : synch(X)
+Event    clearCell     : clearThecell(X)     //Forse meglio non qui ....
+Event curstate         : curstate(NB,STATE)
+
+Dispatch cellUpdate : cellUpdate(SOURCE,ARG)  //DEC23
+Dispatch guidone    : guidone(X)
+
+Dispatch coapUpdate    : coapUpdate(SOURCE,ARG)  //
+
+Request gridparams     : gridparams(X)
+Reply gridparamsvalues : gridparamsvalues(R,C,S) for gridparams
+
+
+Context ctxconwayactors ip [ host="localhost" port=8360] 
+
+ 
+QActor griddisplay context ctxconwayactors{
+	[# val display = conway.ConwayIO() #] //create an object
+	State s0 initial{
+		println("===========================================================") color blue
+		println("$name | glmevstream.qak STARTS") color blue
+		println("===========================================================") color blue	
+		
+		observeResource gridcreator msgid coapUpdate
+		//CODICE GENERATO:CoapObserverSupport(myself, "localhost","8360","ctxconwayactors","gridcreator")
+	}
+	Transition t0 //whenMsg gameready -> createhegui
+	           whenMsg coapUpdate -> createhegui //OBS gridcreator
+	
+	State createhegui{
+ //printCurrentMessage color blue
+		 
+		onMsg( coapUpdate : coapUpdate( gridcreator,gameready(CELLNUM)) ){
+		//[# CoapObserverSupport(myself, "localhost","8360","ctxconwayactors","cellc_1_0") #] //OBS
+		
+		[# conway.GridSupport.observeAllCells(myself, context!!.name, "cellUpdate") #] //OBS
+		
+		[# forward("guidone","guidone(ok)",name) #] 
+		
+		[# kotlin.concurrent.thread(start = true) { 
+			 display.initialize(myself)  //launch javafx.application.Application
+		   }
+		#]		   
+		} 
+		onMsg( coapUpdate : coapUpdate(SOURCE, gridcreator(created) ) ){
+			printCurrentMessage color blue
+			println("$name | DISCARD ") color magenta
+		}
+	}	
+	Transition t0 
+	           whenMsg coapUpdate -> createhegui //OBS	            
+	           whenMsg guidone -> working
+		
+	State working{
+		//println("$name | working") color blue
+		
+		
+	}
+	Transition t0 whenMsg guicmd    -> guicmdhandle
+	              //whenMsg todisplay -> todisplayhandle
+	               whenMsg coapUpdate -> discardupdate //potrebbe continuare ad arrivare da gridcreator
+	               whenMsg cellUpdate -> showupdate //OBS
+	
+	
+	State discardupdate{
+		onMsg( coapUpdate : coapUpdate( SOURCE,MSG ) ){
+			println("$name | discards ${payloadArg(1)} from ${payloadArg(0)} ") color red		
+		}
+	}
+	Transition t0 whenMsg guicmd    -> guicmdhandle
+	               whenMsg coapUpdate -> discardupdate //potrebbe arrivare da gridcreator
+	               whenMsg cellUpdate -> showupdate //OBS
+	
+	State guicmdhandle{
+		//printCurrentMessage color cyan
+         onMsg( guicmd : guicmd(startthegame)){ //seleziona usando UNIFICAZIONE Prolog
+            forward gamelife -m fromdisplay : fromdisplay( start )
+         } 		
+         onMsg( guicmd : guicmd(stopthegame)){
+         	forward gamelife -m fromdisplay : fromdisplay( stop )
+		}
+        onMsg( guicmd : guicmd(click(X,Y)) ){
+        	[# 
+        	   val cellName = conway.GridSupport.getCellNameFromClick(payloadArg(0))
+    		   forward( "switchstate", "switchstate(ok)", cellName)         		
+         	#]         	  
+		}
+         onMsg( guicmd : guicmd(clear)){
+			 emit clearCell : clearCell(gui)  //for the cells
+		}
+ 	}
+	Goto working 
+	
+//	State todisplayhandle{		
+//		onMsg( todisplay : todisplay(CELL,STATE)){
+//			[#  
+//			   val CellName= payloadArg(0) 
+// 			   val State   = payloadArg(1)
+//               conway.GridSupport.displayCellState(CellName,State,display)
+//			#]
+//		}		
+//	}
+//	Goto working
+	
+	State showupdate{ //OBS
+		printCurrentMessage color blue
+		//onMsg( coapUpdate : coapUpdate(SOURCE,STATE) ){
+		onMsg( cellUpdate : cellUpdate(SOURCE,STATE) ){
+			[#  
+			   val CellName= payloadArg(0) 
+			   //val goal = "curstate(CELL,STATE)=payloadArg(1)"
+ 			   val State   = payloadArg(1)
+ 			#]
+ 			println("$name | ${CellName}:$State") color green
+ 			if [# ! State.contains("created") &&  CellName != "gridcreator" #]{
+ 			[#   
+               conway.GridSupport.displayCellState(CellName,State,display)
+			#]
+			}else{
+				printCurrentMessage color red
+			}
+//		onMsg( coapUpdate : coapUpdate(SOURCE, gridcreator(created) ) ){
+//			printCurrentMessage color blue
+//			println("$name | DISCARD showupdate ") color magenta
+//		}
+	}
+	}
+	Goto working 
+ 
+}
+
+/*
+ *  gridcreator
+ */
+ 
+QActor gridcreator context ctxconwayactors{
+ [# 
+ 	var RowsN = 0; var ColsN=0; var CellSize=0 
+ 	val neighBornFName = "cellnbs.pl"
+ 	val cellsFName     = "grid.pl"	
+    var NAllCells      =  0  //set in s0
+    var NCellsCreated  =  0  //set in handlecellecreated 		
+    var NCellended      = 0  //set in terminatethegame
+ #]
+	 
+  State s0 initial{
+	[# 
+		val res =
+	conway.GridSupport.readGridConfig("gridConfig.json")
+		      RowsN     = res.get(0)
+		      ColsN     = res.get(1)
+		      NAllCells = RowsN * ColsN       
+	#]
+    println("$name | NAllCells=$NAllCells")	color blue
+	delay 1000 //give time the display to start ..
+    //CREAZIONE DELLE CELLE
+	[#
+	  conway.GridSupport.createCellsLocal(
+			myself,RowsN,ColsN,neighBornFName,cellsFName)
+	 #]
+  }
+  Transition t0 whenMsg cellcreated -> handlecellcreated
+             
+	
+   //GESTIONE DEI MESSAGGI DI AVVENUTA CREAZIONE
+   State handlecellcreated{
+		//printCurrentMessage
+		[# NCellsCreated = NCellsCreated + 1 #]
+		if [# NCellsCreated == NAllCells #]{ 
+			println("$name | ACTORS in ${context!!.name} ${sysUtil.getAllActorNames()}")
+ 			forward gridcreator -m allcellcreated : allcellcreated($NCellsCreated)
+		}
+	}
+    /*5*/ Transition t0 whenMsg cellcreated    -> handlecellcreated
+    /*6*/               whenMsg allcellcreated -> configthecells
+	               
+	
+	//CONFIGURAZIONE DELLE CELLE
+	State configthecells{
+       //Sottoscrive ogni cella ai sui cicini 
+       //e invia alla cella il numero dei vicini
+       [# conway.GridSupport.configureTheCells(myself) #]
+	   //AVVISO DI GIOCO PRONTO
+	/*4*/ forward gamelife -m gameready:gameready($NAllCells)
+	      //forward griddisplay -m gameready:gameready($NAllCells)
+	      updateResource [# "gameready($NAllCells)" #]   //OBS
+	}
+/*5*/Transition t0 whenMsg cellends -> terminatethegame
+	
+	//GESTIONE DEI MESSAGGI DI CELLA TERMINATA
+	State terminatethegame{
+	   [# NCellended = NCellended + 1 #]
+	   if [# NCellended == NAllCells #]{
+	/*6*/forward gamelife -m gameended:gameended($NAllCells)
+	   }
+	}
+	/*5*/Transition t0 whenMsg cellends -> terminatethegame
+	             
+	
+ 
+}
+
+/*
+ *  gamelifehelper delegated by gamelife
+ */
+QActor gamelifehelper context ctxconwayactors{
+    [# 
+	   var NAllCells  = conway.GridSupport.getNumOfCells()
+       var stopped    = false
+       var NCellended = 0 //set in terminatethegame       
+    #]
+	State s0 initial{
+    	println("$name | STARTS  NAllCells=$NAllCells") color blue
+    }	               
+	Transition t0 whenMsg fromdisplay -> handleguicmd
+	              whenRequest gridparams -> handlerequest
+	
+	State handlerequest{
+		onMsg( gridparams : gridparams(X)){
+			[#
+		        val res    = conway.GridSupport.readGridConfig("gridConfig.json")
+				val RowsN  = res.get(0)
+				val ColsN  = res.get(1)
+				val CellSize = res.get(2)				
+			#]
+			replyTo gridparams with gridparamsvalues : gridparamsvalues($RowsN, $ColsN, $CellSize)
+		}
+	}
+	Transition t0 whenMsg fromdisplay -> handleguicmd
+	              whenRequest gridparams -> handlerequest
+	
+	State handleguicmd{
+    	onMsg( fromdisplay : fromdisplay(start) ){
+    		println("$name | startthegame ") color green
+    		[# stopped    = false #]
+     		emit startthegame : startthegame(ok)
+    	}
+    	onMsg( fromdisplay : fromdisplay(stop) ){
+    		//println("$name | stopthegame ----------- ") color red
+    		if [# ! stopped #] {
+    			forward gamelife -m gamestopped : gamestopped($NAllCells)
+	    		//invio stopthecell a tutte le celle
+	    		[# conway.GridSupport.sendStopToAllCells(myself) #]    		
+    		}//Se no, ho gi� inviato 
+      		[# stopped = true #]   		
+    	}
+    }
+    Transition t0 whenMsg fromdisplay -> handleguicmd
+                  whenMsg cellends    -> terminatethegame
+                  whenRequest gridparams -> handlerequest
+
+	State terminatethegame{
+		//printCurrentMessage
+//		onMsg( cellends : cellends(CELL)  ){
+//			//println("$name | terminatethegame ${payloadArg(0) }")
+//		}
+		[# NCellended = NCellended + 1 #]
+		//println("$name | terminatethegame $NCellended/$NAllCells  ")
+		if [# NCellended == NAllCells #]{ 
+			println("$name | terminatethegame $NCellended/$NAllCells  ")
+			forward gamelife -m gameended : gameended($NAllCells)
+			[# NCellended = 0 #]
+		}
+	}
+	Transition t0 whenMsg cellends    -> terminatethegame
+	              whenMsg fromdisplay -> handleguicmd 	
+	              whenRequest gridparams -> handlerequest
+}//gamelifehelper
+
+/*
+ *  gamelife
+ */
+QActor gamelife context ctxconwayactors{
+ [#  	
+ 	var NumOfCells     = 0
+ 	var NCellReady     = 0
+ 	var NumIter        = 0
+ 	var stopped        = false
+ #]
+    State s0 initial{
+    	println("$name | STARTS") color blue
+    	delegate "fromdisplay" to gamelifehelper
+    	delegate "cellends"    to gamelifehelper
+    	delegate "gridparams"  to gamelifehelper
+ 
+    }	               
+	Transition t0 whenMsg gameready -> handlegameready
+
+    State handlegameready{
+    	  	
+    	onMsg( gameready : gameready(N)){
+    		[# 
+    			NumOfCells = payloadArg(0).toInt() 
+    		#]
+    	}
+    	println("$name | game ready-to-start with $NumOfCells cells") color magenta 
+    }
+    Transition t0  whenMsg cellready  -> handlecellready
+      
+    State handlecellready {
+    	onMsg( cellready:cellready(CELL)){
+    	    [# NCellReady = NCellReady + 1  #]
+     	    if [# NCellReady == NumOfCells #] {
+println("$name|handlecellready $NCellReady/$NumOfCells for  ${payloadArg(0)}") color cyan //ULTIMA              
+            forward gamelife -m allcellready : allcellready(ok) } //automsg
+     	}
+    }
+    Transition t0 whenMsg cellready     -> handlecellready
+                  whenMsg allcellready  -> synchclock
+    	          whenMsg gamestopped   -> setstopgame
+    
+    State setstopgame{
+    	println("$name | game receives stop NCellReady=$NCellReady ----------- ") color red
+    	[# stopped = true #]
+    }
+    Transition t0 whenMsg cellready     -> handlecellready
+    
+    State synchclock{
+    	if [# ! stopped #]{
+	    	[# NumIter = NumIter + 1
+	    	   val Dt = 500L   
+	    	#]
+	     	delayVar Dt //reduce the speed of the game ...
+	    	emit synch : synch(ok)
+	    	println("$name | emitted synch $NumIter") color red
+	    	//[# NCellReady = 0  #]    		
+    	}
+    	else{
+    		forward gamelife -m gamesuspend : gamesuspend(oK) //automsg
+    	}
+    	[# NCellReady = 0  #]  
+    }
+    Transition t0 
+    	whenMsg gamestopped -> handlestopaftersynch //stop arrivato dopo 
+    	whenMsg gamesuspend -> stopgame             //le celle sono tutte ferme
+        whenMsg cellready   -> handlecellready      //RICOMINCIA
+    
+    State handlestopaftersynch{ 
+    	println("$name | handlestopaftersynch *** ") color magenta 
+    	[# stopped = true #]
+    }
+    Goto synchclock
+    
+	State stopgame{ 
+		//printCurrentMessage
+		println("$name | stopgame: the game ENDS") color magenta
+	}
+    Transition t0 whenMsg gameended -> resumegame 
+                  whenMsg gamestopped -> handlestopaftersynch  //???
+                  whenMsg gamesuspend -> stopgame              //???
+	
+	State resumegame{
+		//printCurrentMessage color magenta
+ 	     [#
+	     	stopped    = false
+	    	NCellReady = 0
+	    	//Riattivazione da stop a start  fatta
+	    #]
+		println("$name | resumegame ") color green
+	}
+    Transition t0 whenMsg cellready -> handlecellready  //nuovo START
+              
+}	 
+
+/*
+ * cell  
+ */
+QActor cell context ctxconwayactors dynamicOnly{
+	[# 
+	   var MyState = false 
+	   var Countnb     = 0  //numero dei vicini
+	   var Countnbon   = 0  //numero degli stati on dei vicini
+	   var Countnbmsgs = 0  //numero dei msg ricevuti dai vicini	   
+	#]
+	State s0 initial{
+		forward gridcreator -m cellcreated : cellcreated(MyName,false)
+    } 
+    /*2*/Transition t0 whenMsg nbconfig->setmyneigbors
+     
+    
+    State setmyneigbors{
+    	//printCurrentMessage color green
+    	//La cella riceve l'info su QUANTI vicini ha da gridcreator	    
+	    onMsg( nbconfig : nbconfig(N) ){
+	    	[# Countnb = payloadArg(0).toInt() #]
+	    	println("$name | ha  $Countnb vicini") color blue
+	    }
+    }    
+	Transition t0 whenMsg switchstate     -> setcellstate
+	              whenEvent startthegame  -> emitinfophase  
+ 	 	
+	State setcellstate{
+		onMsg( switchstate:switchstate(X) ){ 
+			[# MyState = ! MyState #]
+		} 
+//		forward griddisplay -m todisplay : todisplay($MyName,$MyState)
+        
+        updateResource [# "$MyState" #] //OBS
+		
+	}
+	Transition t0 whenMsg switchstate     -> setcellstate
+	              whenEvent startthegame  -> emitinfophase  
+ 	
+	State emitinfophase{
+ 		[# var MyInfo = "$name,$MyState" #]
+ 		//Aggiorno il display
+// 		forward griddisplay -m todisplay : todisplay($MyName,$MyState) 
+//
+//println("$name | updateResource ") color blue
+		updateResource [# "$MyState" #]  //OBS
+ 
+	    delay 10 //cede il controllo  
+	    //allow other cells to handle synch.  
+        
+        //emitlocalstream curstate : curstate($MyInfo)
+        [# conway.GLMSupport.sendToNeighbors(myself, MyInfo) #]
+	}
+	Transition t0   whenEvent curstate    -> elabinfophase
+				  
+    State elabinfophase{
+		[# Countnbmsgs=Countnbmsgs+1 #]
+//		onMsg ( curstate : curstate(NB,false) ){
+//			
+//		}
+		onMsg ( curstate : curstate(NB,true) ){
+			[# Countnbon = Countnbon + 1 
+			#]
+		} 
+		if [# Countnbmsgs == Countnb #] {  		 
+		[#  
+			//CommUtils.outyellow("$name | elabinfophase $Countnbmsgs/$Countnb ")  //!!!
+			forward("allnbreceived","allnbreceived(ok)",name)						 
+		#]	 
+		}		 
+    } 
+	Transition t0 //whenEvent stopthegame -> endthecell //SE ARRIVATO, lo perdo?
+				  whenEvent curstate    -> elabinfophase
+				  whenMsg allnbreceived -> elabstatephase
+	
+	State elabstatephase{
+		//println("$name | elabstatephase $MyState $Countnbon") color cyan
+		if [# MyState  #]{ //soprevvice o muore
+			[# MyState = Countnbon==2 || Countnbon==3 #]
+		}
+		if [# ! MyState  #]{ //rinasce o rimane morta
+			[# MyState = (Countnbon==3) #]
+		}
+		//Aggiorno il display in emitinfophase		 		
+		[# Countnbmsgs = 0
+		   Countnbon   = 0 
+		#]
+ 		forward gamelife -m cellready : cellready($MyName) 
+	}
+	Transition t0 whenEvent synch       -> emitinfophase
+	              whenMsg stopthecell   -> endthecell
+	 //potrebbe arrivare curstate da altre celle, 
+	 //ma lo si recupera in elabinfophase
+
+	/*
+	 * Fase di teminazione  
+	 */ 
+	State endthecell{
+		//println("$name | endthecell $Countnbmsgs ")
+		forward gamelife -m cellends : cellends($MyName)
+	}
+	Goto waittoresume
+
+    State clearThecell{
+     	[# MyState = false #]
+		//forward griddisplay -m todisplay : todisplay($MyName,$MyState)
+		updateResource [# "$MyState" #]  //OBS
+    }
+    Goto waittoresume
+
+	/*
+	 * Fase di  ripristino
+	 */ 
+    State waittoresume{
+    }
+    Transition t0  whenMsg switchstate-> setcellstate
+                   whenEvent startthegame-> emitinfophase 
+                   whenEvent clearCell -> clearThecell 
+ 
+}//cell

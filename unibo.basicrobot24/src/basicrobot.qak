@@ -15,7 +15,6 @@ Reply stepfailed   : stepfailed(DURATION, CAUSE) for step
 
 Event  sonardata   : sonar( DISTANCE ) 	   
 Event obstacle     : obstacle(X) 
-
 Event info         : info(X)    
 
 Request  doplan     : doplan( PATH, STEPTIME )
@@ -23,7 +22,6 @@ Reply doplandone    : doplandone( ARG )    for doplan
 Reply doplanfailed  : doplanfailed( ARG )  for doplan
 
 Dispatch setrobotstate: setpos(X,Y,D)
-
 
 Request engage        : engage(OWNER, STEPTIME)	
 Reply   engagedone    : engagedone(ARG)    for engage
@@ -127,14 +125,14 @@ QActor engager context ctxbasicrobot{
 	} 
 	Goto s0
 	 
-	State handleEvent{
-		printCurrentMessage
-		[# CommUtils.outcyan("handleEvent $currentMsg") 
-		   val info = currentMsg.toString()
-		   if( curConn != null ) CommUtils.forwardOnInterconn(curConn,info) //invio l'evento al caller'
-		#]
- 	}
- 	Goto s0
+//	State handleEvent{
+//		printCurrentMessage
+//		[# CommUtils.outcyan("handleEvent $currentMsg") 
+//		   val info = currentMsg.toString()
+//		   if( curConn != null ) CommUtils.forwardOnInterconn(curConn,info) //invio l'evento al caller'
+//		#]
+// 	}
+// 	Goto s0
  	
  	//Added June6. Poi removed a favore di OwnerMngr
  	State checkTheOwner{
@@ -243,7 +241,7 @@ QActor basicrobot context ctxbasicrobot withobj robot using "uniborobots.robotSu
 	State handlesonardata{ 
     	printCurrentMessage color yellow
     	onMsg( sonardata : sonar(D)){
-    		updateResource [# "sonar(${payloadArg(0)})" #] //"moveactivated(${payloadArg(0)})"
+    		updateResource [# "sonar(${payloadArg(0)})" #] 
     	}   	
     }
     Goto work
@@ -703,11 +701,11 @@ QActor robotpos context ctxbasicrobot{
 //                   appl "main.java.facade24.Facade24Application" 
 //                   UserLibs -f "Facade24Start-1.0-plain"  -f "Facade24Start-1.0"
 
-Facade robotfacade port 8085 usingactor basicrobot inctx ctxbasicrobot  
-                   appl "main.java.robotfacade24.Robotfacade24Application" 
-                   UserLibs -f "robotfacade24-1.0-plain"  -f "robotfacade24-1.0"
+//Facade robotfacade port 8085 usingactor basicrobot inctx ctxbasicrobot  
+//                   appl "main.java.robotfacade24.Robotfacade24Application" 
+//                   UserLibs -f "robotfacade24-1.0-plain"  -f "robotfacade24-1.0"
 
-
+  
 /*
  * ------------------------------
  * robotposclient (tester)
