@@ -410,15 +410,24 @@ si veda <a class="reference internal" href="RobotFacade24.html#id1"><span class=
 <h3>BR24 Creazione immagine docker locale<a class="headerlink" href="#br24-creazione-immagine-docker-locale" title="Permalink to this heading">¶</a></h3>
 <ol class="arabic">
 <li><p>Impostare il file <code class="docutils literal notranslate"><span class="pre">basicRobotConfig.json</span></code> come segue</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;virtual&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="s2">&quot;8090&quot;</span><span class="p">,</span> <span class="s2">&quot;iprobot&quot;</span><span class="p">:</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="s2">&quot;commtrace&quot;</span><span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">}</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;virtual&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="s2">&quot;8090&quot;</span><span class="p">,</span> <span class="s2">&quot;iprobot&quot;</span><span class="p">:</span><span class="s2">&quot;IPADDR&quot;</span><span class="p">,</span> <span class="s2">&quot;commtrace&quot;</span><span class="p">:</span> <span class="s2">&quot;false&quot;</span><span class="p">}</span>
 </pre></div>
 </div>
 </li>
+</ol>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">IPADDR</span></code> deve essere fissato al all’IP del computer su cui viene attivato il virtual robot.</p>
+<p>Per modificare il file <code class="docutils literal notranslate"><span class="pre">basicRobotConfig.json</span></code> entro un container <code class="docutils literal notranslate"><span class="pre">XYZK</span></code> senza rifare l’immagine, usare il comando</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">cp</span> <span class="n">basicrobotConfig</span><span class="o">.</span><span class="n">json</span> <span class="n">XYZK</span><span class="p">:</span><span class="o">/</span><span class="n">basicrobot24</span><span class="o">-</span><span class="mf">1.0</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">basicrobotConfig</span><span class="o">.</span><span class="n">json</span>
+</pre></div>
+</div>
+</div></blockquote>
+<ol class="arabic simple">
 <li><p>Eseguire <code class="docutils literal notranslate"><span class="pre">gradlew</span> <span class="pre">distTar</span></code></p></li>
 <li><p>Eseguire <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">build</span> <span class="pre">-t</span> <span class="pre">basicrobot24:1.0</span> <span class="pre">.</span></code>  <span class="slide2">Notare il punto finale</span></p></li>
 <li><p>Eseguire</p></li>
 </ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">--</span><span class="n">rm</span> <span class="o">--</span><span class="n">name</span> <span class="n">basicrobot24</span> <span class="o">-</span><span class="n">p8020</span><span class="p">:</span><span class="mi">8020</span><span class="o">/</span><span class="n">tcp</span> <span class="o">-</span><span class="n">p8020</span><span class="p">:</span><span class="mi">8020</span><span class="o">/</span><span class="n">udp</span> <span class="o">-</span><span class="n">p8085</span><span class="p">:</span><span class="mi">8085</span><span class="o">/</span><span class="n">tcp</span> <span class="o">--</span><span class="n">privileged</span> <span class="n">basicrobot24</span><span class="p">:</span><span class="mf">1.0</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">--</span><span class="n">rm</span> <span class="o">--</span><span class="n">name</span> <span class="n">basicrobot24</span> <span class="o">-</span><span class="n">p8020</span><span class="p">:</span><span class="mi">8020</span><span class="o">/</span><span class="n">tcp</span> <span class="o">-</span><span class="n">p8020</span><span class="p">:</span><span class="mi">8020</span><span class="o">/</span><span class="n">udp</span>  <span class="o">--</span><span class="n">privileged</span> <span class="n">basicrobot24</span><span class="p">:</span><span class="mf">1.0</span>
 </pre></div>
 </div>
 </section>
@@ -442,7 +451,7 @@ si veda <a class="reference internal" href="RobotFacade24.html#id1"><span class=
       <span class="o">-</span> <span class="mi">8091</span><span class="p">:</span><span class="mi">8091</span><span class="o">/</span><span class="n">tcp</span>
       <span class="o">-</span> <span class="mi">8091</span><span class="p">:</span><span class="mi">8091</span><span class="o">/</span><span class="n">udp</span>
   <span class="n">basicrobot24</span><span class="p">:</span>
-    <span class="c1">#image: docker.io/natbodocker/basicrobot24:1.0  #VERSSIONE FINALE</span>
+    <span class="c1">#image: docker.io/natbodocker/basicrobot24:1.0  #VERSIONE FINALE</span>
     <span class="n">image</span><span class="p">:</span> <span class="n">basicrobot24</span><span class="p">:</span><span class="mf">1.0</span>
     <span class="n">ports</span><span class="p">:</span>
       <span class="o">-</span> <span class="mi">8020</span><span class="p">:</span><span class="mi">8020</span><span class="o">/</span><span class="n">tcp</span>
