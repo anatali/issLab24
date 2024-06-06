@@ -1,0 +1,1325 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>GLM-Sprint3: interazioni a eventi-stream &#8212; iss24 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="GLM-Sprint4: interazioni a eventi via MQTT" href="GLMSprint4.html" />
+    <link rel="prev" title="GLM-Sprint2: basi di conoscenza" href="GLMSprint2.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="GLMSprint4.html" title="GLM-Sprint4: interazioni a eventi via MQTT"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="GLMSprint2.html" title="GLM-Sprint2: basi di conoscenza"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">GLM-Sprint3: interazioni a eventi-stream</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="glm-sprint3-interazioni-a-eventi-stream">
+<h1>GLM-Sprint3: interazioni a eventi-stream<a class="headerlink" href="#glm-sprint3-interazioni-a-eventi-stream" title="Permalink to this heading">¶</a></h1>
+<p>Il <span class="slide2">Goal Sprint3:</span> consiste nel realizzare un sistema software (sempre denominato <span class="blue">gamelifeactors</span>)
+in cui:</p>
+<ul class="simple">
+<li><p>ogni cella opera (in una prima fase, detta <a class="reference internal" href="#emitinfophase"><span class="std std-ref">emitinfophase</span></a>) come un produttore osservabile di dati, emettendo
+(usando la primitiva <span class="xref std std-ref">emitlocalstream</span>) informazioni di nome <strong>curstate</strong> nell forma di  <span class="blue">eventi-stream</span></p></li>
+<li><p>gli eventi <strong>curstate</strong>  vengono trasmesse dalla cella agli attori (celle) locali, che si sono (o vengono)
+‘registrati come osservatori’ della cella, con la primitiva <strong>qak</strong> <a class="reference internal" href="#subscribeto"><span class="std std-ref">subscribeTo</span></a></p></li>
+<li><p>la celle elabora gli eventi <strong>curstate</strong> emessi dai vicini, nella fase detta <a class="reference internal" href="#elabinfophase"><span class="std std-ref">elabinfophase</span></a>, al fine
+di determinare il numero dei vicni con stato corrente <strong>true</strong></p></li>
+<li><p>una volta noto lo stato delle celle vicine, la cella entra nella <a class="reference internal" href="#elabstatephase"><span class="std std-ref">elabstatephase</span></a> in cui applica
+al suo stao corrente le <a class="reference internal" href="ConwayLife.html#le-regole-del-gioco"><span class="std std-ref">Le regole del gioco</span></a> per determinare il suo nuovo valore di stato</p></li>
+<li><p>il problema di coordinamento <a class="reference internal" href="GLMAnalisi.html#p-4"><span class="std std-ref">P_4</span></a> viene risolto impostando <a class="reference internal" href="#gamelife"><span class="std std-ref">gamelife</span></a> come <strong>orchestratore</strong>.</p></li>
+</ul>
+<p>Impostiamo il modello del sistema nel file: <a class="reference external" href="../../../../../uniboConwayActors/src/glmevstream.qaktt">glmevstream.qak</a>.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>La figura mostra il modello finale, prodotto a partire dalla analisi del problema
+e perfezionato nella fase di progetto.</p></td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">System</span> <span class="n">gamelifeactors</span>
+<span class="o">/*</span>
+<span class="o">*</span> <span class="n">Uso</span> <span class="n">di</span> <span class="n">evstream</span>
+<span class="o">*/</span>
+
+<span class="o">//</span><span class="n">Definizioone</span> <span class="n">dei</span> <span class="n">messaggi</span>
+<span class="o">....</span>
+<span class="o">//</span><span class="n">Definizioone</span> <span class="n">dei</span> <span class="n">contesti</span>
+<span class="n">Context</span> <span class="n">ctxconwayactors</span> <span class="n">ip</span>
+      <span class="p">[</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span> <span class="n">port</span><span class="o">=</span><span class="mi">8360</span><span class="p">]</span>
+
+<span class="o">//</span><span class="n">Definizioone</span> <span class="n">degli</span> <span class="n">attori</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<a class="reference internal image-reference" href="_images/glmevstream.PNG"><img alt="_images/glmevstream.PNG" class="align-center" src="_images/glmevstream.PNG" style="width: 100%;" /></a>
+<section id="glm-sprint3-overview">
+<h2>GLM-Sprint3: overview<a class="headerlink" href="#glm-sprint3-overview" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Il sistema è composto da un insieme di attori (celle) che operano (al momento) in un contesto condiviso.</p></li>
+<li><p>Le celle sono create da un attore <span class="blue">gridcreator</span> che si occupa anche di configurarle, una volta che sono state create tutte.
+in modo che ciascuna cella possa conoscere il numero delle sue celle vicine.</p></li>
+<li><p>Ogni cella è un <em>observer</em> delle sue celle vicine e produce un evento-stream <strong>curstate</strong> che contiene il suo stato corrente.</p></li>
+<li><p>Ogni cella elabora gli eventi <strong>curstate</strong> provenienti dalle sue celle vicine, per determinare il numero di vicini
+con stato <strong>true</strong>.</p></li>
+<li><p>L’attore <span class="blue">gridcreator</span> avvisa il gestore del gioco <span class="blue">gamelife</span> quando tutte le celle sono pronte
+per iniziare il gioco ed emette informazione osservata da <span class="blue">griddisplay</span></p></li>
+<li><p>L’attore <span class="blue">griddisplay</span> è un <em>observer</em> delle celle e visualizza il gioco.</p></li>
+<li><p>L’attore <span class="blue">gamelife</span> è l’orchestratore del gioco e coordina le attività delle celle, gestendo anche i comandi
+dell’utente.</p></li>
+</ol>
+<p>Iniziamo con l’introdurre  i messaggi con cui interagiranno i componenti (<em>Actor</em>) del sistema.</p>
+</section>
+<section id="messaggi-in-gamelifeactors-nello-sprint3">
+<h2>Messaggi in gamelifeactors nello SPRINT3<a class="headerlink" href="#messaggi-in-gamelifeactors-nello-sprint3" title="Permalink to this heading">¶</a></h2>
+<p>I primi messaggi sono  quelli connessi al dispositivo di I/O</p>
+<section id="messaggi-di-i-o">
+<h3>Messaggi di I/O<a class="headerlink" href="#messaggi-di-i-o" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 55%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Dispatch</span> <span class="pre">guicmd</span> <span class="pre">:</span> <span class="pre">guicmd(X)</span></code></p></td>
+<td><p>Inviato da <a class="reference internal" href="GLMSprint1.html#conwayio"><span class="std std-ref">ConwayIO</span></a>  a <a class="reference internal" href="GLMSprint1.html#griddisplay"><span class="std std-ref">griddisplay</span></a> come Input della GUI</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Dispatch</span> <span class="pre">fromdisplay</span> <span class="pre">:</span> <span class="pre">fromdisplay(CMD)</span></code></p></td>
+<td><p>Inviato da <a class="reference internal" href="GLMSprint1.html#griddisplay"><span class="std std-ref">griddisplay</span></a> (nello stato <span class="xref std std-ref">guicmdhandle</span>) a <a class="reference internal" href="#gamelife"><span class="std std-ref">gamelife</span></a> come comando (Start/Stop)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Dispatch</span> <span class="pre">todisplay</span> <span class="pre">:</span> <span class="pre">todisplay(CELL,STATE)</span></code></p></td>
+<td><p>Inviato a <a class="reference internal" href="GLMSprint1.html#griddisplay"><span class="std std-ref">griddisplay</span></a>  da componenti applicativi per settare il colore di una cella</p></td>
+</tr>
+</tbody>
+</table>
+<p>A differenza dello <span class="xref std std-ref">Sprint1</span>, non c’è più <strong>stopthegame</strong></p>
+<p>Per semplità espostiva, riportiamo qui anche i messaggi che verranno definiti in seguito,
+durante la fase di analisi e/o di progettazione.</p>
+</section>
+<section id="messaggi-relativi-alla-creazione">
+<h3>Messaggi relativi alla creazione<a class="headerlink" href="#messaggi-relativi-alla-creazione" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 55%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Dispatch</span> <span class="pre">cellcreated</span> <span class="pre">:</span> <span class="pre">cellcreated(C,S)</span></code></p></td>
+<td><p>Inviato da <a class="reference internal" href="#cell"><span class="std std-ref">cell</span></a> (nello stato <a class="reference internal" href="#cell"><span class="std std-ref">iniziale</span></a>)  a <a class="reference internal" href="#gridcreator"><span class="std std-ref">gridcreator</span></a>  per
+indicare che la cella <code class="docutils literal notranslate"><span class="pre">C</span></code> è stata creata con stato <code class="docutils literal notranslate"><span class="pre">S</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Dispatch</span> <span class="pre">gameready</span> <span class="pre">:</span> <span class="pre">gameready(CELLNUM)</span></code></p></td>
+<td><p>Inviato da <a class="reference internal" href="#gridcreator"><span class="std std-ref">gridcreator</span></a> (nello stato <a class="reference internal" href="#configthecells"><span class="std std-ref">configthecells</span></a>)  a <a class="reference internal" href="#gamelife"><span class="std std-ref">gamelife</span></a>
+e a <a class="reference internal" href="GLMSprint1.html#griddisplay"><span class="std std-ref">griddisplay</span></a> per indicare che le strutture del gioco sono state create</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Dispatch</span> <span class="pre">allcellcreated:</span> <span class="pre">allcellcreated(N)</span></code></p></td>
+<td><p>Automessaggio di <a class="reference internal" href="#gridcreator"><span class="std std-ref">gridcreator</span></a>  per
+indicare che tutte le celle sono create</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Dispatch</span> <span class="pre">switchstate</span> <span class="pre">:</span> <span class="pre">switchstate(X)</span></code></p></td>
+<td><p>Inviato da <a class="reference internal" href="GLMSprint1.html#griddisplay"><span class="std std-ref">griddisplay</span></a> (nello stato <span class="xref std std-ref">guicmdhandle</span>) a una specifica  <a class="reference internal" href="#cell"><span class="std std-ref">cell</span></a>
+per farla commutare di stato</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="messaggi-relativi-alla-inizializzazione">
+<h3>Messaggi relativi alla inizializzazione<a class="headerlink" href="#messaggi-relativi-alla-inizializzazione" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 55%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Dispatch</span> <span class="pre">nbconfig</span> <span class="pre">:</span> <span class="pre">nbconfig(N)</span></code></p></td>
+<td><p>Inviato da <a class="reference internal" href="#gridcreator"><span class="std std-ref">gridcreator</span></a> (nello stato <a class="reference internal" href="#configthecells"><span class="std std-ref">configthecells</span></a>) attraverso
+la funzione (<a class="reference internal" href="#configurethecells"><span class="std std-ref">configureTheCells</span></a>) a una specifica  <a class="reference internal" href="#cell"><span class="std std-ref">cell</span></a>
+per indicare alla cella il numero (3|5|8) delle sue celle vicine</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Dispatch</span> <span class="pre">allcellready</span> <span class="pre">:</span> <span class="pre">allcellready(N)</span></code></p></td>
+<td><p>Automessaggio di <a class="reference internal" href="#gamelife"><span class="std std-ref">gamelife</span></a> (nello stato <a class="reference internal" href="#handlecellready"><span class="std std-ref">handlecellready</span></a>) per indicare
+di sapere che tutte le celle sono attive e pronte per il gioco</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="messaggi-relativi-al-funzionamento">
+<h3>Messaggi relativi al funzionamento<a class="headerlink" href="#messaggi-relativi-al-funzionamento" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 55%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Event</span> <span class="pre">startthegame</span> <span class="pre">:</span> <span class="pre">startthegame(X)</span></code></p></td>
+<td><p>Emesso da <a class="reference internal" href="#gamelifehelper"><span class="std std-ref">gamelifehelper</span></a> (nello stato <a class="reference internal" href="#handleguicmd"><span class="std std-ref">handleguicmd</span></a>), percepito da tutte le <a class="reference internal" href="#cell"><span class="std std-ref">cell</span></a>
+per indicare che la cella può iniziare il gioco, entrando nella <a class="reference internal" href="#emitinfophase"><span class="std std-ref">emitinfophase</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Event</span> <span class="pre">curstate</span> <span class="pre">:</span> <span class="pre">curstate(NB,STATE)</span></code></p></td>
+<td><p>Evento-stream emesso da <a class="reference internal" href="#cell"><span class="std std-ref">cell</span></a> (nello stato <a class="reference internal" href="#emitinfophase"><span class="std std-ref">emitinfophase</span></a>) per indicare
+alle celle vicine che sono state registate come osservatori il nuovo valore dello stato</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Dispatch</span> <span class="pre">allnbreceived</span> <span class="pre">:</span> <span class="pre">allnbreceived(N)</span></code></p></td>
+<td><p>Automessaggio di <a class="reference internal" href="#cell"><span class="std std-ref">cell</span></a> (nello stato <a class="reference internal" href="#elabinfophase"><span class="std std-ref">elabinfophase</span></a>) per indicare di avere
+ricevuto il valore dello stato corrente da tutte le celle vicine</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Dispatch</span> <span class="pre">cellready</span> <span class="pre">:</span> <span class="pre">cellready(N)</span></code></p></td>
+<td><p>Inviato da <a class="reference internal" href="#cell"><span class="std std-ref">cell</span></a> (nello stato <a class="reference internal" href="#elabstatephase"><span class="std std-ref">elabstatephase</span></a>) a <a class="reference internal" href="#gamelife"><span class="std std-ref">gamelife</span></a> per indicare
+di avere terminato una iterazione del gioco ed essere pronta a riprenderlo</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Event</span> <span class="pre">synch</span> <span class="pre">:</span> <span class="pre">synch(X)</span></code></p></td>
+<td><p>Evento generico di orchestrazione emesso da  di <a class="reference internal" href="#gamelife"><span class="std std-ref">gamelife</span></a> (nello stato <a class="reference internal" href="#synchclock"><span class="std std-ref">synchclock</span></a>)
+per indurre le celle a compiere un’altra iterazione del gioco</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="messaggi-relativi-alla-terminazione">
+<h3>Messaggi relativi alla terminazione<a class="headerlink" href="#messaggi-relativi-alla-terminazione" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 55%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Dispatch</span> <span class="pre">stopthecell</span> <span class="pre">:</span> <span class="pre">stopthecell(X)</span></code></p></td>
+<td><p>Inviato da <a class="reference internal" href="#gamelifehelper"><span class="std std-ref">gamelifehelper</span></a> alle celle (usando la funzione <a class="reference internal" href="#sendstoptoallcells"><span class="std std-ref">sendStopToAllCells</span></a>)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Dispatch</span> <span class="pre">gamestopped</span> <span class="pre">:</span> <span class="pre">gamestopped(X)</span></code></p></td>
+<td><p>Inviato da <a class="reference internal" href="#gamelifehelper"><span class="std std-ref">gamelifehelper</span></a> (nello stato <a class="reference internal" href="#handleguicmd"><span class="std std-ref">handleguicmd</span></a>)  a <a class="reference internal" href="#gamelife"><span class="std std-ref">gamelife</span></a> per indicare
+che l’utente ha premuto il pulsante <code class="docutils literal notranslate"><span class="pre">Stop</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Dispatch</span> <span class="pre">gameended</span> <span class="pre">:</span> <span class="pre">gameended(X)</span></code></p></td>
+<td><p>Inviato da <a class="reference internal" href="#gamelifehelper"><span class="std std-ref">gamelifehelper</span></a> (nello stato <a class="reference internal" href="#id1"><span class="std std-ref">terminatethegame</span></a>) a <a class="reference internal" href="#gamelife"><span class="std std-ref">gamelife</span></a>
+per  indicare che la gara è sospesa</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Dispatch</span> <span class="pre">cellends</span> <span class="pre">:</span> <span class="pre">cellends(CELL)</span></code></p></td>
+<td><p>Inviato da una <a class="reference internal" href="#cell"><span class="std std-ref">cell</span></a> (nello stato <a class="reference internal" href="#endthecell"><span class="std std-ref">endthecell</span></a>) a <a class="reference internal" href="#gamelife"><span class="std std-ref">gamelife</span></a>
+(che ne delega la gestione a <a class="reference internal" href="#gamelifehelper"><span class="std std-ref">gamelifehelper</span></a>)
+per indicare al gestore del gioco che la cella è ferma</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Dispatch</span> <span class="pre">gamesuspend</span> <span class="pre">:</span> <span class="pre">gamesuspend(X)</span></code></p></td>
+<td><p>Automessaggio di <a class="reference internal" href="#gamelife"><span class="std std-ref">gamelife</span></a> che indica che ha capito che tutte le celle sono ferme</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Event</span> <span class="pre">clearCell</span> <span class="pre">:</span> <span class="pre">clearThecell(X)</span></code></p></td>
+<td><p>Evento generico emesso  da <a class="reference internal" href="GLMSprint1.html#griddisplay"><span class="std std-ref">griddisplay</span></a> (nello stato <span class="xref std std-ref">guicmdhandle</span>)
+e percepito da tutte le  <a class="reference internal" href="#cell"><span class="std std-ref">cell</span></a> per tornare allo stato <strong>off</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Come primo passo, affrontiamo il problema <a class="reference internal" href="GLMAnalisi.html#p-5"><span class="std std-ref">P_5</span></a>, relativo alla fase fondamentale di come
+le celle sono create e configurate.</p>
+</section>
+</section>
+<section id="il-problema-della-creazione-configurazione">
+<h2>Il problema della creazione/configurazione<a class="headerlink" href="#il-problema-della-creazione-configurazione" title="Permalink to this heading">¶</a></h2>
+<p>Osserviamo che esiste una relazione tra il problema <a class="reference internal" href="GLMAnalisi.html#p-1"><span class="std std-ref">P_1</span></a> della conoscenza e il problema <a class="reference internal" href="GLMAnalisi.html#p-5"><span class="std std-ref">P_5</span></a>
+della creazione/configurazione. Inoltre, <a class="reference internal" href="GLMAnalisi.html#p-5"><span class="std std-ref">P_5</span></a> è logicamente distinto dal problema
+del comportamento del gioco, che può iniziare solo dopo che le sue componenti sono state inizializzate.</p>
+<p>Come analisti, diciamo dunque che:</p>
+<ul class="simple">
+<li><p>in accordo al <span class="slide1">Principio di singola responsabilità</span>, conviene affidare le funzioni di
+creazione/configurazione delle celle ad un componente software diverso da <a class="reference internal" href="#gamelife"><span class="std std-ref">gamelife</span></a>,
+che possiamo denominare <span class="blue">gridcreator</span>.</p></li>
+</ul>
+<p>Sorge ora la questione: <span class="slide2">P_1-5) gridcreator: un Oggetto o un Actor?</span>.</p>
+<blockquote>
+<div><p>Nel caso fosse un <em>Oggetto</em>, il componente sarebbe interno a <a class="reference internal" href="#gamelife"><span class="std std-ref">gamelife</span></a>, mentre nel caso fosse un <em>Actor</em>,
+<span class="blue">gridcreator</span> sarebbe autonomo e dovrebbe coordinarsi con le celle
+e con <a class="reference internal" href="#gamelife"><span class="std std-ref">gamelife</span></a> attraverso messaggi.</p>
+</div></blockquote>
+<p>Per decidere, possiamo porci questa ulteriore domanda:</p>
+<blockquote>
+<div><p><span class="slide2">P_1-5-a) gridcreator ha motivi per interagire con le celle?</span></p>
+</div></blockquote>
+<p>La risposta è positiva, in quanto <span class="blue">gridcreator</span> deve poter conoscere quando tutte le celle si sono
+correttamente attivate, poichè il gioco può avere inizio solo quando questo è avvenuto.</p>
+<p>In questa ottica, riteniamo che sia opportuno <span class="slide2">modellare gridcreator come Actor</span>.</p>
+<p>Osserviamo anche che, in questa vesrione, <span class="blue">gridcreator</span> deve avere anche la responsiabilità di
+<span class="slide2">configurare le celle</span>. Infatti la registrazione di una cella come <em>observer</em> a un suo vicino
+(attraverso la primitva <strong>qak</strong> <a class="reference internal" href="#subscribeto"><span class="std std-ref">subscribeTo</span></a>) può avvenire solo dopo che tutte le celle sono state craate.</p>
+</section>
+<section id="gridcreator">
+<h2>gridcreator<a class="headerlink" href="#gridcreator" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Nella <span class="blue">fase iniziale</span>:</p>
+<ol class="arabic simple">
+<li><p>Legge la configurazione della griglia usando l’utility <a class="reference internal" href="GLMSprint1.html#readgridconfig"><span class="std std-ref">readGridConfig</span></a>.</p></li>
+<li><p>Crea il file <a class="reference internal" href="GLMSprint2.html#i-files-cellnbs-pl-e-grid-pl"><span class="std std-ref">grid.pl</span></a>
+usando l’utility <a class="reference internal" href="GLMSprint2.html#genlocalgriddescr"><span class="std std-ref">genLocalGriddescr</span></a>.</p></li>
+<li><p>Inserisce nella base di conoscenza dell’attore i fatti del file <a class="reference internal" href="GLMSprint2.html#i-files-cellnbs-pl-e-grid-pl"><span class="std std-ref">grid.pl</span></a>.</p></li>
+<li><p>Crea le celle usando l’utility <a class="reference internal" href="GLMSprint2.html#createcellsinternal"><span class="std std-ref">createCellsInternal</span></a>.</p></li>
+<li><p>Attende i messaggi di avvenuta creazione da parte di tutte le celle.</p></li>
+<li><p>Quando tutte le celle sono state create, passa alla fase di configurazione delle celle
+<code class="docutils literal notranslate"><span class="pre">auto-inviandosi</span></code> il <em>dispatch</em> <strong>cellallcreated</strong>.</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>QActor gridcreator context ctxconwayactors{
+   [#
+     var RowsN = 0; var ColsN=0; var CellSize=0
+     val neighBornFName = &quot;cellnbs.pl&quot;
+     val cellsFName     = &quot;grid.pl&quot;
+     var NAllCells      =  0  //set in s0
+     var NCellsCreated  =  0  //set in handlecellecreated
+     var NCellended      = 0  //set in terminatethegame
+   #]
+   State s0 initial{
+   [# val res =
+  /*1*/conway.GridSupport.readGridConfig(&quot;gridConfig.json&quot;)
+        RowsN     = res.get(0)
+        ColsN     = res.get(1)
+        NAllCells = RowsN * ColsN
+     #]
+     delay 1000 //give time the display to start ..
+     //CREAZIONE DELLE CELLE
+     [#
+  /*2*/ conway.GridSupport.genLocalGriddescr(
+     context!!.name,RowsN,ColsN,neighBornFName,cellsFName)
+  /*3*/ sysUtil.loadTheory(cellsFName)
+  /*4*/ conway.GridSupport.createCellsInternal(myself)
+     #]
+     }
+  /*5*/Transition t0 whenMsg cellcreated-&gt;handlecellcreated
+
+  }
+
+  //GESTIONE DEI MESSAGGI DI AVVENUTA CREAZIONE
+  State handlecellcreated{
+  [# NCellsCreated = NCellsCreated + 1 #]
+     if [# NCellsCreated == NAllCells #]{
+        forward gridcreator -m
+             allcellcreated:allcellcreated($NCellsCreated)
+     }
+  }
+  /*5*/ Transition t0 whenMsg cellcreated-&gt;handlecellcreated
+  /*6*/               whenMsg allcellcreated-&gt;configthecells
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<section id="configthecells">
+<h3>configthecells<a class="headerlink" href="#configthecells" title="Permalink to this heading">¶</a></h3>
+<p>Fase di configurazione delle celle in gridcreator</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><ol class="arabic simple">
+<li><p>Configura le celle appena create invocando la funzione di utility <a class="reference internal" href="#configurethecells"><span class="std std-ref">configureTheCells</span></a></p></li>
+<li><p>Invia a <a class="reference internal" href="#gamelife"><span class="std std-ref">gamelife</span></a> il dispatch <strong>gameready</strong> per segnalare che il gioco è pronto.</p></li>
+<li><p>Attende il primo dei dispatch <strong>cellends</strong> che le celle inviano quando terminano</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>State configthecells{
+/*1*/ [# conway.GridSupport.configureTheCells(myself) #]
+     //AVVISO DI GIOCO PRONTO
+/*2*/ forward gamelife -m gameready:gameready($NAllCells)
+}
+/*3*/Transition t0 whenMsg cellends -&gt; terminatethegame
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="terminatethegame">
+<h3>terminatethegame<a class="headerlink" href="#terminatethegame" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><ol class="arabic simple">
+<li><p>Aggiorna il numero delle celle terminate</p></li>
+<li><p>Attende gli altri dispatch <strong>cellends</strong> che le celle inviano quando terminano</p></li>
+<li><p>Dopo aver ricevuto tutti i messaggi di terminazione,
+invia a <a class="reference internal" href="#gamelife"><span class="std std-ref">gamelife</span></a> il dispatch <strong>gameended</strong>, per segnalare che il gioco è sospeso.</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>State terminatethegame{
+/*1*/ [# NCellended = NCellended + 1 #]
+  if [# NCellended == NAllCells #]{
+/*3*/forward gamelife -m
+         gameended:gameended($NAllCells)
+   }
+}
+/*2*/Transition t0 whenMsg cellends-&gt;terminatethegame
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="configurethecells">
+<h3>configureTheCells<a class="headerlink" href="#configurethecells" title="Permalink to this heading">¶</a></h3>
+<p>Questa funzione di utilità (introdotta nel file <a class="reference internal" href="GLMSprint2.html#gridsupport-kt"><span class="std std-ref">GridSupport.kt</span></a>) registra ogni cell come observer di eventi-stream
+delle sue celle vicine.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><ol class="arabic simple">
+<li><p>Determina la lista dei nomi delle celle del sistema usando la funzione <a class="reference internal" href="GLMSprint2.html#getcellnamesincontext"><span class="std std-ref">getCellNamesInContext</span></a></p></li>
+<li><p>Per ogni cella <strong>C</strong> del sistema:</p></li>
+<li><p>‘Registra’ ciascuna cella vicina usando la funzione di utilità <a class="reference internal" href="#subscribetoneighbors"><span class="std std-ref">subscribeToNeighbors</span></a></p></li>
+<li><p>Invia a <strong>C</strong> il dispatch <strong>nbconfig</strong> con il numero (3,5,8) delle sue celle vicine,
+in modo che <strong>C</strong> sappia quanti eventi osservare per determinare il suo nuovo valore di stato.</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>@JvmStatic suspend fun configureTheCells(a:ActorBasic){
+   val ctx  = a.context!!.name
+/*1*/ val cellsList =
+     conway.GridSupport.getCellNamesInContext(ctx)
+   val cells=cellsList?.listIterator()
+/*2*/while( cells!!.hasNext() ){ //Per ogni cella ...
+      val name = &quot;cell${cells!!.next().toString()}&quot;
+/*2*/ val countnb = subscribeToNeighbors(a,name)
+      //INVIO DEL NUMERO DI VICINI
+/*3*/ a.forward(&quot;nbconfig&quot;, &quot;nbconfig($countnb)&quot;,name)
+    }//while
+}
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="subscribetoneighbors">
+<h3>subscribeToNeighbors<a class="headerlink" href="#subscribetoneighbors" title="Permalink to this heading">¶</a></h3>
+<p>Questa funzione di utilità (introdotta in <a class="reference internal" href="GLMSprint2.html#gridsupport-kt"><span class="std std-ref">GridSupport.kt</span></a>) registra una cella come observer di eventi-stream delle sue celle vicine
+e restituisce il numero delle celle vicine.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><ol class="arabic simple">
+<li><p>Determina la lista dei nomi delle celle vicine usando la funzione <a class="reference internal" href="GLMSprint2.html#getcellneighbors"><span class="std std-ref">getCellNeighbors</span></a>.</p></li>
+<li><p>Per ogni cella vicina:</p></li>
+<li><p>usa la funzione <em>qak</em> <a class="reference internal" href="#subscribeto"><span class="std std-ref">subscribeTo</span></a> per registrare la cella presso la cella vicina.</p></li>
+<li><p>Restituisce il numero delle celle vicine.</p></li>
+</ol>
+</td>
+<td><div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="nd">@JvmStatic</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">subscribeToNeighbors</span><span class="p">(</span>
+<span class="w">     </span><span class="n">a</span><span class="p">:</span><span class="n">ActorBasic</span><span class="p">,</span><span class="w"> </span><span class="n">cellName</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="p">):</span><span class="kt">Int</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="kd">val</span><span class="w"> </span><span class="nv">Coords</span><span class="o">=</span>
+<span class="w">      </span><span class="n">conway</span><span class="p">.</span><span class="na">GridSupport</span><span class="p">.</span><span class="na">getCellCoords</span><span class="p">(</span><span class="n">cellName</span><span class="p">)</span>
+<span class="w">   </span><span class="kd">val</span><span class="w"> </span><span class="nv">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Coords</span><span class="o">[</span><span class="m">0</span><span class="o">]</span>
+<span class="w">   </span><span class="kd">val</span><span class="w"> </span><span class="nv">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Coords</span><span class="o">[</span><span class="m">1</span><span class="o">]</span>
+<span class="cm">/*1*/</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">nblist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getCellNeighbors</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="w">      </span><span class="kd">val</span><span class="w"> </span><span class="nv">nblistiter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nblist</span><span class="p">.</span><span class="na">iterator</span><span class="p">()</span>
+<span class="w">      </span><span class="kd">var</span><span class="w"> </span><span class="nv">countnb</span><span class="o">=</span><span class="m">0</span>
+<span class="cm">/*2*/</span><span class="w"> </span><span class="k">while</span><span class="p">(</span><span class="w"> </span><span class="n">nblistiter</span><span class="p">.</span><span class="na">hasNext</span><span class="p">()</span><span class="w"> </span><span class="p">){</span>
+<span class="w">         </span><span class="kd">val</span><span class="w"> </span><span class="nv">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nblistiter</span><span class="p">.</span><span class="na">next</span><span class="p">().</span><span class="na">toString</span><span class="p">()</span>
+<span class="cm">/*3*/</span><span class="w">    </span><span class="n">a</span><span class="p">.</span><span class="na">subscribeTo</span><span class="p">(</span><span class="w"> </span><span class="s">&quot;cell</span><span class="si">$</span><span class="n">next</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">cellName</span><span class="w"> </span><span class="p">)</span>
+<span class="w">         </span><span class="n">countnb</span><span class="o">=</span><span class="n">countnb</span><span class="o">+</span><span class="m">1</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="cm">/*4*/</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">countnb</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="subscribeto">
+<h3>subscribeTo<a class="headerlink" href="#subscribeto" title="Permalink to this heading">¶</a></h3>
+<p>Ogni <em>Actor</em> possiede il metodo <code class="docutils literal notranslate"><span class="pre">subscribeTo(A1:String,A2:String)</span></code>  mediante il quale può ‘registrare’
+l’attore di nome <strong>A2</strong> come osservatore degli eventi-stream emessi dall’attore <strong>A1</strong>.</p>
+<p>A questo punto, la nostra analisi può affrontare il problema <a class="reference internal" href="GLMAnalisi.html#p-3"><span class="std std-ref">P_3</span></a> della formalizzazione del
+comportamento delle celle.</p>
+</section>
+</section>
+<section id="il-comportamento-di-una-cell">
+<h2>Il comportamento di una cell<a class="headerlink" href="#il-comportamento-di-una-cell" title="Permalink to this heading">¶</a></h2>
+<p>In questo Sprint, assumiamo che</p>
+<p><span class="slide1">ogni cella sia un observer delle sue celle adiacenti</span>.</p>
+<p>Sappiamo che ogni cella deve operare logicamente in due fasi:</p>
+<ol class="arabic simple">
+<li><p>Acquisizione del numero di celle vicine con stato  <strong>true</strong></p></li>
+<li><p>Calcolo del nuovo stato e propagazione della informazione relativa a tale cambiamento alle celle vicine.</p></li>
+</ol>
+<section id="la-interazione-tra-le-celle">
+<h3>La interazione tra le celle<a class="headerlink" href="#la-interazione-tra-le-celle" title="Permalink to this heading">¶</a></h3>
+<p>Essendo ora ogni cella un <em>Actor</em> che funge da <em>observer</em> delle sue celle vicine, l’attività di una cella <strong>C</strong>
+può essere articolata in tre fasi:</p>
+<ol class="arabic simple">
+<li><p><span class="blue">emitinfophase</span>: emissione dell’evento-stream <strong>curstate</strong> con il valore dello stato corrente di <strong>C</strong>,
+che viene propagato solo alle celle vicine che sono state
+registrate nella <a class="reference internal" href="#configthecells"><span class="std std-ref">Fase di configurazione delle celle in gridcreator</span></a>
+come osservatori di <strong>C</strong>;</p></li>
+<li><p><span class="blue">elabinfophase</span>: gestione degli eventi <strong>curstate</strong> provenienti dalle celle vicine, per determinare quante
+di queste abbiano stato corrente <span class="brown">true</span>;</p></li>
+<li><p><span class="blue">elabstatephase</span>: applicazione de <a class="reference internal" href="ConwayLife.html#le-regole-del-gioco"><span class="std std-ref">Le regole del gioco</span></a> per determinare il valore del prossimo stato
+di <strong>C</strong>.</p></li>
+</ol>
+<p>Il problema  di coordinamento <a class="reference internal" href="GLMAnalisi.html#p-4"><span class="std std-ref">P_4</span></a>, implica che <strong>C</strong> possa ripetere queste tre fasi
+solo quando tutte le sue vicine (e quindi tutte le altre celle) si sono ‘stabilizzate’.</p>
+<p>Per avere questo coordinamento,</p>
+<p>il gestore del gioco <strong>gamelife</strong> <span class="slide1">può fungere da Orchestratore</span>.</p>
+<p>Questo comportamento si può ottenere come segue:</p>
+<ul class="simple">
+<li><p>al termine delle tre fasi precedenti, <strong>C</strong> invia a <a class="reference internal" href="#gamelife"><span class="std std-ref">gamelife</span></a> il dispatch <strong>cellready</strong>,
+per segnalere che è pronta per ripetere il calcolo del nuovo stato;</p></li>
+<li><p>quindi, attende l’evento <strong>synch</strong>, che <a class="reference internal" href="#gamelife"><span class="std std-ref">gamelife</span></a> emetterà quando avrà ricevuto <strong>cellready</strong>
+da parte di tutte le celle del contesto.</p></li>
+</ul>
+</section>
+<section id="cell">
+<h3>cell<a class="headerlink" href="#cell" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Nella <span class="blue">fase iniziale</span>, la cella:</p>
+<ol class="arabic simple">
+<li><p>comunica a <a class="reference internal" href="#gridcreator"><span class="std std-ref">gridcreator</span></a> l’avvenuta creazione</p></li>
+<li><p>attende (da <a class="reference internal" href="#gridcreator"><span class="std std-ref">gridcreator</span></a>) il dispatch <strong>nbconfig</strong> con il numero dei vicini</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span> <span class="n">cell</span> <span class="n">context</span> <span class="n">ctxconwayactors</span> <span class="n">dynamicOnly</span><span class="p">{</span>
+<span class="p">[</span><span class="c1">#</span>
+   <span class="n">var</span> <span class="n">MyState</span><span class="o">=</span> <span class="n">false</span>
+   <span class="n">var</span> <span class="n">Countnb</span>  <span class="o">=</span> <span class="mi">0</span>  <span class="o">//</span><span class="n">num</span><span class="o">.</span> <span class="n">dei</span> <span class="n">vicini</span>
+   <span class="n">var</span> <span class="n">Countnbon</span><span class="o">=</span> <span class="mi">0</span>  <span class="o">//</span><span class="n">num</span><span class="o">.</span> <span class="n">stati</span> <span class="n">on</span> <span class="n">dei</span> <span class="n">vicini</span>
+   <span class="n">var</span> <span class="n">Countnbmsgs</span><span class="o">=</span> <span class="mi">0</span> <span class="o">//</span><span class="n">num</span><span class="o">.</span> <span class="n">msg</span> <span class="n">ricevuti</span> <span class="n">dai</span> <span class="n">vicini</span>
+
+<span class="c1">#]</span>
+<span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span><span class="p">{</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span> <span class="n">forward</span> <span class="n">gridcreator</span> <span class="o">-</span><span class="n">m</span>
+           <span class="n">cellcreated</span><span class="p">:</span><span class="n">cellcreated</span><span class="p">(</span><span class="n">MyName</span><span class="p">,</span><span class="n">false</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span><span class="n">Transition</span> <span class="n">t0</span> <span class="n">whenMsg</span> <span class="n">nbconfig</span><span class="o">-&gt;</span><span class="n">setmyneigbors</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<section id="setmyneigbors">
+<h4>setmyneigbors<a class="headerlink" href="#setmyneigbors" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>In questa fase, la cella:</p>
+<ol class="arabic simple">
+<li><p>memorizza il numero dei vicini contenuto nel dispatch <strong>nbconfig</strong> inviato da <a class="reference internal" href="#gridcreator"><span class="std std-ref">gridcreator</span></a></p></li>
+<li><p>attende (da <a class="reference internal" href="GLMSprint1.html#griddisplay"><span class="std std-ref">griddisplay</span></a>) il dispatch <strong>switchstate</strong> per commutare il suo stato
+(transitando in <a class="reference internal" href="#setcellstate"><span class="std std-ref">setcellstate</span></a>)</p></li>
+<li><p>attende (da <a class="reference internal" href="#gamelifehelper"><span class="std std-ref">gamelifehelper</span></a>) l’evento <strong>startthegame</strong> per iniziare le sua attività
+(transitando nell stato <a class="reference internal" href="#emitinfophase"><span class="std std-ref">emitinfophase</span></a>)</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">State</span> <span class="n">setmyneigbors</span><span class="p">{</span>
+   <span class="n">onMsg</span><span class="p">(</span> <span class="n">nbconfig</span> <span class="p">:</span> <span class="n">nbconfig</span><span class="p">(</span><span class="n">NB</span> <span class="p">)){</span>
+   <span class="p">[</span><span class="c1">#</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span> <span class="n">Countnb</span> <span class="o">=</span> <span class="n">payloadArg</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">toInt</span><span class="p">()</span>
+   <span class="c1">#]</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span><span class="n">Transition</span> <span class="n">t0</span> <span class="n">whenMsg</span> <span class="n">switchstate</span><span class="o">-&gt;</span><span class="n">setcellstate</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span>    <span class="n">whenEvent</span> <span class="n">startthegame</span><span class="o">-&gt;</span><span class="n">emitinfophase</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="setcellstate">
+<h4>setcellstate<a class="headerlink" href="#setcellstate" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Nella fase di <span class="blue">settaggio dello stato</span>, la cella</p>
+<ol class="arabic simple">
+<li><p>Commuta il suo stato</p></li>
+<li><p>Aggiorna il <a class="reference internal" href="GLMSprint1.html#griddisplay"><span class="std std-ref">griddisplay</span></a></p></li>
+<li><p>attende (da <a class="reference internal" href="GLMSprint1.html#griddisplay"><span class="std std-ref">griddisplay</span></a>) qualche altro dispatch <strong>switchstate</strong> per commutare
+il suo stato  (rimanendo nello stato corrente)</p></li>
+<li><p>attende (da <a class="reference internal" href="#gamelifehelper"><span class="std std-ref">gamelifehelper</span></a>) l’evento <strong>startthegame</strong> per iniziare le sua attività
+(transitando nell stato <a class="reference internal" href="#emitinfophase"><span class="std std-ref">emitinfophase</span></a>)</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>State setcellstate{
+   onMsg( switchstate:switchstate(X) ){
+/*1*/      [# MyState = ! MyState #]
+   }
+/*2*/ forward griddisplay -m
+         todisplay:todisplay($MyName,$MyState)
+}
+Transition t0
+/*3*/   whenMsg switchstate-&gt;setcellstate
+/*4*/   whenEvent startthegame-&gt;emitinfophase
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="emitinfophase">
+<h4>emitinfophase<a class="headerlink" href="#emitinfophase" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 55%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Nella <span class="blue">elabinfophase</span>, la cella:</p>
+<ol class="arabic simple">
+<li><p>aggiorna il colore delle cella sul <a class="reference internal" href="GLMSprint1.html#griddisplay"><span class="std std-ref">griddisplay</span></a></p></li>
+<li><p>emette l’evento-stream <strong>curstate</strong>.</p></li>
+<li><p>attende (dai vicini) i primo evento <strong>curstate</strong> e transita nello stato <a class="reference internal" href="#elabinfophase"><span class="std std-ref">elabinfophase</span></a></p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>State emitinfophase{
+ [# var MyInfo = &quot;$name,$MyState&quot; #]
+/*1*/forward griddisplay -m
+       todisplay : todisplay($MyName,$MyState)
+/*2*/emitlocalstream curstate : curstate($MyInfo)
+ [# Countnbmsgs = 0; Countnbon=0 #]
+}
+Transition t0
+/*3*/ whenEvent curstate -&gt; elabinfophase
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="elabinfophase">
+<h4>elabinfophase<a class="headerlink" href="#elabinfophase" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 55%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Nella <span class="blue">elabinfophase</span>, la cella:</p>
+<ol class="arabic simple">
+<li><p>percepisce l’evento <strong>curstate</strong>
+dai suoi vicini, e conta il numero degli stati <strong>true</strong></p></li>
+<li><p>quando ha percepito l’evento <strong>curstate</strong>
+da tutti i suoi vicini, transita nello stato <a class="reference internal" href="#elabstatephase"><span class="std std-ref">elabstatephase</span></a>
+<span class="slide2">auto-inviandosi</span> il dispatch <strong>allnbreceived</strong></p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">State</span> <span class="n">elabinfophase</span><span class="p">{</span>
+<span class="p">[</span><span class="c1"># Countnbmsgs=Countnbmsgs+1 #]</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span> <span class="n">onMsg</span><span class="p">(</span><span class="n">curstate</span><span class="p">:</span><span class="n">curstate</span><span class="p">(</span><span class="n">NB</span><span class="p">,</span><span class="n">true</span><span class="p">)){</span>
+   <span class="p">[</span><span class="c1">#</span>
+      <span class="n">Countnbon</span> <span class="o">=</span> <span class="n">Countnbon</span> <span class="o">+</span> <span class="mi">1</span>
+   <span class="c1">#]</span>
+   <span class="p">}</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span><span class="k">if</span> <span class="p">[</span><span class="c1"># Countnbmsgs == Countnb #] {</span>
+   <span class="p">[</span><span class="c1">#</span>
+    <span class="n">forward</span><span class="p">(</span><span class="s2">&quot;allnbreceived&quot;</span><span class="p">,</span><span class="s2">&quot;allnbreceived(ok)&quot;</span><span class="p">,</span><span class="n">name</span><span class="p">)</span>
+   <span class="c1">#]</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+<span class="n">Transition</span> <span class="n">t0</span>
+   <span class="o">/*</span><span class="mi">1</span><span class="o">*/</span>  <span class="n">whenEvent</span> <span class="n">curstate</span>    <span class="o">-&gt;</span> <span class="n">elabinfophase</span>
+   <span class="o">/*</span><span class="mi">2</span><span class="o">*/</span>  <span class="n">whenMsg</span> <span class="n">allnbreceived</span> <span class="o">-&gt;</span> <span class="n">elabstatephase</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="elabstatephase">
+<h4>elabstatephase<a class="headerlink" href="#elabstatephase" title="Permalink to this heading">¶</a></h4>
+<p>Notiamo che nelle fasi <a class="reference internal" href="#emitinfophase"><span class="std std-ref">emitinfophase</span></a> ed <a class="reference internal" href="#elabinfophase"><span class="std std-ref">elabinfophase</span></a> la cella decide di <span class="blue">ignorare</span>
+eventuali dispatch <strong>stopthecell</strong> emessi da <a class="reference internal" href="#gamelifehelper"><span class="std std-ref">gamelifehelper</span></a>.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Nella <span class="blue">elabstatephase</span>, la cella</p>
+<ol class="arabic simple">
+<li><p>applica <a class="reference internal" href="ConwayLife.html#le-regole-del-gioco"><span class="std std-ref">Le regole del gioco</span></a> determinando il suo nuovo stato.</p></li>
+<li><p>invia il dispatch <strong>cellready</strong> a <a class="reference internal" href="#gamelife"><span class="std std-ref">gamelife</span></a></p></li>
+<li><p>attende (da <a class="reference internal" href="#gamelife"><span class="std std-ref">gamelife</span></a>) l’evento <strong>synch</strong> e poi transita di nuovo in <a class="reference internal" href="#emitinfophase"><span class="std std-ref">emitinfophase</span></a></p></li>
+<li><p>attende (da <a class="reference internal" href="#gamelifehelper"><span class="std std-ref">gamelifehelper</span></a>) il dispatch <strong>stopthecell</strong> e poi trasnsita nello stato
+<a class="reference internal" href="#endthecell"><span class="std std-ref">endthecell</span></a></p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   State elabstatephase{
+   /*1*/ //REGOLE DEL GIOCO
+      if [# MyState  #]{ //sopravvive o muore
+         [# MyState = Countnbon==2 || Countnbon==3 #]
+      }
+      if [# ! MyState  #]{ //rinasce o rimane morta
+         [# MyState = (Countnbon==3) #]
+      }
+   /*2*/ forward gamelife -m cellready:cellready($MyName)
+   }
+   Transition t0
+   /*3*/    whenEvent synch       -&gt; emitinfophase
+   /*4*/    whenMsg stopthecell   -&gt; endthecell
+}
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="come-qak-attiva-le-transizioni">
+<h3>Come qak attiva le transizioni<a class="headerlink" href="#come-qak-attiva-le-transizioni" title="Permalink to this heading">¶</a></h3>
+<p>Si noti che:</p>
+<ul class="simple">
+<li><p>l’evento <strong>synch</strong> potrebbe essere emesso da <a class="reference internal" href="#gamelife"><span class="std std-ref">gamelife</span></a> <span class="slide2">dopo</span>  che l’utente ha premuto il pulsante
+<code class="docutils literal notranslate"><span class="pre">stop</span></code> (provocando la emissione del messaggio <strong>stopthecell</strong>). In tal caso l’evento <strong>synch</strong> <span class="blue">è perduto</span>,
+in quanto gli eventi generici <span class="blue">non vengono memorizzati</span> nella coda dell’<em>Actor</em>.
+Ma ciò non è un problema, in quanto la cella non deve continuare l’attività.</p></li>
+<li><p>l’evento <strong>synch</strong> potrebbe essere emesso da <a class="reference internal" href="#gamelife"><span class="std std-ref">gamelife</span></a> <span class="slide2">mentre</span>  un eventuale messaggio <strong>stopthecell</strong>
+sta transitando nel sistema. Se al momento della transizione dello stato <a class="reference internal" href="#elabstatephase"><span class="std std-ref">elabstatephase</span></a>:</p>
+<ol class="arabic simple">
+<li><p>sia <strong>synch</strong> che <strong>stopthecell</strong> sono entrambi nella coda dell’<em>Actor</em>, la <a class="reference internal" href="GLMIntro.html#infrastruttura-qak"><span class="std std-ref">Infrastruttura qak</span></a> si accorge
+del primo dei due nella coda</p></li>
+<li><p>il messaggio <strong>stopthecell</strong> non è ancora pervenuto nella coda dell’<em>Actor</em>, oppure è stata selezionata
+la transzione relativa a <strong>synch</strong>, il messaggio <strong>stopthecell</strong> non viene perduto, ma rimane in coda.
+La cella farà un ulteriore passo di elborazione e poi andrà nello stato <a class="reference internal" href="#endthecell"><span class="std std-ref">endthecell</span></a>.</p></li>
+</ol>
+</li>
+</ul>
+<section id="endthecell">
+<h4>endthecell<a class="headerlink" href="#endthecell" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 55%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Nella fase <span class="blue">terminazione</span>, la cella</p>
+<ol class="arabic simple">
+<li><p>Invia il dispatch <strong>cellends</strong> a <a class="reference internal" href="#gamelife"><span class="std std-ref">gamelife</span></a></p></li>
+<li><p>Va nello stato <a class="reference internal" href="#waittoresume"><span class="std std-ref">waittoresume</span></a></p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>State endthecell{
+/*1*/ forward gamelife -m cellends : cellends($MyName)
+}
+/*2*/Goto waittoresume
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="waittoresume">
+<h4>waittoresume<a class="headerlink" href="#waittoresume" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Nella <span class="blue">fase di ripresa</span>, la cella</p>
+<ol class="arabic simple">
+<li><p>attende l’evento <strong>startthegame</strong> per riprendere l’attività</p></li>
+<li><p>attende il dispatch <strong>switchstate</strong> per commutare il suo stato
+(transitando in <a class="reference internal" href="#setcellstate"><span class="std std-ref">setcellstate</span></a>)</p></li>
+<li><p>attende il dispatch <strong>clearCell</strong> per ripulire la griglia
+(transitando in <a class="reference internal" href="#clearthecell"><span class="std std-ref">clearThecell</span></a>)</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">State</span> <span class="n">waittoresume</span><span class="p">{</span>
+<span class="p">}</span>
+<span class="n">Transition</span> <span class="n">t0</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span> <span class="n">whenEvent</span> <span class="n">startthegame</span><span class="o">-&gt;</span> <span class="n">emitinfophase</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span> <span class="n">whenMsg</span> <span class="n">switchstate</span><span class="o">-&gt;</span> <span class="n">setcellstate</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span> <span class="n">whenEvent</span> <span class="n">clearCell</span> <span class="o">-&gt;</span> <span class="n">clearThecell</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="clearthecell">
+<h4>clearThecell<a class="headerlink" href="#clearthecell" title="Permalink to this heading">¶</a></h4>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 55%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Nella <span class="blue">fase di ripulitura</span>, la cella</p>
+<ol class="arabic simple">
+<li><p>invia il dispatch <strong>switchstate</strong> per commutare il suo stato</p></li>
+<li><p>torna a <a class="reference internal" href="#waittoresume"><span class="std std-ref">waittoresume</span></a></p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>State clearThecell{
+   [# MyState = false #]
+/*1*/ forward griddisplay
+       -m todisplay : todisplay($MyName,$MyState)
+}
+/*2*/Goto waittoresume
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+<section id="gamelife">
+<h2>gamelife<a class="headerlink" href="#gamelife" title="Permalink to this heading">¶</a></h2>
+<p>L’attore <em>gamelife</em> ha la responsabilità di gestire il gioco.
+In relazione al problema  di coordinamento <a class="reference internal" href="GLMAnalisi.html#p-4"><span class="std std-ref">P_4</span></a>, <em>gamelife</em> funge anche da <span class="slide2">orchestratore</span>
+dell’attività delle celle.</p>
+<p>Esso quindi si relaziona
+con <a class="reference internal" href="#gridcreator"><span class="std std-ref">gridcreator</span></a> per conoscere il numero globale di celle,
+con le <a class="reference internal" href="#cell"><span class="std std-ref">cell</span></a> per coordinarle e
+con il dispositivo di I/O <a class="reference internal" href="GLMSprint1.html#griddisplay"><span class="std std-ref">griddisplay</span></a> per gestire i comandi-utente,
+che, per semoplificarsi la vita, <code class="docutils literal notranslate"><span class="pre">gamelife</span></code> <span class="slide2">delega</span> all’attore <a class="reference internal" href="#gamelifehelper"><span class="std std-ref">gamelifehelper</span></a>.</p>
+<section id="il-meccanismo-di-delega">
+<h3>Il meccanismo di delega<a class="headerlink" href="#il-meccanismo-di-delega" title="Permalink to this heading">¶</a></h3>
+<p><span class="slide1">Delegazione</span>: un <em>Actor</em> può delegare la gestione di un qualunque messaggio a un altro
+<em>Actor</em>, semplificando in questo modo la struttura del suo codice. Ovviamente:</p>
+<ul class="simple">
+<li><p>l’<em>Actor</em> delegato può svolgere il suo compito se i messaggi che deve gestire non implicano
+conoscenza dello stato dell’<em>Actor</em> delegante</p></li>
+<li><p>la <a class="reference internal" href="GLMIntro.html#infrastruttura-qak"><span class="std std-ref">Infrastruttura qak</span></a> è capace di gestire anche la delega dei <span class="blue">messaggi di richiesta</span> inviati
+all’<em>Actor</em> delegante.</p></li>
+</ul>
+</section>
+<section id="gamelife-fase-iniziale">
+<h3>gamelife: fase iniziale<a class="headerlink" href="#gamelife-fase-iniziale" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Nella <span class="blue">fase iniziale</span>:</p>
+<ol class="arabic simple">
+<li><p>Delega all’attore <a class="reference internal" href="#gamelifehelper"><span class="std std-ref">gamelifehelper</span></a> i dispatch <strong>fromdisplay</strong>
+(emessi da <a class="reference internal" href="GLMSprint1.html#griddisplay"><span class="std std-ref">griddisplay</span></a>) e <strong>cellends</strong> (emessi da ogni <a class="reference internal" href="#cell"><span class="std std-ref">cell</span></a> quando termina)</p></li>
+<li><p>Attende il dispatch <strong>gameready</strong> da parte di <a class="reference internal" href="#gridcreator"><span class="std std-ref">gridcreator</span></a>,
+da cui:</p></li>
+<li><p>Ricava il numero globale di celle</p></li>
+<li><p>Attende il primo dispatch <strong>cellready</strong> per transitare
+nello stato di orchestrazione <a class="reference internal" href="#handlecellready"><span class="std std-ref">handlecellready</span></a></p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span> <span class="n">gamelife</span> <span class="n">context</span> <span class="n">ctxconwayactors</span><span class="p">{</span>
+<span class="p">[</span><span class="c1">#</span>
+   <span class="n">var</span> <span class="n">NumOfCells</span>     <span class="o">=</span> <span class="mi">0</span>
+   <span class="n">var</span> <span class="n">NCellReady</span>     <span class="o">=</span> <span class="mi">0</span>
+   <span class="n">var</span> <span class="n">NumIter</span>        <span class="o">=</span> <span class="mi">0</span>
+<span class="c1">#]</span>
+   <span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span><span class="p">{</span>
+      <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name | STARTS&quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">blue</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span> <span class="n">delegate</span> <span class="s2">&quot;fromdisplay&quot;</span> <span class="n">to</span> <span class="n">gamelifehelper</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span> <span class="n">delegate</span> <span class="s2">&quot;cellends&quot;</span>    <span class="n">to</span> <span class="n">gamelifehelper</span>
+   <span class="p">}</span>
+   <span class="n">Transition</span> <span class="n">t0</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span> <span class="n">whenMsg</span> <span class="n">gameready</span><span class="o">-&gt;</span><span class="n">handlegameready</span>
+
+   <span class="n">State</span> <span class="n">handlegameready</span><span class="p">{</span>
+      <span class="n">onMsg</span><span class="p">(</span> <span class="n">gameready</span> <span class="p">:</span> <span class="n">gameready</span><span class="p">(</span><span class="n">N</span><span class="p">)){</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span>  <span class="p">[</span><span class="c1"># NumOfCells = payloadArg(0).toInt() #]</span>
+      <span class="p">}</span>
+   <span class="p">}</span>
+   <span class="n">Transition</span> <span class="n">t0</span>
+<span class="o">/*</span><span class="mi">4</span><span class="o">*/</span>  <span class="n">whenMsg</span> <span class="n">cellready</span> <span class="o">-&gt;</span> <span class="n">handlecellready</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="handlecellready">
+<h3>handlecellready<a class="headerlink" href="#handlecellready" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 65%" />
+<col style="width: 35%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Nella <span class="blue">fase di coordinamento</span>:</p>
+<ol class="arabic simple">
+<li><p>Gestisce il dispatch <strong>cellready</strong>  dalle celle aggiornando il numero dei msg ricevuti</p></li>
+<li><p>Quando ha ricevuto <strong>cellready</strong>  da tutte le celle,
+transita nello stato <a class="reference internal" href="#synchclock"><span class="std std-ref">synchclock</span></a>
+<span class="slide2">auto-inviandosi</span> il dispatch <strong>allcellready</strong></p></li>
+<li><p>Se nel frattempo giunge (da <a class="reference internal" href="#gamelifehelper"><span class="std std-ref">gamelifehelper</span></a>) un dispatch <strong>gamestopped</strong>
+transitare nello stato <span class="blue">setstopgame</span>  per tenerne conto, senza però venir meno al compito
+di raccogliere <strong>cellready</strong>  da tutte le celle.</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">State</span> <span class="n">handlecellready</span> <span class="p">{</span>
+   <span class="n">onMsg</span><span class="p">(</span> <span class="n">cellready</span><span class="p">:</span><span class="n">cellready</span><span class="p">(</span><span class="n">CELL</span><span class="p">)){</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span> <span class="p">[</span><span class="c1"># NCellReady = NCellReady + 1  #]</span>
+      <span class="k">if</span> <span class="p">[</span><span class="c1"># NCellReady == NumOfCells #] {</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span>    <span class="n">forward</span> <span class="n">gamelife</span>
+            <span class="o">-</span><span class="n">m</span> <span class="n">allcellready</span><span class="p">:</span><span class="n">allcellready</span><span class="p">(</span><span class="n">ok</span><span class="p">)</span>
+      <span class="p">}</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+<span class="n">Transition</span> <span class="n">t0</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span>  <span class="n">whenMsg</span> <span class="n">cellready</span>     <span class="o">-&gt;</span> <span class="n">handlecellready</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span>  <span class="n">whenMsg</span> <span class="n">allcellready</span>  <span class="o">-&gt;</span> <span class="n">synchclock</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span>  <span class="n">whenMsg</span> <span class="n">gamestopped</span>   <span class="o">-&gt;</span> <span class="n">setstopgame</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="setstopgame">
+<h3>setstopgame<a class="headerlink" href="#setstopgame" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><ol class="arabic simple">
+<li><p>Il gestore memorizza nella variabile <code class="docutils literal notranslate"><span class="pre">stopped</span></code> che l’utente ha fermato il gioco.</p></li>
+<li><p>Poi continua a gestire i dispacth <strong>cellready</strong> inviati dalle celle</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">State</span> <span class="n">setstopgame</span><span class="p">{</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span> <span class="p">[</span><span class="c1"># stopped = true #]</span>
+<span class="p">}</span>
+<span class="n">Transition</span> <span class="n">t0</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span> <span class="n">whenMsg</span> <span class="n">cellready</span> <span class="o">-&gt;</span> <span class="n">handlecellready</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="synchclock">
+<h3>synchclock<a class="headerlink" href="#synchclock" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Nella <span class="blue">fase di orchestrazione</span>:</p>
+<ol class="arabic simple">
+<li><p>Attende un pò, al fine di rendere il gico meno veloce</p></li>
+<li><p>Se <strong>non</strong> <code class="docutils literal notranslate"><span class="pre">stopped</span></code>, emette l’evento <strong>synch</strong> per segnalare alle celle che possono
+riprendere le attività</p></li>
+<li><p>Se <code class="docutils literal notranslate"><span class="pre">stopped</span></code>, transita nello stato <a class="reference internal" href="#stopgame"><span class="std std-ref">stopgame</span></a>, <span class="slide2">auto-inviandosi</span> il dispach
+<strong>gamesuspend</strong></p></li>
+<li><p>Verifica se nel frattempo sia arrivato (da <a class="reference internal" href="#gamelifehelper"><span class="std std-ref">gamelifehelper</span></a>) un dispatch <strong>gamestopped</strong>, e
+in tal caso transita nello stato <span class="blue">handlestopaftersynch</span> per tenere conto</p></li>
+<li><p>Se invece l’utente ha rispreso il gioco, transita di nuovo in <cite>handlecellready</cite>, al
+primo dispatch <strong>cellready</strong> inviato dalle celle</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">State</span> <span class="n">synchclock</span><span class="p">{</span>
+<span class="k">if</span> <span class="p">[</span><span class="c1"># ! stopped #]{</span>
+   <span class="p">[</span><span class="c1">#</span>
+      <span class="n">NumIter</span> <span class="o">=</span> <span class="n">NumIter</span> <span class="o">+</span> <span class="mi">1</span>
+      <span class="n">val</span> <span class="n">Dt</span> <span class="o">=</span> <span class="mi">500</span><span class="n">L</span>
+   <span class="c1">#]</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span> <span class="n">delayVar</span> <span class="n">Dt</span> <span class="o">//</span><span class="n">reduce</span> <span class="n">the</span> <span class="n">game</span> <span class="n">speed</span>
+
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span> <span class="n">emit</span> <span class="n">synch</span> <span class="p">:</span> <span class="n">synch</span><span class="p">(</span><span class="n">ok</span><span class="p">)</span>
+   <span class="p">[</span><span class="c1"># NCellReady = 0  #]</span>
+<span class="p">}</span>
+<span class="k">else</span><span class="p">{</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span>   <span class="n">forward</span> <span class="n">gamelife</span>
+       <span class="o">-</span><span class="n">m</span> <span class="n">gamesuspend</span> <span class="p">:</span> <span class="n">gamesuspend</span><span class="p">(</span><span class="n">oK</span><span class="p">)</span><span class="o">//</span><span class="n">automsg</span>
+<span class="p">}</span>
+<span class="n">Transition</span> <span class="n">t0</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span> <span class="n">whenMsg</span> <span class="n">gamesuspend</span> <span class="o">-&gt;</span> <span class="n">stopgame</span>
+<span class="o">/*</span><span class="mi">4</span><span class="o">*/</span> <span class="n">whenMsg</span> <span class="n">gamestopped</span> <span class="o">-&gt;</span> <span class="n">handlestopaftersynch</span>
+<span class="o">/*</span><span class="mi">5</span><span class="o">*/</span> <span class="n">whenMsg</span> <span class="n">cellready</span>   <span class="o">-&gt;</span> <span class="n">handlecellready</span>
+
+<span class="n">State</span> <span class="n">handlestopaftersynch</span><span class="p">{</span>
+   <span class="p">[</span><span class="c1"># stopped = true #]</span>
+<span class="p">}</span>
+<span class="n">Goto</span> <span class="n">synchclock</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="stopgame">
+<h3>stopgame<a class="headerlink" href="#stopgame" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 65%" />
+<col style="width: 35%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><ol class="arabic simple">
+<li><p>Il gestore attende il dispatch <strong>gameended</strong>.</p></li>
+<li><p>Poi resetta alcune variabili e quindi</p></li>
+<li><p>attende una ripresa, che avverrà quando le celle ricominceranno
+a inviare iol dispatch <strong>cellready</strong> in conseguenza di un click
+sul pulsante <code class="docutils literal notranslate"><span class="pre">start</span></code> da parte dell’utente</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">State</span> <span class="n">stopgame</span><span class="p">{</span>
+<span class="p">}</span>
+<span class="n">Transition</span> <span class="n">t0</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span>  <span class="n">whenMsg</span> <span class="n">gameended</span><span class="o">-&gt;</span><span class="n">resumegame</span>
+
+<span class="n">State</span> <span class="n">resumegame</span><span class="p">{</span>
+   <span class="p">[</span><span class="c1">#</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span> <span class="n">stopped</span>    <span class="o">=</span> <span class="n">false</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span> <span class="n">NCellReady</span> <span class="o">=</span> <span class="mi">0</span>
+   <span class="c1">#]</span>
+<span class="p">}</span>
+<span class="n">Transition</span> <span class="n">t0</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span> <span class="n">whenMsg</span> <span class="n">cellready</span><span class="o">-&gt;</span><span class="n">handlecellready</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="gamelifehelper">
+<h2>gamelifehelper<a class="headerlink" href="#gamelifehelper" title="Permalink to this heading">¶</a></h2>
+<p><em>gamelifehelper</em> viene <a class="reference internal" href="#il-meccanismo-di-delega"><span class="std std-ref">delegato</span></a> da <a class="reference internal" href="#gamelife"><span class="std std-ref">gamelife</span></a> a gestire i dispatch <span class="blue">fromdisplay</span>
+(emessi da <a class="reference internal" href="GLMSprint1.html#griddisplay"><span class="std std-ref">griddisplay</span></a>) e <span class="blue">cellends</span> (emessi da ogni <a class="reference internal" href="#cell"><span class="std std-ref">cell</span></a> quando termina).</p>
+<p>Questo <em>Actor</em> affronta anche la <span class="slide2">parte P_6_1</span> del problema <a class="reference internal" href="GLMAnalisi.html#p-6"><span class="std std-ref">P_6</span></a>: quella relativa al
+fatto che l’utente si aspetta di poter sospendere il gioco.</p>
+<section id="sendstoptoallcells">
+<h3>sendStopToAllCells<a class="headerlink" href="#sendstoptoallcells" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Introduciamo in <a class="reference internal" href="GLMSprint2.html#gridsupport-kt"><span class="std std-ref">GridSupport.kt</span></a> una funzione di utilità per inviare a tutte le celle il dispatch
+<strong>stopthecell</strong>.</p></td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>@JvmStatic suspend fun sendStopToAllCells(a: ActorBasic ){
+   val ctx       = a.context!!.name
+   val cellsList = getCellNamesInContext(ctx)
+   val cells=cellsList?.listIterator()
+   while( cells!!.hasNext() ){
+      val name  = &quot;cell${cells!!.next().toString()}&quot;
+      a.forward(&quot;stopthecell&quot;,&quot;stopthecell(ok)&quot;,name)
+   }
+}
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Nella <span class="blue">fase iniziale di gamelifehelper</span>:</p>
+<ol class="arabic simple">
+<li><p>Stabilisce il numero complessivo delle celle usando la funzione <a class="reference internal" href="GLMSprint1.html#getnumofcells"><span class="std std-ref">getNumOfCells</span></a></p></li>
+<li><p>Introduce una variabile booleana <strong>stopped</strong>, per ricordare se è arrivato un messaggio <code class="docutils literal notranslate"><span class="pre">fromdisplay(stop)</span></code>
+dal <a class="reference internal" href="GLMSprint1.html#griddisplay"><span class="std std-ref">griddisplay</span></a></p></li>
+<li><p>Attende il dispatch <strong>fromdisplay</strong>  (da <a class="reference internal" href="GLMSprint1.html#griddisplay"><span class="std std-ref">griddisplay</span></a>) con un comando-utente</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QActor</span> <span class="n">gamelifehelper</span> <span class="n">context</span> <span class="n">ctxconwayactors</span><span class="p">{</span>
+<span class="p">[</span><span class="c1">#</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span> <span class="n">val</span> <span class="n">NAllCells</span>  <span class="o">=</span>
+     <span class="n">conway</span><span class="o">.</span><span class="n">GridSupport</span><span class="o">.</span><span class="n">getNumOfCells</span><span class="p">()</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span> <span class="n">var</span> <span class="n">stopped</span>    <span class="o">=</span> <span class="n">false</span>
+      <span class="n">var</span> <span class="n">NCellended</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">//</span><span class="n">see</span> <span class="n">terminatethegame</span>
+<span class="c1">#]</span>
+<span class="n">State</span> <span class="n">s0</span> <span class="n">initial</span><span class="p">{</span>
+   <span class="n">println</span><span class="p">(</span><span class="s2">&quot;$name | STARTS&quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">blue</span>
+<span class="p">}</span>
+<span class="n">Transition</span> <span class="n">t0</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span>   <span class="n">whenMsg</span> <span class="n">fromdisplay</span> <span class="o">-&gt;</span> <span class="n">handleguicmd</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="handleguicmd">
+<h3>handleguicmd<a class="headerlink" href="#handleguicmd" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Nella <span class="blue">gestione del comando-utente</span>:</p>
+<ol class="arabic simple">
+<li><p>nel caso il comando sia <code class="docutils literal notranslate"><span class="pre">fromdisplay(start)</span></code>, pone  <code class="docutils literal notranslate"><span class="pre">stopped=false</span></code> ed
+emette l’evento <strong>startthegame</strong>  che verrà percepito e gestito da ogni <a class="reference internal" href="#cell"><span class="std std-ref">cell</span></a></p></li>
+<li><p>nel caso il payload sia <code class="docutils literal notranslate"><span class="pre">fromdisplay(stop)</span></code> e non già in stato di stop
+(per evitare ridondanza comunicativa):</p></li>
+<li><p>invia a <a class="reference internal" href="#gamelife"><span class="std std-ref">gamelife</span></a> il dispatch <strong>gamestopped</strong></p></li>
+<li><p>usa la funzione <a class="reference internal" href="#sendstoptoallcells"><span class="std std-ref">sendStopToAllCells</span></a> per inviare il dispatch <strong>stopthecell</strong> a tutte le celle</p></li>
+<li><p>attende nuovi comandi-utente</p></li>
+<li><p>attende il dispatch <strong>cellends</strong> da parte delle celle, nel caso l’utente abbia sospeso
+il gioco. In tal caso transita nell stato <code class="docutils literal notranslate"><span class="pre">terminatethegame</span></code></p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>State handleguicmd{
+   onMsg( fromdisplay : fromdisplay(start) ){
+     [# stopped    = false #]
+/*1*/ emit startthegame : startthegame(ok)
+   }
+   onMsg( fromdisplay : fromdisplay(stop) ){
+/*2*/if [# ! stopped #] {
+/*3*/ forward gamelife
+         -m gamestopped : gamestopped($NAllCells)
+/*4*/ [# conway.GridSupport.sendStopToAllCells(myself) #]
+    }
+    [# stopped = true #]
+   }
+}
+Transition t0
+/*5*/ whenMsg fromdisplay-&gt;handleguicmd
+/*6*/ whenMsg cellends-&gt;terminatethegame
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id1">
+<h3>terminatethegame<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 45%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Nella <span class="blue">gestione di cellends</span>, l’<em>Actor</em> ref:<cite>gamelifehelper</cite>:</p>
+<ol class="arabic simple">
+<li><p>attende il dispatch <strong>cellends</strong> da parte di tutte le celle</p></li>
+<li><p>quando tutti i messaggi sono ricevuti, invia il dispatch <strong>gameended</strong> a <a class="reference internal" href="#gamelife"><span class="std std-ref">gamelife</span></a></p></li>
+<li><p>non dimentica di continuare a gestire i comandi-utente (a pulsanti attivi)</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>State terminatethegame{
+   [# NCellended = NCellended + 1 #]
+   if [# NCellended == NAllCells #]{
+/*2*/ forward gamelife
+        -m gameended:gameended($NAllCells)
+      [# NCellended = 0 #]
+   }
+}
+Transition t0
+/*1*/   whenMsg cellends-&gt;terminatethegame
+/*3*/   whenMsg fromdisplay-&gt;handleguicmd
+}
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>A questo punto,
+procediamo con  <a class="reference internal" href="GLMSprint4.html#glm-sprint4-interazioni-a-eventi-via-mqtt"><span class="std std-ref">GLM-Sprint4: interazioni a eventi via MQTT</span></a> in cui
+realizzare e sperimentare interazioni tra le celle attraverso meccanisimi publish-subscribe
+con la mediazione di MessageBroker.</p>
+<p><span class="slide1">Indice:</span>: <a class="reference internal" href="GLMIntro.html#indice-glm"><span class="std std-ref">Indice GLM</span></a></p>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">GLM-Sprint3: interazioni a eventi-stream</a><ul>
+<li><a class="reference internal" href="#glm-sprint3-overview">GLM-Sprint3: overview</a></li>
+<li><a class="reference internal" href="#messaggi-in-gamelifeactors-nello-sprint3">Messaggi in gamelifeactors nello SPRINT3</a><ul>
+<li><a class="reference internal" href="#messaggi-di-i-o">Messaggi di I/O</a></li>
+<li><a class="reference internal" href="#messaggi-relativi-alla-creazione">Messaggi relativi alla creazione</a></li>
+<li><a class="reference internal" href="#messaggi-relativi-alla-inizializzazione">Messaggi relativi alla inizializzazione</a></li>
+<li><a class="reference internal" href="#messaggi-relativi-al-funzionamento">Messaggi relativi al funzionamento</a></li>
+<li><a class="reference internal" href="#messaggi-relativi-alla-terminazione">Messaggi relativi alla terminazione</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#il-problema-della-creazione-configurazione">Il problema della creazione/configurazione</a></li>
+<li><a class="reference internal" href="#gridcreator">gridcreator</a><ul>
+<li><a class="reference internal" href="#configthecells">configthecells</a></li>
+<li><a class="reference internal" href="#terminatethegame">terminatethegame</a></li>
+<li><a class="reference internal" href="#configurethecells">configureTheCells</a></li>
+<li><a class="reference internal" href="#subscribetoneighbors">subscribeToNeighbors</a></li>
+<li><a class="reference internal" href="#subscribeto">subscribeTo</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#il-comportamento-di-una-cell">Il comportamento di una cell</a><ul>
+<li><a class="reference internal" href="#la-interazione-tra-le-celle">La interazione tra le celle</a></li>
+<li><a class="reference internal" href="#cell">cell</a><ul>
+<li><a class="reference internal" href="#setmyneigbors">setmyneigbors</a></li>
+<li><a class="reference internal" href="#setcellstate">setcellstate</a></li>
+<li><a class="reference internal" href="#emitinfophase">emitinfophase</a></li>
+<li><a class="reference internal" href="#elabinfophase">elabinfophase</a></li>
+<li><a class="reference internal" href="#elabstatephase">elabstatephase</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#come-qak-attiva-le-transizioni">Come qak attiva le transizioni</a><ul>
+<li><a class="reference internal" href="#endthecell">endthecell</a></li>
+<li><a class="reference internal" href="#waittoresume">waittoresume</a></li>
+<li><a class="reference internal" href="#clearthecell">clearThecell</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gamelife">gamelife</a><ul>
+<li><a class="reference internal" href="#il-meccanismo-di-delega">Il meccanismo di delega</a></li>
+<li><a class="reference internal" href="#gamelife-fase-iniziale">gamelife: fase iniziale</a></li>
+<li><a class="reference internal" href="#handlecellready">handlecellready</a></li>
+<li><a class="reference internal" href="#setstopgame">setstopgame</a></li>
+<li><a class="reference internal" href="#synchclock">synchclock</a></li>
+<li><a class="reference internal" href="#stopgame">stopgame</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gamelifehelper">gamelifehelper</a><ul>
+<li><a class="reference internal" href="#sendstoptoallcells">sendStopToAllCells</a></li>
+<li><a class="reference internal" href="#handleguicmd">handleguicmd</a></li>
+<li><a class="reference internal" href="#id1">terminatethegame</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="GLMSprint2.html"
+                          title="previous chapter">GLM-Sprint2: basi di conoscenza</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="GLMSprint4.html"
+                          title="next chapter">GLM-Sprint4: interazioni a eventi via MQTT</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/GLMSprint3.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="GLMSprint4.html" title="GLM-Sprint4: interazioni a eventi via MQTT"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="GLMSprint2.html" title="GLM-Sprint2: basi di conoscenza"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">GLM-Sprint3: interazioni a eventi-stream</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>

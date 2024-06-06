@@ -40,29 +40,29 @@ Dispatch cellUpdate : cellUpdate(SOURCE,ARG)  //DEC23
 Dispatch guidone    : guidone(X)
 
 Dispatch coapUpdate    : coapUpdate(SOURCE,ARG)  //
-
+ 
 Request gridparams     : gridparams(X)
 Reply gridparamsvalues : gridparamsvalues(R,C,S) for gridparams
 
 
 Context ctxconwayactors ip [ host="localhost" port=8360] 
-
  
-QActor griddisplay context ctxconwayactors{
-	[# val display = conway.ConwayIO() #] //create an object
+ 
+QActor griddisplay context ctxconwayactors withobj display using "conway.ConwayIO()"{
+	//[# val display = conway.ConwayIO() #] //create an object
 	State s0 initial{
 		println("===========================================================") color blue
 		println("$name | glmevstream.qak STARTS") color blue
 		println("===========================================================") color blue	
-		
-		observeResource gridcreator msgid coapUpdate
+		delay 1000 //give time to start ...
+		//observeResource gridcreator msgid coapUpdate
 		//CODICE GENERATO:CoapObserverSupport(myself, "localhost","8360","ctxconwayactors","gridcreator")
 	}
-	Transition t0 //whenMsg gameready -> createhegui
+	Transition t0 whenMsg gameready -> createhegui
 	           whenMsg coapUpdate -> createhegui //OBS gridcreator
 	
 	State createhegui{
- //printCurrentMessage color blue
+    printCurrentMessage color blue
 		 
 		onMsg( coapUpdate : coapUpdate( gridcreator,gameready(CELLNUM)) ){
 		//[# CoapObserverSupport(myself, "localhost","8360","ctxconwayactors","cellc_1_0") #] //OBS
@@ -313,9 +313,9 @@ QActor gamelife context ctxconwayactors{
  #]
     State s0 initial{
     	println("$name | STARTS") color blue
-    	delegate "fromdisplay" to gamelifehelper
-    	delegate "cellends"    to gamelifehelper
-    	delegate "gridparams"  to gamelifehelper
+    	delegate fromdisplay to gamelifehelper
+    	delegate cellends    to gamelifehelper
+    	delegate gridparams  to gamelifehelper
  
     }	               
 	Transition t0 whenMsg gameready -> handlegameready

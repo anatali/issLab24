@@ -5,12 +5,12 @@ Dispatch fromdisplay   : fromdisplay(CELL)
 Dispatch todisplay     : todisplay(CELL,STATE)
 
 Event startthegame     : startthegame(X)
-Event stopthegame      : stopthegame(X)
+Event stopthegame      : stopthegame(X)  
   
 Context ctxconwayactors ip [ host="localhost" port=8360] 
 
-QActor griddisplay context ctxconwayactors{
-	[# val display = conway.ConwayIO() #] //create an object
+QActor griddisplay context ctxconwayactors withobj display using "conway.ConwayIO()"{
+	//[# val display = conway.ConwayIO() #] //create an object
 	State s0 initial{
 		println("=======================================") color blue
 		println("$name | gamelifeactors1.qak STARTS") color blue
@@ -86,7 +86,7 @@ QActor cell context ctxconwayactors dynamicOnly{
 }
 
 /*
- * Funge da tester per le funzioni di utilità
+ * Funge da tester per le funzioni di utilitï¿½
  */
 QActor gamemock context ctxconwayactors{
  [# var RowsN = 0; var ColsN=0; var CellSise=0 
