@@ -262,8 +262,31 @@ per poter ripulire la griglia astratta (in una fase di gioco sospeso).</p>
 procediamo con  <a class="reference internal" href="GLMSprint3.html#glm-sprint3-interazioni-a-eventi-stream"><span class="std std-ref">GLM-Sprint3: interazioni a eventi-stream</span></a> in cui
 realizzare e sperimentare interazioni tra celle locali a una stessa JVM medianie
 <a class="reference internal" href="#interazione-a-eventi-stream"><span class="std std-ref">eventi-stream</span></a>.</p>
-<p><span class="slide1">Indice:</span>: <a class="reference internal" href="GLMIntro.html#indice-glm"><span class="std std-ref">Indice GLM</span></a></p>
 </section>
+</section>
+<section id="glm-un-quadro-di-riferimento-proposto-dall-analista">
+<h2>GLM: un quadro di riferimento proposto dall’analista<a class="headerlink" href="#glm-un-quadro-di-riferimento-proposto-dall-analista" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Il sistema è composto da un insieme di attori (celle) che operano (al momento) in un contesto condiviso.</p></li>
+<li><p>Le celle sono create da un attore :blue:<a href="#id1"><span class="problematic" id="id2">`</span></a>gridcreatorc che si occupa anche di configurarle, una volta che sono state create tutte.
+in modo che ciascuna cella possa conoscere il numero delle sue celle vicine.</p></li>
+<li><p>Ogni cella è un <em>observer</em> delle sue celle vicine e produce un evento-stream   <span class="magenta">curstate</span> che contiene il suo stato corrente.</p></li>
+<li><p>Ogni cella elabora gli eventi   <span class="magenta">curstate</span> provenienti dalle sue celle vicine, per determinare il numero di vicini
+con stato <strong>true</strong> operando in tre macro-fasi:</p>
+<ol class="arabic simple">
+<li><p>Emissione dell’evento   <span class="magenta">curstate</span> con il proprio stato corrente</p></li>
+<li><p>Ricezione degli eventi   <span class="magenta">curstate</span> delle celle vicine</p></li>
+<li><p>Calcolo del nuovo stato</p></li>
+<li><p>Attesa di un segnale di coordinamento (da parte del gestore del gioco <span class="blue">gamelife</span>) per iniziare un nuovo ciclo di calcolo.</p></li>
+</ol>
+</li>
+<li><p>L’attore <span class="blue">gridcreator</span> avvisa il gestore del gioco <span class="blue">gamelife</span> quando tutte le celle sono pronte
+per iniziare il gioco ed emette informazione osservata da <span class="blue">griddisplay</span></p></li>
+<li><p>L’attore <span class="blue">griddisplay</span> è un <em>observer</em> delle celle e visualizza il gioco.</p></li>
+<li><p>L’attore <span class="blue">gamelife</span> è l’orchestratore del gioco e coordina le attività delle celle, gestendo anche i comandi
+dell’utente.</p></li>
+</ol>
+<p><span class="slide1">Indice:</span>: <a class="reference internal" href="GLMIntro.html#indice-glm"><span class="std std-ref">Indice GLM</span></a></p>
 </section>
 </section>
 
@@ -300,6 +323,7 @@ realizzare e sperimentare interazioni tra celle locali a una stessa JVM medianie
 <li><a class="reference internal" href="#p-6">P_6</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#glm-un-quadro-di-riferimento-proposto-dall-analista">GLM: un quadro di riferimento proposto dall’analista</a></li>
 </ul>
 </li>
 </ul>

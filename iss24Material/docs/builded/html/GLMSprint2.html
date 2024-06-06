@@ -1,0 +1,739 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>GLM-Sprint2: basi di conoscenza &#8212; iss24 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="GLM-Sprint3: interazioni a eventi-stream" href="GLMSprint3.html" />
+    <link rel="prev" title="GLM: Analisi del problema" href="GLMAnalisi.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="GLMSprint3.html" title="GLM-Sprint3: interazioni a eventi-stream"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="GLMAnalisi.html" title="GLM: Analisi del problema"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">GLM-Sprint2: basi di conoscenza</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="glm-sprint2-basi-di-conoscenza">
+<h1>GLM-Sprint2: basi di conoscenza<a class="headerlink" href="#glm-sprint2-basi-di-conoscenza" title="Permalink to this heading">¶</a></h1>
+<p><span class="slide3">progetto uniboConwayActors</span></p>
+<p>Il <span class="slide2">Goal Sprint2:</span> consiste nel:</p>
+<ol class="arabic simple">
+<li><p>estendere il file <a class="reference internal" href="GLMSprint1.html#gridsupport-kt-prime-funzioni"><span class="std std-ref">GridSupport.kt</span></a> introdotto
+in <a class="reference internal" href="GLMSprint1.html#glm-sprint1-sottosistema-di-i-o"><span class="std std-ref">GLM-Sprint1: sottosistema di I/O</span></a>, con nuove funzioni di utilità
+per la gestione della griglia, rappresentata anche attraverso
+<span class="slide2">basi di conoscenza</span> descritte in Prolog;</p></li>
+<li><p>creare files che includono
+la rappresentazione Prolog di <a class="reference internal" href="#basi-di-conoscenza-sulla-griglia"><span class="std std-ref">Basi di conoscenza sulla griglia</span></a>;</p></li>
+<li><p>definire una prima, semplice versione dell’attore destinato a definire
+<a class="reference internal" href="#le-celle-come-attori"><span class="std std-ref">il comportamento delle celle</span></a> del gioco.</p></li>
+</ol>
+<p>Impostiamo il modello del sistema nel file: <a class="reference external" href="../../../../../uniboConwayActors/src/gamelifeactors1.qaktt">gamelifeactors1.qak</a>.</p>
+<section id="gridsupport-kt">
+<h2>GridSupport.kt<a class="headerlink" href="#gridsupport-kt" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="#genneighborsnames"><span class="std std-ref">genNeighborsNames</span></a>: genera i nomi delle celle vicine a una cella di coordinate <code class="docutils literal notranslate"><span class="pre">row,col</span></code></p></li>
+<li><p><a class="reference internal" href="#genneighbornsdescr"><span class="std std-ref">genNeighbornsDescr</span></a>: genera una stringa contenente fatti Prolog del tipo
+<code class="docutils literal notranslate"><span class="pre">nb(c_x_y,[&lt;NomiCelleVicine&gt;])</span></code>, cioè la lista dei nomi delle celle vicine a una cella
+di coordinate <code class="docutils literal notranslate"><span class="pre">x,y</span></code> e quindi di nome <code class="docutils literal notranslate"><span class="pre">c_x_y</span></code> e salva la stringa in un file</p></li>
+<li><p><a class="reference internal" href="#gencelldescr"><span class="std std-ref">genCellDescr</span></a>: genera descrizione di cella della forma <code class="docutils literal notranslate"><span class="pre">cell(c_x_y,localctx)</span></code></p></li>
+<li><p><a class="reference internal" href="#genlocalgriddescr"><span class="std std-ref">genLocalGriddescr</span></a>: costruisce due files che descrivono in sintassi Prolog
+informazioni (fatti) relative a una griglia, in forma di <span class="slide2">base di conoscenza</span></p></li>
+</ul>
+<p>Una volta create le basi di conoscenza relative a una griglia, altre funzioni possono
+usare queste conoscenze per ‘dedurre’ ulteriori informazioni utili. Più avanti introdurremo:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#getcellnamesincontext"><span class="std std-ref">getCellNamesInContext</span></a>: restituisce la lista dei nomi delle celle in forma di Struct (List) Prolog</p></li>
+<li><p><a class="reference internal" href="#createcellsinternal"><span class="std std-ref">createCellsInternal</span></a>: crea in modo dinamico le celle locali al contesto di un dato attore, usando il metodo
+<span class="slide2">createActorDynamically</span>, cha fa parte del patrimonio dei metodi di ogni attore.</p></li>
+</ul>
+<section id="createactordynamically">
+<h3>createActorDynamically<a class="headerlink" href="#createactordynamically" title="Permalink to this heading">¶</a></h3>
+<p>Riportiamo il metodo definito in <code class="docutils literal notranslate"><span class="pre">ActorBasic.kt</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>fun createActorDynamically(actorName:String,
+           instanceSuffix:String, isconfined:Boolean ):String{
+    val actorClass = sysUtil.solve(&quot;qactor($actorName, ${context!!.name},CLASS)&quot;,&quot;CLASS&quot;)
+    val className  = actorClass!!.replace(&quot;&#39;&quot;,&quot;&quot;)
+    executorNameCounter++
+    if(instanceSuffix.contains(&quot;_&quot;)) executorName  = actorName+instanceSuffix
+    else executorName     = actorName+executorNameCounter
+    sysUtil.createActorFsm(context!!, executorName, className, argscope, isconfined )
+    return executorName
+}
+</pre></div>
+</div>
+</section>
+<section id="genneighborsnames">
+<h3>genNeighborsNames<a class="headerlink" href="#genneighborsnames" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Genera i nomi delle celle vicine a quella di ccordinate x,y</p></td>
+<td><div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="nd">@JvmStatic</span><span class="w">  </span><span class="kd">fun</span><span class="w"> </span><span class="nf">genNeighborsNames</span><span class="p">(</span>
+<span class="w">      </span><span class="n">rNum</span><span class="p">:</span><span class="w"> </span><span class="kt">Int</span><span class="p">,</span><span class="w"> </span><span class="n">cNum</span><span class="p">:</span><span class="w"> </span><span class="kt">Int</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="kt">Int</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">:</span><span class="w"> </span><span class="kt">Int</span><span class="p">):</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="kd">var</span><span class="w"> </span><span class="nv">outS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">   </span><span class="kd">val</span><span class="w"> </span><span class="nv">nb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">java</span><span class="p">.</span><span class="na">lang</span><span class="p">.</span><span class="na">StringBuilder</span><span class="p">()</span>
+<span class="w">   </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">-</span><span class="m">1.</span><span class="p">.</span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">-</span><span class="m">1.</span><span class="p">.</span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">continue</span>
+<span class="w">            </span><span class="kd">val</span><span class="w"> </span><span class="nv">x1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span>
+<span class="w">            </span><span class="kd">val</span><span class="w"> </span><span class="nv">y1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">j</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">x1</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">x1</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">rNum</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">y1</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">y1</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">cNum</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">               </span><span class="kd">val</span><span class="w"> </span><span class="nv">cell</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;,c_&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;_&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">y1</span>
+<span class="w">               </span><span class="n">nb</span><span class="p">.</span><span class="na">append</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">         </span><span class="p">}</span>
+<span class="w">   </span><span class="p">}</span>
+<span class="w">   </span><span class="n">outS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nb</span><span class="p">.</span><span class="na">toString</span><span class="p">().</span><span class="na">replaceFirst</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">.</span><span class="na">toRegex</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">)</span>
+<span class="w">   </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;[</span><span class="si">$</span><span class="n">outS</span><span class="s">]&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="genneighbornsdescr">
+<h3>genNeighbornsDescr<a class="headerlink" href="#genneighbornsdescr" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Genera una stringa contenente fatti del tipo</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">nb(c_x_y,[nomi</span> <span class="pre">celle</span> <span class="pre">vicine]</span> <span class="pre">)</span></code></p>
+</div></blockquote>
+<p>cioè la lista dei nomi delle celle vicine a una cella
+di coordinate <code class="docutils literal notranslate"><span class="pre">x,y</span></code> (e quindi di nome <code class="docutils literal notranslate"><span class="pre">c_x_y</span></code>)
+e salva la stringa in un file</p>
+</td>
+<td><div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="nd">@JvmStatic</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">genNeighbornsDescr</span><span class="p">(</span>
+<span class="w">        </span><span class="n">rNum</span><span class="p">:</span><span class="w"> </span><span class="kt">Int</span><span class="p">,</span><span class="w"> </span><span class="n">cNum</span><span class="p">:</span><span class="w"> </span><span class="kt">Int</span><span class="p">,</span><span class="w"> </span><span class="n">fName</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="kd">var</span><span class="w"> </span><span class="nv">outS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">   </span><span class="kd">val</span><span class="w"> </span><span class="nv">grid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">java</span><span class="p">.</span><span class="na">lang</span><span class="p">.</span><span class="na">StringBuilder</span><span class="p">()</span>
+<span class="w">   </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="n">until</span><span class="w"> </span><span class="n">rNum</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="n">until</span><span class="w"> </span><span class="n">cNum</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">val</span><span class="w"> </span><span class="nv">cell</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;c_&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;_&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">j</span>
+<span class="w">            </span><span class="kd">val</span><span class="w"> </span><span class="nv">nbs</span><span class="o">=</span><span class="n">genNeighbors</span><span class="p">(</span><span class="n">rNum</span><span class="p">,</span><span class="w"> </span><span class="n">cNum</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span>
+<span class="w">            </span><span class="n">grid</span><span class="p">.</span><span class="na">append</span><span class="p">(</span><span class="s">&quot;nb(</span><span class="si">$</span><span class="n">cell</span><span class="s">,</span><span class="si">$</span><span class="n">nbs</span><span class="s">).\n&quot;</span><span class="p">)</span>
+<span class="w">         </span><span class="p">}</span>
+<span class="w">   </span><span class="p">}</span>
+<span class="w">   </span><span class="n">outS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">grid</span><span class="p">.</span><span class="na">toString</span><span class="p">()</span>
+<span class="w">   </span><span class="n">saveOnFile</span><span class="p">(</span><span class="n">outS</span><span class="p">,</span><span class="w"> </span><span class="n">fName</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="getcellneighbors">
+<h3>getCellNeighbors<a class="headerlink" href="#getcellneighbors" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Fornisce la lista dei nomi delle celle vicine a una cella data usando la conoscenza del file
+<a class="reference internal" href="#i-files-cellnbs-pl-e-grid-pl"><span class="std std-ref">cellnbs.pl</span></a></p></td>
+<td><div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="nd">@JvmStatic</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">getCellNeighbors</span><span class="p">(</span><span class="n">x</span><span class="p">:</span><span class="kt">Int</span><span class="p">,</span><span class="n">y</span><span class="p">:</span><span class="kt">Int</span><span class="p">):</span><span class="n">Vector</span><span class="o">&lt;</span><span class="n">Term</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="n">sysUtil</span><span class="p">.</span><span class="na">loadTheory</span><span class="p">(</span><span class="s">&quot;cellnbs.pl&quot;</span><span class="p">)</span>
+<span class="w">   </span><span class="kd">val</span><span class="w"> </span><span class="nv">nblist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Vector</span><span class="o">&lt;</span><span class="n">Term</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">   </span><span class="kd">val</span><span class="w"> </span><span class="nv">goal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;nb(c_&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;_&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;,L).&quot;</span>
+<span class="w">   </span><span class="c1">//esempio di goal: nb(c_0_0,[c_0_1,c_1_0,c_1_1]).</span>
+<span class="w">   </span><span class="kd">val</span><span class="w"> </span><span class="nv">sol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sysUtil</span><span class="p">.</span><span class="na">getPrologEngine</span><span class="p">().</span><span class="na">solve</span><span class="p">(</span><span class="n">goal</span><span class="p">)</span>
+<span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sol</span><span class="p">.</span><span class="na">isSuccess</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="kd">val</span><span class="w"> </span><span class="nv">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sol</span><span class="p">.</span><span class="na">getVarValue</span><span class="p">(</span><span class="s">&quot;L&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">Struct</span>
+<span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="na">isList</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">val</span><span class="w"> </span><span class="nv">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="na">listIterator</span><span class="p">()</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">Iterator</span><span class="o">&lt;</span><span class="n">Term</span><span class="o">&gt;</span>
+<span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nb">it</span><span class="p">.</span><span class="na">hasNext</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">               </span><span class="n">nblist</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="nb">it</span><span class="p">.</span><span class="na">next</span><span class="p">())</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">nblist</span>
+<span class="w">         </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="n">Exception</span><span class="p">(</span><span class="s">&quot;GridSupport | ...&quot;</span><span class="p">)</span>
+<span class="w">   </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="n">Exception</span><span class="p">(</span><span class="s">&quot;GridSupport | ...&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="gencelldescr">
+<h3>genCellDescr<a class="headerlink" href="#gencelldescr" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Crea descrizione di cella della forma:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">cell(c_x_y,localctx)</span></code></p>
+</div></blockquote>
+<p>Si noti che l’indice della prima riga non è <span class="blue">0</span> di default,
+ma è il valore dato dal parametro <span class="blue">firstRowIndex</span>.
+Questo è un punto di flessibilità che sarà utile
+in seguito.</p>
+</td>
+<td><div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="nd">@JvmStatic</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">genCellDescr</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="p">,</span>
+<span class="w">             </span><span class="n">firstRowIndex</span><span class="p">:</span><span class="w"> </span><span class="kt">Int</span><span class="p">,</span>
+<span class="w">            </span><span class="n">rowsN</span><span class="p">:</span><span class="w"> </span><span class="kt">Int</span><span class="p">,</span><span class="w"> </span><span class="n">colsN</span><span class="p">:</span><span class="w"> </span><span class="kt">Int</span><span class="p">):</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="p">{</span>
+<span class="kd">var</span><span class="w"> </span><span class="nv">outS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">grid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StringBuilder</span><span class="p">()</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="n">until</span><span class="w"> </span><span class="n">rowsN</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="n">until</span><span class="w"> </span><span class="n">colsN</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="kd">val</span><span class="w"> </span><span class="nv">cell</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;c_&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">firstRowIndex</span><span class="o">+</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;_&quot;</span><span class="o">+</span><span class="n">j</span>
+<span class="w">         </span><span class="n">grid</span><span class="p">.</span><span class="na">append</span><span class="p">(</span><span class="s">&quot;cell(</span><span class="si">$</span><span class="n">cell</span><span class="s">,</span><span class="si">$</span><span class="n">ctx</span><span class="s">).\n&quot;</span><span class="p">)</span>
+<span class="w">   </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="n">outS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">grid</span><span class="p">.</span><span class="na">toString</span><span class="p">()</span>
+<span class="k">return</span><span class="w"> </span><span class="n">outS</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="basi-di-conoscenza-sulla-griglia">
+<h2>Basi di conoscenza sulla griglia<a class="headerlink" href="#basi-di-conoscenza-sulla-griglia" title="Permalink to this heading">¶</a></h2>
+<p>Attraverso le precedenti funzioni di <a class="reference internal" href="#gridsupport-kt"><span class="std std-ref">GridSupport.kt</span></a>, è possibile creare files che includono
+la rappresentazione Prolog di basi di conoscenza sulla griglia, come ad esempio:</p>
+<ul class="simple">
+<li><p>il file <span class="blue">cellnbs.pl</span> che include una sequenza di fatti, ciascuno ei quali correla
+il nome di una cella alla la lista dei nomi delle sue celle vicine;</p></li>
+<li><p>il file <span class="blue">grid.pl</span> che include una sequenza di fatti, ciascuno ei quali correla
+il nome di una cella (attore) al contesto in cui è definita.</p></li>
+</ul>
+<section id="i-files-cellnbs-pl-e-grid-pl">
+<h3>I files cellnbs.pl e grid.pl<a class="headerlink" href="#i-files-cellnbs-pl-e-grid-pl" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Ad esempio, se il file <code class="docutils literal notranslate"><span class="pre">gridConfig.json</span></code> contiene:</p>
+<p><code class="docutils literal notranslate"><span class="pre">{&quot;rowsNum&quot;:3,&quot;colsNum&quot;:4,&quot;cellsize&quot;:45}</span></code></p>
+<p>La rappresentazione grafica della griglia è quella della figura qui a fianco.</p>
+<p>Il file <span class="blue">cellnbs.pl</span> contiene:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nb</span><span class="p">(</span><span class="n">c_0_0</span><span class="p">,[</span><span class="n">c_0_1</span><span class="p">,</span><span class="n">c_1_0</span><span class="p">,</span><span class="n">c_1_1</span><span class="p">])</span><span class="o">.</span>
+<span class="n">nb</span><span class="p">(</span><span class="n">c_0_1</span><span class="p">,[</span><span class="n">c_0_0</span><span class="p">,</span><span class="n">c_0_2</span><span class="p">,</span><span class="n">c_1_0</span><span class="p">,</span><span class="n">c_1_1</span><span class="p">,</span><span class="n">c_1_2</span><span class="p">])</span><span class="o">.</span>
+<span class="n">nb</span><span class="p">(</span><span class="n">c_0_2</span><span class="p">,[</span><span class="n">c_0_1</span><span class="p">,</span><span class="n">c_0_3</span><span class="p">,</span><span class="n">c_1_1</span><span class="p">,</span><span class="n">c_1_2</span><span class="p">,</span><span class="n">c_1_3</span><span class="p">])</span><span class="o">.</span>
+<span class="n">nb</span><span class="p">(</span><span class="n">c_0_3</span><span class="p">,[</span><span class="n">c_0_2</span><span class="p">,</span><span class="n">c_1_2</span><span class="p">,</span><span class="n">c_1_3</span><span class="p">])</span><span class="o">.</span>
+<span class="n">nb</span><span class="p">(</span><span class="n">c_1_0</span><span class="p">,[</span><span class="n">c_0_0</span><span class="p">,</span><span class="n">c_0_1</span><span class="p">,</span><span class="n">c_1_1</span><span class="p">,</span><span class="n">c_2_0</span><span class="p">,</span><span class="n">c_2_1</span><span class="p">])</span><span class="o">.</span>
+<span class="n">nb</span><span class="p">(</span><span class="n">c_1_1</span><span class="p">,[</span><span class="n">c_0_0</span><span class="p">,</span><span class="n">c_0_1</span><span class="p">,</span><span class="n">c_0_2</span><span class="p">,</span><span class="n">c_1_0</span><span class="p">,</span><span class="n">c_1_2</span><span class="p">,</span><span class="n">c_2_0</span><span class="p">,</span><span class="n">c_2_1</span><span class="p">,</span><span class="n">c_2_2</span><span class="p">])</span><span class="o">.</span>
+<span class="n">nb</span><span class="p">(</span><span class="n">c_1_2</span><span class="p">,[</span><span class="n">c_0_1</span><span class="p">,</span><span class="n">c_0_2</span><span class="p">,</span><span class="n">c_0_3</span><span class="p">,</span><span class="n">c_1_1</span><span class="p">,</span><span class="n">c_1_3</span><span class="p">,</span><span class="n">c_2_1</span><span class="p">,</span><span class="n">c_2_2</span><span class="p">,</span><span class="n">c_2_3</span><span class="p">])</span><span class="o">.</span>
+<span class="n">nb</span><span class="p">(</span><span class="n">c_1_3</span><span class="p">,[</span><span class="n">c_0_2</span><span class="p">,</span><span class="n">c_0_3</span><span class="p">,</span><span class="n">c_1_2</span><span class="p">,</span><span class="n">c_2_2</span><span class="p">,</span><span class="n">c_2_3</span><span class="p">])</span><span class="o">.</span>
+<span class="n">nb</span><span class="p">(</span><span class="n">c_2_0</span><span class="p">,[</span><span class="n">c_1_0</span><span class="p">,</span><span class="n">c_1_1</span><span class="p">,</span><span class="n">c_2_1</span><span class="p">])</span><span class="o">.</span>
+<span class="n">nb</span><span class="p">(</span><span class="n">c_2_1</span><span class="p">,[</span><span class="n">c_1_0</span><span class="p">,</span><span class="n">c_1_1</span><span class="p">,</span><span class="n">c_1_2</span><span class="p">,</span><span class="n">c_2_0</span><span class="p">,</span><span class="n">c_2_2</span><span class="p">])</span><span class="o">.</span>
+<span class="n">nb</span><span class="p">(</span><span class="n">c_2_2</span><span class="p">,[</span><span class="n">c_1_1</span><span class="p">,</span><span class="n">c_1_2</span><span class="p">,</span><span class="n">c_1_3</span><span class="p">,</span><span class="n">c_2_1</span><span class="p">,</span><span class="n">c_2_3</span><span class="p">])</span><span class="o">.</span>
+<span class="n">nb</span><span class="p">(</span><span class="n">c_2_3</span><span class="p">,[</span><span class="n">c_1_2</span><span class="p">,</span><span class="n">c_1_3</span><span class="p">,</span><span class="n">c_2_2</span><span class="p">])</span><span class="o">.</span>
+</pre></div>
+</div>
+</td>
+<td><a class="reference internal image-reference" href="_images/CelleActor3x4.PNG"><img alt="_images/CelleActor3x4.PNG" class="align-center" src="_images/CelleActor3x4.PNG" style="width: 60%;" /></a>
+<p>Il file <span class="blue">grid.pl</span> contiene:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cell</span><span class="p">(</span><span class="n">c_0_0</span><span class="p">,</span><span class="n">ctxconwayactors</span><span class="p">)</span><span class="o">.</span>
+<span class="n">cell</span><span class="p">(</span><span class="n">c_0_1</span><span class="p">,</span><span class="n">ctxconwayactors</span><span class="p">)</span><span class="o">.</span>
+<span class="n">cell</span><span class="p">(</span><span class="n">c_0_2</span><span class="p">,</span><span class="n">ctxconwayactors</span><span class="p">)</span><span class="o">.</span>
+<span class="n">cell</span><span class="p">(</span><span class="n">c_0_3</span><span class="p">,</span><span class="n">ctxconwayactors</span><span class="p">)</span><span class="o">.</span>
+<span class="n">cell</span><span class="p">(</span><span class="n">c_1_0</span><span class="p">,</span><span class="n">ctxconwayactors</span><span class="p">)</span><span class="o">.</span>
+<span class="n">cell</span><span class="p">(</span><span class="n">c_1_1</span><span class="p">,</span><span class="n">ctxconwayactors</span><span class="p">)</span><span class="o">.</span>
+<span class="n">cell</span><span class="p">(</span><span class="n">c_1_2</span><span class="p">,</span><span class="n">ctxconwayactors</span><span class="p">)</span><span class="o">.</span>
+<span class="n">cell</span><span class="p">(</span><span class="n">c_1_3</span><span class="p">,</span><span class="n">ctxconwayactors</span><span class="p">)</span><span class="o">.</span>
+<span class="n">cell</span><span class="p">(</span><span class="n">c_2_0</span><span class="p">,</span><span class="n">ctxconwayactors</span><span class="p">)</span><span class="o">.</span>
+<span class="n">cell</span><span class="p">(</span><span class="n">c_2_1</span><span class="p">,</span><span class="n">ctxconwayactors</span><span class="p">)</span><span class="o">.</span>
+<span class="n">cell</span><span class="p">(</span><span class="n">c_2_2</span><span class="p">,</span><span class="n">ctxconwayactors</span><span class="p">)</span><span class="o">.</span>
+<span class="n">cell</span><span class="p">(</span><span class="n">c_2_3</span><span class="p">,</span><span class="n">ctxconwayactors</span><span class="p">)</span><span class="o">.</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Per ottenere il corretto funzionamento di questa versione, le celle hanno bisogno della
+base di conoscenza descritta nei file <span class="blue">grid.pl</span>, in quanto, come vedermo
+verranno costruite in modo dinamico proprio consultando questa KB
+(si veda in <a class="reference internal" href="#createcellsinternal"><span class="std std-ref">createCellsInternal</span></a> e <a class="reference internal" href="GLMSprint3.html#gridcreator"><span class="std std-ref">gridcreator</span></a>) .</p>
+<p>La base di conoscenza descritta nei files <span class="blue">cellnbs.pl</span> non è strettamente necessaria, in
+quanto la lista dei nomi delle celle adiacenti a una cella data si può costruire
+invocando la funzione <a class="reference internal" href="#genneighborsnames"><span class="std std-ref">genNeighborsNames</span></a>.</p>
+<p>In ogni caso, conviene introdurre una nuova funzione di utilità per costruire entrambe queste
+basi di conoscenza.</p>
+</section>
+<section id="genlocalgriddescr">
+<h3>genLocalGriddescr<a class="headerlink" href="#genlocalgriddescr" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>costruisce due files che descrivono in sintassi Prolog
+la rappresentazione delle basi di conoscenza come quelle dell’esempio
+<a class="reference internal" href="#i-files-cellnbs-pl-e-grid-pl"><span class="std std-ref">I files cellnbs.pl e grid.pl</span></a>:</p>
+<ul class="simple">
+<li><p>nel file <code class="docutils literal notranslate"><span class="pre">neighBornFName</span></code>, le lista dei nomi delle celle vicine a ciascuna cella</p></li>
+<li><p>nel file <code class="docutils literal notranslate"><span class="pre">cellsFName</span></code>, i nomi delle celle che fanno parte del contesto di nome <code class="docutils literal notranslate"><span class="pre">localCtxName</span></code></p></li>
+</ul>
+</td>
+<td><div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="nd">@JvmStatic</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">genLocalGriddescr</span><span class="p">(</span>
+<span class="w">   </span><span class="n">localCtxName</span><span class="p">:</span><span class="kt">String</span><span class="p">,</span>
+<span class="w">   </span><span class="n">RowsN</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kt">Int</span><span class="p">,</span><span class="w"> </span><span class="n">ColsN</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kt">Int</span><span class="p">,</span>
+<span class="w">   </span><span class="n">neighBornFName</span><span class="p">:</span><span class="kt">String</span><span class="p">,</span><span class="w"> </span><span class="n">cellsFName</span><span class="p">:</span><span class="kt">String</span><span class="p">){</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">genCellDescr</span><span class="p">(</span><span class="n">localCtxName</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="n">RowsN</span><span class="p">,</span><span class="n">ColsN</span><span class="w"> </span><span class="p">)</span>
+<span class="w">    </span><span class="n">saveOnFile</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="n">cellsFName</span><span class="p">)</span>
+<span class="w">    </span><span class="n">genNeighbornsDescr</span><span class="p">(</span><span class="n">RowsN</span><span class="p">,</span><span class="n">ColsN</span><span class="p">,</span><span class="n">neighBornFName</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="aggiornamento-della-base-di-conoscenza-dell-actor">
+<h3>Aggiornamento della base di conoscenza dell’Actor<a class="headerlink" href="#aggiornamento-della-base-di-conoscenza-dell-actor" title="Permalink to this heading">¶</a></h3>
+<p>Una volta prodotta, in un file testo, la rappresentazione Prolog di una base di conoscenza,
+questa può essere caricata all’interno della base di conoscenza di un attore
+attraverso la funzione di utilità:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sysUtil</span><span class="o">.</span><span class="n">loadTheory</span><span class="p">(</span><span class="o">&lt;</span><span class="n">FileName</span><span class="o">&gt;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="sysutil">
+<h3>sysUtil<a class="headerlink" href="#sysutil" title="Permalink to this heading">¶</a></h3>
+<p><span class="blue">sysUtil.kt</span> è un <strong>object</strong> Kotlin definito nella <a class="reference internal" href="GLMIntro.html#infrastruttura-qak"><span class="std std-ref">Infrastruttura qak</span></a>, che offre
+una classe <a class="reference internal" href="#sysutil"><span class="std std-ref">sysUtil</span></a></p>
+</section>
+<section id="gamemock-come-tester-della-base-di-conoscenza">
+<h3>gamemock come tester della base di conoscenza<a class="headerlink" href="#gamemock-come-tester-della-base-di-conoscenza" title="Permalink to this heading">¶</a></h3>
+<p>Nel modello <strong>gamelifeactors1.qak</strong>, ridefiniamo l’attore <span class="blue">gamemock</span> in modo da invocare, nel suo stato iniziale,
+la funzione <a class="reference internal" href="#genlocalgriddescr"><span class="std std-ref">genLocalGriddescr</span></a>, realizzando un primo test sul suo funzionamento.</p>
+<p>Ad esempio:</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 55%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Se il file <code class="docutils literal notranslate"><span class="pre">gridConfig.json</span></code> contiene:</p>
+<p><code class="docutils literal notranslate"><span class="pre">{&quot;rows&quot;:3,&quot;cols&quot;:4,&quot;cellsize&quot;:45}</span></code></p>
+<p>La rappresentazione grafica delle griglia si presenta così:</p>
+<a class="reference internal image-reference" href="_images/CelleActor3x4.PNG"><img alt="_images/CelleActor3x4.PNG" class="align-left" src="_images/CelleActor3x4.PNG" style="width: 70%;" /></a>
+</td>
+<td><p>Lo stato iniziale di
+<span class="blue">gamemock</span> invoca <a class="reference internal" href="#genlocalgriddescr"><span class="std std-ref">genLocalGriddescr</span></a> per creare i files
+<code class="docutils literal notranslate"><span class="pre">cellsFName</span></code> e <code class="docutils literal notranslate"><span class="pre">neighBornFName</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>QActor gamemock context ctxconwayactors{
+[# var RowsN = 0; var ColsN=0; var CellSize=0
+   val neighBornFName = &quot;cellnbs.pl&quot;
+   val cellsFName     = &quot;grid.pl&quot;
+
+   lateinit var CellNamesList  : alice.tuprolog.Term
+#]
+State s0 initial{
+[#
+  val res =
+   conway.GridSupport.readGridConfig(&quot;gridConfig.json&quot;)
+  RowsN  = res.get(0)
+  ColsN  = res.get(1)
+  conway.GridSupport.genLocalGriddescr(
+         context!!.name,
+         RowsN,ColsN,neighBornFName,cellsFName)
+#]
+}
+Goto usekb
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<section id="uso-del-file-cellsfname">
+<h4>Uso del file cellsFName<a class="headerlink" href="#uso-del-file-cellsfname" title="Permalink to this heading">¶</a></h4>
+<p>Per verificare come il contenuto del file <code class="docutils literal notranslate"><span class="pre">cellsFName</span></code> possa essere usato
+a livello applicativo, impostiamo lo stato <strong>usekb</strong>
+come segue:</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><ol class="arabic simple">
+<li><p>esegue un <a class="reference internal" href="#aggiornamento-della-base-di-conoscenza-dell-actor"><span class="std std-ref">Aggiornamento della base di conoscenza dell’Actor</span></a> con il contenuto del file <code class="docutils literal notranslate"><span class="pre">cellsFName</span></code>;</p></li>
+<li><p>imposta un goal per <strong>dedurre</strong> dalla base di conoscenza (una lista con) i nomi di tutte le celle</p></li>
+<li><p>visualizza la lista dei nomi, estratta dalla soluzione della query Prolog.</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">State</span> <span class="n">usekb</span><span class="p">{</span>
+<span class="p">[</span><span class="c1">#</span>
+   <span class="o">//</span><span class="n">Carica</span> <span class="n">la</span> <span class="n">base</span> <span class="n">di</span> <span class="n">conoscenza</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span> <span class="n">sysUtil</span><span class="o">.</span><span class="n">loadTheory</span><span class="p">(</span><span class="n">cellsFName</span><span class="p">)</span>
+
+   <span class="o">//</span><span class="n">Imposta</span> <span class="n">un</span> <span class="n">goal</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span> <span class="n">val</span> <span class="n">goal</span> <span class="o">=</span>
+    <span class="s2">&quot;findall(C,cell(C,${context!!.name} ),CELLS).&quot;</span>
+
+   <span class="o">//</span><span class="n">Dimostra</span> <span class="n">il</span> <span class="n">goal</span><span class="p">,</span> <span class="n">con</span> <span class="n">il</span> <span class="n">binding</span> <span class="n">di</span> <span class="n">CELLS</span>
+   <span class="n">val</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">sysUtil</span><span class="o">.</span><span class="n">getPrologEngine</span><span class="p">()</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span> <span class="n">goal</span><span class="p">)</span>
+   <span class="k">if</span> <span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">isSuccess</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">CellNamesList</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">getVarValue</span><span class="p">(</span><span class="s2">&quot;CELLS&quot;</span><span class="p">)</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span> <span class="n">CommUtils</span><span class="o">.</span><span class="n">outblue</span><span class="p">(</span><span class="s2">&quot;$t&quot;</span><span class="p">)</span> <span class="o">//</span><span class="n">Visualizza</span>
+   <span class="p">}</span>
+<span class="c1">#]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Il risultato di questa fase è la lista (una <em>Struct</em> <a class="reference external" href="http://amsacta.unibo.it/5450/7/tuprolog-guide.pdf">tuProlog</a>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">c_0_0</span><span class="p">,</span><span class="n">c_0_1</span><span class="p">,</span><span class="n">c_0_2</span><span class="p">,</span><span class="n">c_0_3</span><span class="p">,</span><span class="n">c_1_0</span><span class="p">,</span><span class="n">c_1_1</span><span class="p">,</span><span class="n">c_1_2</span><span class="p">,</span><span class="n">c_1_3</span><span class="p">,</span><span class="n">c_2_0</span><span class="p">,</span><span class="n">c_2_1</span><span class="p">,</span><span class="n">c_2_2</span><span class="p">,</span><span class="n">c_2_3</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Al solito, è conveniente definire una funzione di supporto capace di restituire la lista dei nomi delle
+celle nascondendo i dettagli dell’uso del Prolog.</p>
+</section>
+</section>
+<section id="getcellnamesincontext">
+<h3>getCellNamesInContext<a class="headerlink" href="#getcellnamesincontext" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>restituisce la lista dei nomi delle celle di un dato contesto, nascondendo
+i dettagli (legati al Prolog) relativi a come ciò viene ottenuto.</p></td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>//ASSUNZIONE: KB locale già aggiornata con grid.pl
+fun getCellNamesInContext(ctx: String): Struct? {
+   val goal= &quot;findall( C, cell( C,$ctx ),CELLS).&quot;
+   val sol = sysUtil.getPrologEngine().solve(goal)
+   if (sol.isSuccess) {
+      return sol.getVarValue(&quot;CELLS&quot;) as Struct //List
+   } else return null
+}
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="esempio-di-uso-della-kb-di-un-actor">
+<h3>Esempio di uso della KB di un Actor<a class="headerlink" href="#esempio-di-uso-della-kb-di-un-actor" title="Permalink to this heading">¶</a></h3>
+<p>Con questa nuova funzione, il codice dello stato <span class="blue">usekb</span> si semplifica notevolmente.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><ol class="arabic simple">
+<li><p>esegue un <a class="reference internal" href="#aggiornamento-della-base-di-conoscenza-dell-actor"><span class="std std-ref">Aggiornamento della base di conoscenza dell’Actor</span></a> con il contenuto del file <code class="docutils literal notranslate"><span class="pre">cellsFName</span></code>;</p></li>
+<li><p>crea la lista dei nomi delle celle invocando <a class="reference internal" href="#getcellnamesincontext"><span class="std std-ref">getCellNamesInContext</span></a></p></li>
+<li><p>visualizza la lista dei nomi</p></li>
+<li><p>transita nello stato <a class="reference internal" href="#creazione-dinamica-di-celle-attori"><span class="std std-ref">createCells</span></a></p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>State usekb{
+[#
+ //Carica la base di conoscenza
+/*1*/ sysUtil.loadTheory(cellsFName)
+
+ val ctx = context!!.name
+/*2*/ val cells =
+  conway.GridSupport.getCellNamesInContext(ctx)
+#]
+/*3*/ println(&quot;$name | cell names:\n $cells&quot; )
+}
+/*4*/Goto createCells
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Al termine della sua attività, lo stato <span class="blue">usekb</span> transita nello
+<a class="reference internal" href="#creazione-dinamica-di-celle-attori"><span class="std std-ref">stato createCells</span></a> che
+ci introduce al tema della creazione e configurazione dinamica delle celle.</p>
+<p>Prima di procedere, creiamo una uletriore funzione di utilità, che crea in modo dinamico un insieme
+di celle.</p>
+</section>
+<section id="createcellsinternal">
+<h3>createCellsInternal<a class="headerlink" href="#createcellsinternal" title="Permalink to this heading">¶</a></h3>
+<p>Questa funzione di utilità definita in <a class="reference internal" href="#gridsupport-kt"><span class="std std-ref">GridSupport.kt</span></a>,
+crea in modo dinamico le celle locali al contesto di un dato attore.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><ol class="arabic simple">
+<li><p>crea la lista dei nomi delle celle invocando <a class="reference internal" href="#getcellnamesincontext"><span class="std std-ref">getCellNamesInContext</span></a></p></li>
+<li><p>per ogni nome di cella, crea in modo dinamico una nuovo <em>Actor</em> locale, usando il metodo</p></li>
+</ol>
+<blockquote>
+<div><p><a class="reference internal" href="#createactordynamically"><span class="std std-ref">createActorDynamically</span></a></p>
+<p>cha fa parte del patrimonio dei metodi di ogni attore.</p>
+</div></blockquote>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>@JvmStatic
+fun createCellsInternal(  a : ActorBasic) {
+/*1*/ val cellsList=
+         getCellNamesInContext(a.context!!.name);
+ if (cellsList != null) {
+   val cells =
+      cellsList.listIterator() as Iterator&lt;Term&gt;
+   while (cells.hasNext()) {
+      val nextSuffix = cells.next().toString()
+      val isconfined = false
+/*2*/ val name = a.createActorDynamically(
+         &quot;cell&quot;, nextSuffix, isconfined)
+      }
+ }
+}
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Usando questa funzione, definiamo il funzionamento dello
+<a class="reference internal" href="#creazione-dinamica-di-celle-attori"><span class="std std-ref">stato createCells</span></a>.</p>
+</section>
+<section id="creazione-dinamica-di-celle-attori">
+<h3>Creazione dinamica di celle-attori<a class="headerlink" href="#creazione-dinamica-di-celle-attori" title="Permalink to this heading">¶</a></h3>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><ol class="arabic simple">
+<li><p>crea dinamicamente tutte le celle espresse da <code class="docutils literal notranslate"><span class="pre">cellsFName</span></code>, usando la funzione
+di supporto <a class="reference internal" href="#createcellsinternal"><span class="std std-ref">createCellsInternal</span></a></p></li>
+<li><p>come verifica della creazione, ottiene la lista dei nomi delle celle-attori del <strong>Context</strong> corrente,
+usando la funzione <code class="docutils literal notranslate"><span class="pre">getAllActorNames()</span></code> di <a class="reference internal" href="#sysutil"><span class="std std-ref">sysUtil</span></a></p></li>
+<li><p>visualizza i nomi degli attori attualmente noti al contesto</p></li>
+</ol>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">State</span> <span class="n">createCells</span><span class="p">{</span>
+<span class="p">[</span><span class="c1">#</span>
+<span class="o">/*</span><span class="mi">1</span><span class="o">*/</span><span class="n">conway</span><span class="o">.</span><span class="n">GridSupport</span><span class="o">.</span><span class="n">createCellsInternal</span><span class="p">(</span><span class="n">myself</span><span class="p">)</span>
+<span class="c1">#]</span>
+<span class="o">//</span><span class="n">Controllo</span> <span class="n">degli</span> <span class="n">attori</span> <span class="n">nel</span> <span class="n">contesto</span> <span class="o">...</span>
+<span class="p">[</span><span class="c1">#</span>
+<span class="o">/*</span><span class="mi">2</span><span class="o">*/</span><span class="n">val</span> <span class="n">actorNames</span> <span class="o">=</span> <span class="n">sysUtil</span><span class="o">.</span><span class="n">getAllActorNames</span><span class="p">()</span>
+<span class="c1">#]</span>
+<span class="o">/*</span><span class="mi">3</span><span class="o">*/</span><span class="n">println</span><span class="p">(</span><span class="s2">&quot;$actorNames&quot;</span><span class="p">)</span> <span class="n">color</span> <span class="n">magenta</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong>Output</strong></p>
+<p>Il controllo degli attori fornisce (su una unica linea):</p>
+</td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">griddisplay</span><span class="p">,</span> <span class="n">cell</span><span class="p">,</span> <span class="n">gamemock</span><span class="p">,</span>
+<span class="n">cellc_0_0</span><span class="p">,</span> <span class="n">cellc_0_1</span><span class="p">,</span> <span class="n">cellc_0_2</span><span class="p">,</span> <span class="n">cellc_0_3</span><span class="p">,</span> <span class="n">cellc_0_4</span><span class="p">,</span>
+<span class="n">cellc_1_0</span><span class="p">,</span> <span class="n">cellc_1_1</span><span class="p">,</span> <span class="n">cellc_1_2</span><span class="p">,</span> <span class="n">cellc_1_3</span><span class="p">,</span> <span class="n">cellc_1_4</span><span class="p">,</span>
+<span class="n">cellc_2_0</span><span class="p">,</span> <span class="n">cellc_2_1</span><span class="p">,</span> <span class="n">cellc_2_2</span><span class="p">,</span> <span class="n">cellc_2_3</span><span class="p">,</span> <span class="n">cellc_2_4</span><span class="p">,</span>
+<span class="n">cellc_3_0</span><span class="p">,</span> <span class="n">cellc_3_1</span><span class="p">,</span> <span class="n">cellc_3_2</span><span class="p">,</span> <span class="n">cellc_3_3</span><span class="p">,</span> <span class="n">cellc_3_4</span><span class="p">,</span>
+<span class="n">cellc_4_0</span><span class="p">,</span> <span class="n">cellc_4_1</span><span class="p">,</span> <span class="n">cellc_4_2</span><span class="p">,</span> <span class="n">cellc_4_3</span><span class="p">,</span> <span class="n">cellc_4_4</span><span class="p">]</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="le-celle-come-attori">
+<h2>Le celle come attori<a class="headerlink" href="#le-celle-come-attori" title="Permalink to this heading">¶</a></h2>
+<p>Definiamo ora una prima, semplice versione dell’attore destinato a definire
+il comportamento delle celle del gioco.</p>
+<table class="docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 60%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>QActor cell context ctxconwayactors dynamicOnly{
+ State s0 initial{
+ [# val coords=
+      conway.GridSupport.getCellCoords(MyName)
+   val Dt = 400L * (coords[0]+coords[1])
+ #]
+ delayVar Dt
+ forward griddisplay -m
+             todisplay:todisplay($MyName,true)
+ }
+}
+</pre></div>
+</div>
+<p>Nel linguaggio <strong>qak</strong>, il qualificatore</p>
+<p><span class="slide1">dynamicOnly</span></p>
+<p>impedisca la creazione statica dell’attore.</p>
+</td>
+<td><blockquote>
+<div><p>In questa semplice versione, lo stato iniziale di una cella invia a <a class="reference internal" href="GLMSprint1.html#griddisplay"><span class="std std-ref">griddisplay</span></a>
+il comando-dispatch
+<em>todisplay</em> per accendere la cella, aspettando, prima di farlo, un tempo proporzionale alla somma
+delle sue coordinate.</p>
+<p><strong>Output</strong></p>
+<p>Il <a class="reference internal" href="GLMSprint1.html#griddisplay"><span class="std std-ref">griddisplay</span></a> mostra le celle che si attivano.</p>
+<p>Le celle sono  <span class="slide2">costruite in modo dinamico</span>, a partire dal contenito di
+<a class="reference internal" href="#i-files-cellnbs-pl-e-grid-pl"><span class="std std-ref">grid.pl</span></a>, come mostrato nello
+<a class="reference internal" href="#creazione-dinamica-di-celle-attori"><span class="std std-ref">stato createCells</span></a>.</p>
+</div></blockquote>
+<a class="reference internal image-reference" href="_images/gamelifeactors1.png"><img alt="_images/gamelifeactors1.png" class="align-center" src="_images/gamelifeactors1.png" style="width: 100%;" /></a>
+</td>
+</tr>
+</tbody>
+</table>
+<p>A questo punto,
+salviamo il modello corrente nel file <strong>gamelifeactors1.qaktt</strong> e procediamo con un nuovo passo di sviluppo
+tutto dedicato alla <a class="reference internal" href="GLMAnalisi.html#glm-analisi-del-problema"><span class="std std-ref">GLM: Analisi del problema</span></a> che nasce dalla <span class="slide2">natura distribuita del sistema</span>.</p>
+<p><span class="slide1">Indice:</span>: <a class="reference internal" href="GLMIntro.html#indice-glm"><span class="std std-ref">Indice GLM</span></a></p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">GLM-Sprint2: basi di conoscenza</a><ul>
+<li><a class="reference internal" href="#gridsupport-kt">GridSupport.kt</a><ul>
+<li><a class="reference internal" href="#createactordynamically">createActorDynamically</a></li>
+<li><a class="reference internal" href="#genneighborsnames">genNeighborsNames</a></li>
+<li><a class="reference internal" href="#genneighbornsdescr">genNeighbornsDescr</a></li>
+<li><a class="reference internal" href="#getcellneighbors">getCellNeighbors</a></li>
+<li><a class="reference internal" href="#gencelldescr">genCellDescr</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#basi-di-conoscenza-sulla-griglia">Basi di conoscenza sulla griglia</a><ul>
+<li><a class="reference internal" href="#i-files-cellnbs-pl-e-grid-pl">I files cellnbs.pl e grid.pl</a></li>
+<li><a class="reference internal" href="#genlocalgriddescr">genLocalGriddescr</a></li>
+<li><a class="reference internal" href="#aggiornamento-della-base-di-conoscenza-dell-actor">Aggiornamento della base di conoscenza dell’Actor</a></li>
+<li><a class="reference internal" href="#sysutil">sysUtil</a></li>
+<li><a class="reference internal" href="#gamemock-come-tester-della-base-di-conoscenza">gamemock come tester della base di conoscenza</a><ul>
+<li><a class="reference internal" href="#uso-del-file-cellsfname">Uso del file cellsFName</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#getcellnamesincontext">getCellNamesInContext</a></li>
+<li><a class="reference internal" href="#esempio-di-uso-della-kb-di-un-actor">Esempio di uso della KB di un Actor</a></li>
+<li><a class="reference internal" href="#createcellsinternal">createCellsInternal</a></li>
+<li><a class="reference internal" href="#creazione-dinamica-di-celle-attori">Creazione dinamica di celle-attori</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#le-celle-come-attori">Le celle come attori</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="GLMAnalisi.html"
+                          title="previous chapter">GLM: Analisi del problema</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="GLMSprint3.html"
+                          title="next chapter">GLM-Sprint3: interazioni a eventi-stream</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/GLMSprint2.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="GLMSprint3.html" title="GLM-Sprint3: interazioni a eventi-stream"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="GLMAnalisi.html" title="GLM: Analisi del problema"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">GLM-Sprint2: basi di conoscenza</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>

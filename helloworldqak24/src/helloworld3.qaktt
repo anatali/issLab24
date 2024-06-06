@@ -1,5 +1,5 @@
 System helloworld3 
-/*
+/* 
  *  Il QActor attore display rende esplicito un comportamento 
  *  realizzato in helloworld2 da una parte ‘sommersa’ del sistema
  *  (un CodedQactor di calsse DisplayCodedQak)
@@ -9,9 +9,9 @@ Dispatch out  : out(TERM)
 Context ctxhello ip [host="localhost" port=8003] 
 
 QActor display context ctxhello { //withobj d using "utils.DisplayObj.create()"{
-	[# val d = utils.DisplayObj.create() #]
+	[# val d = DisplayObj.create() #]
 	   
-	State s0 initial{		
+	State s0 initial{		 
 	}
 	Transition t0 whenMsg out -> handleout
 	
