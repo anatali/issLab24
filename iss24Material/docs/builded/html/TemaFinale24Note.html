@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>TemaFinale24Note &#8212; iss24 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="TemaFinale24ChatGpt" href="TemaFinale24ChatGpt.html" />
+    <link rel="prev" title="TemaFinale24" href="TemaFinale24.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="TemaFinale24ChatGpt.html" title="TemaFinale24ChatGpt"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="TemaFinale24.html" title="TemaFinale24"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">TemaFinale24Note</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="temafinale24note">
+<h1>TemaFinale24Note<a class="headerlink" href="#temafinale24note" title="Permalink to this heading">¶</a></h1>
+<section id="il-team-di-lavoro">
+<h2>Il Team di lavoro<a class="headerlink" href="#il-team-di-lavoro" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Il team di lavoro ideale è composto da 3 persone. Sono ammessi anche team di 1 o 2 persone ( <span class="blue">NON 4 o più</span> ).</p></li>
+<li><p>Ogni team deve pubblicare e mantenere un <span class="blue">repository GIT</span> (da referenziare nel  <a class="reference external" href="../../../_static/templateToFill.html">templateToFill.html</a> )
+con il codice e i documenti correlati.</p></li>
+<li><p>Il team dovrà presentare la sequenza degli SPRINT eseguiti, con opportune motivazioni.</p></li>
+<li><p>Ogni SPRINT deve essere associato al proprio spazio di lavoro e a una “cronaca” (vedere templateToFill.html ) che presenti, in modo conciso , i punti chiave relativi a ciascuna fase di sviluppo.</p></li>
+<li><p>Il team deve presentare (in modo sintetico e schematico) l’ <span class="blue">attività specifica</span> di ciascun componente del team.</p></li>
+</ol>
+</section>
+<section id="come-organizzare-gli-sprint">
+<h2>Come organizzare gli sprint<a class="headerlink" href="#come-organizzare-gli-sprint" title="Permalink to this heading">¶</a></h2>
+<p>Il documento (‘chronicle’) relativo a ciascuno SPRINT deve contenere:</p>
+<ol class="arabic simple">
+<li><p>Un link al testo dei requisiti del committente</p></li>
+<li><p>Un link allo sprint precedente (se esiste)</p></li>
+<li><p>Una immagine della architettura al termine dello sprint precedente (se esiste) detta
+ARCHITETTURA INIZIALE DI RIFERIMENTO</p></li>
+<li><p>Un chiara definizione del <span class="blue">GOAL</span> dello Sprint</p></li>
+</ol>
+<p>Nel caso di <span class="slide2">revisione del documento</span> relativo ad uno SPRINT, occorre <span class="slide2">lasciare la versione precedente</span> e
+dare al nuovo documento un <span class="slide1">numero di versione</span>.</p>
+<section id="lo-sprint0">
+<h3>Lo SPRINT0<a class="headerlink" href="#lo-sprint0" title="Permalink to this heading">¶</a></h3>
+<p>Lo scopo dello SPRINT0 è quello di formalizzare i singoli termini del testo
+(usando un qualche linguaggio di programmazione e/o con modelli) e anche quello di fornire  una prima visione
+di insieme del sistema da realizzare.</p>
+<p>Si tratta di <span class="slide1">realizzare qualcosa di significativamente diverso</span> dalla riscrittura di un nuovo testo
+in linguaggio naturale, come quello che <a class="reference internal" href="TemaFinale24ChatGpt.html#analisi-dei-requisiti-tf24-di-chatgpt"><span class="std std-ref">oggi può fare ChatGpt</span></a>.</p>
+<p>Lo SPRINT0 deve concludersi fornendo un modello delle macro-parti del sistema,
+evidenziando quali componenti sono forniti dal committente (ad esempio DDRrobot, Sonar, etc.) e quelli che invece
+bisogna sviluppare.</p>
+<p>Lo scopo del modello dello SPRINT0 è di costituire un <span class="blue">SISTEMA LOGICO  DI RIFERIMENTO</span> e di evidenziare:</p>
+<ul class="simple">
+<li><p>Se sistema DEVE essere distribuito su N&gt;0 nodi computazionali diversi</p></li>
+<li><p>I macro-componenti (hardware/software) che occorre sviluppare</p></li>
+</ul>
+<p>I requisiti relativi alla interazione tra i macro-componenti sono di solito specificabili solo in modo parziale.</p>
+<p>Il modello deve fornire il quadro architetturale complessivo dal quale dedurre
+un possibile <span class="blue">piano di lavoro</span> che conduce allo SPRINT1.</p>
+</section>
+<section id="lo-sprint-n-n-0">
+<h3>Lo SPRINT_N, N&gt;0<a class="headerlink" href="#lo-sprint-n-n-0" title="Permalink to this heading">¶</a></h3>
+<p>Lo SPRINT_N  (con N&gt;= ) dovrebbe quindi affrontare un
+<span class="blue">preciso sottoinsieme dei requisiti</span>, che va definito (<span class="blue">GOAL</span> dello sprint)
+ed associato a uno o più Test-plan funzionali.</p>
+<p>Lo sprint deve  fare uno <span class="blue">ZOOMING</span> entro una parte della architettura di RIFERIMENTO,
+analizzando le problematiche poste dal sottoinsieme dei requisiti considerato.</p>
+<p>Lo svolgimento del lavoro deve avvenire in diverse fasi:</p>
+<ol class="arabic simple">
+<li><p>Enunciazione esplicita dei requisiti considerati nello SPRINT</p></li>
+<li><p>Fase di <span class="blue">analisi del problema</span>, che termina con la definizione di una <span class="blue">architettura logica</span> del sistema,
+di modelli eseguibili e alcuni, significativi piani di testing.
+E’ raccomandato che i risultati di questa fase vengano presentati al committente (con opportuno appuntamento)
+prima della consegna finale del prodotto.</p></li>
+<li><p>Fase di <span class="blue">progetto e realizzazione</span>, che termina con il deployment del prodotto, unitamente a istruzioni
+(ad uso del committente) per la  costruzione/esecuione del prdotto setsso.</p></li>
+</ol>
+<p>Alla fine dello SPRINT, l’ARCHITETTURA INIZIALE DI RIFERIMENTO avrà subito una <span class="blue">evoluzione</span> che produce
+una nuova <span class="blue">nuova ARCHITETTURA DI RIFERIMENTO</span>, che sarà la base di partenza per lo sprint successivo.</p>
+<p>Ogni SPRINT dovrebbe <span class="blue">terminare con una pagina di sintesi</span> che riporta l’architettura finale corrente
+del sistema (con i link al modello e ai Test).
+Questa pagina sarà l’inizio del documento relativo allo SPRINT successivo.</p>
+</section>
+</section>
+<section id="osservazioni-importanti">
+<h2>Osservazioni importanti<a class="headerlink" href="#osservazioni-importanti" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Lo scopo del tema finale NON è (solo) risolvere il problema ma avere un <span class="blue">caso di studio</span> su cui ragionare sul
+<span class="blue">processo di costruzione del software</span>.</p></li>
+<li><p>Lo svliluppo del tema finale <span class="slide3">NON E’ un esercizio di programmazione con il linguaggio qak</span></p></li>
+<li><p>L’uso del linguaggio <strong>qak</strong> non va preso come un vincolo a priori.
+Ne va invece motivato l’uso (come per ogni altra tecnologia) in relazione alle caratteristiche del (sotto)problema esaminato.
+Poichè il lettore potrebbe non consoscere questo linguaggio, è opportuno scrivere - una volta sola - un
+(breve) documento che spiega per quali caratteristiche si ritiene opportuno usare i qak.
+Il documento dovrebbe porre in luce gli aspetti salienti, rinviando (con links) gli approfondimenti ai documenti ‘ufficiali’,
+in modo da porre in evidenza il perchè lo si propone, nel contesto del problema.</p></li>
+<li><p>I link tra i vari documenti dovrebbero essere possibilmente locali, in modo da poter leggere i documenti stessi senza
+(ove possibile) connessione di rete.</p></li>
+</ol>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">TemaFinale24Note</a><ul>
+<li><a class="reference internal" href="#il-team-di-lavoro">Il Team di lavoro</a></li>
+<li><a class="reference internal" href="#come-organizzare-gli-sprint">Come organizzare gli sprint</a><ul>
+<li><a class="reference internal" href="#lo-sprint0">Lo SPRINT0</a></li>
+<li><a class="reference internal" href="#lo-sprint-n-n-0">Lo SPRINT_N, N&gt;0</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#osservazioni-importanti">Osservazioni importanti</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="TemaFinale24.html"
+                          title="previous chapter">TemaFinale24</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="TemaFinale24ChatGpt.html"
+                          title="next chapter">TemaFinale24ChatGpt</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/TemaFinale24Note.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="TemaFinale24ChatGpt.html" title="TemaFinale24ChatGpt"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="TemaFinale24.html" title="TemaFinale24"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">iss24 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">TemaFinale24Note</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, Antonio Natali.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>
