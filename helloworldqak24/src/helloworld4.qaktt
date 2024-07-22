@@ -11,40 +11,56 @@ Context ctxhello ip [host="localhost" port=8004]
 
 QActor display context ctxhello withobj d using "DisplayObj.create()"{
 	State s0 initial{
+		println("$name | START") color green
+		delay 500 //action of worker requires time ...
 		observeResource worker msgid info 
 	}   
 	Transition t0 whenMsg info -> handleinfo
 	
 	State handleinfo{
 		printCurrentMessage
-		println("$currentMsg") color blue
+		println("$name | $currentMsg") color green
+		 
 		[#  
 		 d.print( currentMsg.toString() )  
-		 d.print( "$currentMsg" )  
+		 d.print( "AGAIN: $currentMsg" )  
 		 d.print( currentMsg.msgContent().toString() )  
-		 d.print( "${currentMsg.msgContent()}" )  		 
+		 d.print( "AGAIN: (${currentMsg.msgContent()})" )  		
+		 
 		#]
 		onMsg( info:info(SOURCE,TERM)){
+			//La 3) di worker produce
+			// alice.tuprolog.InvalidTermException: The entire string could not be read as one term 
 			[# val Source = payloadArg(0) 
 			   val infoMsg = payloadArg(1)	
 			   val M      = "$infoMsg from $Source"			
 			#]
+			println("$name | $M") color magenta
 			[# d.write( M ) #]
-		}		
+		}		 
 	}
 	Transition t0 whenMsg info -> handleinfo
 }
-    
+     
 QActor worker context ctxhello  {
  	State s0 initial{
-		[# var n = 0 #]
-		delay 1500
-		updateResource [#  "$name, hello_${n++}" #] 
-//		delay 2000	 
-//		updateResource [# "m( $name, hello_${n++} )" #]
+ 		println("$name | START") color blue
+		[# var n = 0 #] 
+		delay 1500 
+		//1) OK
+		updateResource [#  "$name, hello_${n++}" #]  //Prolog AND
+		delay 1500 
+		//2) OK
+		updateResource [#  "hello_${n++}" #]  //Prolog atom
+		delay 1500 
+		//3) WRONG
+//		updateResource [#  "Some info" #]  //NON Prolog  
+		//4) OK - contenuto strutturato
+		delay 1500	 
+		updateResource [# "info( $MyName, hello_${n++})" #]
 	}	 
 }  
-
+ 
 
 
  
