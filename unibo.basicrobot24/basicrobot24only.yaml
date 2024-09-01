@@ -1,0 +1,15 @@
+##version: '3' ##OBSOLETO
+services:
+  basicrobot24:
+    image: docker.io/natbodocker/basicrobot24only:1.0
+    #image: basicrobot24only:1.0
+    ports:
+      - 8020:8020/tcp 
+      - 8020:8020/udp
+      - 8085:8085
+
+## -------------------------------------------------------------
+## TODO See https://docs.docker.com/compose/startup-order/
+## -------------------------------------------------------------
+## docker-compose -f basicrobot24only.yaml  up
+ 

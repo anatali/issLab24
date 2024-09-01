@@ -207,6 +207,9 @@ QActor basicrobot context ctxbasicrobot withobj robot using "uniborobots.robotSu
   	    #]
    		//delay 2000 //per inserzione in docker
   		*/
+  		
+  		println("basicrobot | STARTING ... ") color magenta
+  		
         run robot.move( "h" )    //reset
         delay 300
 	  	run robot.move( "a" )    //synch 

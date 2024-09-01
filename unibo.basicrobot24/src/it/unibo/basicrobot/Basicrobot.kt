@@ -51,6 +51,7 @@ class Basicrobot ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 						subscribeToLocalActor("basicrobot") 
 						 robot.create(myself,"basicrobotConfig.json")  
 						 RobotType = robot.robotKind  
+						CommUtils.outmagenta("basicrobot | STARTING ... ")
 						robot.move( "h"  )
 						delay(300) 
 						robot.move( "a"  )
