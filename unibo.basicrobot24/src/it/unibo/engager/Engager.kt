@@ -48,6 +48,7 @@ class Engager ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 						 	   
 						if( checkMsgContent( Term.createTerm("engage(OWNER,STEPTIME)"), Term.createTerm("engage(OWNER,STEPTIME)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList
+								CommUtils.outblue("engager | owner=${payloadArg(0)}")
 								 if( currentMsg.conn != null ) curConn = currentMsg.conn					
 												   EngageCaller  = currentMsg.msgSender() //payloadArg(0)
 												   if( curConn != null )
@@ -57,6 +58,7 @@ class Engager ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 												   EngageDone = OwnerMngr.engage(EngageCaller)
 												   if( EngageDone ) OwnerMngr.setStepTime(payloadArg(1))
 												   //MAY24
+								CommUtils.outblue("$name | engage caller=$EngageCaller - engage done=$EngageDone")
 						}
 						//genTimer( actor, state )
 					}

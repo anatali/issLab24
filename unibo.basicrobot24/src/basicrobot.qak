@@ -81,6 +81,7 @@ QActor engager context ctxbasicrobot{
     State handleEngage{
     	printCurrentMessage color magenta
 			onMsg( engage : engage(OWNER, STEPTIME) ) {
+				println("engager | owner=${payloadArg(0)}" ) color blue
 				[# if( currentMsg.conn != null ) curConn = currentMsg.conn					
 				   EngageCaller  = currentMsg.msgSender() //payloadArg(0)
 				   if( curConn != null )
@@ -91,6 +92,7 @@ QActor engager context ctxbasicrobot{
 				   if( EngageDone ) OwnerMngr.setStepTime(payloadArg(1))
 				   //MAY24
 				#]
+				println("$name | engage caller=$EngageCaller - engage done=$EngageDone") color blue
 			}
      }  
      //Goto engageAccept if [# Owner == "unkknown" || Owner == EngageCaller || EngageCaller == "gui23xyz9526" #] else engageRefuse
