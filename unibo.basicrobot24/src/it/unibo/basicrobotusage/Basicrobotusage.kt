@@ -35,7 +35,7 @@ class Basicrobotusage ( name: String, scope: CoroutineScope, isconfined: Boolean
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t023",targetState="dowork",cond=whenReply("engagedone"))
+					 transition(edgeName="t025",targetState="dowork",cond=whenReply("engagedone"))
 				}	 
 				state("dowork") { //this:State
 					action { //it:State
@@ -47,8 +47,8 @@ class Basicrobotusage ( name: String, scope: CoroutineScope, isconfined: Boolean
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t024",targetState="handleStepDone",cond=whenReply("stepdone"))
-					transition(edgeName="t025",targetState="handleStepFail",cond=whenReply("stepfailed"))
+					 transition(edgeName="t026",targetState="handleStepDone",cond=whenReply("stepdone"))
+					transition(edgeName="t027",targetState="handleStepFail",cond=whenReply("stepfailed"))
 				}	 
 				state("handleStepDone") { //this:State
 					action { //it:State
@@ -79,8 +79,8 @@ class Basicrobotusage ( name: String, scope: CoroutineScope, isconfined: Boolean
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t026",targetState="testdoplanEnd",cond=whenReply("doplandone"))
-					transition(edgeName="t027",targetState="testdoplanEnd",cond=whenReply("doplanfailed"))
+					 transition(edgeName="t028",targetState="testdoplanEnd",cond=whenReply("doplandone"))
+					transition(edgeName="t029",targetState="testdoplanEnd",cond=whenReply("doplanfailed"))
 				}	 
 				state("testdoplanEnd") { //this:State
 					action { //it:State

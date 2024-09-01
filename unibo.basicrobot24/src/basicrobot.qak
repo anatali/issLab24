@@ -79,7 +79,7 @@ QActor engager context ctxbasicrobot{
 		          whenRequest checkowner ->  checkTheOwner
      			   
     State handleEngage{
-    	printCurrentMessage 
+    	printCurrentMessage color magenta
 			onMsg( engage : engage(OWNER, STEPTIME) ) {
 				[# if( currentMsg.conn != null ) curConn = currentMsg.conn					
 				   EngageCaller  = currentMsg.msgSender() //payloadArg(0)
@@ -701,9 +701,9 @@ QActor robotpos context ctxbasicrobot{
 //                   appl "main.java.facade24.Facade24Application" 
 //                   UserLibs -f "Facade24Start-1.0-plain"  -f "Facade24Start-1.0"
 
-//Facade robotfacade port 8085 usingactor basicrobot inctx ctxbasicrobot  
-//                   appl "main.java.robotfacade24.Robotfacade24Application" 
-//                   UserLibs -f "robotfacade24-1.0-plain"  -f "robotfacade24-1.0"
+Facade robotfacade port 8085 usingactor basicrobot inctx ctxbasicrobot  
+                   appl "main.java.robotfacade24.Robotfacade24Application" 
+                   UserLibs -f "robotfacade24-1.0-plain"  -f "robotfacade24-1.0"
 
   
 /*
@@ -786,7 +786,7 @@ QActor basicrobotusage context ctxbasicrobot{
 	State handleStepDone{
 		printCurrentMessage color black
 	}
-	Goto dowork
+	Goto dowork 
 	
 	State handleStepFail{
 		printCurrentMessage color black

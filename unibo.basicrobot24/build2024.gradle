@@ -124,7 +124,15 @@ dependencies {
 
     
     //USER libs for facades
+    implementation name: 'robotfacade24-1.0-plain'
+    implementation name: 'robotfacade24-1.0'
     
+	/* Librerie spring per il supporto a facade ***************************** */
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	//depends on spring-boot-starter-logging, which already pulls in spring-jcl for us.
+	//When using starters, Logback is used for logging by default.
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 }
 	
 sourceSets {

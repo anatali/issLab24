@@ -21,7 +21,7 @@ CMD ["bash", "basicrobot24"]
 ## 1) gradlew distTar
 ## 2) docker build -t basicrobot24:1.0 .
 ## OCCORRE APRIRE UDP PER PERMETTERE COAP
-## docker run -it --rm --name basicrobot24 -p8020:8020/tcp -p8020:8020/udp -p8085:8085/tcp --privileged basicrobot24:1.0  /bin/bash
+## docker run -it --rm --name basicrobot24 -p8020:8020/tcp -p8020:8020/udp  --privileged basicrobot24:1.0  /bin/bash
 ## MODIFICA DEL FILE DI CONFIGURAZIONE
 # docker cp basicrobotConfig.json 89193dba02a2:/basicrobot24-1.0/bin/basicrobotConfig.json
 # docker cp stepTimeConfig.json cab3aa29f8eb:/basicrobot24-1.0/bin/stepTimeConfig.json

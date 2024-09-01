@@ -1,36 +1,29 @@
 /*
 ================================================================================
-build2024.gradle
+build2025Starting.gradle
 GENERATED ONLY ONCE
 ================================================================================
 */
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
-    id 'application'
-    id 'java'
+    id 'application'  //include java
     id 'eclipse'
 
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
     id "org.jetbrains.kotlin.jvm" version "1.9.22"
-    
-    //Per poter usare qakfacadegui23-1.0 che usa Spring
-    id 'org.springframework.boot' version '2.7.16'
-    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
- 
     
     //Per poter usare javafx
     id 'org.openjfx.javafxplugin' version '0.1.0'
 }
 
 version '1.0'
-//java { sourceCompatibility = '11' }
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(11))
 }
 kotlin {
   jvmToolchain {
-    languageVersion.set(JavaLanguageVersion.of(11))
+    languageVersion.set(JavaLanguageVersion.of("11"))
   }
 }
 
@@ -98,11 +91,14 @@ dependencies {
 	testImplementation group: 'com.squareup.okhttp3', name: 'mockwebserver', version: '4.9.3'
 
     /* LOG4J ***************************************************************************** */    
-    //implementation group: 'org.slf4j', name: 'slf4j-reload4j', version: '2.0.0-alpha7'
-    //implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
+   implementation 'ch.qos.logback:logback-classic:1.2.11'  //vs.1.5.7     1.2.11 (app1.log ok)     1.4.11
+   
+   /* Elasticsearch   */
+    // https://mvnrepository.com/artifact/net.logstash.logback/logstash-logback-encoder
+	implementation("net.logstash.logback:logstash-logback-encoder:7.3")  //7.3 permette di usare 1.2.11
 
 	// https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
-	testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.7'
+	//testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.7'
 
     /* HTTP ******************************************************************************** */
     // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
@@ -116,51 +112,38 @@ dependencies {
     // https://mvnrepository.com/artifact/com.googlecode.aima-java/aima-core
     implementation group: 'com.googlecode.aima-java', name: 'aima-core', version: '3.0.0'
 
- 
     /* UNIBO *********************************************************************************/
     implementation name: 'uniboInterfaces'
     implementation name: '2p301'
 	implementation name: 'unibo.qakactor23-5.0'
-    implementation name: 'unibo.basicomm23-1.0'
-
-   
- 
-    //USER libs for facades
-    implementation name: 'robotfacade24-1.0-plain'
-    implementation name: 'robotfacade24-1.0'
-//    implementation name: 'Facade24Start-1.0-plain'
-//    implementation name: 'Facade24Start-1.0'
-    
-	/* Librerie spring per il supporto a facade ***************************** */
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	//depends on spring-boot-starter-logging, which already pulls in spring-jcl for us.
-	//When using starters, Logback is used for logging by default.
-	implementation 'org.springframework.boot:spring-boot-starter-websocket'
-    
+    implementation name: 'unibo.basicomm23-1.0' 
 }
 	
 sourceSets {
-    main.java.srcDirs += 'src'
-    main.java.srcDirs += 'src/main/java'
-    main.java.srcDirs += 'src/main/kotlin'
-    main.java.srcDirs += 'src/main/resources'
-    test.java.srcDirs += 'src/main/java/test'		//test is specific
-    test.java.srcDirs += 'src/main/kotlin/test'
-}
-  
+    main {
+        java {
+            srcDirs = ['src/main/java']
+        }
+        resources {
+            srcDirs = ['src/main/resources']
+        }
+    }
+    test{
+        java {
+            srcDirs += ['src/test/java']
+        }    
+        resources {
+            srcDirs = ['src/test/resources']
+        }
+    }
+ } 
 
-eclipse {
-    classpath {
-        sourceSets -= [sourceSets.main, sourceSets.test]	
-    }	
- }
 
 
 
 application {
     //Define the main class for the application.
-    mainClassName    = 'it.unibo.ctxbasicrobot.MainCtxbasicrobotKt'
+    mainClassName    = 'TODO'
 }
  
  jar {
@@ -196,15 +179,6 @@ task run0(type: JavaExec) {
     group = "Execution"
     description = "Run the main class with JavaExecTask"
     classpath = sourceSets.main.runtimeClasspath
-    //main = 'it.unibo.ctxbasicrobot.MainCtxbasicrobotKt'
+    main = 'TODO'
 }
 
-/*
-//TODO
-tasks.register('copyReport', Copy) {
-	println("copyReport")
-    from layout.buildDirectory.file("resources/logback.xml")
-    into layout.buildDirectory.dir("toArchive")
-}
-*/
-//gradlew run --warning-mode all

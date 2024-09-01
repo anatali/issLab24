@@ -44,7 +44,7 @@ class Engager ( name: String, scope: CoroutineScope, isconfined: Boolean=false  
 				}	 
 				state("handleEngage") { //this:State
 					action { //it:State
-						CommUtils.outcyan("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
+						CommUtils.outmagenta("$name in ${currentState.stateName} | $currentMsg | ${Thread.currentThread().getName()} n=${Thread.activeCount()}")
 						 	   
 						if( checkMsgContent( Term.createTerm("engage(OWNER,STEPTIME)"), Term.createTerm("engage(OWNER,STEPTIME)"), 
 						                        currentMsg.msgContent()) ) { //set msgArgList

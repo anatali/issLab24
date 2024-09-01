@@ -31,6 +31,9 @@
         <appender-ref ref="STDOUT" />
     </logger>
 
+    <!-- Configura il logger per org.eclipse.californium -->
+    <logger name="org.eclipse.californium" level="OFF" />
+    
     <root level="ERROR">
         <appender-ref ref="STDOUT" />
     </root>
