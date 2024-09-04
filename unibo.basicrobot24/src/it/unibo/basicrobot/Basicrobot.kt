@@ -51,11 +51,7 @@ class Basicrobot ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 						subscribeToLocalActor("basicrobot") 
 						 robot.create(myself,"basicrobotConfig.json")  
 						 RobotType = robot.robotKind  
-						CommUtils.outmagenta("basicrobot | STARTING ... ")
-						robot.move( "h"  )
-						delay(300) 
-						robot.move( "a"  )
-						robot.move( "d"  )
+						CommUtils.outmagenta("basicrobot | STARTING Sept 2024 no moves ... ")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002
@@ -66,7 +62,7 @@ class Basicrobot ( name: String, scope: CoroutineScope, isconfined: Boolean=fals
 				state("waitForRobot") { //this:State
 					action { //it:State
 						delay(5000) 
-						CommUtils.outmagenta("basicrobot | STARTING ... ")
+						CommUtils.outmagenta("basicrobot | waitForRobot ... ")
 						//genTimer( actor, state )
 					}
 					//After Lenzi Aug2002

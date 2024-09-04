@@ -17,7 +17,7 @@ import java.io.File
 
 object robotSupport{
 	lateinit var robotKind  :  String
-	lateinit var vr : VrobotHLMovesActors23
+	lateinit var vr         : VrobotHLMovesActors23
 	var endPipehandler      :  ActorBasic? = null 
 	var jsonParser = JSONParser()
 
@@ -28,6 +28,17 @@ object robotSupport{
 	}
 	
 	fun create( owner: ActorBasic, configFileName: String, endPipe: ActorBasic? = null ){
+		val vrenv = System.getenv("VIRTUAL_ENV")
+		CommUtils.outred("robotSupport | ++++++++++++++++++++ create vrenv=$vrenv" )
+		
+		if( vrenv == null ) createUsingConfigfile( owner, configFileName, endPipe )
+        else {
+        	robotKind = "virtual"
+        	vr        = VrobotHLMovesActors23( vrenv,  owner )
+        }
+	}
+	fun createUsingConfigfile( owner: ActorBasic, configFileName: String, endPipe: ActorBasic? = null ){		
+ 
 		endPipehandler   =  endPipe
  		val config = File("${configFileName}").readText(Charsets.UTF_8)
 		 CommUtils.outred("${configFileName}   $config" )

@@ -208,12 +208,12 @@ QActor basicrobot context ctxbasicrobot withobj robot using "uniborobots.robotSu
    		//delay 2000 //per inserzione in docker
   		*/
   		
-  		println("basicrobot | STARTING ... ") color magenta
+  		println("basicrobot | STARTING Sept 2024 no moves ... ") color magenta
   		
-        run robot.move( "h" )    //reset
-        delay 300
-	  	run robot.move( "a" )    //synch 
- 		run robot.move( "d" )	 //synch
+//        run robot.move( "h" )    //reset
+//        delay 300
+//	  	run robot.move( "a" )    //synch 
+// 		run robot.move( "d" )	 //synch
  
 
  	}
@@ -223,15 +223,15 @@ QActor basicrobot context ctxbasicrobot withobj robot using "uniborobots.robotSu
     State waitForRobot{
  		delay 5000 //per inserzione in docker: attesa per wenv  
  		//NO SUBSCRIPTION TO SONAR FOR THE VIRTUAL ROBOT
- 		println("basicrobot | STARTING ... ") color magenta
+ 		println("basicrobot | waitForRobot ... ") color magenta
  		
  		//ELIMINO LA INTERAZIONE SINCRONA perch� richiede la presenza dell'immagine
    		//run robot.move( "a" )    //synch 
  		//run robot.move( "d" )	//synch   	
-    }
+    } 
     Goto work
     
-  	
+  	 
 	State work{ 
 		//printCurrentMessage   
         //updateResource [# "basicrobot(started)" #]
