@@ -1,0 +1,30 @@
+System helloworld4_2ctx 
+/*
+ * Il QActor workerobs funge da observer per l'attore remoto worker
+ */ 
+Dispatch info : info(SOURCE,TERM) 
+ 
+
+Context ctxobs     ip [host="localhost" port=8005] 
+Context ctxhello   ip [host="127.0.0.1" port=8004] 
+
+ExternalQActor worker context ctxhello	
+
+ 
+QActor workerobs context ctxobs  {
+ 	State s0 initial{
+		observeResource worker msgid info
+		println("$name | STARTS observing remote worker") color blue
+	}	 
+	Transition t0 whenMsg info -> handleinfo 
+
+    State handleinfo{
+	   printCurrentMessage	color blue
+	}
+	Transition t0 whenMsg info -> handleinfo
+	
+}
+
+ 
+
+ 
