@@ -1,4 +1,7 @@
 System mqttdemo
+//mqttBroker "mosquitto" : 1883 eventTopic "cargoevents"     
+mqttBroker "test.mosquitto.org" : 1883 eventTopic "applsevents"   //mosquitto "localhost" : 1883
+//mqttBroker "broker.hivemq.com" : 1883 eventTopic "applsevents"
 
 /*
 ========================================
@@ -7,11 +10,67 @@ mqttdemo.qak
 */
 
 Event sonardata : sonardata(D)
+Dispatch cmd    : cmd(MOVE)
+ 
 
 Context ctxmmqtt  ip [host="localhost" port=8920     ]
 
+ //----------------------------------------------------------
+ //ATTORI CHE USANO MQTT con mqttBroker
+ //----------------------------------------------------------
 
+QActor emitter context ctxmmqtt{
+	State s0 initial{
+		delay 2000 //Give time to connect to the mqtt broker
+		println("$name | emet event ") color blue
+		emit sonardata : sonardata(120)
+		delay 1000
+		println("$name | publish event on mytopic") color blue
+		publish "mytopic" -m sonardata : sonardata(10)
+		delay 1000
+		//DEMO DI EMISSIONE DI UN DISPATCH usando una publish low-level
+		println("$name | publish dispatch on mytopic") color blue
+		[# val msg = MsgUtil.buildDispatch("emitter", "cmd","cmd(l)","perceiver")
+			publish(msg.toString(),"mytopic")
+		#]
+		delay 2000
+		println("$name | BYE") color blue
+		[# System.exit(0) #]
+	}
+	
+}
 
+QActor perceiver context ctxmmqtt{
+	State s0 initial{
+		delay 1000 //Give time to connect to the mqtt broker
+		println("$name | subscribe to mytopic ") color green
+		//subscribe to applsevents is DONE BY THE qak-runtime
+		subscribe "mytopic" 
+	}
+	Transition t0
+	   whenEvent sonardata -> handleevent
+	   whenMsg cmd -> handlecmd
+	   
+	State handleevent{
+		printCurrentMessage color blue
+	}
+	Transition t0
+	   whenEvent sonardata -> handleevent
+	   whenMsg cmd -> handlecmd
+	
+	State handlecmd{
+		printCurrentMessage color blue
+	}
+	Transition t0
+	   whenEvent sonardata -> handleevent
+	   whenMsg cmd -> handlecmd
+	
+}
+
+/* 
+ //----------------------------------------------------------
+ //ATTORI CHE USANO MQTT SENZA DICHIARARE mqttBroker
+ //----------------------------------------------------------
 QActor publisher context ctxmmqtt{
 	State s0 initial{
 		connectToMqttBroker "wss://test.mosquitto.org:8081"
@@ -45,3 +104,4 @@ QActor receiver context ctxmmqtt{
 	}
 	Transition t0 whenEvent sonardata -> handlesonardata
 }
+*/

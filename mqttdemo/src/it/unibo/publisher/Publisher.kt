@@ -11,6 +11,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import it.unibo.kactor.sysUtil.createActor   //Sept2023
+//Sept2024
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory 
+import org.json.simple.parser.JSONParser
+import org.json.simple.JSONObject
+
 
 //User imports JAN2024
 
@@ -25,6 +31,7 @@ class Publisher ( name: String, scope: CoroutineScope, isconfined: Boolean=false
 				state("s0") { //this:State
 					action { //it:State
 						connectToMqttBroker( "wss://test.mosquitto.org:8081" )
+						subscribe(  "sonardatatopic" ) //mqtt.subscribe(this,topic)
 						delay(1000) 
 						//val m = MsgUtil.buildEvent(name, "sonardata", "sonardata(10)" ) 
 						publish(MsgUtil.buildEvent(name,"sonardata","sonardata(10)").toString(), "sonardatatopic" )   
