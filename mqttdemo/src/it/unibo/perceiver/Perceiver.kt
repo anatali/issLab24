@@ -38,8 +38,8 @@ class Perceiver ( name: String, scope: CoroutineScope, isconfined: Boolean=false
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t00",targetState="handleevent",cond=whenEvent("sonardata"))
-					transition(edgeName="t01",targetState="handlecmd",cond=whenDispatch("cmd"))
+					 transition(edgeName="t01",targetState="handleevent",cond=whenEvent("sonardata"))
+					transition(edgeName="t02",targetState="handlecmd",cond=whenDispatch("cmd"))
 				}	 
 				state("handleevent") { //this:State
 					action { //it:State
@@ -50,8 +50,8 @@ class Perceiver ( name: String, scope: CoroutineScope, isconfined: Boolean=false
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t02",targetState="handleevent",cond=whenEvent("sonardata"))
-					transition(edgeName="t03",targetState="handlecmd",cond=whenDispatch("cmd"))
+					 transition(edgeName="t03",targetState="handleevent",cond=whenEvent("sonardata"))
+					transition(edgeName="t04",targetState="handlecmd",cond=whenDispatch("cmd"))
 				}	 
 				state("handlecmd") { //this:State
 					action { //it:State
@@ -62,8 +62,8 @@ class Perceiver ( name: String, scope: CoroutineScope, isconfined: Boolean=false
 					//After Lenzi Aug2002
 					sysaction { //it:State
 					}	 	 
-					 transition(edgeName="t04",targetState="handleevent",cond=whenEvent("sonardata"))
-					transition(edgeName="t05",targetState="handlecmd",cond=whenDispatch("cmd"))
+					 transition(edgeName="t05",targetState="handleevent",cond=whenEvent("sonardata"))
+					transition(edgeName="t06",targetState="handlecmd",cond=whenDispatch("cmd"))
 				}	 
 			}
 		}

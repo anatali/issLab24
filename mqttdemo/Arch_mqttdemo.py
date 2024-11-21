@@ -26,8 +26,7 @@ with Diagram('mqttdemoArch', show=False, outformat='png', graph_attr=graphattr) 
      sys = Custom('','./qakicons/system.png')
 ### see https://renenyffenegger.ch/notes/tools/Graphviz/attributes/label/HTML-like/index
      with Cluster('ctxmmqtt', graph_attr=nodeattr):
-          publisher=Custom('publisher','./qakicons/symActorSmall.png')
-          receiver=Custom('receiver','./qakicons/symActorSmall.png')
-     sys >> Edge( label='sonardata', **evattr, decorate='true', fontcolor='darkgreen') >> publisher
-     sys >> Edge( label='sonardata', **evattr, decorate='true', fontcolor='darkgreen') >> receiver
+          engagermock=Custom('engagermock','./qakicons/symActorSmall.png')
+     with Cluster('ctxbasicrobot', graph_attr=nodeattr):
+          basicrobot=Custom('basicrobot(ext)','./qakicons/externalQActor.png')
 diag

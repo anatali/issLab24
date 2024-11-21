@@ -1,6 +1,7 @@
 System mqttdemo
-//mqttBroker "mosquitto" : 1883 eventTopic "cargoevents"     
-mqttBroker "test.mosquitto.org" : 1883 eventTopic "applsevents"   //mosquitto "localhost" : 1883
+ 
+mqttBroker "localhost" : 1883 eventTopic "applsevents"       //USATO per basicrobot 
+//mqttBroker "test.mosquitto.org" : 1883 eventTopic "applsevents"   //mosquitto "localhost" : 1883  
 //mqttBroker "broker.hivemq.com" : 1883 eventTopic "applsevents"
 
 /*
@@ -12,13 +13,132 @@ mqttdemo.qak
 Event sonardata : sonardata(D)
 Dispatch cmd    : cmd(MOVE)
  
+Request engage        : engage(OWNER, STEPTIME)	
+Reply   engagedone    : engagedone(ARG)    for engage
+Reply   engagermockefused : engagermockefused(ARG) for engage
+ 
+ 
+ 
 
-Context ctxmmqtt  ip [host="localhost" port=8920     ]
+Context ctxmmqtt      ip [host="localhost" port=8920 ]
+Context ctxbasicrobot ip [host="127.0.0.1" port=8020 ] 
+
+ExternalQActor basicrobot context ctxbasicrobot
 
  //----------------------------------------------------------
  //ATTORI CHE USANO MQTT con mqttBroker
  //----------------------------------------------------------
 
+/* 
+QActor emitter context ctxmmqtt{
+	State s0 initial{
+		delay 3000 //Give time to connect to the mqtt broker
+		println("$name | emit event ") color blue
+		emit sonardata : sonardata(120)
+		delay 1000
+		println("$name | publish event on mytopic") color blue
+		publish "mytopic" -m sonardata : sonardata(10)
+		delay 1000
+		//DEMO DI EMISSIONE DI UN DISPATCH usando una publish low-level
+		println("$name | publish dispatch on mytopic") color blue
+		[# val msg = MsgUtil.buildDispatch("emitter", "cmd","cmd(l)","perceiver")
+			publish(msg.toString(),"mytopic")
+		#]
+		delay 2000
+		println("$name | BYE") color blue
+		//[# System.exit(0) #]
+	}
+	
+}
+
+QActor perceiver context ctxmmqtt{
+	State s0 initial{
+		delay 2000 //Give time to connect to the mqtt broker
+		println("$name | subscribe to mytopic ") color green
+		//subscribe to applsevents is DONE BY THE qak-runtime
+		subscribe "mytopic" 
+	}
+	Transition t0
+	   whenEvent sonardata -> handleevent
+	   whenMsg cmd -> handlecmd
+	   
+	State handleevent{
+		printCurrentMessage color blue
+	}
+	Transition t0
+	   whenEvent sonardata -> handleevent
+	   whenMsg cmd -> handlecmd
+	
+	State handlecmd{
+		printCurrentMessage color blue
+	}
+	Transition t0
+	   whenEvent sonardata -> handleevent
+	   whenMsg cmd -> handlecmd
+	
+}
+ 
+*/ 
+
+ //----------------------------------------------------------
+ //ATTORI CHE USANO MQTT con mqttBroker
+ //----------------------------------------------------------
+
+  
+/*  
+ * -----------------------------------------
+ Sperimentazione di requst / reply NOV 2024
+ * -----------------------------------------
+ */
+
+//WARNING: MQTT richiede che ogni client connesso a un broker 
+//abbia un Client ID univoco: il nome engager esiste già in basicrobot
+//TODO: proibire l'uso di alcuni nomi nell'editore del linguaggio
+QActor engagermock context ctxmmqtt{
+	State s0 initial{
+		delay 2000 //Give time to connect to the mqtt broker
+		subscribe "answ_engage_engagermock"
+		delay 1000
+		println("$name | STARTS emitting request engage ") color green
+		//CASO DI basicrobot
+		[#  val REQmsg = MsgUtil.buildRequest("engagermock", "engage","engage($MyName,200)","basicrobot")
+			publish(REQmsg.toString(),"robotevents")
+			//Non riceve su answ_engage_engagermock se non fa subscribe "answ_engage_engagermock"
+		#]		  
+		//CASO di basicrobotmock
+//		[# 	val REQmsg = MsgUtil.buildRequest("engagermock", "engage","engage($MyName,200)","basicrobotmock")
+//			publish(REQmsg.toString(),"applsevents")	//		 
+//		#]		  
+	}
+	Transition t0
+		whenReply engagedone -> endengagermock
+		
+    State endengagermock{
+    	printCurrentMessage color green
+    	println("$name | BYE") color green
+    }
+}
+
+/* 
+QActor basicrobotmock context ctxmmqtt{
+	State s0 initial{
+		//delay 1000 //Give time to connect to the mqtt broker
+		//connectToMqttBroker "wss://test.mosquitto.org:8081" //FATTO dalla infrastruttura
+		println("$name | STARTS waiting engage ") color magenta
+	}	
+	Transition t0 whenRequest engage -> handleEngage
+	
+	State handleEngage{
+		printCurrentMessage color magenta
+		replyTo engage with engagedone : engagedone($MyName)
+		//LA REPLY A UN CALLER LOCALE viene sempre eseguita
+		//PIù significativo provare con basicrobot
+	}
+	Goto s0
+}
+*/ 
+
+/* 
 QActor emitter context ctxmmqtt{
 	State s0 initial{
 		delay 2000 //Give time to connect to the mqtt broker
@@ -66,6 +186,7 @@ QActor perceiver context ctxmmqtt{
 	   whenMsg cmd -> handlecmd
 	
 }
+*/ 
 
 /* 
  //----------------------------------------------------------
